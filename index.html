@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico Gratuito — BG Tech</title>
+<meta name="description" content="Em 3 minutos, a BG Tech mapeia os gargalos do seu negócio e projeta, em reais, quanto você pode recuperar com a tecnologia certa. Diagnóstico estratégico gratuito.">
+<meta property="og:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
+<meta property="og:description" content="Descubra onde sua empresa está perdendo dinheiro. Diagnóstico personalizado em 3 minutos, sem compromisso.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1142,7 +1146,6 @@ header {
   background: var(--cyan);
   box-shadow: var(--glow);
 }
-.cta-texts {}
 .cta-eyebrow {
   font-family: var(--font-ui);
   font-size: 11px;
@@ -1355,6 +1358,15 @@ header {
   .btn-cta-final:active { transform: scale(0.97); }
   .option-card:active { background: rgba(0,200,255,0.06); border-color: var(--cyan40); }
 }
+
+/* ─── Prefer reduced motion: collapse animations/transitions ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1434,7 +1446,7 @@ header {
       </div>
     </div>
 
-    <button class="btn-primary" onclick="startQuiz()">
+    <button type="button" class="btn-primary" onclick="startQuiz()">
       Iniciar Diagnóstico Gratuito
     </button>
     <p class="btn-hint">Sem compromisso · Sem cartão · Resultado imediato</p>
@@ -1471,8 +1483,8 @@ header {
     <div class="step-indicator" id="step-indicator"></div>
     <div class="question-wrap" id="question-wrap"></div>
     <div class="nav-row">
-      <button class="btn-back" id="btn-back" onclick="prevStep()">← Voltar</button>
-      <button class="btn-next" id="btn-next" onclick="nextStep()" disabled>Continuar</button>
+      <button type="button" class="btn-back" id="btn-back" onclick="prevStep()">← Voltar</button>
+      <button type="button" class="btn-next" id="btn-next" onclick="nextStep()" disabled>Continuar</button>
     </div>
   </section>
 
@@ -1530,7 +1542,7 @@ header {
         <p class="cta-sub" id="cta-sub">Nosso time entra em contato em até 24h úteis para apresentar as soluções específicas para o seu negócio, sem compromisso.</p>
       </div>
       <div class="cta-action">
-        <button class="btn-cta-final" onclick="showToast()">Falar com Especialista</button>
+        <button type="button" class="btn-cta-final" onclick="showToast()">Falar com Especialista</button>
         <span class="cta-trust">Resposta em até 24h · Sem custo</span>
       </div>
     </div>
@@ -1726,7 +1738,7 @@ function renderQuestion() {
   }).join('');
 
   backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-  nextBtn.disabled = !answers[q.id] && q.type !== 'text';
+  nextBtn.disabled = answers[q.id] === undefined && q.type !== 'text';
 
   if (q.type === 'options') {
     wrap.innerHTML = `
@@ -1749,7 +1761,6 @@ function renderQuestion() {
       </div>
     `;
     nextBtn.textContent = currentStep === QUESTIONS.length - 1 ? 'Ver Diagnóstico' : 'Continuar';
-    nextBtn.innerHTML = (currentStep === QUESTIONS.length - 1 ? 'Ver Diagnóstico' : 'Continuar');
   } else {
     const vals = textValues;
     wrap.innerHTML = `
@@ -1924,7 +1935,7 @@ function showResult() {
   document.getElementById('score-desc').textContent = scoreDesc;
   document.getElementById('score-text').textContent = scoreText;
   document.getElementById('result-intro').textContent =
-    `Analisamos o perfil de ${setorName} com ${QUESTIONS[1].options[answers['tamanho']||1].label.toLowerCase()} e identificamos os pontos críticos abaixo.`;
+    `Analisamos o perfil de ${setorName} com ${QUESTIONS[1].options[answers['tamanho'] ?? 1].label.toLowerCase()} e identificamos os pontos críticos abaixo.`;
 
   // Insights dinâmicos
   const insights = buildInsights(score, dorIdx, setorIdx);
