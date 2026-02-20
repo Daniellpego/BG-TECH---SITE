@@ -243,8 +243,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 100px 48px 80px;
+  justify-content: flex-start;
+  padding: 140px 48px 80px;
   text-align: center;
   position: relative;
 }
@@ -317,8 +317,8 @@ header {
 .scan-card {
   width: 100%;
   max-width: 580px;
-  background: rgba(6,32,93,0.5);
-  border: 1px solid var(--cyan20);
+  background: rgba(6,32,93,0.65);
+  border: 1px solid var(--cyan40);
   border-radius: 4px;
   padding: 36px 40px;
   margin-bottom: 48px;
@@ -2577,8 +2577,8 @@ function submitLead() {
   window.open(url, '_blank', 'noopener,noreferrer');
 
   // Show thank you screen
-  const nome = textValues.nome ? textValues.nome.split(' ')[0] : '';
-  document.getElementById('thankyou-name').textContent = nome || 'seu diagnóstico';
+  const firstName = textValues.nome ? textValues.nome.split(' ')[0] : '';
+  document.getElementById('thankyou-name').textContent = firstName || 'seu diagnóstico';
   document.getElementById('thankyou-wpp-link').href = url;
   show('thankyou');
   document.getElementById('progress-bar').style.width = '100%';
