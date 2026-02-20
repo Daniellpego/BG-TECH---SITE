@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico Gratuito — BG Tech</title>
+<meta name="description" content="Em 3 minutos, a BG Tech mapeia os gargalos do seu negócio e projeta, em reais, quanto você pode recuperar com a tecnologia certa. Diagnóstico estratégico gratuito.">
+<meta property="og:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
+<meta property="og:description" content="Descubra onde sua empresa está perdendo dinheiro. Diagnóstico personalizado em 3 minutos, sem compromisso.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -13,6 +17,7 @@
    RESET & TOKENS — Manual BG Tech
 ═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button, .option-card { touch-action: manipulation; }
 
 :root {
   --navy:    #0D1B4B;
@@ -43,6 +48,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   cursor: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── Custom Cursor ─────────────────────── */
@@ -865,6 +871,7 @@ header {
 ═══════════════════════════════════════════ */
 #screen-result {
   display: none;
+  flex-direction: column;
   min-height: 100vh;
   padding: 100px 48px 80px;
   max-width: 900px;
@@ -1139,7 +1146,6 @@ header {
   background: var(--cyan);
   box-shadow: var(--glow);
 }
-.cta-texts {}
 .cta-eyebrow {
   font-family: var(--font-ui);
   font-size: 11px;
@@ -1318,9 +1324,48 @@ header {
 
   .result-cta { grid-template-columns: 1fr; padding: 24px 16px; gap: 20px; text-align: center; }
   .cta-action { width: 100%; }
-  .btn-cta-final { width: 100%; padding: 16px 24px; font-size: 12px; }
+  .btn-cta-final { width: 100%; padding: 18px 24px; font-size: 14px; }
 
   .toast { left: 16px; right: 16px; bottom: 16px; }
+
+  /* Use small-viewport height unit so screens don't overflow behind browser chrome */
+  #screen-intro, #screen-quiz, #screen-loading, #screen-result { min-height: 100svh; }
+
+  /* Ensure btn-back meets 44px minimum touch target */
+  .btn-back { min-height: 44px; padding: 10px 0; }
+
+  /* Scale down loading orb on small screens */
+  .loading-orb { width: 80px; height: 80px; margin-bottom: 32px; }
+  .orb-icon { font-size: 26px; }
+  .loading-title { font-size: 18px; }
+
+  /* Hide large decorative hex shapes — reduce GPU paint on mobile */
+  .hex-deco { display: none; }
+}
+
+/* ─── Touch: disable hover-persist transforms & add tap feedback ─── */
+@media (hover: none), (pointer: coarse) {
+  /* Disable hover-state transforms that persist awkwardly after tap */
+  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.08); background: rgba(13,27,75,0.5); }
+  .option-card:hover::before { transform: scaleY(0); }
+  .trust-item:hover { transform: none; border-color: var(--cyan20); box-shadow: none; }
+  .btn-primary:hover,
+  .btn-next:not(:disabled):hover,
+  .btn-cta-final:hover { transform: none; box-shadow: none; }
+  /* Tactile active-state feedback for tap */
+  .btn-primary:active,
+  .btn-next:not(:disabled):active,
+  .btn-cta-final:active { transform: scale(0.97); }
+  .option-card:active { background: rgba(0,200,255,0.06); border-color: var(--cyan40); }
+}
+
+/* ─── Prefer reduced motion: collapse animations/transitions ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+  }
 }
 </style>
 </head>
@@ -1372,15 +1417,15 @@ header {
       onde não percebe.
     </h1>
     <p class="intro-sub">
-      Em 3 minutos, nosso time mapeia os gargalos do seu negócio e projeta, em reais, quanto você pode recuperar com a tecnologia certa.
+      Responda 6 perguntas rápidas e descubra, em reais, quanto dinheiro a sua empresa está deixando na mesa — e o que fazer para recuperar.
     </p>
 
     <div class="scan-card">
-      <p class="scan-card-label">O que vamos analisar</p>
+      <p class="scan-card-label">O que você vai descobrir</p>
       <div class="scan-items">
         <div class="scan-item">
           <div class="scan-icon">⚙️</div>
-          <span>Processos operacionais e gargalos de produtividade</span>
+          <span>Onde sua equipe perde tempo e energia todo dia</span>
           <div class="scan-bar"><div class="scan-bar-fill" style="animation-delay:0.2s"></div></div>
         </div>
         <div class="scan-item">
@@ -1390,28 +1435,28 @@ header {
         </div>
         <div class="scan-item">
           <div class="scan-icon">🎯</div>
-          <span>Oportunidades de automação com ROI imediato</span>
+          <span>O que pode ser automatizado para gerar resultado rápido</span>
           <div class="scan-bar"><div class="scan-bar-fill" style="animation-delay:0.8s"></div></div>
         </div>
         <div class="scan-item">
           <div class="scan-icon">📈</div>
-          <span>Projeção financeira personalizada para o seu negócio</span>
+          <span>Quanto você pode recuperar nos próximos 90 dias</span>
           <div class="scan-bar"><div class="scan-bar-fill" style="animation-delay:1.1s"></div></div>
         </div>
       </div>
     </div>
 
-    <button class="btn-primary" onclick="startQuiz()">
-      Iniciar Diagnóstico Gratuito
+    <button type="button" class="btn-primary" onclick="startQuiz()">
+      Quero ver meu diagnóstico
     </button>
-    <p class="btn-hint">Sem compromisso · Sem cartão · Resultado imediato</p>
+    <p class="btn-hint">Sem compromisso · 100% gratuito · 3 minutos</p>
 
     <div class="trust-strip" id="trust-strip">
       <div class="trust-item">
         <div class="trust-icon" aria-hidden="true">🏢</div>
         <div class="trust-content">
           <span class="trust-number" data-target="47" data-suffix="+">0</span>
-          <span class="trust-label">empresas atendidas</span>
+          <span class="trust-label">empresas já transformadas</span>
         </div>
       </div>
       <div class="trust-item">
@@ -1425,7 +1470,7 @@ header {
         <div class="trust-icon" aria-hidden="true">⚡</div>
         <div class="trust-content">
           <span class="trust-number" data-target="7" data-suffix=" dias">0</span>
-          <span class="trust-label">implementação em até</span>
+          <span class="trust-label">para os primeiros resultados</span>
         </div>
       </div>
     </div>
@@ -1438,8 +1483,8 @@ header {
     <div class="step-indicator" id="step-indicator"></div>
     <div class="question-wrap" id="question-wrap"></div>
     <div class="nav-row">
-      <button class="btn-back" id="btn-back" onclick="prevStep()">← Voltar</button>
-      <button class="btn-next" id="btn-next" onclick="nextStep()" disabled>Continuar</button>
+      <button type="button" class="btn-back" id="btn-back" onclick="prevStep()">← Voltar</button>
+      <button type="button" class="btn-next" id="btn-next" onclick="nextStep()" disabled>Continuar</button>
     </div>
   </section>
 
@@ -1451,7 +1496,7 @@ header {
       <div class="orb-icon">🔍</div>
     </div>
     <h2 class="loading-title">Analisando seu negócio...</h2>
-    <p class="loading-step-text" id="loading-text">Processando suas respostas</p>
+    <p class="loading-step-text" id="loading-text">Preparando seu diagnóstico personalizado...</p>
     <div class="loading-steps-list" id="loading-steps"></div>
   </section>
 
@@ -1477,7 +1522,7 @@ header {
         </div>
       </div>
       <div class="score-info">
-        <div class="score-label">Índice de Oportunidade</div>
+        <div class="score-label">Seu Potencial de Recuperação</div>
         <div class="score-desc" id="score-desc">Calculando...</div>
         <div class="score-text" id="score-text"></div>
       </div>
@@ -1492,13 +1537,13 @@ header {
 
     <div class="result-cta">
       <div class="cta-texts">
-        <div class="cta-eyebrow">Próximo Passo</div>
+        <div class="cta-eyebrow">O Que Acontece Agora</div>
         <h3 class="cta-heading" id="cta-heading">Vamos transformar esse diagnóstico em resultados reais</h3>
         <p class="cta-sub" id="cta-sub">Nosso time entra em contato em até 24h úteis para apresentar as soluções específicas para o seu negócio, sem compromisso.</p>
       </div>
       <div class="cta-action">
-        <button class="btn-cta-final" onclick="showToast()">Falar com Especialista</button>
-        <span class="cta-trust">Resposta em até 24h · Sem custo</span>
+        <button type="button" class="btn-cta-final" onclick="submitLead()">Quero conversar com um especialista</button>
+        <span class="cta-trust">Você recebe contato em até 24h · Sem compromisso de compra</span>
       </div>
     </div>
   </section>
@@ -1508,10 +1553,20 @@ header {
 <!-- Toast -->
 <div class="toast" id="toast">
   <div class="toast-dot"></div>
-  <span>Diagnóstico enviado! Nosso time entra em contato em breve.</span>
+  <span>Recebemos! Um especialista vai entrar em contato com você em até 24h.</span>
 </div>
 
 <script>
+// ═══════════════════════════════════════════
+// CONFIGURAÇÃO — edite o número antes de publicar
+// ═══════════════════════════════════════════
+const CONFIG = {
+  // ⚠️  OBRIGATÓRIO: substitua pelo número real da BG Tech antes de publicar.
+  // Formato: código do país + DDD + número, sem + ou espaços.
+  // Exemplo: '5511999998888'  →  +55 (11) 99999-8888
+  whatsappNumber: '5511999998888',
+};
+
 // ═══════════════════════════════════════════
 // CURSOR CUSTOMIZADO
 // ═══════════════════════════════════════════
@@ -1542,7 +1597,8 @@ document.querySelectorAll('button, .option-card').forEach(el => {
 // PARTÍCULAS
 // ═══════════════════════════════════════════
 const pc = document.getElementById('particles');
-for (let i = 0; i < 25; i++) {
+const particleCount = window.innerWidth <= 640 ? 8 : 25;
+for (let i = 0; i < particleCount; i++) {
   const p = document.createElement('div');
   p.className = 'particle';
   p.style.left = Math.random() * 100 + '%';
@@ -1560,7 +1616,7 @@ const QUESTIONS = [
     id: 'setor',
     label: 'Etapa 01 / 06',
     title: 'Qual o segmento da sua empresa?',
-    desc: 'Isso nos ajuda a identificar os gargalos mais comuns do seu mercado e comparar com empresas similares.',
+    desc: 'Cada setor tem padrões de ineficiência únicos. Vamos comparar o seu negócio com empresas do mesmo segmento.',
     type: 'options',
     options: [
       { icon: '🏪', label: 'Comércio e Varejo',        sub: 'Loja física, e-commerce, distribuidoras',   score: 82 },
@@ -1575,7 +1631,7 @@ const QUESTIONS = [
     id: 'tamanho',
     label: 'Etapa 02 / 06',
     title: 'Quantas pessoas trabalham na sua empresa?',
-    desc: 'O número de colaboradores define quais oportunidades de automação geram maior impacto financeiro.',
+    desc: 'O tamanho da equipe muda tudo. O que funciona pra empresa de 5 pessoas não é o mesmo que funciona pra de 50.',
     type: 'options',
     options: [
       { icon: '👤', label: 'Só eu (solopreneur)',   sub: 'Faço tudo sozinho ou com poucos parceiros', score: 70 },
@@ -1589,7 +1645,7 @@ const QUESTIONS = [
     id: 'dor',
     label: 'Etapa 03 / 06',
     title: 'Qual dor tira mais o seu sono hoje?',
-    desc: 'Seja honesto — esse é o ponto de partida para o nosso diagnóstico. Não existe resposta certa ou errada.',
+    desc: 'Seja honesto com você mesmo. A resposta certa é a que você sente na barriga todo dia.',
     type: 'options',
     options: [
       { icon: '⏰', label: 'Perco tempo demais com tarefas repetitivas', sub: 'Planilhas, retrabalho, processos manuais',          score: 88 },
@@ -1604,7 +1660,7 @@ const QUESTIONS = [
     id: 'faturamento',
     label: 'Etapa 04 / 06',
     title: 'Qual a faixa de faturamento mensal da empresa?',
-    desc: 'Essa informação é estritamente confidencial. Usamos para calcular o impacto financeiro real das soluções.',
+    desc: 'Usamos só para calibrar o diagnóstico. Quanto maior o faturamento, maiores os ganhos potenciais que vamos encontrar.',
     type: 'options',
     options: [
       { icon: '🌱', label: 'Até R$ 30 mil/mês',              sub: 'Fase de validação e crescimento inicial',    score: 75 },
@@ -1618,7 +1674,7 @@ const QUESTIONS = [
     id: 'tecnologia',
     label: 'Etapa 05 / 06',
     title: 'Como está a tecnologia na sua empresa hoje?',
-    desc: 'Queremos entender seu ponto de partida para não sugerir nada que seja complexo demais ou de menos.',
+    desc: 'Assim garantimos que as soluções que indicamos sejam práticas pro seu momento atual — sem prometer o que não faz sentido pra você.',
     type: 'options',
     options: [
       { icon: '📋', label: 'Usamos basicamente planilhas e papel',       sub: 'Muito a evoluir — o potencial é enorme',     score: 95 },
@@ -1631,23 +1687,23 @@ const QUESTIONS = [
   {
     id: 'contato',
     label: 'Etapa 06 / 06',
-    title: 'Para quem enviamos o diagnóstico completo?',
-    desc: 'Nosso especialista prepara um relatório personalizado e entra em contato para apresentar as soluções. Sem spam, prometemos.',
+    title: 'Onde você quer receber o seu diagnóstico?',
+    desc: 'Um especialista da BG Tech vai analisar suas respostas e entrar em contato via WhatsApp para uma conversa rápida — sem script, sem enrolação.',
     type: 'text',
     fields: [
       { id: 'nome',    placeholder: 'Seu nome completo',        type: 'text' },
       { id: 'empresa', placeholder: 'Nome da empresa',          type: 'text' },
-      { id: 'whatsapp',placeholder: 'WhatsApp (com DDD)',        type: 'text' },
+      { id: 'whatsapp',placeholder: 'WhatsApp (com DDD)',        type: 'tel' },
     ]
   }
 ];
 
 const LOADING_STEPS = [
-  { icon: '📊', text: 'Analisando perfil da empresa' },
-  { icon: '🔍', text: 'Mapeando gargalos operacionais' },
-  { icon: '💰', text: 'Calculando impacto financeiro' },
-  { icon: '🎯', text: 'Identificando oportunidades prioritárias' },
-  { icon: '📋', text: 'Gerando relatório personalizado' },
+  { icon: '📊', text: 'Mapeando o perfil do seu negócio' },
+  { icon: '🔍', text: 'Identificando onde está o custo oculto' },
+  { icon: '💰', text: 'Calculando quanto você pode recuperar' },
+  { icon: '🎯', text: 'Priorizando as ações com maior retorno' },
+  { icon: '📋', text: 'Preparando o seu diagnóstico personalizado' },
 ];
 
 // ═══════════════════════════════════════════
@@ -1692,7 +1748,7 @@ function renderQuestion() {
   }).join('');
 
   backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-  nextBtn.disabled = !answers[q.id] && q.type !== 'text';
+  nextBtn.disabled = answers[q.id] === undefined && q.type !== 'text';
 
   if (q.type === 'options') {
     wrap.innerHTML = `
@@ -1715,7 +1771,6 @@ function renderQuestion() {
       </div>
     `;
     nextBtn.textContent = currentStep === QUESTIONS.length - 1 ? 'Ver Diagnóstico' : 'Continuar';
-    nextBtn.innerHTML = (currentStep === QUESTIONS.length - 1 ? 'Ver Diagnóstico' : 'Continuar');
   } else {
     const vals = textValues;
     wrap.innerHTML = `
@@ -1727,7 +1782,9 @@ function renderQuestion() {
           <div class="text-input-wrap">
             <input class="text-input" id="field-${f.id}" type="${f.type}"
               placeholder="${f.placeholder}" value="${vals[f.id]||''}"
-              oninput="checkTextFields()" autocomplete="off">
+              oninput="checkTextFields()"
+              autocomplete="${{nome: 'name', empresa: 'organization', whatsapp: 'tel'}[f.id] || 'off'}"
+              inputmode="${f.type === 'tel' ? 'tel' : 'text'}">
           </div>
         `).join('')}
       </div>
@@ -1875,20 +1932,20 @@ function showResult() {
 
   let scoreDesc, scoreText;
   if (score >= 90) {
-    scoreDesc = 'Potencial Crítico de Transformação';
-    scoreText = `A ${empresa} apresenta um índice altíssimo de oportunidade. Isso significa que há ganhos imediatos e significativos esperando por tecnologia certa — e cada mês de atraso tem um custo real.`;
+    scoreDesc = 'Urgente: Você Está Perdendo Dinheiro Agora';
+    scoreText = `A ${empresa} tem um volume alto de dinheiro sendo desperdiçado em processos que a tecnologia pode resolver. Cada mês sem ação tem um custo real — e a gente já sabe por onde começar.`;
   } else if (score >= 80) {
-    scoreDesc = 'Alto Potencial de Otimização';
-    scoreText = `A ${empresa} tem uma base sólida, mas está deixando valor na mesa. Com as automações certas, é possível liberar capacidade operacional e aumentar a margem de lucro em semanas.`;
+    scoreDesc = 'Alto Potencial — Hora de Agir';
+    scoreText = `A ${empresa} está num ponto ideal para dar o próximo salto. Com os ajustes certos, é possível liberar tempo da equipe e aumentar a margem de lucro em poucas semanas.`;
   } else {
-    scoreDesc = 'Boas Oportunidades Identificadas';
-    scoreText = `A ${empresa} já evoluiu bem em tecnologia, mas identificamos pontos estratégicos onde a automação pode gerar retorno mensurável.`;
+    scoreDesc = 'Boas Oportunidades à Vista';
+    scoreText = `A ${empresa} já tem uma base boa de tecnologia. O trabalho agora é encontrar os pontos exatos de melhoria — e eles existem.`;
   }
 
   document.getElementById('score-desc').textContent = scoreDesc;
   document.getElementById('score-text').textContent = scoreText;
   document.getElementById('result-intro').textContent =
-    `Analisamos o perfil de ${setorName} com ${QUESTIONS[1].options[answers['tamanho']||1].label.toLowerCase()} e identificamos os pontos críticos abaixo.`;
+    `Olhamos de perto o perfil de ${setorName} com ${QUESTIONS[1].options[answers['tamanho'] ?? 1].label.toLowerCase()} e isto é o que encontramos:`;
 
   // Insights dinâmicos
   const insights = buildInsights(score, dorIdx, setorIdx);
@@ -1919,9 +1976,9 @@ function showResult() {
 
   // CTA
   document.getElementById('cta-heading').textContent =
-    `${nome}, vamos transformar esse diagnóstico em resultado real`;
+    `${nome}, a próxima etapa é uma conversa de 20 minutos.`;
   document.getElementById('cta-sub').textContent =
-    `Nossa equipe entra em contato em até 24h úteis para apresentar as soluções exatas para ${empresa}. Sem enrolação, sem pitch genérico — só o que faz sentido para o seu negócio.`;
+    `Um especialista da BG Tech vai te ligar em até 24h para conversar sobre o que encontramos no seu diagnóstico. Sem apresentação de vendas — só uma conversa honesta sobre o que faz sentido para ${empresa}.`;
 
   // Cursor
   setTimeout(() => {
@@ -1938,25 +1995,25 @@ function buildInsights(score, dorIdx, setorIdx) {
       icon: '⚡',
       label: 'Principal Gargalo',
       title: dorIdx !== undefined ? QUESTIONS[2].options[dorIdx].label : 'Processos manuais lentos',
-      text: 'Esse é o ponto de maior perda de produtividade identificado. Automatizar aqui gera retorno imediato e perceptível pela equipe.',
+      text: 'É aqui que a sua equipe perde mais tempo e energia. Resolver isso vai ser perceptível no dia a dia em menos de 30 dias.',
     },
     {
       icon: '💰',
       label: 'Impacto Financeiro Estimado',
       title: score >= 90 ? 'Perda mensal acima de R$ 15.000' : score >= 80 ? 'Perda mensal entre R$ 5k–15k' : 'Perda mensal entre R$ 2k–8k',
-      text: 'Estimativa baseada em benchmarks do seu segmento e porte. O valor exato será calculado na nossa conversa.',
+      text: 'Estimativa baseada em empresas parecidas com a sua. Vamos afinar esse número juntos na nossa conversa.',
     },
     {
       icon: '🎯',
       label: 'Prioridade de Ação',
       title: score >= 90 ? 'Urgente — Aja nos próximos 30 dias' : 'Alta — Janela de oportunidade aberta',
-      text: 'Empresas do seu porte e segmento que não automatizam nos próximos 6 meses tendem a perder competitividade de forma expressiva.',
+      text: 'Empresas parecidas com a sua que tomaram ação agora estão operando com muito menos custo e muito mais resultado. A janela está aberta.',
     },
     {
       icon: '📈',
-      label: 'Tempo para ROI',
-      title: 'Retorno esperado em 4 a 8 semanas',
-      text: 'Implementamos soluções que mostram resultado rápido. Você não vai esperar 6 meses para perceber a diferença no operacional.',
+      label: 'Prazo para Resultado',
+      title: 'Você sente a diferença em 4 a 8 semanas',
+      text: 'Não trabalhamos com projetos de 6 meses para ver resultado. Você vai sentir a diferença no operacional em semanas — não anos.',
     },
   ];
   return insights;
@@ -1978,7 +2035,47 @@ function buildOpportunities(ans) {
 }
 
 // ═══════════════════════════════════════════
-// TOAST
+// ENVIO DO LEAD — abre WhatsApp com todos os dados
+// ═══════════════════════════════════════════
+function submitLead() {
+  const nome    = textValues.nome     || 'Lead';
+  const empresa = textValues.empresa  || '—';
+  const wpp     = textValues.whatsapp || '—';
+
+  const setorIdx   = answers['setor'];
+  const tamanhoIdx = answers['tamanho'];
+  const dorIdx     = answers['dor'];
+  const fatIdx     = answers['faturamento'];
+  const tecIdx     = answers['tecnologia'];
+
+  const setor   = setorIdx   !== undefined ? QUESTIONS[0].options[setorIdx].label   : '—';
+  const tamanho = tamanhoIdx !== undefined ? QUESTIONS[1].options[tamanhoIdx].label  : '—';
+  const dor     = dorIdx     !== undefined ? QUESTIONS[2].options[dorIdx].label     : '—';
+  const fat     = fatIdx     !== undefined ? QUESTIONS[3].options[fatIdx].label     : '—';
+  const tec     = tecIdx     !== undefined ? QUESTIONS[4].options[tecIdx].label     : '—';
+
+  const msg = [
+    '🔔 *Novo Lead — BG Tech Diagnóstico*',
+    '',
+    `👤 *Nome:* ${nome}`,
+    `🏢 *Empresa:* ${empresa}`,
+    `📱 *WhatsApp do lead:* ${wpp}`,
+    '',
+    `📊 *Segmento:* ${setor}`,
+    `👥 *Tamanho da equipe:* ${tamanho}`,
+    `⚡ *Principal dor:* ${dor}`,
+    `💰 *Faturamento mensal:* ${fat}`,
+    `🖥️ *Maturidade tech:* ${tec}`,
+  ].join('\n');
+
+  const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+
+  showToast();
+}
+
+// ═══════════════════════════════════════════
+// TOAST NOTIFICATION
 // ═══════════════════════════════════════════
 function showToast() {
   const t = document.getElementById('toast');
