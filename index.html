@@ -13,6 +13,7 @@
    RESET & TOKENS — Manual BG Tech
 ═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button, .option-card { touch-action: manipulation; }
 
 :root {
   --navy:    #0D1B4B;
@@ -43,6 +44,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   cursor: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── Custom Cursor ─────────────────────── */
@@ -1319,9 +1321,39 @@ header {
 
   .result-cta { grid-template-columns: 1fr; padding: 24px 16px; gap: 20px; text-align: center; }
   .cta-action { width: 100%; }
-  .btn-cta-final { width: 100%; padding: 16px 24px; font-size: 12px; }
+  .btn-cta-final { width: 100%; padding: 18px 24px; font-size: 14px; }
 
   .toast { left: 16px; right: 16px; bottom: 16px; }
+
+  /* Use small-viewport height unit so screens don't overflow behind browser chrome */
+  #screen-intro, #screen-quiz, #screen-loading, #screen-result { min-height: 100svh; }
+
+  /* Ensure btn-back meets 44px minimum touch target */
+  .btn-back { min-height: 44px; padding: 10px 0; }
+
+  /* Scale down loading orb on small screens */
+  .loading-orb { width: 80px; height: 80px; margin-bottom: 32px; }
+  .orb-icon { font-size: 26px; }
+  .loading-title { font-size: 18px; }
+
+  /* Hide large decorative hex shapes — reduce GPU paint on mobile */
+  .hex-deco { display: none; }
+}
+
+/* ─── Touch: disable hover-persist transforms & add tap feedback ─── */
+@media (hover: none), (pointer: coarse) {
+  /* Disable hover-state transforms that persist awkwardly after tap */
+  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.08); background: rgba(13,27,75,0.5); }
+  .option-card:hover::before { transform: scaleY(0); }
+  .trust-item:hover { transform: none; border-color: var(--cyan20); box-shadow: none; }
+  .btn-primary:hover,
+  .btn-next:not(:disabled):hover,
+  .btn-cta-final:hover { transform: none; box-shadow: none; }
+  /* Tactile active-state feedback for tap */
+  .btn-primary:active,
+  .btn-next:not(:disabled):active,
+  .btn-cta-final:active { transform: scale(0.97); }
+  .option-card:active { background: rgba(0,200,255,0.06); border-color: var(--cyan40); }
 }
 </style>
 </head>
@@ -1543,7 +1575,8 @@ document.querySelectorAll('button, .option-card').forEach(el => {
 // PARTÍCULAS
 // ═══════════════════════════════════════════
 const pc = document.getElementById('particles');
-for (let i = 0; i < 25; i++) {
+const particleCount = window.innerWidth <= 640 ? 8 : 25;
+for (let i = 0; i < particleCount; i++) {
   const p = document.createElement('div');
   p.className = 'particle';
   p.style.left = Math.random() * 100 + '%';
@@ -1638,7 +1671,7 @@ const QUESTIONS = [
     fields: [
       { id: 'nome',    placeholder: 'Seu nome completo',        type: 'text' },
       { id: 'empresa', placeholder: 'Nome da empresa',          type: 'text' },
-      { id: 'whatsapp',placeholder: 'WhatsApp (com DDD)',        type: 'text' },
+      { id: 'whatsapp',placeholder: 'WhatsApp (com DDD)',        type: 'tel' },
     ]
   }
 ];
@@ -1728,7 +1761,9 @@ function renderQuestion() {
           <div class="text-input-wrap">
             <input class="text-input" id="field-${f.id}" type="${f.type}"
               placeholder="${f.placeholder}" value="${vals[f.id]||''}"
-              oninput="checkTextFields()" autocomplete="off">
+              oninput="checkTextFields()"
+              autocomplete="${{nome: 'name', empresa: 'organization', whatsapp: 'tel'}[f.id] || 'off'}"
+              inputmode="${f.type === 'tel' ? 'tel' : 'text'}">
           </div>
         `).join('')}
       </div>
