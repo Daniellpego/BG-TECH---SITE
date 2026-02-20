@@ -47,7 +47,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 /* ═══════════════════════════════════════════
@@ -69,7 +69,7 @@ button, .option-card { touch-action: manipulation; }
   --cyan60:  rgba(12,151,243,0.60);
   --glow:    0 0 16px rgba(99,229,253,0.28);
   --glow-lg: 0 0 28px rgba(99,229,253,0.20), 0 0 56px rgba(99,229,253,0.08);
-  --font-display: 'Orbitron', monospace;
+  --font-display: 'Sora', sans-serif;
   --font-ui:      'Exo 2', sans-serif;
   --font-body:    'Inter', sans-serif;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -187,7 +187,7 @@ header {
 .logo-mark {
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.12em;
   color: var(--white);
   display: flex;
@@ -207,7 +207,7 @@ header {
 .logo-name {
   font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--white);
 }
@@ -243,8 +243,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 100px 48px 80px;
+  justify-content: flex-start;
+  padding: 140px 48px 80px;
   text-align: center;
   position: relative;
 }
@@ -265,7 +265,7 @@ header {
 .intro-headline {
   font-family: var(--font-display);
   font-size: clamp(36px, 6vw, 72px);
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--white);
@@ -317,8 +317,8 @@ header {
 .scan-card {
   width: 100%;
   max-width: 580px;
-  background: rgba(6,32,93,0.5);
-  border: 1px solid var(--cyan20);
+  background: rgba(6,32,93,0.65);
+  border: 1px solid var(--cyan40);
   border-radius: 4px;
   padding: 36px 40px;
   margin-bottom: 48px;
@@ -529,7 +529,7 @@ header {
 .trust-number {
   font-family: var(--font-display);
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--cyan);
   text-shadow: 0 0 12px rgba(12,151,243,0.28);
   line-height: 1;
@@ -546,6 +546,213 @@ header {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   COMO FUNCIONA (3 passos)
+═══════════════════════════════════════════ */
+.how-section {
+  width: 100%;
+  max-width: 860px;
+  margin-top: 64px;
+  text-align: center;
+}
+.how-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 40px;
+}
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.how-step {
+  background: rgba(6,32,93,0.5);
+  border: 1px solid var(--cyan20);
+  border-radius: 6px;
+  padding: 32px 20px;
+  text-align: center;
+}
+.how-step-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--cyan);
+  text-shadow: var(--glow);
+  margin-bottom: 12px;
+}
+.how-step-title {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.how-step-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(240,248,255,0.6);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   DEPOIMENTOS — fundo mais claro
+═══════════════════════════════════════════ */
+.testimonials-section {
+  width: 100%;
+  margin-top: 64px;
+  padding: 64px 0;
+  background: linear-gradient(180deg, rgba(20,50,120,0.55) 0%, rgba(24,60,140,0.4) 100%);
+  border-top: 1px solid rgba(12,151,243,0.18);
+  border-bottom: 1px solid rgba(12,151,243,0.18);
+}
+.testimonials-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.testimonials-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 40px;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.testimonial-card {
+  background: rgba(240,248,255,0.06);
+  border: 1px solid rgba(240,248,255,0.1);
+  border-radius: 6px;
+  padding: 28px 24px;
+  position: relative;
+}
+.testimonial-card::before {
+  content: '"';
+  font-family: Georgia, serif;
+  font-size: 48px;
+  color: var(--cyan);
+  opacity: 0.3;
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  line-height: 1;
+}
+.testimonial-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(240,248,255,0.8);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 20px;
+  margin-top: 8px;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testimonial-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cyan20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 1px solid var(--cyan20);
+}
+.testimonial-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.testimonial-name {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+}
+.testimonial-role {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(240,248,255,0.5);
+}
+
+/* ═══════════════════════════════════════════
+   SEÇÃO EQUIPE — humanizar
+═══════════════════════════════════════════ */
+.team-section {
+  width: 100%;
+  max-width: 860px;
+  margin-top: 64px;
+  text-align: center;
+}
+.team-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.team-sub {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: rgba(240,248,255,0.6);
+  line-height: 1.6;
+  margin-bottom: 36px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.team-grid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 200px;
+}
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan20), var(--tech));
+  border: 2px solid var(--cyan40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--glow);
+}
+.team-name {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+}
+.team-role {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(240,248,255,0.5);
+  line-height: 1.4;
 }
 
 /* ═══════════════════════════════════════════
@@ -579,29 +786,40 @@ header {
 .step-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 60px;
-  opacity: 0.7;
+  width: 100%;
+  max-width: 680px;
 }
-.step-dot {
-  width: 8px; height: 8px;
-  border: 1.5px solid var(--cyan40);
-  border-radius: 50%;
-  transition: all 0.4s ease;
+.step-progress-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.step-dot.active {
-  background: var(--cyan);
-  border-color: var(--cyan);
-  box-shadow: 0 0 10px var(--cyan60);
-  transform: scale(1.3);
+.step-progress-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
 }
-.step-dot.done {
-  background: var(--tech);
-  border-color: var(--tech);
+.step-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.6));
+  border-radius: 3px;
+  box-shadow: 0 0 8px var(--cyan40);
+  transition: width 0.5s var(--ease-out-expo);
 }
-.step-line {
-  width: 32px; height: 1px;
-  background: var(--cyan20);
+.step-progress-pct {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(240,248,255,0.55);
+  white-space: nowrap;
 }
 
 /* ─── Pergunta ──────────────────────────── */
@@ -642,7 +860,7 @@ header {
 }
 .option-card {
   background: rgba(6,32,93,0.5);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 3px;
   padding: 20px 24px;
   display: flex;
@@ -960,7 +1178,7 @@ header {
 .result-title {
   font-family: var(--font-display);
   font-size: clamp(28px, 5vw, 48px);
-  font-weight: 900;
+  font-weight: 800;
   color: var(--white);
   line-height: 1.1;
   margin-bottom: 14px;
@@ -1035,7 +1253,7 @@ header {
 .score-value {
   font-family: var(--font-display);
   font-size: 32px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--cyan);
   text-shadow: var(--glow);
   line-height: 1;
@@ -1311,6 +1529,93 @@ header {
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast-dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; box-shadow: var(--glow); }
 
+/* ═══════════════════════════════════════════
+   TELA DE OBRIGADO (THANK YOU)
+═══════════════════════════════════════════ */
+#screen-thankyou {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 48px 80px;
+  text-align: center;
+}
+.thankyou-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: float-icon 3s ease-in-out infinite;
+}
+.thankyou-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.thankyou-title .accent {
+  color: var(--cyan);
+  text-shadow: var(--glow);
+}
+.thankyou-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: rgba(240,248,255,0.72);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+.thankyou-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 40px;
+  text-align: left;
+}
+.thankyou-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(6,32,93,0.5);
+  border: 1px solid var(--cyan20);
+  border-radius: 6px;
+  padding: 18px 20px;
+}
+.thankyou-step-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.thankyou-step-text {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(240,248,255,0.8);
+}
+.btn-thankyou-wpp {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #25D366;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s var(--ease-spring);
+  text-decoration: none;
+}
+.btn-thankyou-wpp:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(37,211,102,0.3);
+}
+
 /* ─── Touch devices: restore default cursor ─── */
 @media (hover: none), (pointer: coarse) {
   *, *::before, *::after { cursor: auto !important; }
@@ -1321,7 +1626,7 @@ header {
 /* ─── Tablet breakpoint ─── */
 @media (max-width: 900px) {
   header { padding: 20px 28px; }
-  #screen-intro, #screen-quiz, #screen-loading, #screen-result { padding: 100px 28px 80px; }
+  #screen-intro, #screen-quiz, #screen-loading, #screen-result, #screen-thankyou { padding: 100px 28px 80px; }
   .score-banner { gap: 28px; padding: 28px; }
   .result-cta { padding: 28px; gap: 24px; }
 }
@@ -1336,7 +1641,7 @@ header {
   .header-tag { font-size: 9px; padding: 5px 10px; letter-spacing: 0.15em; }
 
   #screen-intro { padding: 90px 16px 60px; }
-  #screen-quiz, #screen-loading, #screen-result { padding: 90px 16px 60px; }
+  #screen-quiz, #screen-loading, #screen-result, #screen-thankyou { padding: 90px 16px 60px; }
 
   #screen-result { overflow-wrap: break-word; word-wrap: break-word; }
 
@@ -1365,10 +1670,21 @@ header {
   .trust-number { font-size: 22px; }
   .trust-label { font-size: 10px; }
 
+  .how-steps { grid-template-columns: 1fr; gap: 16px; }
+  .how-step { padding: 24px 16px; }
+
+  .testimonials-inner { padding: 0 16px; }
+  .testimonials-grid { grid-template-columns: 1fr; gap: 16px; }
+  .testimonial-card { padding: 24px 20px; }
+
+  .team-grid { gap: 24px; }
+  .team-avatar { width: 64px; height: 64px; font-size: 24px; }
+
   .btn-primary { padding: 16px 32px; font-size: 13px; width: 100%; text-align: center; }
 
-  .step-indicator { gap: 4px; flex-wrap: wrap; justify-content: center; margin-bottom: 36px; }
-  .step-line { width: 16px; }
+  .step-indicator { gap: 8px; margin-bottom: 36px; }
+  .step-progress-label { font-size: 10px; }
+  .step-progress-pct { font-size: 10px; }
 
   .question-wrap { max-width: 100%; }
   .question-desc { margin-bottom: 28px; }
@@ -1402,7 +1718,7 @@ header {
   .toast { left: 16px; right: 16px; bottom: 16px; }
 
   /* Use small-viewport height unit so screens don't overflow behind browser chrome */
-  #screen-intro, #screen-quiz, #screen-loading, #screen-result { min-height: 100svh; }
+  #screen-intro, #screen-quiz, #screen-loading, #screen-result, #screen-thankyou { min-height: 100svh; }
 
   /* Ensure btn-back meets 44px minimum touch target */
   .btn-back { min-height: 44px; padding: 10px 0; }
@@ -1419,7 +1735,7 @@ header {
 /* ─── Touch: disable hover-persist transforms & add tap feedback ─── */
 @media (hover: none), (pointer: coarse) {
   /* Disable hover-state transforms that persist awkwardly after tap */
-  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.08); background: rgba(6,32,93,0.5); }
+  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.15); background: rgba(6,32,93,0.5); }
   .option-card:hover::before { transform: scaleY(0); }
   .trust-item:hover { transform: none; border-color: var(--cyan20); box-shadow: none; }
   .btn-primary:hover,
@@ -1596,6 +1912,85 @@ header {
         </div>
       </div>
     </div>
+
+    <!-- Como funciona — 3 passos -->
+    <div class="how-section">
+      <h2 class="how-title">Como funciona</h2>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-num">1</div>
+          <div class="how-step-title">Responda 6 perguntas</div>
+          <div class="how-step-desc">São rápidas e práticas — sobre sua empresa, equipe e principais desafios do dia a dia.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">2</div>
+          <div class="how-step-title">Receba seu diagnóstico</div>
+          <div class="how-step-desc">Nosso sistema analisa as respostas e mostra onde sua empresa está perdendo dinheiro.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">3</div>
+          <div class="how-step-title">Fale com um especialista</div>
+          <div class="how-step-desc">Um consultor da BG Tech entra em contato para apresentar soluções sob medida para o seu negócio.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quem somos — humanizar -->
+    <div class="team-section">
+      <h2 class="team-title">Quem está por trás da BG Tech</h2>
+      <p class="team-sub">Somos especialistas em automação e tecnologia para PMEs. Nosso time combina experiência técnica com visão de negócio.</p>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" role="img" aria-label="Iniciais de Bruno">B</div>
+          <span class="team-name">Bruno</span>
+          <span class="team-role">Co-fundador &amp; Tecnologia</span>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" role="img" aria-label="Iniciais de Gabriel">G</div>
+          <span class="team-name">Gabriel</span>
+          <span class="team-role">Co-fundador &amp; Estratégia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Depoimentos — seção com fundo mais claro -->
+    <div class="testimonials-section">
+      <div class="testimonials-inner">
+        <h2 class="testimonials-title">O que nossos clientes dizem</h2>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <p class="testimonial-text">Em 2 semanas já tínhamos processos automatizados que economizaram mais de 40 horas por mês da equipe. O diagnóstico acertou em cheio.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" role="img" aria-label="Avatar de Carlos M.">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Carlos M.</span>
+                <span class="testimonial-role">Diretor Operacional — Comércio Varejista</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p class="testimonial-text">Nossos sistemas não se comunicavam e perdíamos dados todo dia. A BG Tech integrou tudo e reduziu nossos erros em 90%.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" role="img" aria-label="Avatar de Fernanda L.">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Fernanda L.</span>
+                <span class="testimonial-role">Sócia-proprietária — Clínica de Saúde</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p class="testimonial-text">O atendimento foi consultivo de verdade. Entenderam nossas dores antes de propor qualquer solução. Recomendo para qualquer PME.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" role="img" aria-label="Avatar de Ricardo A.">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Ricardo A.</span>
+                <span class="testimonial-role">CEO — Escritório de Contabilidade</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ═══════════════════════════════════
@@ -1668,6 +2063,30 @@ header {
         <span class="cta-trust">Você recebe contato em até 24h · Sem compromisso de compra</span>
       </div>
     </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       TELA 5 — OBRIGADO
+  ═══════════════════════════════════ -->
+  <section id="screen-thankyou" class="screen">
+    <div class="thankyou-icon" role="img" aria-label="Sucesso">✅</div>
+    <h2 class="thankyou-title">Pronto, <span class="accent" id="thankyou-name">seu diagnóstico</span> foi enviado!</h2>
+    <p class="thankyou-sub">Nosso time já recebeu os dados e um especialista da BG Tech vai entrar em contato em até 24h úteis.</p>
+    <div class="thankyou-steps">
+      <div class="thankyou-step">
+        <div class="thankyou-step-icon" aria-hidden="true">📱</div>
+        <div class="thankyou-step-text">Você vai receber uma mensagem no WhatsApp com os próximos passos</div>
+      </div>
+      <div class="thankyou-step">
+        <div class="thankyou-step-icon" aria-hidden="true">🗓️</div>
+        <div class="thankyou-step-text">O especialista vai agendar uma conversa rápida de 15 min — sem compromisso</div>
+      </div>
+      <div class="thankyou-step">
+        <div class="thankyou-step-icon" aria-hidden="true">🎯</div>
+        <div class="thankyou-step-text">Juntos, vamos encontrar a melhor solução para a sua empresa</div>
+      </div>
+    </div>
+    <a class="btn-thankyou-wpp" id="thankyou-wpp-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Abrir conversa no WhatsApp">💬 Falar no WhatsApp agora</a>
   </section>
 
 </div>
@@ -1815,6 +2234,7 @@ const QUESTIONS = [
     fields: [
       { id: 'nome',    placeholder: 'Seu nome completo',        type: 'text' },
       { id: 'empresa', placeholder: 'Nome da empresa',          type: 'text' },
+      { id: 'email',   placeholder: 'Seu melhor e-mail',        type: 'email' },
       { id: 'whatsapp',placeholder: 'WhatsApp (com DDD)',        type: 'tel' },
     ]
   }
@@ -1837,7 +2257,7 @@ let textValues = {};
 
 function getScreen(id) { return document.getElementById('screen-' + id); }
 function show(id) {
-  ['intro','quiz','loading','result'].forEach(s => {
+  ['intro','quiz','loading','result','thankyou'].forEach(s => {
     const el = getScreen(s);
     el.style.display = (s === id) ? 'flex' : 'none';
   });
@@ -1862,12 +2282,16 @@ function renderQuestion() {
   const nextBtn = document.getElementById('btn-next');
   const backBtn = document.getElementById('btn-back');
 
-  // Indicator
+  // Indicator — progress bar with label
   const ind = document.getElementById('step-indicator');
-  ind.innerHTML = QUESTIONS.map((_, i) => {
-    let cls = i < currentStep ? 'done' : (i === currentStep ? 'active' : '');
-    return (i > 0 ? '<div class="step-line"></div>' : '') + `<div class="step-dot ${cls}"></div>`;
-  }).join('');
+  const pctDone = Math.round(((currentStep + 1) / QUESTIONS.length) * 100);
+  ind.innerHTML = `
+    <span class="step-progress-label">Etapa ${currentStep + 1} de ${QUESTIONS.length}</span>
+    <div class="step-progress-track">
+      <div class="step-progress-fill" style="width:${pctDone}%"></div>
+    </div>
+    <span class="step-progress-pct">${pctDone}%</span>
+  `;
 
   backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
   nextBtn.disabled = answers[q.id] === undefined && q.type !== 'text';
@@ -1905,8 +2329,8 @@ function renderQuestion() {
             <input class="text-input" id="field-${f.id}" type="${f.type}"
               placeholder="${f.placeholder}" value="${vals[f.id]||''}"
               oninput="checkTextFields()"
-              autocomplete="${{nome: 'name', empresa: 'organization', whatsapp: 'tel'}[f.id] || 'off'}"
-              inputmode="${f.type === 'tel' ? 'tel' : 'text'}">
+              autocomplete="${{nome: 'name', empresa: 'organization', email: 'email', whatsapp: 'tel'}[f.id] || 'off'}"
+              inputmode="${f.type === 'tel' ? 'tel' : f.type === 'email' ? 'email' : 'text'}">
           </div>
         `).join('')}
       </div>
@@ -1950,6 +2374,7 @@ function checkTextFields() {
 
 function nextStep() {
   const q = QUESTIONS[currentStep];
+  if (q.type === 'options' && answers[q.id] === undefined) return;
   if (q.type === 'text') {
     q.fields.forEach(f => {
       textValues[f.id] = document.getElementById('field-' + f.id)?.value.trim() || '';
@@ -2191,6 +2616,7 @@ function buildOpportunities(ans) {
 function submitLead() {
   const nome    = textValues.nome     || 'Lead';
   const empresa = textValues.empresa  || '—';
+  const email   = textValues.email    || '—';
   const wpp     = textValues.whatsapp || '—';
 
   const setorIdx   = answers['setor'];
@@ -2210,6 +2636,7 @@ function submitLead() {
     '',
     `👤 *Nome:* ${nome}`,
     `🏢 *Empresa:* ${empresa}`,
+    `📧 *E-mail:* ${email}`,
     `📱 *WhatsApp do lead:* ${wpp}`,
     '',
     `📊 *Segmento:* ${setor}`,
@@ -2237,7 +2664,12 @@ function submitLead() {
 
   window.open(url, '_blank', 'noopener,noreferrer');
 
-  showToast();
+  // Show thank you screen
+  const firstName = textValues.nome ? textValues.nome.split(' ')[0] : '';
+  document.getElementById('thankyou-name').textContent = firstName || 'seu diagnóstico';
+  document.getElementById('thankyou-wpp-link').href = url;
+  show('thankyou');
+  document.getElementById('progress-bar').style.width = '100%';
 }
 
 // ═══════════════════════════════════════════
