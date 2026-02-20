@@ -20,18 +20,18 @@
 button, .option-card { touch-action: manipulation; }
 
 :root {
-  --navy:    #0D1B4B;
-  --cyan:    #00C8FF;
+  --navy:    #06205D;
+  --cyan:    #0C97F3;
   --white:   #F0F8FF;
-  --dark-bg: #08102E;
-  --tech:    #1A3A8F;
+  --dark-bg: #000B34;
+  --tech:    #174D9F;
   --lgray:   #E8EDF5;
-  --cyan10:  rgba(0,200,255,0.10);
-  --cyan20:  rgba(0,200,255,0.20);
-  --cyan40:  rgba(0,200,255,0.40);
-  --cyan60:  rgba(0,200,255,0.60);
-  --glow:    0 0 24px rgba(0,200,255,0.55);
-  --glow-lg: 0 0 48px rgba(0,200,255,0.40), 0 0 96px rgba(0,200,255,0.15);
+  --cyan10:  rgba(12,151,243,0.10);
+  --cyan20:  rgba(12,151,243,0.20);
+  --cyan40:  rgba(12,151,243,0.40);
+  --cyan60:  rgba(12,151,243,0.60);
+  --glow:    0 0 24px rgba(99,229,253,0.55);
+  --glow-lg: 0 0 48px rgba(99,229,253,0.40), 0 0 96px rgba(99,229,253,0.15);
   --font-display: 'Orbitron', monospace;
   --font-ui:      'Exo 2', sans-serif;
   --font-body:    'Inter', sans-serif;
@@ -160,7 +160,7 @@ header {
 .logo-mark span { color: var(--cyan); text-shadow: var(--glow); }
 .logo-hex {
   width: 36px; height: 36px;
-  filter: drop-shadow(0 0 8px rgba(0,200,255,0.7));
+  filter: drop-shadow(0 0 8px rgba(12,151,243,0.7));
 }
 .header-tag {
   font-family: var(--font-ui);
@@ -256,7 +256,7 @@ header {
 .scan-card {
   width: 100%;
   max-width: 580px;
-  background: rgba(13,27,75,0.5);
+  background: rgba(6,32,93,0.5);
   border: 1px solid var(--cyan20);
   border-radius: 4px;
   padding: 36px 40px;
@@ -321,7 +321,7 @@ header {
 }
 .scan-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), rgba(0,200,255,0.4));
+  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.4));
   border-radius: 2px;
   animation: bar-fill 2s var(--ease-out-expo) forwards;
   transform-origin: left;
@@ -393,7 +393,7 @@ header {
   text-align: center;
   gap: 8px;
   font-family: var(--font-ui);
-  background: linear-gradient(145deg, rgba(13,27,75,0.7) 0%, rgba(8,16,46,0.85) 100%);
+  background: linear-gradient(145deg, rgba(6,32,93,0.7) 0%, rgba(8,16,46,0.85) 100%);
   border: 1px solid var(--cyan20);
   border-radius: 6px;
   padding: 28px 18px 22px;
@@ -429,7 +429,7 @@ header {
   position: absolute;
   top: 0; left: -75%;
   width: 50%; height: 100%;
-  background: linear-gradient(105deg, transparent 40%, rgba(0,200,255,0.07) 50%, transparent 60%);
+  background: linear-gradient(105deg, transparent 40%, rgba(12,151,243,0.07) 50%, transparent 60%);
   animation: trust-shimmer 4s ease-in-out infinite;
 }
 .trust-item:nth-child(2)::after { animation-delay: 1.3s; }
@@ -442,7 +442,7 @@ header {
 .trust-item:hover {
   transform: translateY(-6px) rotateX(-2deg) scale(1.03);
   border-color: var(--cyan60);
-  box-shadow: 0 12px 36px rgba(0,200,255,0.15), 0 0 20px rgba(0,200,255,0.1);
+  box-shadow: 0 12px 36px rgba(12,151,243,0.15), 0 0 20px rgba(12,151,243,0.1);
 }
 
 .trust-icon {
@@ -453,16 +453,16 @@ header {
   font-size: 20px;
   border: 1px solid var(--cyan20);
   border-radius: 50%;
-  background: rgba(0,200,255,0.06);
+  background: rgba(12,151,243,0.06);
   margin-bottom: 4px;
-  box-shadow: 0 0 12px rgba(0,200,255,0.1);
+  box-shadow: 0 0 12px rgba(12,151,243,0.1);
   animation: trust-icon-glow 3s ease-in-out infinite;
 }
 .trust-item:nth-child(2) .trust-icon { animation-delay: 1s; }
 .trust-item:nth-child(3) .trust-icon { animation-delay: 2s; }
 @keyframes trust-icon-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(0,200,255,0.08); }
-  50%      { box-shadow: 0 0 20px rgba(0,200,255,0.25), 0 0 40px rgba(0,200,255,0.08); }
+  0%, 100% { box-shadow: 0 0 8px rgba(12,151,243,0.08); }
+  50%      { box-shadow: 0 0 20px rgba(12,151,243,0.25), 0 0 40px rgba(12,151,243,0.08); }
 }
 
 .trust-number {
@@ -470,7 +470,7 @@ header {
   font-size: 28px;
   font-weight: 900;
   color: var(--cyan);
-  text-shadow: 0 0 18px rgba(0,200,255,0.5);
+  text-shadow: 0 0 18px rgba(12,151,243,0.5);
   line-height: 1;
 }
 .trust-label {
@@ -509,7 +509,7 @@ header {
 }
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), rgba(0,200,255,0.6));
+  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.6));
   box-shadow: 0 0 12px var(--cyan60);
   transition: width 0.6s var(--ease-out-expo);
 }
@@ -580,7 +580,7 @@ header {
   gap: 12px;
 }
 .option-card {
-  background: rgba(13,27,75,0.5);
+  background: rgba(6,32,93,0.5);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 3px;
   padding: 20px 24px;
@@ -603,13 +603,13 @@ header {
 }
 .option-card:hover {
   border-color: var(--cyan40);
-  background: rgba(0,200,255,0.06);
+  background: rgba(12,151,243,0.06);
   transform: translateX(4px);
 }
 .option-card:hover::before { transform: scaleY(1); }
 .option-card.selected {
   border-color: var(--cyan);
-  background: rgba(0,200,255,0.10);
+  background: rgba(12,151,243,0.10);
   transform: translateX(6px);
 }
 .option-card.selected::before { transform: scaleY(1); }
@@ -624,13 +624,13 @@ header {
   font-size: 20px;
   flex-shrink: 0;
   transition: all 0.3s ease;
-  background: rgba(0,200,255,0.05);
+  background: rgba(12,151,243,0.05);
 }
 .option-card.selected .option-icon,
 .option-card:hover .option-icon {
   border-color: var(--cyan);
   background: var(--cyan10);
-  box-shadow: 0 0 12px rgba(0,200,255,0.2);
+  box-shadow: 0 0 12px rgba(12,151,243,0.2);
 }
 
 .option-info { flex: 1; }
@@ -672,7 +672,7 @@ header {
 .text-input-wrap { position: relative; }
 .text-input {
   width: 100%;
-  background: rgba(13,27,75,0.5);
+  background: rgba(6,32,93,0.5);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 3px;
   padding: 20px 24px;
@@ -686,7 +686,7 @@ header {
 .text-input::placeholder { color: rgba(240,248,255,0.25); }
 .text-input:focus {
   border-color: var(--cyan60);
-  box-shadow: 0 0 0 3px rgba(0,200,255,0.08);
+  box-shadow: 0 0 0 3px rgba(12,151,243,0.08);
 }
 .char-count {
   position: absolute;
@@ -920,7 +920,7 @@ header {
 
 /* ─── Score principal ───────────────────── */
 .score-banner {
-  background: linear-gradient(135deg, rgba(13,27,75,0.8) 0%, rgba(26,58,143,0.5) 100%);
+  background: linear-gradient(135deg, rgba(6,32,93,0.8) 0%, rgba(26,58,143,0.5) 100%);
   border: 1px solid var(--cyan20);
   border-radius: 4px;
   padding: 40px;
@@ -960,7 +960,7 @@ header {
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
   transition: stroke-dashoffset 2s var(--ease-out-expo) 0.5s;
-  filter: drop-shadow(0 0 4px rgba(0,200,255,0.7));
+  filter: drop-shadow(0 0 4px rgba(12,151,243,0.7));
 }
 .score-number {
   position: absolute;
@@ -1015,7 +1015,7 @@ header {
   margin-bottom: 32px;
 }
 .insight-card {
-  background: rgba(13,27,75,0.4);
+  background: rgba(6,32,93,0.4);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 3px;
   padding: 24px;
@@ -1062,7 +1062,7 @@ header {
 
 /* ─── Barra de oportunidades ────────────── */
 .opportunities {
-  background: rgba(13,27,75,0.4);
+  background: rgba(6,32,93,0.4);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 3px;
   padding: 32px;
@@ -1113,7 +1113,7 @@ header {
   transform-origin: left;
   transform: scaleX(0);
 }
-.opp-bar.high    { background: linear-gradient(90deg, var(--cyan), rgba(0,200,255,0.5)); }
+.opp-bar.high    { background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.5)); }
 .opp-bar.medium  { background: linear-gradient(90deg, #3B82F6, rgba(59,130,246,0.5)); }
 .opp-bar.low     { background: linear-gradient(90deg, #6366F1, rgba(99,102,241,0.5)); }
 .opp-percent {
@@ -1229,7 +1229,7 @@ header {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  background: rgba(13,27,75,0.95);
+  background: rgba(6,32,93,0.95);
   border: 1px solid var(--cyan40);
   border-radius: 3px;
   padding: 14px 20px;
@@ -1346,7 +1346,7 @@ header {
 /* ─── Touch: disable hover-persist transforms & add tap feedback ─── */
 @media (hover: none), (pointer: coarse) {
   /* Disable hover-state transforms that persist awkwardly after tap */
-  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.08); background: rgba(13,27,75,0.5); }
+  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.08); background: rgba(6,32,93,0.5); }
   .option-card:hover::before { transform: scaleY(0); }
   .trust-item:hover { transform: none; border-color: var(--cyan20); box-shadow: none; }
   .btn-primary:hover,
@@ -1356,7 +1356,7 @@ header {
   .btn-primary:active,
   .btn-next:not(:disabled):active,
   .btn-cta-final:active { transform: scale(0.97); }
-  .option-card:active { background: rgba(0,200,255,0.06); border-color: var(--cyan40); }
+  .option-card:active { background: rgba(12,151,243,0.06); border-color: var(--cyan40); }
 }
 
 /* ─── Prefer reduced motion: collapse animations/transitions ─── */
@@ -1381,10 +1381,10 @@ header {
 
 <!-- Hexágonos decorativos -->
 <div class="hex-deco" style="width:400px;height:400px;top:-100px;right:-100px;">
-  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#00C8FF" stroke-width="1"/></svg>
+  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0C97F3" stroke-width="1"/></svg>
 </div>
 <div class="hex-deco" style="width:300px;height:300px;bottom:50px;left:-80px;">
-  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#00C8FF" stroke-width="1"/></svg>
+  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0C97F3" stroke-width="1"/></svg>
 </div>
 
 <!-- Barra de progresso -->
@@ -1393,13 +1393,7 @@ header {
 <!-- Header -->
 <header>
   <div class="logo-mark">
-    <svg class="logo-hex" viewBox="0 0 40 40" fill="none">
-      <polygon points="20,2 36,11 36,29 20,38 4,29 4,11"
-        fill="#0D1B4B" stroke="#00C8FF" stroke-width="1.5"/>
-      <text x="20" y="26" text-anchor="middle" font-family="Orbitron" font-size="12"
-        font-weight="900" fill="#00C8FF">BG</text>
-    </svg>
-    BG <span>TECH</span>
+    <img src="logo%20vetorizada.png" alt="BG Tech Logo" style="height: 36px; width: auto; object-fit: contain;">
   </div>
   <div class="header-tag">Diagnóstico Estratégico</div>
 </header>
@@ -1538,8 +1532,8 @@ header {
     <div class="result-cta">
       <div class="cta-texts">
         <div class="cta-eyebrow">O Que Acontece Agora</div>
-        <h3 class="cta-heading" id="cta-heading">Vamos transformar esse diagnóstico em resultados reais</h3>
-        <p class="cta-sub" id="cta-sub">Nosso time entra em contato em até 24h úteis para apresentar as soluções específicas para o seu negócio, sem compromisso.</p>
+        <h3 class="cta-heading" id="cta-heading">Vamos entender suas dores e encontrar a solução ideal</h3>
+        <p class="cta-sub" id="cta-sub">Nosso time entra em contato em até 24h úteis para uma conversa focada em mapear os principais problemas do seu dia a dia, identificar onde sua empresa perde mais tempo e dinheiro, e juntos construirmos um caminho claro de solução.</p>
       </div>
       <div class="cta-action">
         <button type="button" class="btn-cta-final" onclick="submitLead()">Quero conversar com um especialista</button>
@@ -1976,9 +1970,9 @@ function showResult() {
 
   // CTA
   document.getElementById('cta-heading').textContent =
-    `${nome}, a próxima etapa é uma conversa de 20 minutos.`;
+    `${nome}, vamos entender a fundo os problemas da sua empresa.`;
   document.getElementById('cta-sub').textContent =
-    `Um especialista da BG Tech vai te ligar em até 24h para conversar sobre o que encontramos no seu diagnóstico. Sem apresentação de vendas — só uma conversa honesta sobre o que faz sentido para ${empresa}.`;
+    `Um especialista da BG Tech vai te ligar em até 24h úteis. Nosso objetivo nessa conversa é entender profundamente suas principais dores, mapear os obstáculos operacionais da ${empresa} e, juntos, encontrarmos a solução ideal para recuperar sua eficiência e lucro.`;
 
   // Cursor
   setTimeout(() => {
