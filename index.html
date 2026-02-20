@@ -616,7 +616,7 @@ header {
   width: 100%;
   margin-top: 100px;
   padding: 100px 0;
-  background: linear-gradient(180deg, rgba(214,234,255,0.12) 0%, rgba(234,244,255,0.08) 100%);
+  background: linear-gradient(180deg, #0F2A44 0%, #1B4A7A 100%);
   border-top: 1px solid rgba(12,151,243,0.18);
   border-bottom: 1px solid rgba(12,151,243,0.18);
 }
@@ -889,7 +889,7 @@ header {
   display: flex;
   align-items: center;
   gap: 20px;
-  transition: all 0.25s var(--ease-out-expo);
+  transition: transform 0.15s ease, background 0.25s ease, border-color 0.25s ease;
   position: relative;
   overflow: hidden;
 }
@@ -912,7 +912,7 @@ header {
 .option-card.selected {
   border-color: var(--cyan);
   background: rgba(12,151,243,0.10);
-  transform: translateX(6px);
+  transform: translateX(6px) scale(1.04);
 }
 .option-card.selected::before { transform: scaleY(1); }
 
@@ -2321,6 +2321,8 @@ header {
       </div>
       <div class="cta-action">
         <button type="button" class="btn-cta-final" onclick="submitLead()">Quero conversar com um especialista</button>
+        <a class="btn-thankyou-wpp" href="javascript:void(0)" onclick="submitLead()" aria-label="Abrir conversa no WhatsApp">💬 Falar agora pelo WhatsApp</a>
+        <p class="urgency-text">⚡ Agenda de especialistas disponível esta semana</p>
         <span class="cta-trust">Você recebe contato em até 24h · Sem compromisso de compra</span>
       </div>
     </div>
@@ -2639,9 +2641,6 @@ function selectOption(i) {
 function checkTextFields() {
   const q = QUESTIONS[currentStep];
   if (q.type !== 'text') return;
-  const nome = document.getElementById('field-nome')?.value.trim();
-  const wpp  = document.getElementById('field-whatsapp')?.value.trim();
-  document.getElementById('btn-next').disabled = !(nome && wpp);
 }
 
 function nextStep() {
