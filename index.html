@@ -3,11 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnóstico Gratuito — BG Tech</title>
-<meta name="description" content="Em 3 minutos, a BG Tech mapeia os gargalos do seu negócio e projeta, em reais, quanto você pode recuperar com a tecnologia certa. Diagnóstico estratégico gratuito.">
+<title>Diagnóstico Gratuito de Automação para Empresas | BG Tech</title>
+<meta name="description" content="Descubra onde sua empresa perde dinheiro e quanto pode recuperar com automação. Diagnóstico estratégico gratuito em 3 minutos. Faça agora — BG Tech Sistemas e Automações.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://bgtech.com.br/">
+<link rel="icon" href="https://bgtech.com.br/favicon.ico">
+<link rel="apple-touch-icon" href="https://bgtech.com.br/apple-touch-icon.png">
 <meta property="og:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
 <meta property="og:description" content="Descubra onde sua empresa está perdendo dinheiro. Diagnóstico personalizado em 3 minutos, sem compromisso.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://bgtech.com.br/">
+<meta property="og:image" content="https://bgtech.com.br/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="BG Tech">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
+<meta name="twitter:description" content="Descubra onde sua empresa perde dinheiro. Diagnóstico em 3 minutos.">
+<meta name="twitter:image" content="https://bgtech.com.br/og-image.jpg">
+<!-- Google Tag Manager (substitua GTM-XXXX pelo seu ID) -->
+<!--
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXX');</script>
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "BG Tech",
+  "description": "Sistemas e Automações para empresas",
+  "url": "https://bgtech.com.br",
+  "logo": "https://bgtech.com.br/logo.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "availableLanguage": "Portuguese"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -80,7 +117,7 @@ body {
   width: 56px; height: 56px;
   border-color: var(--cyan);
 }
-* { cursor: none !important; }
+/* cursor: none is set on body above; * rule removed for accessibility */
 
 /* ─── Animated background grid ─────────── */
 .grid-bg {
@@ -1396,6 +1433,15 @@ header {
 </style>
 </head>
 <body>
+<noscript>
+  <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #000B34; color: #F0F8FF; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div>
+      <h1>BG Tech — Diagnóstico Estratégico</h1>
+      <p>Para usar o diagnóstico gratuito da BG Tech, ative o JavaScript no seu navegador.</p>
+      <p>Entre em contato pelo WhatsApp: <a href="https://wa.me/5511999998888" style="color: #0C97F3;">Clique aqui</a></p>
+    </div>
+  </div>
+</noscript>
 
 <!-- Cursor customizado -->
 <div class="cursor" id="cursor"></div>
@@ -1419,7 +1465,7 @@ header {
 <!-- Header -->
 <header>
   <div class="logo-mark">
-    <img src="logo%20vetorizada.png" alt="BG Tech Logo" style="height: 52px; width: auto; object-fit: contain;">
+    <img src="logo%20vetorizada.png" alt="BG Tech — Sistemas e Automações" style="height: 52px; width: auto; object-fit: contain;">
     <div class="logo-text">
       <span class="logo-name">BG <span>Tech</span></span>
       <span class="logo-tagline">Sistemas &amp; Automações</span>
@@ -2093,6 +2139,21 @@ function submitLead() {
   ].join('\n');
 
   const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+
+  // Google Ads Conversion Tracking (ative substituindo AW-XXXXXXXXX/YYYYYY pelo seu ID)
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-XXXXXXXXX/YYYYYYYYYY',
+      'value': 1.0,
+      'currency': 'BRL'
+    });
+    gtag('event', 'generate_lead', {
+      event_category: 'diagnostico',
+      event_label: textValues.empresa || 'sem-empresa',
+      value: 1
+    });
+  }
+
   window.open(url, '_blank', 'noopener,noreferrer');
 
   showToast();
