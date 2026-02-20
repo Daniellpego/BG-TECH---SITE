@@ -605,9 +605,9 @@ header {
   width: 100%;
   margin-top: 64px;
   padding: 64px 0;
-  background: linear-gradient(180deg, rgba(12,35,90,0.5) 0%, rgba(16,42,105,0.35) 100%);
-  border-top: 1px solid rgba(12,151,243,0.12);
-  border-bottom: 1px solid rgba(12,151,243,0.12);
+  background: linear-gradient(180deg, rgba(20,50,120,0.55) 0%, rgba(24,60,140,0.4) 100%);
+  border-top: 1px solid rgba(12,151,243,0.18);
+  border-bottom: 1px solid rgba(12,151,243,0.18);
 }
 .testimonials-inner {
   max-width: 860px;
@@ -686,6 +686,73 @@ header {
   font-family: var(--font-body);
   font-size: 11px;
   color: rgba(240,248,255,0.5);
+}
+
+/* ═══════════════════════════════════════════
+   SEÇÃO EQUIPE — humanizar
+═══════════════════════════════════════════ */
+.team-section {
+  width: 100%;
+  max-width: 860px;
+  margin-top: 64px;
+  text-align: center;
+}
+.team-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.team-sub {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: rgba(240,248,255,0.6);
+  line-height: 1.6;
+  margin-bottom: 36px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.team-grid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 200px;
+}
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan20), var(--tech));
+  border: 2px solid var(--cyan40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--glow);
+}
+.team-name {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+}
+.team-role {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(240,248,255,0.5);
+  line-height: 1.4;
 }
 
 /* ═══════════════════════════════════════════
@@ -1610,6 +1677,9 @@ header {
   .testimonials-grid { grid-template-columns: 1fr; gap: 16px; }
   .testimonial-card { padding: 24px 20px; }
 
+  .team-grid { gap: 24px; }
+  .team-avatar { width: 64px; height: 64px; font-size: 24px; }
+
   .btn-primary { padding: 16px 32px; font-size: 13px; width: 100%; text-align: center; }
 
   .step-indicator { gap: 8px; margin-bottom: 36px; }
@@ -1861,6 +1931,24 @@ header {
           <div class="how-step-num">3</div>
           <div class="how-step-title">Fale com um especialista</div>
           <div class="how-step-desc">Um consultor da BG Tech entra em contato para apresentar soluções sob medida para o seu negócio.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quem somos — humanizar -->
+    <div class="team-section">
+      <h2 class="team-title">Quem está por trás da BG Tech</h2>
+      <p class="team-sub">Somos especialistas em automação e tecnologia para PMEs. Nosso time combina experiência técnica com visão de negócio.</p>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" role="img" aria-label="Foto de Bruno">B</div>
+          <span class="team-name">Bruno</span>
+          <span class="team-role">Co-fundador &amp; Tecnologia</span>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" role="img" aria-label="Foto de Gabriel">G</div>
+          <span class="team-name">Gabriel</span>
+          <span class="team-role">Co-fundador &amp; Estratégia</span>
         </div>
       </div>
     </div>
