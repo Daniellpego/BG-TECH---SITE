@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico Gratuito de Automação para Empresas | BG Tech</title>
-<meta name="description" content="Descubra onde sua empresa perde dinheiro e quanto pode recuperar com automação. Diagnóstico estratégico gratuito em 3 minutos. Faça agora — BG Tech Sistemas e Automações.">
+<meta name="description" content="Descubra onde sua empresa perde dinheiro e quanto pode recuperar com automação. Diagnóstico estratégico gratuito em 3 minutos. Faça agora | BG Tech Sistemas e Automações.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://bgtech.com.br/">
 <link rel="icon" href="https://bgtech.com.br/favicon.ico">
 <link rel="apple-touch-icon" href="https://bgtech.com.br/apple-touch-icon.png">
-<meta property="og:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
+<meta property="og:title" content="Diagnóstico Estratégico Gratuito | BG Tech">
 <meta property="og:description" content="Descubra onde sua empresa está perdendo dinheiro. Diagnóstico personalizado em 3 minutos, sem compromisso.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bgtech.com.br/">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="BG Tech">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Diagnóstico Estratégico Gratuito — BG Tech">
+<meta name="twitter:title" content="Diagnóstico Estratégico Gratuito | BG Tech">
 <meta name="twitter:description" content="Descubra onde sua empresa perde dinheiro. Diagnóstico em 3 minutos.">
 <meta name="twitter:image" content="https://bgtech.com.br/og-image.jpg">
 <!-- Google Tag Manager (substitua GTM-XXXX pelo seu ID) -->
@@ -57,21 +57,55 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 button, .option-card { touch-action: manipulation; }
 
 :root {
-  --navy:    #06205D;
-  --cyan:    #0C97F3;
-  --white:   #F0F8FF;
-  --dark-bg: #040C26;
-  --tech:    #174D9F;
-  --lgray:   #E8EDF5;
-  --cyan10:  rgba(12,151,243,0.10);
-  --cyan20:  rgba(12,151,243,0.20);
-  --cyan40:  rgba(12,151,243,0.40);
-  --cyan60:  rgba(12,151,243,0.60);
-  --glow:    0 0 16px rgba(99,229,253,0.14);
-  --glow-lg: 0 0 28px rgba(99,229,253,0.10), 0 0 56px rgba(99,229,253,0.04);
+  /* ── Dark Hero backgrounds ── */
+  --dark-bg:   #080D1A;
+  --navy:      #0F1629;
+  --surface:   #141B2D;
+  --border:    rgba(255,255,255,0.07);
+
+  /* ── Light section backgrounds ── */
+  --page-bg:    #F8FAFC;
+  --card-bg:    #FFFFFF;
+  --card-bg-alt:#F1F5F9;
+  --border-light: #E2E8F0;
+
+  /* ── Text hierarchy (dark) ── */
+  --white:     #F1F5F9;
+
+  /* ── Text hierarchy (light) ── */
+  --text-dark:      #0F172A;
+  --text-secondary: #475569;
+  --text-muted:     #94A3B8;
+
+  /* ── Accent ── */
+  --cyan:      #0EA5E9;
+  --cyan-soft: #38BDF8;
+  --cyan-dark: #0369A1;
+  --tech:      #174D9F;
+  --lgray:     #F1F5F9;
+
+  /* ── Cyan opacities ── */
+  --cyan10:  rgba(14,165,233,0.10);
+  --cyan20:  rgba(14,165,233,0.20);
+  --cyan40:  rgba(14,165,233,0.40);
+  --cyan60:  rgba(14,165,233,0.60);
+
+  /* ── Glows (subtle) ── */
+  --glow:    0 0 8px rgba(14,165,233,0.20);
+  --glow-lg: 0 0 16px rgba(14,165,233,0.25), 0 0 32px rgba(14,165,233,0.06);
+
+  /* ── Soft shadows for light sections ── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.05);
+
+  /* ── Typography ── */
   --font-display: 'Sora', sans-serif;
   --font-ui:      'Exo 2', sans-serif;
   --font-body:    'Inter', sans-serif;
+
+  /* ── Easing ── */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -181,7 +215,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(to bottom, rgba(8,16,46,0.95) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(8,13,26,0.95) 0%, transparent 100%);
   backdrop-filter: blur(12px);
 }
 .logo-mark {
@@ -197,7 +231,7 @@ header {
 .logo-mark span { color: var(--cyan); text-shadow: var(--glow); }
 .logo-hex {
   width: 36px; height: 36px;
-  filter: drop-shadow(0 0 5px rgba(12,151,243,0.35));
+  filter: drop-shadow(0 0 5px rgba(14,165,233,0.35));
 }
 .logo-text {
   display: flex;
@@ -221,7 +255,7 @@ header {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.15em;
-  color: rgba(0, 180, 235, 0.6);
+  color: var(--cyan60);
   text-transform: uppercase;
 }
 .header-tag {
@@ -301,7 +335,7 @@ header {
   font-family: var(--font-body);
   font-size: clamp(16px, 2vw, 19px);
   font-weight: 300;
-  color: rgba(240,248,255,0.72);
+  color: rgba(241,245,249,0.72);
   max-width: 560px;
   line-height: 1.7;
   margin-bottom: 56px;
@@ -314,11 +348,37 @@ header {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ─── New Premium Animations ─────────── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes soft-bounce-in {
+  0%   { opacity: 0; transform: translateY(30px) scale(0.95); }
+  60%  { transform: translateY(-4px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ─── Scan visual (card central) ────────── */
 .scan-card {
   width: 100%;
   max-width: 580px;
-  background: rgba(6,32,93,0.65);
+  background: rgba(15,22,41,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--cyan40);
   border-radius: 4px;
   padding: 36px 40px;
@@ -393,7 +453,7 @@ header {
 }
 .scan-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.4));
+  background: linear-gradient(90deg, var(--cyan), rgba(14,165,233,0.4));
   border-radius: 2px;
   animation: bar-fill 2s var(--ease-out-expo) forwards;
   transform-origin: left;
@@ -465,7 +525,9 @@ header {
   text-align: center;
   gap: 8px;
   font-family: var(--font-ui);
-  background: linear-gradient(145deg, rgba(6,32,93,0.7) 0%, rgba(8,16,46,0.85) 100%);
+  background: rgba(15,22,41,0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--cyan20);
   border-radius: 6px;
   padding: 28px 18px 22px;
@@ -501,7 +563,7 @@ header {
   position: absolute;
   top: 0; left: -75%;
   width: 50%; height: 100%;
-  background: linear-gradient(105deg, transparent 40%, rgba(12,151,243,0.07) 50%, transparent 60%);
+  background: linear-gradient(105deg, transparent 40%, rgba(14,165,233,0.07) 50%, transparent 60%);
   animation: trust-shimmer 4s ease-in-out infinite;
 }
 .trust-item:nth-child(2)::after { animation-delay: 1.3s; }
@@ -514,7 +576,7 @@ header {
 .trust-item:hover {
   transform: translateY(-6px) rotateX(-2deg) scale(1.03);
   border-color: var(--cyan60);
-  box-shadow: 0 12px 36px rgba(12,151,243,0.15), 0 0 20px rgba(12,151,243,0.1);
+  box-shadow: 0 12px 36px rgba(14,165,233,0.15), 0 0 20px rgba(14,165,233,0.1);
 }
 
 .trust-icon {
@@ -525,16 +587,16 @@ header {
   font-size: 20px;
   border: 1px solid var(--cyan20);
   border-radius: 50%;
-  background: rgba(12,151,243,0.06);
+  background: rgba(14,165,233,0.06);
   margin-bottom: 4px;
-  box-shadow: 0 0 12px rgba(12,151,243,0.1);
+  box-shadow: 0 0 12px rgba(14,165,233,0.1);
   animation: trust-icon-glow 3s ease-in-out infinite;
 }
 .trust-item:nth-child(2) .trust-icon { animation-delay: 1s; }
 .trust-item:nth-child(3) .trust-icon { animation-delay: 2s; }
 @keyframes trust-icon-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(12,151,243,0.06); }
-  50%      { box-shadow: 0 0 14px rgba(12,151,243,0.18), 0 0 28px rgba(12,151,243,0.06); }
+  0%, 100% { box-shadow: 0 0 6px rgba(14,165,233,0.06); }
+  50%      { box-shadow: 0 0 14px rgba(14,165,233,0.18), 0 0 28px rgba(14,165,233,0.06); }
 }
 
 .trust-number {
@@ -542,7 +604,7 @@ header {
   font-size: 28px;
   font-weight: 800;
   color: var(--cyan);
-  text-shadow: 0 0 12px rgba(12,151,243,0.28);
+  text-shadow: 0 0 12px rgba(14,165,233,0.28);
   line-height: 1;
 }
 .trust-label {
@@ -563,48 +625,58 @@ header {
    COMO FUNCIONA (3 passos)
 ═══════════════════════════════════════════ */
 .how-section {
-  width: 100%;
-  max-width: 860px;
-  margin-top: 100px;
+  width: 100vw;
+  max-width: 100vw;
+  margin-top: 0;
   text-align: center;
+  padding: 100px 48px;
+  background: var(--page-bg);
 }
 .how-title {
   font-family: var(--font-display);
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
-  color: var(--white);
+  color: var(--text-dark);
   margin-bottom: 40px;
 }
 .how-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  max-width: 860px;
+  margin: 0 auto;
 }
 .how-step {
-  background: rgba(6,32,93,0.5);
-  border: 1px solid var(--cyan20);
-  border-radius: 6px;
-  padding: 32px 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 36px 24px;
   text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease;
+}
+.how-step:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
 .how-step-num {
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 800;
-  color: rgba(240,248,255,0.5);
+  color: var(--cyan);
   margin-bottom: 12px;
 }
 .how-step-title {
   font-family: var(--font-ui);
   font-size: 15px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--text-dark);
   margin-bottom: 8px;
 }
 .how-step-desc {
   font-family: var(--font-body);
   font-size: 13px;
-  color: rgba(240,248,255,0.6);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -612,12 +684,10 @@ header {
    DEPOIMENTOS — fundo mais claro
 ═══════════════════════════════════════════ */
 .testimonials-section {
-  width: 100%;
-  margin-top: 100px;
+  width: 100vw;
+  margin-top: 0;
   padding: 100px 0;
-  background: linear-gradient(180deg, #0F2A44 0%, #1B4A7A 100%);
-  border-top: 1px solid rgba(12,151,243,0.18);
-  border-bottom: 1px solid rgba(12,151,243,0.18);
+  background: var(--card-bg);
 }
 .testimonials-inner {
   max-width: 860px;
@@ -628,7 +698,7 @@ header {
   font-family: var(--font-display);
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
-  color: var(--white);
+  color: var(--text-dark);
   text-align: center;
   margin-bottom: 40px;
 }
@@ -638,18 +708,24 @@ header {
   gap: 20px;
 }
 .testimonial-card {
-  background: rgba(240,248,255,0.06);
-  border: 1px solid rgba(240,248,255,0.1);
-  border-radius: 6px;
+  background: var(--page-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
   padding: 28px 24px;
   position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease;
+}
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 .testimonial-card::before {
   content: '"';
   font-family: Georgia, serif;
   font-size: 48px;
   color: var(--cyan);
-  opacity: 0.3;
+  opacity: 0.25;
   position: absolute;
   top: 12px;
   left: 20px;
@@ -664,7 +740,7 @@ header {
 .testimonial-text {
   font-family: var(--font-body);
   font-size: 14px;
-  color: rgba(240,248,255,0.8);
+  color: var(--text-secondary);
   line-height: 1.7;
   font-style: italic;
   margin-bottom: 20px;
@@ -679,7 +755,7 @@ header {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--cyan20);
+  background: var(--cyan10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -702,34 +778,35 @@ header {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--text-dark);
 }
 .testimonial-role {
   font-family: var(--font-body);
   font-size: 11px;
-  color: rgba(240,248,255,0.5);
+  color: var(--text-muted);
 }
 
 /* ═══════════════════════════════════════════
    SEÇÃO EQUIPE — humanizar
 ═══════════════════════════════════════════ */
 .team-section {
-  width: 100%;
+  width: 100vw;
   padding: 80px 48px;
   margin-top: 0;
   text-align: center;
+  background: var(--page-bg);
 }
 .team-title {
   font-family: var(--font-display);
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
-  color: var(--white);
+  color: var(--text-dark);
   margin-bottom: 12px;
 }
 .team-sub {
   font-family: var(--font-body);
   font-size: 15px;
-  color: rgba(240,248,255,0.6);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 36px;
   max-width: 520px;
@@ -753,8 +830,8 @@ header {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--cyan20), var(--tech));
-  border: 2px solid var(--cyan40);
+  background: linear-gradient(135deg, var(--cyan10), var(--cyan20));
+  border: 2px solid var(--cyan20);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -762,18 +839,18 @@ header {
   font-size: 28px;
   font-weight: 700;
   color: var(--cyan);
-  text-shadow: var(--glow);
+  box-shadow: var(--shadow-md);
 }
 .team-name {
   font-family: var(--font-ui);
   font-size: 15px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--text-dark);
 }
 .team-role {
   font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(240,248,255,0.5);
+  color: var(--text-muted);
   line-height: 1.4;
 }
 
@@ -799,7 +876,7 @@ header {
 }
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.6));
+  background: linear-gradient(90deg, var(--cyan), rgba(14,165,233,0.6));
   box-shadow: 0 0 12px var(--cyan60);
   transition: width 0.6s var(--ease-out-expo);
 }
@@ -831,7 +908,7 @@ header {
 }
 .step-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.6));
+  background: linear-gradient(90deg, var(--cyan), rgba(14,165,233,0.6));
   border-radius: 3px;
   box-shadow: 0 0 8px var(--cyan40);
   transition: width 0.5s var(--ease-out-expo);
@@ -881,7 +958,7 @@ header {
   gap: 12px;
 }
 .option-card {
-  background: rgba(6,32,93,0.5);
+  background: rgba(15,22,41,0.5);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 3px;
   padding: 20px 24px;
@@ -904,13 +981,13 @@ header {
 }
 .option-card:hover {
   border-color: var(--cyan40);
-  background: rgba(12,151,243,0.06);
+  background: rgba(14,165,233,0.06);
   transform: translateX(4px);
 }
 .option-card:hover::before { transform: scaleY(1); }
 .option-card.selected {
   border-color: var(--cyan);
-  background: rgba(12,151,243,0.10);
+  background: rgba(14,165,233,0.10);
   transform: translateX(6px) scale(1.04);
 }
 .option-card.selected::before { transform: scaleY(1); }
@@ -925,13 +1002,13 @@ header {
   font-size: 20px;
   flex-shrink: 0;
   transition: all 0.3s ease;
-  background: rgba(12,151,243,0.05);
+  background: rgba(14,165,233,0.05);
 }
 .option-card.selected .option-icon,
 .option-card:hover .option-icon {
   border-color: var(--cyan);
   background: var(--cyan10);
-  box-shadow: 0 0 12px rgba(12,151,243,0.2);
+  box-shadow: 0 0 12px rgba(14,165,233,0.2);
 }
 
 .option-info { flex: 1; }
@@ -973,7 +1050,7 @@ header {
 .text-input-wrap { position: relative; }
 .text-input {
   width: 100%;
-  background: rgba(6,32,93,0.5);
+  background: rgba(15,22,41,0.5);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 3px;
   padding: 20px 24px;
@@ -987,7 +1064,7 @@ header {
 .text-input::placeholder { color: rgba(240,248,255,0.25); }
 .text-input:focus {
   border-color: var(--cyan60);
-  box-shadow: 0 0 0 3px rgba(12,151,243,0.08);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.08);
 }
 .char-count {
   position: absolute;
@@ -1221,7 +1298,7 @@ header {
 
 /* ─── Score principal ───────────────────── */
 .score-banner {
-  background: linear-gradient(135deg, rgba(6,32,93,0.8) 0%, rgba(26,58,143,0.5) 100%);
+  background: linear-gradient(135deg, rgba(15,22,41,0.8) 0%, rgba(26,58,143,0.5) 100%);
   border: 1px solid var(--cyan20);
   border-radius: 4px;
   padding: 40px;
@@ -1261,7 +1338,7 @@ header {
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
   transition: stroke-dashoffset 2s var(--ease-out-expo) 0.5s;
-  filter: drop-shadow(0 0 3px rgba(12,151,243,0.5));
+  filter: drop-shadow(0 0 3px rgba(14,165,233,0.5));
   animation: score-pulse 2.5s ease-in-out 2.5s infinite;
 }
 .score-number {
@@ -1317,7 +1394,7 @@ header {
   margin-bottom: 32px;
 }
 .insight-card {
-  background: rgba(6,32,93,0.4);
+  background: rgba(15,22,41,0.4);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 3px;
   padding: 24px;
@@ -1364,7 +1441,7 @@ header {
 
 /* ─── Barra de oportunidades ────────────── */
 .opportunities {
-  background: rgba(6,32,93,0.4);
+  background: rgba(15,22,41,0.4);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 3px;
   padding: 32px;
@@ -1416,7 +1493,7 @@ header {
   transform-origin: left;
   transform: scaleX(0);
 }
-.opp-bar.high    { background: linear-gradient(90deg, var(--cyan), rgba(12,151,243,0.5)); }
+.opp-bar.high    { background: linear-gradient(90deg, var(--cyan), rgba(14,165,233,0.5)); }
 .opp-bar.medium  { background: linear-gradient(90deg, #3B82F6, rgba(59,130,246,0.5)); }
 .opp-bar.low     { background: linear-gradient(90deg, #6366F1, rgba(99,102,241,0.5)); }
 .opp-percent {
@@ -1532,7 +1609,7 @@ header {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  background: rgba(6,32,93,0.95);
+  background: rgba(15,22,41,0.95);
   border: 1px solid var(--cyan40);
   border-radius: 3px;
   padding: 14px 20px;
@@ -1601,7 +1678,7 @@ header {
   display: flex;
   align-items: center;
   gap: 16px;
-  background: rgba(6,32,93,0.5);
+  background: rgba(15,22,41,0.5);
   border: 1px solid var(--cyan20);
   border-radius: 6px;
   padding: 18px 20px;
@@ -1775,7 +1852,7 @@ header {
 /* ─── Touch: disable hover-persist transforms & add tap feedback ─── */
 @media (hover: none), (pointer: coarse) {
   /* Disable hover-state transforms that persist awkwardly after tap */
-  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.15); background: rgba(6,32,93,0.5); }
+  .option-card:hover { transform: none; border-color: rgba(255,255,255,0.15); background: rgba(15,22,41,0.5); }
   .option-card:hover::before { transform: scaleY(0); }
   .trust-item:hover { transform: none; border-color: var(--cyan20); box-shadow: none; }
   .btn-primary:hover,
@@ -1785,7 +1862,7 @@ header {
   .btn-primary:active,
   .btn-next:not(:disabled):active,
   .btn-cta-final:active { transform: scale(0.97); }
-  .option-card:active { background: rgba(12,151,243,0.06); border-color: var(--cyan40); }
+  .option-card:active { background: rgba(14,165,233,0.06); border-color: var(--cyan40); }
 }
 
 /* ─── Reveal on scroll ───────────────────── */
@@ -1799,18 +1876,35 @@ header {
   transform: translateY(0);
 }
 
+/* ─── Staggered reveal for cards ───────── */
+.stagger-reveal > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+.stagger-reveal.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-reveal.revealed > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger-reveal.revealed > *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-reveal.revealed > *:nth-child(3) { transition-delay: 0.15s; }
+.stagger-reveal.revealed > *:nth-child(4) { transition-delay: 0.2s; }
+.stagger-reveal.revealed > *:nth-child(5) { transition-delay: 0.25s; }
+.stagger-reveal.revealed > *:nth-child(6) { transition-delay: 0.3s; }
+
 /* ─── Keyframes for new animations ──────── */
 @keyframes float-icon {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
 }
 @keyframes score-pulse {
-  0%, 100% { filter: drop-shadow(0 0 3px rgba(12,151,243,0.5)); }
-  50% { filter: drop-shadow(0 0 10px rgba(12,151,243,0.85)) drop-shadow(0 0 20px rgba(12,151,243,0.28)); }
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(14,165,233,0.5)); }
+  50% { filter: drop-shadow(0 0 10px rgba(14,165,233,0.85)) drop-shadow(0 0 20px rgba(14,165,233,0.28)); }
 }
 @keyframes opp-icon-glow {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.75; filter: drop-shadow(0 0 5px rgba(12,151,243,0.9)); }
+  50% { opacity: 0.75; filter: drop-shadow(0 0 5px rgba(14,165,233,0.9)); }
 }
 
 /* ─── Scan icon float ────────────────────── */
@@ -1826,7 +1920,7 @@ header {
 @media (hover: hover) {
   .insight-card:hover {
     border-color: var(--cyan40);
-    box-shadow: 0 0 24px rgba(12,151,243,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+    box-shadow: 0 0 24px rgba(14,165,233,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
   }
 }
 
@@ -1845,22 +1939,24 @@ header {
   height: 1px;
   border: none;
   margin: 0 auto;
-  background: linear-gradient(90deg, transparent, var(--cyan40), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-light), transparent);
 }
 
 /* ─── Segments strip ─────────────────────── */
 .segments-section {
-  width: 100%;
-  max-width: 860px;
-  margin-top: 100px;
+  width: 100vw;
+  max-width: 100vw;
+  margin-top: 0;
   text-align: center;
+  padding: 80px 48px;
+  background: var(--page-bg);
 }
 .segments-title {
   font-family: var(--font-ui);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.25em;
-  color: rgba(240,248,255,0.45);
+  color: var(--text-muted);
   text-transform: uppercase;
   margin-bottom: 32px;
 }
@@ -1881,7 +1977,7 @@ header {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(12,151,243,0.08);
+  background: var(--cyan10);
   border: 1px solid var(--cyan20);
   display: flex;
   align-items: center;
@@ -1892,13 +1988,13 @@ header {
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 500;
-  color: rgba(240,248,255,0.55);
+  color: var(--text-secondary);
 }
 
 /* ─── Quiz option selected scale ─────────── */
 .option-card.selected {
   border-color: var(--cyan);
-  background: rgba(12,151,243,0.10);
+  background: rgba(14,165,233,0.10);
   transform: translateX(6px) scale(1.02);
   transition: all 0.15s ease;
 }
@@ -1943,7 +2039,7 @@ header {
   right: 0;
   z-index: 150;
   padding: 12px 16px;
-  background: linear-gradient(to top, rgba(4,12,38,0.98) 60%, transparent);
+  background: linear-gradient(to top, var(--dark-bg) 60%, transparent);
 }
 .sticky-cta .btn-sticky {
   width: 100%;
@@ -1958,7 +2054,7 @@ header {
   padding: 16px 24px;
   border-radius: 4px;
   text-align: center;
-  box-shadow: 0 -4px 20px rgba(12,151,243,0.3);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s var(--ease-spring);
 }
 .sticky-cta .btn-sticky:active { transform: scale(0.97); }
@@ -2008,10 +2104,12 @@ header {
    SEÇÃO DE SERVIÇOS
 ═══════════════════════════════════════════ */
 .services-section {
-  width: 100%;
-  margin-top: 100px;
+  width: 100vw;
+  margin-top: 0;
   padding: 80px 0;
-  background: var(--lgray);
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
 }
 .services-inner {
   max-width: 860px;
@@ -2029,7 +2127,7 @@ header {
 .services-sub {
   font-family: var(--font-body);
   font-size: 15px;
-  color: rgba(6,32,93,0.65);
+  color: var(--text-secondary);
   text-align: center;
   line-height: 1.6;
   margin-bottom: 40px;
@@ -2043,23 +2141,24 @@ header {
   gap: 20px;
 }
 .service-card {
-  background: #fff;
-  border: 1px solid rgba(6,32,93,0.08);
-  border-radius: 8px;
+  background: var(--page-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
   padding: 28px 20px;
   text-align: center;
   transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+  box-shadow: var(--shadow-sm);
 }
 .service-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(6,32,93,0.1);
+  box-shadow: var(--shadow-md);
 }
 .service-icon {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(12,151,243,0.08);
-  border: 1px solid rgba(12,151,243,0.15);
+  background: var(--cyan10);
+  border: 1px solid var(--cyan20);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2076,7 +2175,7 @@ header {
 .service-desc {
   font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(6,32,93,0.6);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -2084,16 +2183,18 @@ header {
    SEÇÃO FAQ
 ═══════════════════════════════════════════ */
 .faq-section {
-  width: 100%;
-  max-width: 860px;
-  margin-top: 100px;
+  width: 100vw;
+  max-width: 100vw;
+  margin-top: 0;
   text-align: center;
+  padding: 80px 48px;
+  background: var(--card-bg);
 }
 .faq-title {
   font-family: var(--font-display);
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
-  color: var(--white);
+  color: var(--text-dark);
   margin-bottom: 40px;
 }
 .faq-list {
@@ -2101,18 +2202,24 @@ header {
   flex-direction: column;
   gap: 12px;
   text-align: left;
+  max-width: 860px;
+  margin: 0 auto;
 }
 .faq-item {
-  background: rgba(6,32,93,0.5);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
+  background: var(--page-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
   overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+.faq-item:hover {
+  box-shadow: var(--shadow-sm);
 }
 .faq-question {
   font-family: var(--font-ui);
   font-size: 15px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--text-dark);
   padding: 20px 24px;
   cursor: pointer;
   display: flex;
@@ -2128,7 +2235,7 @@ header {
 .faq-question:hover { color: var(--cyan); }
 .faq-arrow {
   font-size: 12px;
-  color: rgba(240,248,255,0.4);
+  color: var(--text-muted);
   transition: transform 0.3s ease;
   flex-shrink: 0;
 }
@@ -2136,7 +2243,7 @@ header {
 .faq-answer {
   font-family: var(--font-body);
   font-size: 14px;
-  color: rgba(240,248,255,0.65);
+  color: var(--text-secondary);
   line-height: 1.7;
   padding: 0 24px;
   max-height: 0;
@@ -2153,9 +2260,9 @@ header {
 ═══════════════════════════════════════════ */
 .site-footer {
   width: 100%;
-  margin-top: 100px;
+  margin-top: 0;
   padding: 40px 48px;
-  background: rgba(4,12,38,0.95);
+  background: var(--dark-bg);
   border-top: 1px solid rgba(255,255,255,0.06);
   text-align: center;
 }
@@ -2215,11 +2322,11 @@ header {
 </head>
 <body>
 <noscript>
-  <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #000B34; color: #F0F8FF; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+  <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #080D1A; color: #F0F8FF; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div>
-      <h1>BG Tech — Diagnóstico Estratégico</h1>
+      <h1>BG Tech | Diagnóstico Estratégico</h1>
       <p>Para usar o diagnóstico gratuito da BG Tech, ative o JavaScript no seu navegador.</p>
-      <p>Entre em contato pelo WhatsApp: <a href="https://wa.me/TROCAR_PELO_NUMERO_REAL" style="color: #0C97F3;">Clique aqui</a></p>
+      <p>Entre em contato pelo WhatsApp: <a href="https://wa.me/TROCAR_PELO_NUMERO_REAL" style="color: #0EA5E9;">Clique aqui</a></p>
     </div>
   </div>
 </noscript>
@@ -2234,10 +2341,10 @@ header {
 
 <!-- Hexágonos decorativos -->
 <div class="hex-deco" style="width:400px;height:400px;top:-100px;right:-100px;">
-  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0C97F3" stroke-width="1"/></svg>
+  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0EA5E9" stroke-width="1"/></svg>
 </div>
 <div class="hex-deco" style="width:300px;height:300px;bottom:50px;left:-80px;">
-  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0C97F3" stroke-width="1"/></svg>
+  <svg viewBox="0 0 200 200"><polygon points="100,10 185,55 185,145 100,190 15,145 15,55" fill="none" stroke="#0EA5E9" stroke-width="1"/></svg>
 </div>
 
 <!-- Barra de progresso -->
@@ -2246,7 +2353,7 @@ header {
 <!-- Header -->
 <header>
   <div class="logo-mark">
-    <img src="logo-bgtech.png" alt="BG Tech — Tecnologia que move negócios" style="height: 52px; width: auto; object-fit: contain;">
+    <img src="logo-bgtech.png" alt="BG Tech | Tecnologia que move negócios" style="height: 52px; width: auto; object-fit: contain;">
     <div class="logo-text">
       <span class="logo-name">BG <span>Tech</span></span>
       <span class="logo-tagline">Tecnologia que move negócios</span>
@@ -2268,7 +2375,7 @@ header {
       onde não percebe.
     </h1>
     <p class="intro-sub">
-      Responda 6 perguntas rápidas e descubra, em reais, quanto dinheiro a sua empresa está deixando na mesa — e o que fazer para recuperar.
+      Responda 6 perguntas rápidas e descubra, em reais, quanto dinheiro a sua empresa está deixando na mesa. E o que fazer para recuperar.
     </p>
 
     <div class="scan-card">
@@ -2326,17 +2433,14 @@ header {
       </div>
     </div>
 
-    <!-- Separador visual -->
-    <hr class="section-divider" style="margin-top:100px">
-
     <!-- Como funciona — 3 passos -->
     <div class="how-section">
-      <h2 class="how-title">Como funciona</h2>
-      <div class="how-steps">
+      <h2 class="how-title reveal-on-scroll">Como funciona</h2>
+      <div class="how-steps reveal-on-scroll stagger-reveal">
         <div class="how-step">
           <div class="how-step-num">1</div>
           <div class="how-step-title">Responda 6 perguntas</div>
-          <div class="how-step-desc">São rápidas e práticas — sobre sua empresa, equipe e principais desafios do dia a dia.</div>
+          <div class="how-step-desc">São rápidas e práticas, sobre sua empresa, equipe e principais desafios do dia a dia.</div>
         </div>
         <div class="how-step">
           <div class="how-step-num">2</div>
@@ -2351,15 +2455,54 @@ header {
       </div>
     </div>
 
-    <!-- Separador visual -->
-    <hr class="section-divider" style="margin-top:100px">
+    <!-- Depoimentos -->
+    <div class="testimonials-section">
+      <div class="testimonials-inner">
+        <h2 class="testimonials-title reveal-on-scroll">O que nossos clientes dizem</h2>
+        <div class="testimonials-grid reveal-on-scroll stagger-reveal">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"A BG Tech transformou nossa operação. Reduzimos em 60% o tempo gasto com processos manuais e recuperamos controle total do negócio."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Carlos M.</span>
+                <span class="testimonial-role">Diretor Comercial · Varejo</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Antes da BG Tech, perdíamos horas por dia com planilhas. Hoje nosso time foca no que realmente importa. O retorno veio em menos de 2 meses."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Ana P.</span>
+                <span class="testimonial-role">Gerente de Operações · Saúde</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"O diagnóstico da BG Tech revelou problemas que a gente nem sabia que tinha. Só com os ajustes iniciais já economizamos R$ 8 mil por mês."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">👤</div>
+              <div class="testimonial-info">
+                <span class="testimonial-name">Roberto S.</span>
+                <span class="testimonial-role">CEO · Indústria</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Serviços -->
     <div class="services-section">
       <div class="services-inner">
-        <h2 class="services-title">O que a BG Tech faz pela sua empresa</h2>
+        <h2 class="services-title reveal-on-scroll">O que a BG Tech faz pela sua empresa</h2>
         <p class="services-sub">Soluções completas de tecnologia para PMEs que querem crescer com eficiência.</p>
-        <div class="services-grid">
+        <div class="services-grid reveal-on-scroll stagger-reveal">
           <div class="service-card">
             <div class="service-icon">🛡️</div>
             <div class="service-name">Suporte de TI</div>
@@ -2386,9 +2529,9 @@ header {
 
     <!-- Quem somos — humanizar -->
     <div class="team-section">
-      <h2 class="team-title">Quem está por trás da BG Tech</h2>
+      <h2 class="team-title reveal-on-scroll">Quem está por trás da BG Tech</h2>
       <p class="team-sub">Somos especialistas em automação e tecnologia para PMEs. Nosso time combina experiência técnica com visão de negócio.</p>
-      <div class="team-grid">
+      <div class="team-grid reveal-on-scroll stagger-reveal">
         <div class="team-card">
           <div class="team-avatar">B</div>
           <span class="team-name">Bruno</span>
@@ -2402,13 +2545,10 @@ header {
       </div>
     </div>
 
-    <!-- Separador visual -->
-    <hr class="section-divider" style="margin-top:100px">
-
     <!-- Segmentos atendidos -->
     <div class="segments-section">
-      <p class="segments-title">Segmentos que já confiam na BG Tech</p>
-      <div class="segments-grid">
+      <p class="segments-title reveal-on-scroll">Segmentos que já confiam na BG Tech</p>
+      <div class="segments-grid reveal-on-scroll stagger-reveal">
         <div class="segment-item">
           <div class="segment-icon" aria-hidden="true">🏪</div>
           <span class="segment-label">Comércio</span>
@@ -2436,13 +2576,10 @@ header {
       </div>
     </div>
 
-    <!-- Separador visual -->
-    <hr class="section-divider" style="margin-top:100px">
-
     <!-- FAQ -->
     <div class="faq-section">
-      <h2 class="faq-title">Perguntas frequentes</h2>
-      <div class="faq-list">
+      <h2 class="faq-title reveal-on-scroll">Perguntas frequentes</h2>
+      <div class="faq-list reveal-on-scroll stagger-reveal">
         <div class="faq-item">
           <button type="button" class="faq-question" onclick="toggleFaq(this)">
             Quanto custa o diagnóstico?
@@ -2462,7 +2599,7 @@ header {
             Quanto tempo leva para ver resultados?
             <span class="faq-arrow">▼</span>
           </button>
-          <div class="faq-answer">A maioria dos nossos clientes começa a sentir diferença em 4 a 8 semanas. Não trabalhamos com projetos longos sem entrega — priorizamos ações que geram retorno rápido e perceptível no dia a dia.</div>
+          <div class="faq-answer">A maioria dos nossos clientes começa a sentir diferença em 4 a 8 semanas. Não trabalhamos com projetos longos sem entrega. Priorizamos ações que geram retorno rápido e perceptível no dia a dia.</div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-question" onclick="toggleFaq(this)">
@@ -2476,7 +2613,7 @@ header {
             Preciso ter conhecimento técnico para começar?
             <span class="faq-arrow">▼</span>
           </button>
-          <div class="faq-answer">Não. Nossa equipe cuida de toda a parte técnica. Você só precisa nos contar como funciona o dia a dia da sua empresa — nós traduzimos isso em soluções práticas.</div>
+          <div class="faq-answer">Não. Nossa equipe cuida de toda a parte técnica. Você só precisa nos contar como funciona o dia a dia da sua empresa e nós traduzimos isso em soluções práticas.</div>
         </div>
       </div>
     </div>
@@ -2587,7 +2724,7 @@ header {
       </div>
       <div class="thankyou-step">
         <div class="thankyou-step-icon" aria-hidden="true">🗓️</div>
-        <div class="thankyou-step-text">O especialista vai agendar uma conversa rápida de 15 min — sem compromisso</div>
+        <div class="thankyou-step-text">O especialista vai agendar uma conversa rápida de 15 min, sem compromisso</div>
       </div>
       <div class="thankyou-step">
         <div class="thankyou-step-icon" aria-hidden="true">🎯</div>
@@ -2730,10 +2867,10 @@ const QUESTIONS = [
     id: 'tecnologia',
     label: 'Etapa 05 / 06',
     title: 'Como está a tecnologia na sua empresa hoje?',
-    desc: 'Assim garantimos que as soluções que indicamos sejam práticas pro seu momento atual — sem prometer o que não faz sentido pra você.',
+    desc: 'Assim garantimos que as soluções que indicamos sejam práticas pro seu momento atual, sem prometer o que não faz sentido pra você.',
     type: 'options',
     options: [
-      { icon: '📋', label: 'Usamos basicamente planilhas e papel',       sub: 'Muito a evoluir — o potencial é enorme',     score: 95 },
+      { icon: '📋', label: 'Usamos basicamente planilhas e papel',       sub: 'Muito a evoluir e o potencial é enorme',     score: 95 },
       { icon: '🖥️', label: 'Temos alguns sistemas, mas desconectados',   sub: 'O caos da falta de integração',              score: 91 },
       { icon: '⚡', label: 'Temos sistemas, mas subutilizamos',          sub: 'Pagamos por algo que não exploramos',        score: 85 },
       { icon: '🔧', label: 'Tecnologia razoável, mas precisa melhorar',  sub: 'Base sólida para evoluir',                   score: 80 },
@@ -2744,7 +2881,7 @@ const QUESTIONS = [
     id: 'contato',
     label: 'Etapa 06 / 06',
     title: 'Onde você quer receber o seu diagnóstico?',
-    desc: 'Um especialista da BG Tech vai analisar suas respostas e entrar em contato via WhatsApp para uma conversa rápida — sem script, sem enrolação.',
+    desc: 'Um especialista da BG Tech vai analisar suas respostas e entrar em contato via WhatsApp para uma conversa rápida, sem script, sem enrolação.',
     type: 'text',
     fields: [
       { id: 'nome',    placeholder: 'Seu nome completo',        type: 'text' },
@@ -3029,13 +3166,13 @@ function showResult() {
   let scoreDesc, scoreText;
   if (score >= 90) {
     scoreDesc = 'Urgente: Você Está Perdendo Dinheiro Agora';
-    scoreText = `A ${empresa} tem um volume alto de dinheiro sendo desperdiçado em processos que a tecnologia pode resolver. Cada mês sem ação tem um custo real — e a gente já sabe por onde começar.`;
+    scoreText = `A ${empresa} tem um volume alto de dinheiro sendo desperdiçado em processos que a tecnologia pode resolver. Cada mês sem ação tem um custo real, e a gente já sabe por onde começar.`;
   } else if (score >= 80) {
-    scoreDesc = 'Alto Potencial — Hora de Agir';
+    scoreDesc = 'Alto Potencial: Hora de Agir';
     scoreText = `A ${empresa} está num ponto ideal para dar o próximo salto. Com os ajustes certos, é possível liberar tempo da equipe e aumentar a margem de lucro em poucas semanas.`;
   } else {
     scoreDesc = 'Boas Oportunidades à Vista';
-    scoreText = `A ${empresa} já tem uma base boa de tecnologia. O trabalho agora é encontrar os pontos exatos de melhoria — e eles existem.`;
+    scoreText = `A ${empresa} já tem uma base boa de tecnologia. O trabalho agora é encontrar os pontos exatos de melhoria, e eles existem.`;
   }
 
   document.getElementById('score-desc').textContent = scoreDesc;
@@ -3125,20 +3262,20 @@ function buildInsights(score, dorIdx, setorIdx) {
     {
       icon: '💰',
       label: 'Impacto Financeiro Estimado',
-      title: score >= 90 ? 'Perda mensal acima de R$ 15.000' : score >= 80 ? 'Perda mensal entre R$ 5k–15k' : 'Perda mensal entre R$ 2k–8k',
+      title: score >= 90 ? 'Perda mensal acima de R$ 15.000' : score >= 80 ? 'Perda mensal entre R$ 5k e 15k' : 'Perda mensal entre R$ 2k e 8k',
       text: 'Estimativa baseada em empresas parecidas com a sua. Vamos afinar esse número juntos na nossa conversa.',
     },
     {
       icon: '🎯',
       label: 'Prioridade de Ação',
-      title: score >= 90 ? 'Urgente — Aja nos próximos 30 dias' : 'Alta — Janela de oportunidade aberta',
+      title: score >= 90 ? 'Urgente: Aja nos próximos 30 dias' : 'Alta: Janela de oportunidade aberta',
       text: 'Empresas parecidas com a sua que tomaram ação agora estão operando com muito menos custo e muito mais resultado. A janela está aberta.',
     },
     {
       icon: '📈',
       label: 'Prazo para Resultado',
       title: 'Você sente a diferença em 4 a 8 semanas',
-      text: 'Não trabalhamos com projetos de 6 meses para ver resultado. Você vai sentir a diferença no operacional em semanas — não anos.',
+      text: 'Não trabalhamos com projetos de 6 meses para ver resultado. Você vai sentir a diferença no operacional em semanas, não anos.',
     },
   ];
   return insights;
@@ -3181,7 +3318,7 @@ function submitLead() {
   const tec     = tecIdx     !== undefined ? QUESTIONS[4].options[tecIdx].label     : '—';
 
   const msg = [
-    '🔔 *Novo Lead — BG Tech Diagnóstico*',
+    '🔔 *Novo Lead | BG Tech Diagnóstico*',
     '',
     `👤 *Nome:* ${nome}`,
     `🏢 *Empresa:* ${empresa}`,
@@ -3283,6 +3420,8 @@ const revealObserver = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
 
 // ═══════════════════════════════════════════
 // FAQ TOGGLE
