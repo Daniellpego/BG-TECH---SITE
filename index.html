@@ -2566,7 +2566,7 @@ header {
       </div>
       <div class="cta-action">
         <button type="button" class="btn-cta-final" onclick="submitLead()">Quero conversar com um especialista</button>
-        <a class="btn-thankyou-wpp" id="result-wpp-link" href="#" onclick="submitLead(); return false;" aria-label="Abrir conversa no WhatsApp">💬 Falar agora pelo WhatsApp</a>
+        <a class="btn-thankyou-wpp" id="result-wpp-link" href="javascript:void(0)" onclick="submitLead()" aria-label="Abrir conversa no WhatsApp">💬 Falar agora pelo WhatsApp</a>
         <p class="urgency-text">⚡ Agenda de especialistas disponível esta semana</p>
         <span class="cta-trust">Você recebe contato em até 24h · Sem compromisso de compra</span>
       </div>
@@ -2770,8 +2770,10 @@ let currentStep = 0;
 let answers = {};
 let textValues = {};
 
+let currentScreen = 'intro';
 function getScreen(id) { return document.getElementById('screen-' + id); }
 function show(id) {
+  currentScreen = id;
   ['intro','quiz','loading','result','thankyou'].forEach(s => {
     const el = getScreen(s);
     el.style.display = (s === id) ? 'flex' : 'none';
@@ -3309,15 +3311,10 @@ if (window.innerWidth <= 768) {
 
   window.addEventListener('scroll', () => {
     const heroBottom = heroCta?.getBoundingClientRect().bottom ?? 0;
-    const isIntroVisible = getScreen('intro').style.display !== 'none';
-    const isOnIntro = !getScreen('quiz').style.display.includes('flex') &&
-                      !getScreen('loading').style.display.includes('flex') &&
-                      !getScreen('result').style.display.includes('flex') &&
-                      !getScreen('thankyou').style.display.includes('flex');
-    if (heroBottom < 0 && isIntroVisible && isOnIntro && !stickyVisible) {
+    if (heroBottom < 0 && currentScreen === 'intro' && !stickyVisible) {
       stickyCta.classList.add('visible');
       stickyVisible = true;
-    } else if ((heroBottom >= 0 || !isIntroVisible || !isOnIntro) && stickyVisible) {
+    } else if ((heroBottom >= 0 || currentScreen !== 'intro') && stickyVisible) {
       stickyCta.classList.remove('visible');
       stickyVisible = false;
     }
