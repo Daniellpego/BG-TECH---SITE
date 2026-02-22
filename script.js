@@ -1,12 +1,13 @@
 // ==== CONFIGURAÇÕES ====
 const CONFIG = {
     whatsappNumber: '5511999998888', // MUDE AQUI
-    webhookUrl: '' // Make.com
+    webhookUrl: '' // Make.com / n8n
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
+  // A MATRIZ DE VENDAS
   const QUESTIONS = [
     {
       id: 'segmento', label: 'PASSO 1 DE 6',
@@ -65,11 +66,11 @@ const CONFIG = {
       desc: 'Maturidade digital.',
       type: 'options',
       options: [
-        { icon: 'file-text', title: 'No papel ou no Excel', sub: 'Tudo manual, dependente de pessoas' },
+        { icon: 'file-text', title: 'No papel ou Excel', sub: 'Tudo manual, dependente de pessoas' },
         { icon: 'box', title: 'Sistemas básicos', sub: 'Até tem ferramenta, mas ninguém usa direito' },
-        { icon: 'boxes', title: 'Alguns sistemas sem integração', sub: 'Dados em vários lugares, muito retrabalho' },
+        { icon: 'boxes', title: 'Sistemas sem integração', sub: 'Dados espalhados, muito retrabalho' },
         { icon: 'server', title: 'Sistemas razoáveis', sub: 'Funciona, mas tem muito espaço pra evoluir' },
-        { icon: 'rocket', title: 'Tecnologia boa, quero acelerar', sub: 'Base sólida, preciso de parceiro estratégico' }
+        { icon: 'rocket', title: 'Tecnologia boa', sub: 'Base sólida, preciso de parceiro estratégico' }
       ]
     },
     {
@@ -88,6 +89,8 @@ const CONFIG = {
   // INIT
   document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
+    
+    // REVEAL ANIMATIONS
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -98,6 +101,7 @@ const CONFIG = {
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   
+    // COUNTERS IMEDIATOS
     const counters = document.querySelectorAll('.counter');
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -119,9 +123,10 @@ const CONFIG = {
           counterObserver.unobserve(counter);
         }
       });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.2 });
     counters.forEach(c => counterObserver.observe(c));
   
+    // MENU MOBILE
     document.querySelector('.js-toggle-menu').addEventListener('click', () => {
       document.getElementById('mobile-menu').classList.toggle('open');
     });
@@ -129,6 +134,7 @@ const CONFIG = {
       btn.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
     });
   
+    // HEADER & PROGRESS
     window.addEventListener('scroll', () => {
       const header = document.getElementById('site-header');
       const progress = document.getElementById('reading-progress');
@@ -138,6 +144,7 @@ const CONFIG = {
       progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
     });
   
+    // QUIZ BINDS
     document.querySelectorAll('.js-open-quiz').forEach(btn => {
       btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); });
     });
@@ -196,17 +203,17 @@ const CONFIG = {
                  </div>`;
       });
       html += `
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Nada de spam. Usamos esse contato apenas para falar sobre o diagnóstico.</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Nada de spam. Nosso time usa esse contato para falar sobre o seu diagnóstico — nada mais.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
-          <button class="btn-primary js-next">Gerar Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
+          <button class="btn-primary js-next">Ver Meu Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
         </div>`;
       body.innerHTML = html;
       
       body.querySelector('.js-next').addEventListener('click', () => {
         let hasError = false;
         
-        // Validação Agressiva
+        // VALIDAÇÃO BLINDADA
         const elNome = document.getElementById('inp-nome');
         if(elNome.value.trim().length < 3) {
             hasError = true; elNome.classList.add('error'); 
@@ -253,8 +260,8 @@ const CONFIG = {
       { icon: 'briefcase', text: `Analisando padrão operacional de ${segName}...` },
       { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
       { icon: 'dollar-sign', text: 'Calculando impacto financeiro da ineficiência...' },
-      { icon: 'target', text: 'Priorizando automações de alto ROI...' },
-      { icon: 'file-check-2', text: 'Compilando seu plano executivo...' }
+      { icon: 'target', text: 'Identificando oportunidades de automação...' },
+      { icon: 'file-check-2', text: 'Preparando relatório personalizado...' }
     ];
   
     body.innerHTML = `
@@ -292,21 +299,21 @@ const CONFIG = {
   
   function showResult() {
     const body = document.getElementById('quiz-body');
-    const nome = textData.nome.split(' ')[0];
-    const empresa = textData.empresa;
+    const nome = textData.nome.trim().split(' ')[0]; // Pega o primeiro nome seguro
+    const empresa = textData.empresa.trim();
     
-    // Copywriting por Segmento (Hiper-Personalização)
+    // 1. O ESPELHO (Copywriting hiper-personalizado pelo Segmento)
     const segTexts = [
-        "Obras, projetos e a gestão da equipe de campo dependendo de planilhas criam um gargalo invisível gigantesco.",
-        "Escritórios com alto volume de processos e clientes dependendo de rotinas burocráticas perdem muita margem.",
-        "Operações de vendas dependendo de conciliação manual limitam a capacidade de escala real.",
-        "A produção, o estoque e o chão de fábrica dependendo de apontamentos manuais geram custos invisíveis.",
-        "Clínicas com agendamento, prontuários e faturamento não integrados perdem eficiência a cada paciente.",
-        "A gestão de projetos e o controle de horas dependendo de follow-ups constantes drenam o lucro dos contratos."
+        "obras, projetos e a gestão da equipe de campo dependendo de processos manuais criam um gargalo invisível gigantesco.",
+        "escritórios com alto volume de processos e clientes dependendo de rotinas burocráticas perdem muita margem.",
+        "operações de vendas e e-commerce dependendo de conciliação e pedidos manuais limitam a capacidade de escala real.",
+        "a produção, o estoque e a operação dependendo de apontamentos no papel ou planilhas geram custos altos.",
+        "clínicas com agendamentos, prontuários e faturamento não integrados perdem eficiência a cada novo paciente.",
+        "a gestão de projetos e o controle de horas dependendo de follow-ups constantes drenam o lucro dos contratos."
     ];
-    let mirrorText = segTexts[answers.segmento] || "Depender de esforço humano bruto para processos repetitivos cria um teto de crescimento.";
+    let mirrorText = segTexts[answers.segmento] || "depender de esforço humano bruto para processos repetitivos cria um teto de crescimento claro.";
 
-    // Lógica Financeira e Score
+    // 2. A DOR FINANCEIRA
     const fatIndex = answers.faturamento;
     const matIndex = answers.maturidade;
     
@@ -315,20 +322,20 @@ const CONFIG = {
     if(fatIndex === 2) perda = "R$ 28.500 a R$ 42.000";
     if(fatIndex === 3) perda = "R$ 60.000+";
 
-    let score = 42; // Base ruim
+    // 3. O SCORE
+    let score = 42; 
     if(matIndex === 1) score = 55;
     if(matIndex === 2) score = 68;
     if(matIndex === 3) score = 82;
     if(matIndex === 4) score = 91;
 
-    // Cálculo pro SVG Circle
     const circleOffset = 251 - (251 * (score / 100));
   
     body.innerHTML = `
       <div class="reveal visible">
-        <h2 class="q-title" style="font-size: 24px;">O retrato operacional da ${empresa}.</h2>
+        <h2 class="q-title" style="font-size: 24px;">O diagnóstico da ${empresa}.</h2>
         <p style="color:var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 15px;">
-          ${nome}, sua empresa está no estágio de 'crescimento por esforço bruto'. ${mirrorText}
+          ${nome}, sua empresa está no estágio que chamamos de 'crescimento por sobrevivência' — vocês crescem, mas cada novo cliente exige mais esforço. O time trabalha mais, mas a margem não acompanha. Isso é comum no seu setor porque ${mirrorText}
         </p>
 
         <div class="score-banner">
@@ -344,51 +351,49 @@ const CONFIG = {
            </div>
            <div class="score-text">
              <h4>Score de Maturidade Tecnológica</h4>
-             <p>Empresas em ${leadLocation} com score acima de 75 crescem 34% mais rápido reduzindo custo de operação.</p>
+             <p>Empresas em ${leadLocation} com score acima de 75 crescem 34% mais rápido reduzindo custo de operação. A diferença é a automação.</p>
            </div>
         </div>
         
-        <div class="financial-box">
-          <div class="badge-blue"><i data-lucide="bar-chart-2" width="14"></i> IMPACTO FINANCEIRO MAPEADO</div>
+        <div class="result-box">
+          <div class="alert-tag"><i data-lucide="target" width="14"></i> Oportunidade Financeira Mapeada</div>
+          <div class="loss-desc">Com base no faturamento atual, estimamos que a empresa esteja perdendo mensalmente em ineficiências operacionais:</div>
           <div class="loss-value">${perda}</div>
-          <div class="loss-desc">Estimativa de desperdício mensal corroído direto da sua margem de lucro por falta de integração.</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.6);">Valor sendo corroído direto da margem de lucro por falta de integração sistêmica.</p>
         </div>
 
-        <div class="opps-box">
-          <h4 class="opps-title">Plano de Ação Sugerido</h4>
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-family: var(--font-display); font-size: 16px; color: var(--text-heading); margin-bottom: 16px; font-weight: 800;">3 Oportunidades Priorizadas</h4>
           
           <div class="opp-item">
-             <div class="opp-header"><span>1. Automação de tarefas repetitivas</span><span>Alto ROI</span></div>
+             <div class="opp-header"><span>Automação de processos repetitivos</span><span>Alto ROI</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 95%;"></div></div>
           </div>
           <div class="opp-item">
-             <div class="opp-header"><span>2. Integração do Banco de Dados</span><span>Médio/Alto</span></div>
+             <div class="opp-header"><span>Integração de ferramentas (Fim do retrabalho)</span><span>Rápido</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 80%;"></div></div>
           </div>
           <div class="opp-item">
-             <div class="opp-header"><span>3. Dashboards em Tempo Real</span><span>Estratégico</span></div>
+             <div class="opp-header"><span>Dashboards e visibilidade de dados</span><span>Estratégico</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 65%;"></div></div>
           </div>
         </div>
         
-        <div class="cta-row">
-          <button class="btn-primary js-wpp" style="width:100%; padding: 18px; font-size: 15px;">
-            Quero o plano para a ${empresa} <i data-lucide="arrow-right" width="18"></i>
-          </button>
-          <button class="btn-whatsapp js-wpp-direct" style="width:100%;">
-            <i data-lucide="message-circle" width="18"></i> Chamar no WhatsApp
+        <div style="text-align: center; border-top: 1px solid var(--border-light); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-size: 16px; color: var(--text-heading); margin-bottom: 16px; font-weight: 800;">
+            O próximo passo é uma conversa de 20 min com nosso time para transformar isso em um plano.
+          </h3>
+          <button class="btn-whatsapp js-wpp" style="width:100%; padding: 18px; font-size: 16px;">
+            <i data-lucide="message-circle" width="20"></i> Quero meu plano para a ${empresa}
           </button>
         </div>
       </div>`;
     lucide.createIcons();
   
-    // Logic for Buttons
-    const openWpp = () => {
+    // Logic for Button
+    body.querySelector('.js-wpp').addEventListener('click', () => {
       if(CONFIG.webhookUrl) { fetch(CONFIG.webhookUrl, { method:'POST', body: JSON.stringify({dados: textData, respostas: answers})}).catch(()=>{}); }
-      const msg = `Olá! Vi aqui no diagnóstico que a ineficiência tecnológica está custando até ${perda} para a ${empresa}. Meu score foi ${score}. Quero agendar 20 min para desenhar um plano de automação.`;
+      const msg = `Olá! Sou ${nome} da ${empresa}. Concluí o diagnóstico, vi que meu score é ${score}/100 e que a ineficiência está nos custando caro. Quero agendar meus 20 minutos para desenhar o plano de automação.`;
       window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    };
-
-    body.querySelector('.js-wpp').addEventListener('click', openWpp);
-    body.querySelector('.js-wpp-direct').addEventListener('click', openWpp);
+    });
   }
