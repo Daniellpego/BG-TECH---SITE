@@ -1,13 +1,12 @@
 // ==== CONFIGURAÇÕES ====
 const CONFIG = {
-    whatsappNumber: '5511999998888', // MUDE AQUI O SEU NUMERO 
-    webhookUrl: '' 
+    whatsappNumber: '5511999998888', // MUDE AQUI
+    webhookUrl: '' // Make.com
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
-  // A MATRIZ DE VENDAS
   const QUESTIONS = [
     {
       id: 'segmento', label: 'PASSO 1 DE 6',
@@ -76,7 +75,7 @@ const CONFIG = {
     {
       id: 'contato', label: 'ÚLTIMOS DADOS',
       title: 'Onde enviamos sua análise personalizada?',
-      desc: 'Seu diagnóstico está pronto.',
+      desc: 'Últimos dados — e o diagnóstico completo aparece para você agora.',
       type: 'text',
       fields: [
         { id: 'nome', placeholder: 'Seu Nome' },
@@ -89,8 +88,6 @@ const CONFIG = {
   // INIT
   document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
-  
-    // REVEAL ANIMATIONS
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -101,7 +98,6 @@ const CONFIG = {
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   
-    // COUNTERS FIX (Sem bug do zero)
     const counters = document.querySelectorAll('.counter');
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -109,20 +105,13 @@ const CONFIG = {
           const counter = entry.target;
           const target = parseFloat(counter.getAttribute('data-target'));
           const isFloat = counter.getAttribute('data-target').includes('.');
-          
-          // Animação com duração fixa
           let startTime = null;
-          const duration = 2000; // 2 segundos
-          
           const updateCount = (timestamp) => {
             if(!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-            // Easing de saída
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-            const current = target * easeProgress;
-            
+            const progress = Math.min((timestamp - startTime) / 2000, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = target * ease;
             counter.innerText = isFloat ? current.toFixed(1) : Math.floor(current);
-            
             if(progress < 1) requestAnimationFrame(updateCount);
             else counter.innerText = target;
           };
@@ -133,7 +122,6 @@ const CONFIG = {
     }, { threshold: 0.5 });
     counters.forEach(c => counterObserver.observe(c));
   
-    // MENU MOBILE
     document.querySelector('.js-toggle-menu').addEventListener('click', () => {
       document.getElementById('mobile-menu').classList.toggle('open');
     });
@@ -141,19 +129,15 @@ const CONFIG = {
       btn.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
     });
   
-    // HEADER GLASS
     window.addEventListener('scroll', () => {
       const header = document.getElementById('site-header');
       const progress = document.getElementById('reading-progress');
       if(window.scrollY > 50) header.classList.add('scrolled');
       else header.classList.remove('scrolled');
-      
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
-      progress.style.width = pct + '%';
+      progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
     });
   
-    // QUIZ BINDS
     document.querySelectorAll('.js-open-quiz').forEach(btn => {
       btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); });
     });
@@ -194,7 +178,6 @@ const CONFIG = {
       });
       html += `</div>`;
       if(currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
-      
       body.innerHTML = html;
   
       body.querySelectorAll('.q-option').forEach(opt => {
@@ -209,27 +192,42 @@ const CONFIG = {
       q.fields.forEach(f => {
         html += `<div class="q-input-group">
                   <input type="text" class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" value="${textData[f.id]||''}">
-                  <div class="q-error-msg" id="err-${f.id}">Campo obrigatório</div>
+                  <div class="q-error-msg" id="err-${f.id}"></div>
                  </div>`;
       });
       html += `
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Nada de spam. Nosso time usa esse contato para falar sobre o seu diagnóstico — nada mais.</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Nada de spam. Usamos esse contato apenas para falar sobre o diagnóstico.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
-          <button class="btn-primary js-next">Ver Meu Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
+          <button class="btn-primary js-next">Gerar Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
         </div>`;
       body.innerHTML = html;
       
       body.querySelector('.js-next').addEventListener('click', () => {
         let hasError = false;
-        q.fields.forEach(f => {
-          const el = document.getElementById(`inp-${f.id}`);
-          if(!el.value.trim()) {
-            hasError = true; el.classList.add('error'); document.getElementById(`err-${f.id}`).style.display = 'block';
-          } else {
-            textData[f.id] = el.value.trim();
-          }
-        });
+        
+        // Validação Agressiva
+        const elNome = document.getElementById('inp-nome');
+        if(elNome.value.trim().length < 3) {
+            hasError = true; elNome.classList.add('error'); 
+            document.getElementById('err-nome').innerText = "Insira um nome válido.";
+            document.getElementById('err-nome').style.display = 'block';
+        } else { textData.nome = elNome.value.trim(); }
+
+        const elEmpresa = document.getElementById('inp-empresa');
+        if(elEmpresa.value.trim().length < 2) {
+            hasError = true; elEmpresa.classList.add('error'); 
+            document.getElementById('err-empresa').innerText = "Informe a empresa.";
+            document.getElementById('err-empresa').style.display = 'block';
+        } else { textData.empresa = elEmpresa.value.trim(); }
+
+        const elWpp = document.getElementById('inp-whatsapp');
+        if(elWpp.value.trim().length < 8) {
+            hasError = true; elWpp.classList.add('error'); 
+            document.getElementById('err-whatsapp').innerText = "Número inválido.";
+            document.getElementById('err-whatsapp').style.display = 'block';
+        } else { textData.whatsapp = elWpp.value.trim(); }
+
         if(!hasError) runLoading();
       });
   
@@ -252,17 +250,17 @@ const CONFIG = {
     const segName = QUESTIONS[0].options[answers.segmento].title;
     
     const steps = [
-      { icon: 'bar-chart', text: `Mapeando o perfil de ${segName}...` },
-      { icon: 'search', text: 'Cruzando com dados de empresas similares...' },
-      { icon: 'dollar-sign', text: 'Calculando impacto financeiro estimado...' },
-      { icon: 'target', text: 'Identificando oportunidades de automação...' },
-      { icon: 'file-check-2', text: 'Preparando relatório personalizado...' }
+      { icon: 'briefcase', text: `Analisando padrão operacional de ${segName}...` },
+      { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
+      { icon: 'dollar-sign', text: 'Calculando impacto financeiro da ineficiência...' },
+      { icon: 'target', text: 'Priorizando automações de alto ROI...' },
+      { icon: 'file-check-2', text: 'Compilando seu plano executivo...' }
     ];
   
     body.innerHTML = `
       <div class="diag-loading reveal visible">
         <div class="diag-loading-ring"></div>
-        <h2 class="q-title" style="margin-bottom: 32px;">Processando dados operacionais...</h2>
+        <h2 class="q-title" style="margin-bottom: 32px;">Processando dados da ${textData.empresa}...</h2>
         <div class="diag-loading-steps">
           ${steps.map((s, i) => `
             <div class="diag-step" id="dls-${i}">
@@ -294,43 +292,103 @@ const CONFIG = {
   
   function showResult() {
     const body = document.getElementById('quiz-body');
-    const nome = textData.nome ? textData.nome.split(' ')[0] : 'Gestor';
-    const empresa = textData.empresa || 'sua empresa';
+    const nome = textData.nome.split(' ')[0];
+    const empresa = textData.empresa;
     
+    // Copywriting por Segmento (Hiper-Personalização)
+    const segTexts = [
+        "Obras, projetos e a gestão da equipe de campo dependendo de planilhas criam um gargalo invisível gigantesco.",
+        "Escritórios com alto volume de processos e clientes dependendo de rotinas burocráticas perdem muita margem.",
+        "Operações de vendas dependendo de conciliação manual limitam a capacidade de escala real.",
+        "A produção, o estoque e o chão de fábrica dependendo de apontamentos manuais geram custos invisíveis.",
+        "Clínicas com agendamento, prontuários e faturamento não integrados perdem eficiência a cada paciente.",
+        "A gestão de projetos e o controle de horas dependendo de follow-ups constantes drenam o lucro dos contratos."
+    ];
+    let mirrorText = segTexts[answers.segmento] || "Depender de esforço humano bruto para processos repetitivos cria um teto de crescimento.";
+
+    // Lógica Financeira e Score
     const fatIndex = answers.faturamento;
-    const dorName = QUESTIONS[2].options[answers.dor].title.toLowerCase();
+    const matIndex = answers.maturidade;
     
     let perda = "R$ 4.200 a R$ 8.500";
     if(fatIndex === 1) perda = "R$ 12.400 a R$ 18.200";
     if(fatIndex === 2) perda = "R$ 28.500 a R$ 42.000";
     if(fatIndex === 3) perda = "R$ 60.000+";
-  
-    let mirrorText = `${nome}, sua empresa está no estágio que chamamos de 'crescimento por esforço bruto' — vocês crescem, mas cada novo pedido exige mais esforço manual. O time trabalha mais, mas a margem não acompanha. Isso é o padrão em empresas de ${leadLocation} que ainda não resolveram o problema de ${dorName}.`;
+
+    let score = 42; // Base ruim
+    if(matIndex === 1) score = 55;
+    if(matIndex === 2) score = 68;
+    if(matIndex === 3) score = 82;
+    if(matIndex === 4) score = 91;
+
+    // Cálculo pro SVG Circle
+    const circleOffset = 251 - (251 * (score / 100));
   
     body.innerHTML = `
       <div class="reveal visible">
-        <h2 class="q-title" style="font-size: 24px;">O retrato da ${empresa}.</h2>
-        <p style="color:var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 15px;">${mirrorText}</p>
-        
-        <div class="result-box">
-          <div class="alert-tag"><i data-lucide="alert-triangle" width="16"></i> Sangria de Margem Identificada</div>
-          <div class="loss-desc">Com base no seu faturamento atual, estimamos que a empresa perca mensalmente em ineficiências:</div>
-          <div class="loss-value">${perda}</div>
-          <p style="font-size: 14px; color: var(--text-muted);">Empresas com infraestrutura de TI avançada crescem 34% mais rápido cortando exatamente esse custo operacional.</p>
+        <h2 class="q-title" style="font-size: 24px;">O retrato operacional da ${empresa}.</h2>
+        <p style="color:var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 15px;">
+          ${nome}, sua empresa está no estágio de 'crescimento por esforço bruto'. ${mirrorText}
+        </p>
+
+        <div class="score-banner">
+           <div class="score-circle">
+             <svg viewBox="0 0 100 100">
+               <circle class="score-track" cx="50" cy="50" r="40"></circle>
+               <circle class="score-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: ${circleOffset};"></circle>
+             </svg>
+             <div class="score-number">
+               <span class="score-val">${score}</span>
+               <span class="score-max">/100</span>
+             </div>
+           </div>
+           <div class="score-text">
+             <h4>Score de Maturidade Tecnológica</h4>
+             <p>Empresas em ${leadLocation} com score acima de 75 crescem 34% mais rápido reduzindo custo de operação.</p>
+           </div>
         </div>
         
-        <div style="text-align: center;">
-          <h3 style="font-family: var(--font-display); font-size: 18px; color: white; margin-bottom: 16px;">O plano para estancar isso está pronto.</h3>
+        <div class="financial-box">
+          <div class="badge-blue"><i data-lucide="bar-chart-2" width="14"></i> IMPACTO FINANCEIRO MAPEADO</div>
+          <div class="loss-value">${perda}</div>
+          <div class="loss-desc">Estimativa de desperdício mensal corroído direto da sua margem de lucro por falta de integração.</div>
+        </div>
+
+        <div class="opps-box">
+          <h4 class="opps-title">Plano de Ação Sugerido</h4>
+          
+          <div class="opp-item">
+             <div class="opp-header"><span>1. Automação de tarefas repetitivas</span><span>Alto ROI</span></div>
+             <div class="opp-bar-wrap"><div class="opp-bar" style="width: 95%;"></div></div>
+          </div>
+          <div class="opp-item">
+             <div class="opp-header"><span>2. Integração do Banco de Dados</span><span>Médio/Alto</span></div>
+             <div class="opp-bar-wrap"><div class="opp-bar" style="width: 80%;"></div></div>
+          </div>
+          <div class="opp-item">
+             <div class="opp-header"><span>3. Dashboards em Tempo Real</span><span>Estratégico</span></div>
+             <div class="opp-bar-wrap"><div class="opp-bar" style="width: 65%;"></div></div>
+          </div>
+        </div>
+        
+        <div class="cta-row">
           <button class="btn-primary js-wpp" style="width:100%; padding: 18px; font-size: 15px;">
-            Quero o plano para a ${empresa} <i data-lucide="arrow-right"></i>
+            Quero o plano para a ${empresa} <i data-lucide="arrow-right" width="18"></i>
+          </button>
+          <button class="btn-whatsapp js-wpp-direct" style="width:100%;">
+            <i data-lucide="message-circle" width="18"></i> Chamar no WhatsApp
           </button>
         </div>
       </div>`;
     lucide.createIcons();
   
-    body.querySelector('.js-wpp').addEventListener('click', () => {
+    // Logic for Buttons
+    const openWpp = () => {
       if(CONFIG.webhookUrl) { fetch(CONFIG.webhookUrl, { method:'POST', body: JSON.stringify({dados: textData, respostas: answers})}).catch(()=>{}); }
-      const msg = `Olá! Vi aqui no diagnóstico que meu problema com ${dorName} está custando caro para a ${empresa}. Quero agendar meus 20 minutos para entender como estancar isso.`;
+      const msg = `Olá! Vi aqui no diagnóstico que a ineficiência tecnológica está custando até ${perda} para a ${empresa}. Meu score foi ${score}. Quero agendar 20 min para desenhar um plano de automação.`;
       window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    });
+    };
+
+    body.querySelector('.js-wpp').addEventListener('click', openWpp);
+    body.querySelector('.js-wpp-direct').addEventListener('click', openWpp);
   }
