@@ -1,137 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BG Tech | Tecnologia que move negócios</title>
   <meta name="description" content="Descubra onde sua empresa perde dinheiro e quanto pode recuperar. Diagnóstico estratégico gratuito em 3 minutos.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://bgtech.com.br/">
   
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
   
-  <script src="https://unpkg.com/lucide@latest"></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-</head>
-
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  </head>
 <body>
   <div class="reading-progress" id="reading-progress"></div>
 
   <header id="site-header">
-    <a href="/" class="logo-mark">
+    <a href="#" class="logo-mark">
       <div class="logo-text">
         <span class="logo-name">BG <span class="blue">TECH</span></span>
         <span class="logo-tagline">Tecnologia que move negócios</span>
       </div>
     </a>
-    <nav class="nav-links" id="nav-links">
+    <nav class="nav-links">
       <a href="#services" class="nav-link">Serviços</a>
       <a href="#process" class="nav-link">Como Funciona</a>
       <a href="#founders" class="nav-link">Sobre Nós</a>
-      <a href="#faq" class="nav-link">FAQ</a>
     </nav>
-    <button type="button" class="header-cta" onclick="openDiagnostic()">Diagnóstico Gratuito</button>
-    <button type="button" class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <button class="header-cta js-open-quiz">Diagnóstico Gratuito</button>
+    <button class="hamburger js-toggle-menu" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </header>
 
   <div class="mobile-menu" id="mobile-menu">
-    <a href="#services" class="mobile-link" onclick="closeMobileMenu()">Serviços</a>
-    <a href="#process" class="mobile-link" onclick="closeMobileMenu()">Como Funciona</a>
-    <a href="#founders" class="mobile-link" onclick="closeMobileMenu()">Sobre Nós</a>
-    <a href="#faq" class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
-    <button type="button" class="btn-primary" onclick="closeMobileMenu(); openDiagnostic();" style="margin-top:16px;">Diagnóstico Gratuito</button>
+    <a href="#services" class="mobile-link js-close-menu">Serviços</a>
+    <a href="#process" class="mobile-link js-close-menu">Como Funciona</a>
+    <a href="#founders" class="mobile-link js-close-menu">Sobre Nós</a>
+    <button class="btn-primary js-open-quiz js-close-menu" style="margin-top: 24px;">Diagnóstico Gratuito</button>
   </div>
 
   <section id="hero">
     <div class="grid-bg"></div>
-    <div class="hero-orb"></div>
-    <div class="hero-orb-secondary"></div>
+    <div class="hero-glow"></div>
+    
+    <div class="hero-content reveal">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        DIAGNÓSTICO GRATUITO · RESULTADO EM 3 MINUTOS
+      </div>
 
-    <div class="hero-badge reveal-hero" style="--delay:200ms">
-      <span class="pulse-dot"></span>
-      DIAGNÓSTICO GRATUITO · RESULTADO EM 3 MINUTOS
+      <h1 class="hero-title">
+        Sua empresa perde<br>dinheiro onde você<br><span class="accent">não percebe.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Em 3 minutos, nosso time mapeia os gargalos da sua operação e mostra, em reais, o que você está deixando na mesa — e a arquitetura exata para recuperar.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-primary js-open-quiz">
+          Quero meu diagnóstico gratuito <i data-lucide="arrow-right"></i>
+        </button>
+        <span class="hero-hint">Sem compromisso · Análise instantânea</span>
+      </div>
     </div>
-
-    <h1 class="hero-title reveal-hero" style="--delay:400ms">
-      Sua empresa perde<br>dinheiro onde você<br><span class="accent">não percebe.</span>
-    </h1>
-
-    <p class="hero-subtitle reveal-hero" style="--delay:600ms">
-      Em 3 minutos, nosso time mapeia os gargalos do seu negócio e mostra, em reais, o que você está deixando na mesa - e o que fazer para recuperar.
-    </p>
-
-    <button type="button" class="btn-primary hero-cta reveal-hero-scale" style="--delay:800ms" onclick="openDiagnostic()">
-      Quero meu diagnóstico gratuito
-    </button>
-    <p class="hero-hint reveal-hero" style="--delay:800ms">Sem compromisso · Sem cartão · Resultado imediato</p>
   </section>
 
   <section id="trust-bar">
-    <div class="trust-bar-grid">
-      <div class="trust-bar-item">
-        <div class="trust-bar-number"><span class="counter" data-target="47" data-suffix="+">0</span></div>
-        <div class="trust-bar-label">Empresas Atendidas</div>
-        <div class="trust-bar-context">atendidas desde 2022</div>
+    <div class="trust-bar-grid reveal">
+      <div class="trust-item">
+        <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
+        <div class="trust-label">Empresas Atendidas</div>
+        <div class="trust-context">Operações otimizadas</div>
       </div>
-      <div class="trust-bar-item">
-        <div class="trust-bar-number">R$ <span class="counter" data-target="4.8" data-suffix="M" data-decimals="1">0</span></div>
-        <div class="trust-bar-label">Em Contratos Ativos</div>
-        <div class="trust-bar-context">soma dos contratos ativos</div>
+      <div class="trust-item">
+        <div class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</div>
+        <div class="trust-label">Valor Gerenciado</div>
+        <div class="trust-context">Em contratos ativos</div>
       </div>
-      <div class="trust-bar-item last">
-        <div class="trust-bar-number"><span class="counter" data-target="7" data-suffix=" dias">0</span></div>
-        <div class="trust-bar-label">Prazo de Implementação</div>
-        <div class="trust-bar-context">prazo máximo garantido</div>
+      <div class="trust-item">
+        <div class="trust-number"><span class="counter" data-target="7">0</span> dias</div>
+        <div class="trust-label">Go-Live Rápido</div>
+        <div class="trust-context">Para automações base</div>
       </div>
     </div>
   </section>
 
   <section id="partners">
-    <p class="partners-label">Tecnologias &amp; Plataformas</p>
-    <div class="partners-row">
-      <span class="partner-chip"><i data-lucide="layers" width="16"></i> Make.com</span>
-      <span class="partner-chip"><i data-lucide="git-merge" width="16"></i> n8n</span>
-      <span class="partner-chip"><i data-lucide="cloud" width="16"></i> Google Cloud</span>
-      <span class="partner-chip"><i data-lucide="server" width="16"></i> Microsoft Azure</span>
-      <span class="partner-chip"><i data-lucide="zap" width="16"></i> Zapier</span>
-      <span class="partner-chip"><i data-lucide="bar-chart-2" width="16"></i> Power BI</span>
+    <div class="partners-inner reveal">
+      <p class="partners-label">Tecnologias & Plataformas que dominamos</p>
+      <div class="partners-row">
+        <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
+        <span class="partner-chip"><i data-lucide="git-branch"></i> n8n</span>
+        <span class="partner-chip"><i data-lucide="cloud"></i> Google Cloud</span>
+        <span class="partner-chip"><i data-lucide="server"></i> Microsoft Azure</span>
+        <span class="partner-chip"><i data-lucide="zap"></i> Zapier</span>
+        <span class="partner-chip"><i data-lucide="bar-chart-2"></i> Power BI</span>
+      </div>
     </div>
   </section>
 
   <section id="problems">
     <div class="section-inner">
-      <p class="eyebrow reveal">O QUE ESTÁ TRAVANDO O CRESCIMENTO</p>
-      <h2 class="section-title reveal">Sua empresa está perdendo dinheiro. E você sabe disso<span class="blue">.</span></h2>
-      <p class="section-subtitle reveal">Três problemas silenciosos retiram até 40% da capacidade de lucro de PMEs todos os dias.</p>
+      <div class="section-header reveal">
+        <span class="eyebrow">A SANGRIA OPERACIONAL</span>
+        <h2 class="section-title">Sua empresa está perdendo dinheiro.<br>E você sabe disso.</h2>
+        <p class="section-subtitle">Estes três problemas silenciosos destroem até 40% da capacidade de lucro de operações B2B todos os dias.</p>
+      </div>
 
       <div class="problems-grid">
-        <div class="problem-card reveal" style="--delay:80ms">
-          <div class="problem-icon-box"><i data-lucide="clock"></i></div>
+        <div class="problem-card reveal">
+          <div class="problem-icon"><i data-lucide="clock"></i></div>
           <h3 class="problem-title">Sua equipe está presa no manual</h3>
-          <p class="problem-desc">Processos manuais consomem horas que poderiam ser investidas em crescimento. Cada planilha preenchida à mão é dinheiro parado.</p>
-          <span class="problem-stat">Perda média de 40h/mês</span>
+          <p class="problem-desc">Processos repetitivos consomem horas cruciais. Cada planilha preenchida à mão é dinheiro e produtividade parados.</p>
+          <span class="problem-stat">Perda média: 40h/mês por setor</span>
         </div>
-        <div class="problem-card reveal" style="--delay:160ms">
-          <div class="problem-icon-box"><i data-lucide="user-x"></i></div>
-          <h3 class="problem-title">Leads bons indo embora</h3>
-          <p class="problem-desc">Enquanto sua equipe demora para responder, o concorrente já fechou. Velocidade de resposta é o novo diferencial competitivo.</p>
-          <span class="problem-stat">67% fecham com quem responde antes</span>
+        <div class="problem-card reveal delay-1">
+          <div class="problem-icon"><i data-lucide="users"></i></div>
+          <h3 class="problem-title">Leads bons esfriando</h3>
+          <p class="problem-desc">Enquanto sua equipe demora para responder e qualificar, o concorrente fechou. Velocidade de resposta é o novo diferencial.</p>
+          <span class="problem-stat">67% compram de quem responde 1º</span>
         </div>
-        <div class="problem-card reveal" style="--delay:240ms">
-          <div class="problem-icon-box"><i data-lucide="cable"></i></div>
+        <div class="problem-card reveal delay-2">
+          <div class="problem-icon"><i data-lucide="cable"></i></div>
           <h3 class="problem-title">Sistemas que não se falam</h3>
-          <p class="problem-desc">Dados duplicados, retrabalho e decisões baseadas em informações incompletas. A falta de integração custa mais do que parece.</p>
-          <span class="problem-stat">Custos operacionais 23% maiores</span>
+          <p class="problem-desc">Dados duplicados e retrabalho criam ilhas de informação. Decisões erradas são tomadas com base em dados incompletos.</p>
+          <span class="problem-stat">Custo operacional 23% maior</span>
         </div>
       </div>
     </div>
@@ -139,37 +137,46 @@
 
   <section id="services">
     <div class="section-inner">
-      <p class="eyebrow reveal">TECNOLOGIA 360°</p>
-      <h2 class="section-title reveal">Uma empresa. Tudo que você precisa.</h2>
+      <div class="section-header reveal">
+        <span class="eyebrow">TECNOLOGIA 360°</span>
+        <h2 class="section-title">A arquitetura que sua operação precisa.</h2>
+      </div>
 
       <div class="services-grid">
-        <div class="service-card reveal" style="--delay:80ms">
-          <span class="service-badge">CONTRATO RECORRENTE</span>
-          <div class="service-icon-box"><i data-lucide="shield-check"></i></div>
-          <h3 class="service-name">Suporte TI Gerenciado</h3>
-          <p class="service-tagline">Sua TI. Nossa responsabilidade.</p>
-          <p class="service-desc">Monitoramento, manutenção preventiva e suporte técnico focado na estabilidade da sua operação.</p>
+        <div class="service-card reveal">
+          <span class="service-badge">ESTABILIDADE</span>
+          <div class="service-header">
+            <div class="service-icon"><i data-lucide="shield-check"></i></div>
+            <h3 class="service-title">Suporte TI Gerenciado</h3>
+          </div>
+          <p class="service-desc">Monitoramento contínuo, manutenção preventiva e suporte técnico focado em garantir que sua operação não pare um segundo sequer.</p>
         </div>
-        <div class="service-card reveal" style="--delay:160ms">
-          <span class="service-badge">PROJETO SOB MEDIDA</span>
-          <div class="service-icon-box"><i data-lucide="code-2"></i></div>
-          <h3 class="service-name">Desenvolvimento de Software</h3>
-          <p class="service-tagline">O sistema que o seu negócio precisa.</p>
-          <p class="service-desc">Sistemas sob medida que resolvem problemas reais. Software feito exclusivamente para o seu processo.</p>
+        
+        <div class="service-card reveal delay-1">
+          <span class="service-badge">SOB MEDIDA</span>
+          <div class="service-header">
+            <div class="service-icon"><i data-lucide="code-2"></i></div>
+            <h3 class="service-title">Desenvolvimento Back-end</h3>
+          </div>
+          <p class="service-desc">Sistemas desenhados exclusivamente para a sua regra de negócio. Sem gambiarras, software limpo e escalável.</p>
         </div>
-        <div class="service-card reveal" style="--delay:240ms">
-          <span class="service-badge">ALTO IMPACTO</span>
-          <div class="service-icon-box"><i data-lucide="cpu"></i></div>
-          <h3 class="service-name">Automações Inteligentes</h3>
-          <p class="service-tagline">Processos que rodam sem você.</p>
-          <p class="service-desc">Conectamos seus sistemas e eliminamos tarefas repetitivas. Sua equipe foca apenas no que gera valor.</p>
+
+        <div class="service-card reveal">
+          <span class="service-badge">EFICIÊNCIA</span>
+          <div class="service-header">
+            <div class="service-icon"><i data-lucide="cpu"></i></div>
+            <h3 class="service-title">Automações Inteligentes</h3>
+          </div>
+          <p class="service-desc">Conectamos seus CRMs, ERPs e ferramentas. Eliminamos o copia-e-cola e deixamos os robôs trabalharem enquanto sua equipe foca em receita.</p>
         </div>
-        <div class="service-card reveal" style="--delay:320ms">
+
+        <div class="service-card reveal delay-1">
           <span class="service-badge">ESTRATÉGICO</span>
-          <div class="service-icon-box"><i data-lucide="compass"></i></div>
-          <h3 class="service-name">Consultoria de TI</h3>
-          <p class="service-tagline">Tecnologia com visão de negócio.</p>
-          <p class="service-desc">Roadmap tecnológico para sua empresa. Identificamos onde investir e o que priorizar para crescer.</p>
+          <div class="service-header">
+            <div class="service-icon"><i data-lucide="compass"></i></div>
+            <h3 class="service-title">Consultoria C-Level</h3>
+          </div>
+          <p class="service-desc">Mapeamento completo e roadmap tecnológico. Ajudamos a diretoria a decidir onde investir em tecnologia para ter o maior ROI.</p>
         </div>
       </div>
     </div>
@@ -177,27 +184,30 @@
 
   <section id="process">
     <div class="section-inner">
-      <p class="eyebrow reveal">PROCESSO SIMPLES</p>
-      <h2 class="section-title reveal">Do diagnóstico ao sistema rodando.</h2>
+      <div class="section-header reveal">
+        <span class="eyebrow">A JORNADA</span>
+        <h2 class="section-title">Do diagnóstico ao Go-Live.</h2>
+      </div>
       
-      <div class="process-steps reveal" style="--delay:160ms">
+      <div class="process-steps reveal">
+        <div class="process-line"></div>
+        
         <div class="process-step">
-          <span class="process-badge">Passo 1</span>
-          <div class="process-circle">01</div>
-          <h3 class="process-step-title">Você faz o diagnóstico</h3>
-          <p class="process-step-desc">Responda 6 perguntas rápidas sobre os gargalos do seu negócio.</p>
+          <div class="process-circle">1</div>
+          <h3 class="process-step-title">Mapeamento</h3>
+          <p class="process-step-desc">Você faz o diagnóstico rápido online. Nós processamos seus dados operacionais.</p>
         </div>
+        
         <div class="process-step">
-          <span class="process-badge">Passo 2</span>
-          <div class="process-circle">02</div>
-          <h3 class="process-step-title">Reunião Estratégica</h3>
-          <p class="process-step-desc">Nosso time desenha a arquitetura exata da solução que vai resolver sua dor.</p>
+          <div class="process-circle">2</div>
+          <h3 class="process-step-title">Arquitetura</h3>
+          <p class="process-step-desc">Desenhamos a solução sob medida em uma reunião executiva direta ao ponto.</p>
         </div>
+        
         <div class="process-step">
-          <span class="process-badge">Passo 3</span>
-          <div class="process-circle">03</div>
-          <h3 class="process-step-title">Sistema no ar</h3>
-          <p class="process-step-desc">Implementação ágil e sua equipe começa a ver os resultados financeiros.</p>
+          <div class="process-circle">3</div>
+          <h3 class="process-step-title">Execução</h3>
+          <p class="process-step-desc">Implementamos a tecnologia e treinamos seu time para o ganho de eficiência imediato.</p>
         </div>
       </div>
     </div>
@@ -206,42 +216,31 @@
   <section id="founders">
     <div class="section-inner">
       <div class="founders-layout">
-        <div class="founders-text">
-          <p class="eyebrow reveal">QUEM ESTÁ POR TRÁS</p>
-          <h2 class="section-title reveal" style="text-align:left">Pessoas reais. Resultados reais.</h2>
-          <p class="section-subtitle reveal" style="text-align:left;margin-left:0">A BG Tech nasceu da combinação de visão técnica avançada com estratégia de negócios. Nós resolvemos problemas, não vendemos apenas código.</p>
-
-          <div class="founders-pillars reveal">
-            <div class="pillar">
-              <span class="pillar-icon"><i data-lucide="target" width="20"></i></span>
-              <div>
-                <h4 class="pillar-title">Orientados a Resultado</h4>
-                <p class="pillar-desc">A tecnologia é o meio, o resultado financeiro é o fim. Sempre.</p>
-              </div>
-            </div>
-            <div class="pillar">
-              <span class="pillar-icon"><i data-lucide="handshake" width="20"></i></span>
-              <div>
-                <h4 class="pillar-title">Parceiros de Longo Prazo</h4>
-                <p class="pillar-desc">Acompanhamos a evolução da sua empresa de perto.</p>
-              </div>
-            </div>
-          </div>
+        <div class="founders-content reveal">
+          <span class="eyebrow">QUEM EXECUTA</span>
+          <h2 class="section-title" style="text-align: left;">Engenharia técnica com visão de negócios.</h2>
+          <p class="section-subtitle" style="text-align: left; margin-left: 0; max-width: 100%;">Não somos apenas desenvolvedores, somos parceiros de crescimento. A BG Tech nasceu para traduzir a complexidade do código em lucro e estabilidade para a sua empresa.</p>
+          
+          <ul class="founders-list">
+            <li><i data-lucide="check-circle-2"></i> Orientação agressiva a resultados e ROI.</li>
+            <li><i data-lucide="check-circle-2"></i> Comunicação transparente, sem jargões técnicos.</li>
+            <li><i data-lucide="check-circle-2"></i> Parceria de longo prazo na evolução do software.</li>
+          </ul>
         </div>
 
-        <div class="founders-cards reveal" style="--delay:160ms">
+        <div class="founders-cards reveal delay-1">
           <div class="founder-card">
             <div class="founder-avatar">B</div>
             <div class="founder-info">
               <span class="founder-name">Bruno</span>
-              <span class="founder-role">Co-fundador & Tecnologia</span>
+              <span class="founder-role">Head de Tecnologia & Infraestrutura</span>
             </div>
           </div>
           <div class="founder-card">
             <div class="founder-avatar">G</div>
             <div class="founder-info">
               <span class="founder-name">Gabriel</span>
-              <span class="founder-role">Co-fundador & Estratégia</span>
+              <span class="founder-role">Head de Estratégia & Automação</span>
             </div>
           </div>
         </div>
@@ -250,55 +249,48 @@
   </section>
 
   <section id="cta-final">
-    <div class="cta-final-orb"></div>
-    <div class="section-inner" style="max-width:640px;position:relative;z-index:1;">
-      <p class="eyebrow reveal" style="color:var(--blue)">O PRÓXIMO PASSO LOGICO</p>
-      <h2 class="section-title reveal" style="color:var(--text-on-dark)">Pronto para escalar com segurança?</h2>
-      <p class="section-subtitle reveal" style="color:rgba(241,245,249,0.55);max-width:480px">Faça o diagnóstico gratuito e descubra exatamente onde sua operação pode ficar mais eficiente hoje mesmo.</p>
-
-      <div class="cta-final-buttons reveal" style="--delay:160ms">
-        <button type="button" class="btn-primary" onclick="openDiagnostic()">Fazer Diagnóstico Gratuito</button>
-      </div>
+    <div class="cta-glow"></div>
+    <div class="section-inner reveal" style="position: relative; z-index: 2;">
+      <span class="eyebrow" style="color: var(--blue-border)">A DECISÃO LÓGICA</span>
+      <h2 class="section-title" style="color: white;">Pronto para blindar sua operação?</h2>
+      <p class="section-subtitle" style="color: rgba(255,255,255,0.7);">Gaste 3 minutos agora para descobrir onde sua empresa está sangrando dinheiro e como recuperar isso nesta semana.</p>
+      
+      <button class="btn-primary btn-large js-open-quiz">
+        Fazer Diagnóstico Gratuito <i data-lucide="bar-chart"></i>
+      </button>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div class="footer-brand-col">
-        <div class="logo-text">
+    <div class="section-inner">
+      <div class="footer-content">
+        <div class="footer-brand">
           <span class="logo-name">BG <span class="blue">TECH</span></span>
+          <p>Tecnologia que move negócios.</p>
         </div>
-        <p class="footer-tagline-text">Tecnologia que move negócios</p>
-      </div>
-      <div class="footer-col">
-        <h4 class="footer-col-title">EMPRESA</h4>
-        <a href="#services" class="footer-link">Serviços</a>
-        <a href="#process" class="footer-link">Como Funciona</a>
-        <a href="#founders" class="footer-link">Sobre Nós</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div style="display:flex;flex-direction:column;gap:4px;">
-        <span>© 2026 BG Tecnologia e Automação LTDA.</span>
+        <div class="footer-links">
+          <p>© 2026 BG Tecnologia e Automação LTDA.</p>
+        </div>
       </div>
     </div>
   </footer>
 
-  <div class="diagnostic-overlay" id="diagnostic-overlay">
-    <div class="diagnostic-header">
-      <span class="logo-name" style="font-size:16px;color:var(--text-on-dark)">BG <span class="blue">TECH</span></span>
-      <button type="button" class="diagnostic-close" onclick="closeDiagnostic()" aria-label="Fechar"><i data-lucide="x"></i></button>
+  <div class="quiz-overlay" id="quiz-overlay">
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <span class="logo-name">BG <span class="blue">TECH</span></span>
+        <button class="quiz-close js-close-quiz"><i data-lucide="x"></i></button>
+      </div>
+      
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+      </div>
+
+      <div class="quiz-body" id="quiz-body">
+        </div>
     </div>
-    <div class="diagnostic-progress">
-      <div class="diagnostic-progress-fill" id="diagnostic-progress-fill"></div>
-    </div>
-    <div class="diagnostic-dots" id="diagnostic-dots"></div>
-    <div class="diagnostic-content" id="diagnostic-content"></div>
   </div>
 
-  <script>
-    // Inicializa os ícones do Lucide
-    lucide.createIcons();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
