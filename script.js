@@ -1,72 +1,96 @@
-// ==== CONFIGURAÇÕES DA BG TECH ====
+// ==== CONFIGURAÇÕES ====
 const CONFIG = {
-    whatsappNumber: '5511999998888', // Coloque o seu numero real
-    webhookUrl: '' // Se tiver Make.com, coloque aqui depois
+    whatsappNumber: '5511999998888', // Seu número aqui
+    webhookUrl: '' 
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
-  // O FUNIL DE VENDAS (SPIN SELLING)
+  // ==== A MATRIZ DE VENDAS DO QUIZ (COMO PEDIDO) ====
   const QUESTIONS = [
     {
-      id: 'gargalo', label: 'PASSO 1 DE 5',
-      title: 'Onde está o maior gargalo da sua empresa?',
-      desc: 'Selecione a área que mais "sangra" tempo ou dinheiro da operação.',
+      id: 'segmento', label: 'PASSO 1 DE 6',
+      title: 'Qual o segmento da sua empresa?',
+      desc: 'Isso personaliza o vocabulário da sua análise estrutural.',
       type: 'options',
       options: [
-        { icon: 'trending-down', title: 'Vendas e Comercial', sub: 'Leads demoram a ser atendidos' },
-        { icon: 'settings', title: 'Operação e Entregas', sub: 'Processos manuais e retrabalho' },
-        { icon: 'pie-chart', title: 'Gestão e Financeiro', sub: 'Falta de dados confiáveis' },
-        { icon: 'cable', title: 'Tecnologia Fragmentada', sub: 'Sistemas que não se falam' }
+        { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
+        { icon: 'scale', title: 'Jurídico / Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
+        { icon: 'store', title: 'Comércio / Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
+        { icon: 'factory', title: 'Indústria / Manufatura', sub: 'Produção, estoque e operação fabril' },
+        { icon: 'stethoscope', title: 'Saúde', sub: 'Clínicas, laboratórios e prestadores de saúde' },
+        { icon: 'briefcase', title: 'Serviços / Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
       ]
     },
     {
-      id: 'caos', label: 'PASSO 2 DE 5',
-      title: 'Como está o nível da sua operação hoje?',
-      desc: 'Seja 100% sincero sobre a rotina da equipe.',
+      id: 'tamanho', label: 'PASSO 2 DE 6',
+      title: 'Quantas pessoas dependem da tecnologia funcionando para trabalhar hoje?',
+      desc: 'Ajuda a calibrar a densidade da nossa arquitetura.',
       type: 'options',
       options: [
-        { icon: 'alert-triangle', title: 'Caótico', sub: 'Erros frequentes, quase tudo é manual' },
-        { icon: 'lock', title: 'Engessado', sub: 'Temos sistemas, mas exigem muito esforço' },
-        { icon: 'activity', title: 'No limite', sub: 'Funciona, mas quebra se as vendas dobrarem' }
+        { icon: 'user', title: 'Até 4 pessoas', sub: 'Equipe super enxuta' },
+        { icon: 'users', title: '5 a 20 pessoas', sub: 'A operação já demanda processos claros' },
+        { icon: 'building', title: '21 a 50 pessoas', sub: 'Departamentos e integrações complexas' },
+        { icon: 'building-2', title: 'Mais de 50 pessoas', sub: 'Estrutura corporativa e dados massivos' }
       ]
     },
     {
-      id: 'faturamento', label: 'PASSO 3 DE 5',
-      title: 'Qual a faixa de faturamento mensal?',
-      desc: 'Isso determina o custo do desperdício operacional em reais.',
+      id: 'dor', label: 'PASSO 3 DE 6',
+      title: 'O que mais trava o crescimento da sua empresa hoje?',
+      desc: 'O gargalo principal da operação.',
       type: 'options',
       options: [
-        { icon: 'wallet', title: 'Até R$ 50 mil', sub: 'Fase de validação/tração' },
-        { icon: 'briefcase', title: 'R$ 50k a R$ 200k', sub: 'Crescimento ativo' },
-        { icon: 'landmark', title: 'Acima de R$ 200k', sub: 'Operação de alta complexidade' }
+        { icon: 'clock', title: 'Processos manuais', sub: '87% das PMEs perdem +15h/semana nisso' },
+        { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Retrabalho que consome 23% do custo' },
+        { icon: 'alert-circle', title: 'Suporte de TI lento', sub: 'Cada hora parada custa muito caro' },
+        { icon: 'bar-chart', title: 'Falta de visibilidade', sub: 'Decisões no achômetro e sem dados claros' },
+        { icon: 'users-x', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais' }
       ]
     },
     {
-      id: 'contato', label: 'PASSO 4 DE 5',
-      title: 'Para onde enviamos a análise?',
-      desc: 'Seu diagnóstico está pronto. Informe os dados corporativos.',
+      id: 'faturamento', label: 'PASSO 4 DE 6',
+      title: 'Qual faixa melhor representa o faturamento mensal atual?',
+      desc: 'Essa informação nos ajuda a calcular o impacto financeiro real das ineficiências.',
+      type: 'options',
+      options: [
+        { icon: 'wallet', title: 'Até R$ 50 mil', sub: 'Fase de validação do modelo' },
+        { icon: 'trending-up', title: 'R$ 50k a R$ 200 mil', sub: 'Ganhando tração e corpo' },
+        { icon: 'landmark', title: 'R$ 200k a R$ 500 mil', sub: 'Operação sólida buscando escala' },
+        { icon: 'gem', title: 'Acima de R$ 500 mil', sub: 'Estrutura robusta' }
+      ]
+    },
+    {
+      id: 'maturidade', label: 'PASSO 5 DE 6',
+      title: 'Como você descreveria a tecnologia hoje — sendo completamente honesto?',
+      desc: 'Maturidade digital.',
+      type: 'options',
+      options: [
+        { icon: 'file-text', title: 'No papel ou no Excel', sub: 'Tudo manual, dependente de pessoas' },
+        { icon: 'box', title: 'Sistemas básicos', sub: 'Até tem ferramenta, mas ninguém usa direito' },
+        { icon: 'boxes', title: 'Alguns sistemas sem integração', sub: 'Dados em vários lugares, muito retrabalho' },
+        { icon: 'server', title: 'Sistemas razoáveis', sub: 'Funciona, mas tem muito espaço pra evoluir' },
+        { icon: 'rocket', title: 'Tecnologia boa, quero acelerar', sub: 'Base sólida, preciso de parceiro estratégico' }
+      ]
+    },
+    {
+      id: 'contato', label: 'ÚLTIMOS DADOS',
+      title: 'Onde enviamos sua análise personalizada?',
+      desc: 'Seu diagnóstico está pronto.',
       type: 'text',
       fields: [
-        { id: 'nome', placeholder: 'Seu Nome e Cargo (Ex: Daniel - CEO)' },
+        { id: 'nome', placeholder: 'Seu Nome' },
         { id: 'empresa', placeholder: 'Nome da Empresa' },
         { id: 'whatsapp', placeholder: 'WhatsApp (com DDD)' }
       ]
     }
   ];
   
-  let currentStep = 0;
-  let answers = {};
-  let textData = {};
-  
-  // INICIALIZAÇÃO BLINDADA
+  // INICIALIZAÇÃO
   document.addEventListener('DOMContentLoaded', () => {
-    
-    // Ícones do Lucide
     lucide.createIcons();
   
-    // Animações Reveal ao rolar a página
+    // ANIMAÇÕES REVEAL SCROLL
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -77,41 +101,65 @@ const CONFIG = {
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   
-    // Scroll do Header (Glassmorphism)
-    const header = document.getElementById('site-header');
-    window.addEventListener('scroll', () => {
-      if(window.scrollY > 60) header.classList.add('scrolled');
-      else header.classList.remove('scrolled');
-    });
+    // CONTADORES REESCRITOS (A PROVA DE FALHAS)
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          const counter = entry.target;
+          const target = parseFloat(counter.getAttribute('data-target'));
+          const isFloat = counter.getAttribute('data-target').includes('.');
+          
+          let count = 0;
+          const updateCount = () => {
+            const increment = target / 50; 
+            if(count < target) {
+              count += increment;
+              counter.innerText = isFloat ? count.toFixed(1) : Math.ceil(count);
+              requestAnimationFrame(updateCount);
+            } else {
+              counter.innerText = target;
+            }
+          };
+          updateCount();
+          counterObserver.unobserve(counter);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(c => counterObserver.observe(c));
   
-    // Menu Mobile
-    const mobileMenu = document.getElementById('mobile-menu');
+    // MENU MOBILE
     document.querySelector('.js-toggle-menu').addEventListener('click', () => {
-      mobileMenu.classList.toggle('open');
+      document.getElementById('mobile-menu').classList.toggle('open');
     });
     document.querySelectorAll('.js-close-menu').forEach(btn => {
-      btn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+      btn.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
     });
   
-    // Acionadores do Quiz (Isso conserta o bug dos botões mortos)
+    // HEADER GLASS
+    window.addEventListener('scroll', () => {
+      if(window.scrollY > 50) document.getElementById('site-header').classList.add('scrolled');
+      else document.getElementById('site-header').classList.remove('scrolled');
+    });
+  
+    // BOTOES DO QUIZ
     document.querySelectorAll('.js-open-quiz').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        openQuiz();
-      });
+      btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); });
     });
-  
     document.querySelector('.js-close-quiz').addEventListener('click', closeQuiz);
   });
   
-  // LOGICA DO QUIZ
+  // MOTOR DO QUIZ
+  let currentStep = 0;
+  let answers = {};
+  let textData = {};
+  
   function openQuiz() {
     currentStep = 0; answers = {}; textData = {};
     document.getElementById('quiz-overlay').classList.add('open');
     document.body.classList.add('modal-open');
     renderStep();
   }
-  
   function closeQuiz() {
     document.getElementById('quiz-overlay').classList.remove('open');
     document.body.classList.remove('modal-open');
@@ -134,120 +182,145 @@ const CONFIG = {
           </div>`;
       });
       html += `</div>`;
+      if(currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
       
-      if(currentStep > 0) {
-        html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
-      }
       body.innerHTML = html;
   
       body.querySelectorAll('.q-option').forEach(opt => {
         opt.addEventListener('click', function() {
           answers[q.id] = parseInt(this.getAttribute('data-index'));
           renderStep();
-          setTimeout(() => { nextStep(); }, 350); // Delay suave
+          setTimeout(() => { nextStep(); }, 300);
         });
       });
-  
     } else {
       let html = `<span class="q-label">${q.label}</span><h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
       q.fields.forEach(f => {
         html += `<div class="q-input-group">
                   <input type="text" class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" value="${textData[f.id]||''}">
-                  <div class="q-error-msg" id="err-${f.id}">Preenchimento obrigatório</div>
+                  <div class="q-error-msg" id="err-${f.id}">Campo obrigatório</div>
                  </div>`;
       });
       html += `
+        <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-bottom: 20px;">Nada de spam. Nosso time usa esse contato para falar sobre o seu diagnóstico — nada mais.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
-          <button class="btn-primary js-next">Finalizar Análise <i data-lucide="arrow-right" width="16"></i></button>
+          <button class="btn-primary js-next">Ver Meu Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
         </div>`;
       body.innerHTML = html;
       
-      body.querySelector('.js-next').addEventListener('click', handleTextSubmit);
-      
-      // Remove erro ao digitar
+      body.querySelector('.js-next').addEventListener('click', () => {
+        let hasError = false;
+        q.fields.forEach(f => {
+          const el = document.getElementById(`inp-${f.id}`);
+          if(!el.value.trim()) {
+            hasError = true; el.classList.add('error'); document.getElementById(`err-${f.id}`).style.display = 'block';
+          } else {
+            textData[f.id] = el.value.trim();
+          }
+        });
+        if(!hasError) runLoading();
+      });
+  
       q.fields.forEach(f => {
-          document.getElementById(`inp-${f.id}`).addEventListener('input', function() {
-              this.classList.remove('error');
-              document.getElementById(`err-${f.id}`).style.display = 'none';
-          });
+        document.getElementById(`inp-${f.id}`).addEventListener('input', function() {
+          this.classList.remove('error'); document.getElementById(`err-${f.id}`).style.display = 'none';
+        });
       });
     }
-  
-    if(body.querySelector('.js-prev')) {
-      body.querySelector('.js-prev').addEventListener('click', () => { currentStep--; renderStep(); });
-    }
     
+    if(body.querySelector('.js-prev')) body.querySelector('.js-prev').addEventListener('click', () => { currentStep--; renderStep(); });
     lucide.createIcons();
   }
   
-  function nextStep() {
-    if (currentStep < QUESTIONS.length - 1) {
-      currentStep++; renderStep();
-    } else {
-      showResult();
-    }
-  }
+  function nextStep() { currentStep++; renderStep(); }
   
-  function handleTextSubmit() {
-    const q = QUESTIONS[currentStep];
-    let hasError = false;
-    q.fields.forEach(f => {
-      const el = document.getElementById(`inp-${f.id}`);
-      if(!el.value.trim()) {
-        hasError = true;
-        el.classList.add('error');
-        document.getElementById(`err-${f.id}`).style.display = 'block';
-      } else {
-        textData[f.id] = el.value.trim();
-      }
-    });
-    if(!hasError) showResult(); // Vai direto para o resultado após validar contato
-  }
-  
-  // TELA DE RESULTADO MATADORA (NEUROMARKETING)
-  function showResult() {
+  function runLoading() {
     document.getElementById('quiz-progress-fill').style.width = '100%';
     const body = document.getElementById('quiz-body');
+    const segName = QUESTIONS[0].options[answers.segmento].title;
     
-    const fat = answers['faturamento'];
-    let perda = "R$ 4.500";
-    if(fat === 1) perda = "R$ 14.800";
-    if(fat === 2) perda = "R$ 38.500+";
+    const steps = [
+      { icon: 'bar-chart', text: `Mapeando o perfil de ${segName}...` },
+      { icon: 'search', text: 'Cruzando com dados de empresas similares...' },
+      { icon: 'dollar-sign', text: 'Calculando impacto financeiro estimado...' },
+      { icon: 'target', text: 'Identificando oportunidades de automação...' },
+      { icon: 'file-check-2', text: 'Preparando relatório personalizado...' }
+    ];
   
-    const nome = textData.nome ? textData.nome.split(' ')[0] : 'Gestor';
-    
     body.innerHTML = `
-      <div style="text-align:center; margin-bottom:24px;">
-        <i data-lucide="check-circle" style="color:var(--blue); width:56px; height:56px;"></i>
-      </div>
-      <div class="result-box">
-        <div class="alert-tag"><i data-lucide="alert-triangle" width="16"></i> Risco Competitivo Detectado</div>
-        <h2 class="q-title" style="color:var(--text-heading); font-size:22px;">${nome}, a operação da ${textData.empresa || 'sua empresa'} está vulnerável.</h2>
-        <p style="color:var(--text-muted); line-height:1.6; margin-bottom:24px; font-size: 15px;">
-          Empresas em <b>${leadLocation}</b> com o seu perfil estão escalando usando automação. Operar de forma manual neste nível está causando uma sangria invisível todos os dias.
-        </p>
-        <div style="background:white; border: 1px solid var(--border-light); padding:24px; border-radius:12px;">
-          <div class="loss-desc">Estimativa de desperdício mensal:</div>
-          <div class="loss-value">Até ${perda}</div>
-          <p style="font-size:13px; color:var(--text-muted); font-weight: 500;">Valor sendo corroído direto da sua margem de lucro.</p>
+      <div class="diag-loading reveal visible">
+        <div class="diag-loading-ring"></div>
+        <h2 class="q-title" style="margin-bottom: 32px;">Processando dados operacionais...</h2>
+        <div class="diag-loading-steps">
+          ${steps.map((s, i) => `
+            <div class="diag-step" id="dls-${i}">
+              <div class="diag-step-icon"><i data-lucide="${s.icon}" width="16"></i></div>
+              <span>${s.text}</span>
+            </div>
+          `).join('')}
         </div>
-      </div>
-      
-      <div style="text-align: center;">
-        <h3 style="font-family: var(--font-display); font-size: 18px; color: var(--text-heading); margin-bottom: 16px;">Nós desenhamos a solução para estancar isso.</h3>
-        <button class="btn-primary js-wpp" style="width:100%; padding: 20px; font-size: 16px;">
-          <i data-lucide="calendar"></i> Agendar Desenho da Arquitetura
-        </button>
-      </div>
-    `;
+      </div>`;
+    lucide.createIcons();
+  
+    let i = 0;
+    const tick = () => {
+      if(i > 0) {
+        document.getElementById(`dls-${i-1}`).classList.replace('active', 'done');
+        document.getElementById(`dls-${i-1}`).querySelector('.diag-step-icon').innerHTML = '<i data-lucide="check" width="16"></i>';
+      }
+      if(i < steps.length) {
+        document.getElementById(`dls-${i}`).classList.add('active');
+        lucide.createIcons();
+        i++;
+        setTimeout(tick, 700);
+      } else {
+        setTimeout(showResult, 600);
+      }
+    };
+    tick();
+  }
+  
+  function showResult() {
+    const body = document.getElementById('quiz-body');
+    const nome = textData.nome ? textData.nome.split(' ')[0] : 'Gestor';
+    const empresa = textData.empresa || 'sua empresa';
+    
+    // Matemática da dor baseada nas opções do lead
+    const fatIndex = answers.faturamento;
+    const dorName = QUESTIONS[2].options[answers.dor].title.toLowerCase();
+    
+    let perda = "R$ 4.200 a R$ 8.500";
+    if(fatIndex === 1) perda = "R$ 12.400 a R$ 18.200";
+    if(fatIndex === 2) perda = "R$ 28.500 a R$ 42.000";
+    if(fatIndex === 3) perda = "R$ 60.000+";
+  
+    let mirrorText = `${nome}, sua empresa está no estágio que chamamos de 'crescimento por esforço bruto' — vocês crescem, mas cada novo pedido exige mais esforço manual. O time trabalha mais, mas a margem não acompanha. Isso é o padrão em empresas de ${leadLocation} que ainda não automatizaram o fluxo de ${dorName}.`;
+  
+    body.innerHTML = `
+      <div class="reveal visible">
+        <h2 class="q-title" style="font-size: 22px;">O retrato operacional da ${empresa}.</h2>
+        <p style="color:var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 15px;">${mirrorText}</p>
+        
+        <div class="result-box">
+          <div class="alert-tag"><i data-lucide="alert-triangle"></i> Sangria de Margem Identificada</div>
+          <div class="loss-desc">Com base no seu faturamento atual, estimamos que a empresa perca mensalmente em ineficiências:</div>
+          <div class="loss-value">${perda}</div>
+          <p style="font-size: 14px; color: var(--text-muted);">Empresas com score de automação alto crescem 34% mais rápido reduzindo esse exato custo operacional.</p>
+        </div>
+        
+        <div style="text-align: center;">
+          <h3 style="font-family: var(--font-display); font-size: 18px; color: var(--text-heading); margin-bottom: 16px;">O plano para estancar isso está pronto.</h3>
+          <button class="btn-primary js-wpp" style="width:100%; padding: 20px; font-size: 16px;">
+            Quero o plano para a ${empresa} <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>`;
     lucide.createIcons();
   
     body.querySelector('.js-wpp').addEventListener('click', () => {
-      if(CONFIG.webhookUrl) {
-        fetch(CONFIG.webhookUrl, { method: 'POST', body: JSON.stringify({dados: textData, respostas: answers})}).catch(()=>{});
-      }
-      const msg = `Olá, sou ${nome}. Concluí o diagnóstico da BG Tech e descobri a perda financeira da minha operação. Quero conversar sobre como resolver isso com tecnologia.`;
+      if(CONFIG.webhookUrl) { fetch(CONFIG.webhookUrl, { method:'POST', body: JSON.stringify({dados: textData, respostas: answers})}).catch(()=>{}); }
+      const msg = `Olá! Vi aqui no diagnóstico que meu gargalo com ${dorName} está custando caro para a ${empresa}. Gostaria de agendar meus 20 minutos para entender como a automação pode resolver isso.`;
       window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     });
   }
