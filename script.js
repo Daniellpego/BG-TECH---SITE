@@ -1,13 +1,13 @@
 // ==== CONFIGURAÇÕES ====
 const CONFIG = {
-    whatsappNumber: '5511999998888', // Seu número aqui
+    whatsappNumber: '5511999998888', // MUDE AQUI O SEU NUMERO 
     webhookUrl: '' 
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
-  // ==== A MATRIZ DE VENDAS DO QUIZ (COMO PEDIDO) ====
+  // A MATRIZ DE VENDAS
   const QUESTIONS = [
     {
       id: 'segmento', label: 'PASSO 1 DE 6',
@@ -86,11 +86,11 @@ const CONFIG = {
     }
   ];
   
-  // INICIALIZAÇÃO
+  // INIT
   document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   
-    // ANIMAÇÕES REVEAL SCROLL
+    // REVEAL ANIMATIONS
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -101,7 +101,7 @@ const CONFIG = {
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   
-    // CONTADORES REESCRITOS (A PROVA DE FALHAS)
+    // COUNTERS FIX (Sem bug do zero)
     const counters = document.querySelectorAll('.counter');
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -110,18 +110,23 @@ const CONFIG = {
           const target = parseFloat(counter.getAttribute('data-target'));
           const isFloat = counter.getAttribute('data-target').includes('.');
           
-          let count = 0;
-          const updateCount = () => {
-            const increment = target / 50; 
-            if(count < target) {
-              count += increment;
-              counter.innerText = isFloat ? count.toFixed(1) : Math.ceil(count);
-              requestAnimationFrame(updateCount);
-            } else {
-              counter.innerText = target;
-            }
+          // Animação com duração fixa
+          let startTime = null;
+          const duration = 2000; // 2 segundos
+          
+          const updateCount = (timestamp) => {
+            if(!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            // Easing de saída
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            const current = target * easeProgress;
+            
+            counter.innerText = isFloat ? current.toFixed(1) : Math.floor(current);
+            
+            if(progress < 1) requestAnimationFrame(updateCount);
+            else counter.innerText = target;
           };
-          updateCount();
+          requestAnimationFrame(updateCount);
           counterObserver.unobserve(counter);
         }
       });
@@ -138,18 +143,24 @@ const CONFIG = {
   
     // HEADER GLASS
     window.addEventListener('scroll', () => {
-      if(window.scrollY > 50) document.getElementById('site-header').classList.add('scrolled');
-      else document.getElementById('site-header').classList.remove('scrolled');
+      const header = document.getElementById('site-header');
+      const progress = document.getElementById('reading-progress');
+      if(window.scrollY > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      progress.style.width = pct + '%';
     });
   
-    // BOTOES DO QUIZ
+    // QUIZ BINDS
     document.querySelectorAll('.js-open-quiz').forEach(btn => {
       btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); });
     });
     document.querySelector('.js-close-quiz').addEventListener('click', closeQuiz);
   });
   
-  // MOTOR DO QUIZ
+  // MOTOR QUIZ
   let currentStep = 0;
   let answers = {};
   let textData = {};
@@ -202,7 +213,7 @@ const CONFIG = {
                  </div>`;
       });
       html += `
-        <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-bottom: 20px;">Nada de spam. Nosso time usa esse contato para falar sobre o seu diagnóstico — nada mais.</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Nada de spam. Nosso time usa esse contato para falar sobre o seu diagnóstico — nada mais.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
           <button class="btn-primary js-next">Ver Meu Diagnóstico <i data-lucide="arrow-right" width="16"></i></button>
@@ -286,7 +297,6 @@ const CONFIG = {
     const nome = textData.nome ? textData.nome.split(' ')[0] : 'Gestor';
     const empresa = textData.empresa || 'sua empresa';
     
-    // Matemática da dor baseada nas opções do lead
     const fatIndex = answers.faturamento;
     const dorName = QUESTIONS[2].options[answers.dor].title.toLowerCase();
     
@@ -295,23 +305,23 @@ const CONFIG = {
     if(fatIndex === 2) perda = "R$ 28.500 a R$ 42.000";
     if(fatIndex === 3) perda = "R$ 60.000+";
   
-    let mirrorText = `${nome}, sua empresa está no estágio que chamamos de 'crescimento por esforço bruto' — vocês crescem, mas cada novo pedido exige mais esforço manual. O time trabalha mais, mas a margem não acompanha. Isso é o padrão em empresas de ${leadLocation} que ainda não automatizaram o fluxo de ${dorName}.`;
+    let mirrorText = `${nome}, sua empresa está no estágio que chamamos de 'crescimento por esforço bruto' — vocês crescem, mas cada novo pedido exige mais esforço manual. O time trabalha mais, mas a margem não acompanha. Isso é o padrão em empresas de ${leadLocation} que ainda não resolveram o problema de ${dorName}.`;
   
     body.innerHTML = `
       <div class="reveal visible">
-        <h2 class="q-title" style="font-size: 22px;">O retrato operacional da ${empresa}.</h2>
+        <h2 class="q-title" style="font-size: 24px;">O retrato da ${empresa}.</h2>
         <p style="color:var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 15px;">${mirrorText}</p>
         
         <div class="result-box">
-          <div class="alert-tag"><i data-lucide="alert-triangle"></i> Sangria de Margem Identificada</div>
+          <div class="alert-tag"><i data-lucide="alert-triangle" width="16"></i> Sangria de Margem Identificada</div>
           <div class="loss-desc">Com base no seu faturamento atual, estimamos que a empresa perca mensalmente em ineficiências:</div>
           <div class="loss-value">${perda}</div>
-          <p style="font-size: 14px; color: var(--text-muted);">Empresas com score de automação alto crescem 34% mais rápido reduzindo esse exato custo operacional.</p>
+          <p style="font-size: 14px; color: var(--text-muted);">Empresas com infraestrutura de TI avançada crescem 34% mais rápido cortando exatamente esse custo operacional.</p>
         </div>
         
         <div style="text-align: center;">
-          <h3 style="font-family: var(--font-display); font-size: 18px; color: var(--text-heading); margin-bottom: 16px;">O plano para estancar isso está pronto.</h3>
-          <button class="btn-primary js-wpp" style="width:100%; padding: 20px; font-size: 16px;">
+          <h3 style="font-family: var(--font-display); font-size: 18px; color: white; margin-bottom: 16px;">O plano para estancar isso está pronto.</h3>
+          <button class="btn-primary js-wpp" style="width:100%; padding: 18px; font-size: 15px;">
             Quero o plano para a ${empresa} <i data-lucide="arrow-right"></i>
           </button>
         </div>
@@ -320,7 +330,7 @@ const CONFIG = {
   
     body.querySelector('.js-wpp').addEventListener('click', () => {
       if(CONFIG.webhookUrl) { fetch(CONFIG.webhookUrl, { method:'POST', body: JSON.stringify({dados: textData, respostas: answers})}).catch(()=>{}); }
-      const msg = `Olá! Vi aqui no diagnóstico que meu gargalo com ${dorName} está custando caro para a ${empresa}. Gostaria de agendar meus 20 minutos para entender como a automação pode resolver isso.`;
+      const msg = `Olá! Vi aqui no diagnóstico que meu problema com ${dorName} está custando caro para a ${empresa}. Quero agendar meus 20 minutos para entender como estancar isso.`;
       window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     });
   }
