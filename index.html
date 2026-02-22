@@ -20,7 +20,7 @@
   <header id="site-header">
     <a href="#" class="logo-mark">
       <div class="logo-text">
-        <span class="logo-name">BG <span class="blue">TECH</span></span>
+        <span class="logo-name">BG <span class="text-cyan">TECH</span></span>
         <span class="logo-tagline">Tecnologia que move negócios</span>
       </div>
     </a>
@@ -30,7 +30,7 @@
       <a href="#cases" class="nav-link">Casos</a>
       <a href="#founders" class="nav-link">Liderança</a>
     </nav>
-    <button class="btn-outline js-open-quiz">Diagnóstico Gratuito</button>
+    <button class="header-cta js-open-quiz">Diagnóstico Gratuito</button>
     <button class="hamburger js-toggle-menu">
       <span></span><span></span><span></span>
     </button>
@@ -44,9 +44,10 @@
     <button class="btn-primary js-open-quiz js-close-menu" style="margin-top: 32px;">Fazer Diagnóstico</button>
   </div>
 
-  <section id="hero" class="dark-section">
+  <section id="hero">
     <div class="grid-overlay"></div>
-    <div class="hero-glow"></div>
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
     
     <div class="hero-content">
       <div class="hero-badge reveal">
@@ -55,7 +56,7 @@
       </div>
 
       <h1 class="hero-title reveal delay-1">
-        Sua empresa perde<br>dinheiro onde você<br><span class="text-blue">não percebe.</span>
+        Sua empresa perde<br>dinheiro onde você<br><span class="hero-highlight">não percebe.</span>
       </h1>
 
       <p class="hero-subtitle reveal delay-2">
@@ -76,7 +77,7 @@
     </div>
   </section>
 
-  <section id="trust-bar" class="dark-section">
+  <section id="trust-bar" class="trust-fade">
     <div class="trust-bar-grid reveal">
       <div class="trust-item">
         <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
@@ -96,7 +97,7 @@
     </div>
   </section>
 
-  <section id="partners" class="light-section">
+  <section id="partners" class="light-section" style="padding-top: 24px;">
     <p class="partners-label">TECNOLOGIAS DE ALTA PERFORMANCE</p>
     <div class="partners-row reveal">
       <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
@@ -137,11 +138,11 @@
     </div>
   </section>
 
-  <section id="services" class="light-section bg-gray">
+  <section id="services" class="light-section bg-light-alt">
     <div class="section-inner">
       <span class="eyebrow reveal">ARQUITETURA DE SOLUÇÃO</span>
       <h2 class="section-title reveal">Uma empresa. Tudo que você precisa.</h2>
-      <p class="section-subtitle reveal">Criamos a tecnologia exata que o seu negócio precisa para parar de travar e começar a escalar rápido.</p>
+      <p class="section-subtitle reveal">Não vendemos 'sisteminha'. Criamos a tecnologia exata que o seu negócio precisa para parar de travar e começar a escalar.</p>
 
       <div class="services-grid">
         <div class="service-card reveal">
@@ -210,7 +211,7 @@
     </div>
   </section>
 
-  <section id="cases" class="light-section bg-gray">
+  <section id="cases" class="light-section testimonials-bg">
     <div class="section-inner">
       <span class="eyebrow reveal">RESULTADOS REAIS</span>
       <h2 class="section-title reveal">Não acredite em nós. Acredite nos números.</h2>
@@ -246,7 +247,7 @@
         <div class="founders-content reveal">
           <span class="eyebrow">A LIDERANÇA</span>
           <h2 class="section-title" style="text-align: left;">Engenharia técnica com visão de negócios.</h2>
-          <p class="section-subtitle" style="text-align: left; margin-left: 0;">Entendemos que você não quer comprar código, você quer comprar lucro e redução de dor de cabeça. A BG Tech nasceu para ser o braço de tecnologia que faltava na sua operação.</p>
+          <p class="section-subtitle" style="text-align: left; margin-left: 0;">Entendemos que você não quer comprar código, você quer comprar lucro e redução de dor de cabeça. A BG Tech nasceu para ser o parceiro estratégico definitivo da sua operação.</p>
           
           <ul class="founders-list">
             <li><i data-lucide="check-circle-2"></i> <strong>Orientação a ROI:</strong> A tecnologia é o meio, a margem é o fim.</li>
@@ -296,6 +297,8 @@
     </div>
   </section>
 
+  <div class="footer-top-border"></div>
+  
   <footer class="site-footer dark-section">
     <div class="section-inner footer-grid">
       <div class="footer-brand">
@@ -327,7 +330,7 @@
   <div class="quiz-overlay" id="quiz-overlay">
     <div class="quiz-container">
       <div class="quiz-header">
-        <span class="logo-name" style="font-size: 18px; color: var(--text-1)">BG <span class="text-cyan">TECH</span></span>
+        <span class="logo-name" style="font-size: 18px; color: var(--text-1);">BG <span class="text-cyan">TECH</span></span>
         <button class="quiz-close js-close-quiz"><i data-lucide="x"></i></button>
       </div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
