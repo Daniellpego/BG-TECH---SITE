@@ -4099,6 +4099,13 @@ const CONFIG = {
   webhookUrl: '' // Make.com webhook URL - configure before launch
 };
 
+// ── SANITIZE ──
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
 // ── UTM CAPTURE ──
 const urlParams = new URLSearchParams(window.location.search);
 const UTM = {
@@ -4386,7 +4393,7 @@ function renderDiagnosticStep() {
           q.fields.map(function (f) {
             return '<div class="diag-field-wrap">' +
               '<input class="diag-input" id="diag-field-' + f.id + '" type="' + f.type + '"' +
-              ' placeholder="' + f.placeholder + '" value="' + (textValues[f.id] || '') + '"' +
+              ' placeholder="' + f.placeholder + '" value="' + escapeHtml(textValues[f.id] || '') + '"' +
               ' oninput="clearDiagError(\'' + f.id + '\')"' +
               ' autocomplete="' + (autocompleteMap[f.id] || 'off') + '"' +
               ' inputmode="' + (f.type === 'tel' ? 'tel' : 'text') + '">' +
@@ -4529,8 +4536,8 @@ function showDiagResult() {
   });
   var score = weightSum > 0 ? Math.min(99, Math.max(55, Math.round(total / weightSum))) : 75;
 
-  var nome = textValues.nome ? textValues.nome.split(' ')[0] : 'Empresário';
-  var empresa = textValues.empresa || 'sua empresa';
+  var nome = escapeHtml(textValues.nome ? textValues.nome.split(' ')[0] : 'Empresário');
+  var empresa = escapeHtml(textValues.empresa || 'sua empresa');
   var dorIdx = answers['dor'];
 
   var profile, scoreDesc, scoreText;
@@ -4687,7 +4694,7 @@ function sendPayload(score, profile) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(function () {});
+    }).catch(function (err) { console.error('Webhook failed:', err); });
   }
 
   if (typeof gtag !== 'undefined') {
