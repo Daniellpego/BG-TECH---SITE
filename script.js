@@ -1,13 +1,13 @@
 // ==== CONFIGURAÇÕES ====
 const CONFIG = {
-    whatsappNumber: '5511999998888', // MUDE PARA O SEU
+    whatsappNumber: '5511999998888', // MUDE PARA O SEU NUMERO
     webhookUrl: '' // Webhook do Make
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
-  // A NOVA MATRIZ DE VENDAS (A LÓGICA DO ESPELHO)
+  // A MATRIZ DE VENDAS
   const QUESTIONS = [
     {
       id: 'segmento', label: 'PASSO 1 DE 5',
@@ -16,22 +16,22 @@ const CONFIG = {
       type: 'options',
       options: [
         { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
-        { icon: 'scale', title: 'Jurídico / Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
-        { icon: 'store', title: 'Comércio / Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
-        { icon: 'factory', title: 'Indústria / Manufatura', sub: 'Produção, estoque e operação fabril' },
+        { icon: 'scale', title: 'Jurídico e Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
+        { icon: 'store', title: 'Comércio e Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
+        { icon: 'factory', title: 'Indústria e Manufatura', sub: 'Produção, estoque e operação fabril' },
         { icon: 'stethoscope', title: 'Saúde', sub: 'Clínicas, laboratórios e prestadores de saúde' },
-        { icon: 'briefcase', title: 'Serviços / Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
+        { icon: 'briefcase', title: 'Serviços e Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
       ]
     },
     {
       id: 'horas_perdidas', label: 'PASSO 2 DE 5',
       title: 'Quanto tempo sua equipe perde por semana em tarefas manuais?',
-      desc: 'Seja honesto — some mentalmente as horas de retrabalho e planilhas antes de responder.',
+      desc: 'Seja honesto, some mentalmente as horas de retrabalho e planilhas antes de responder.',
       type: 'options',
       options: [
         { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação bem azeitada' },
-        { icon: 'refresh-ccw', title: '5 a 15 horas', sub: 'Já dói, mas dá pra ignorar' },
-        { icon: 'flame', title: '15 a 30 horas', sub: 'Está custando dinheiro real todo mês' },
+        { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói, mas dá pra ignorar' },
+        { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Está custando dinheiro real todo mês' },
         { icon: 'skull', title: 'Mais de 30 horas', sub: 'O manual virou o modelo de negócio' }
       ]
     },
@@ -44,7 +44,7 @@ const CONFIG = {
         { icon: 'clock', title: 'Processos manuais', sub: 'Sua equipe é boa. Só que 30% do dia dela vai pro lixo.' },
         { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Você paga por ferramentas que não se falam.' },
         { icon: 'alert-circle', title: 'Suporte de TI lento', sub: 'Cada hora parada custa dinheiro. Você sabe disso.' },
-        { icon: 'bar-chart', title: 'Falta de visibilidade', sub: 'Você decide com base no feeling, não em dados.' },
+        { icon: 'bar-chart', title: 'Falta de visibilidade', sub: 'Você decide com base no feeling e não em dados.' },
         { icon: 'users-x', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais. Não devia ser assim.' }
       ]
     },
@@ -62,11 +62,11 @@ const CONFIG = {
     },
     {
       id: 'maturidade', label: 'PASSO 5 DE 5',
-      title: 'Como você descreveria a tecnologia hoje — sendo honesto?',
-      desc: 'A maturidade digital atual da empresa.',
+      title: 'Sendo completamente honesto, como você descreveria a tecnologia hoje?',
+      desc: 'A maturidade digital atual da sua empresa.',
       type: 'options',
       options: [
-        { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual, dependente de 1 ou 2 pessoas' },
+        { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual, dependente de pessoas' },
         { icon: 'box', iconColor: 'icon-orange', title: 'Sistemas básicos', sub: 'Até tem ferramenta, mas ninguém usa direito' },
         { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados, muito retrabalho' },
         { icon: 'server', iconColor: 'icon-green', title: 'Sistemas razoáveis', sub: 'Funciona, mas tem muito espaço pra evoluir' },
@@ -107,9 +107,11 @@ const CONFIG = {
           const target = parseFloat(counter.getAttribute('data-target'));
           const isFloat = counter.getAttribute('data-target').includes('.');
           let startTime = null;
+          const duration = 2000;
+          
           const updateCount = (timestamp) => {
             if(!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / 2000, 1);
+            const progress = Math.min((timestamp - startTime) / duration, 1);
             const ease = 1 - Math.pow(1 - progress, 3);
             const current = target * ease;
             counter.innerText = isFloat ? current.toFixed(1) : Math.floor(current);
@@ -146,7 +148,7 @@ const CONFIG = {
   });
   
   // MOTOR QUIZ
-  let currentStep = -1; // -1 é a tela de Intro
+  let currentStep = -1;
   let answers = {};
   let textData = {};
   
@@ -168,10 +170,10 @@ const CONFIG = {
     body.innerHTML = `
       <div class="quiz-intro reveal visible">
         <h2>O Diagnóstico BG Tech</h2>
-        <p>Nos próximos 3 minutos, você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês — e por quê.</p>
-        <p>Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
+        <p>Nos próximos 3 minutos, você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e o motivo claro por trás disso.</p>
+        <p>Não é uma estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
         <div class="quiz-intro-hint">
-          Seja completamente honesto. Quanto mais preciso você for, mais preciso será o diagnóstico.
+          Seja completamente honesto. Quanto mais preciso você for nas respostas, mais preciso será o resultado que vamos entregar.
         </div>
         <button class="btn-primary btn-large js-start-quiz" style="width: 100%;">Estou pronto <i data-lucide="arrow-right"></i></button>
       </div>
@@ -195,7 +197,6 @@ const CONFIG = {
   
     if (q.type === 'options') {
       let html = `<div class="reveal visible"><span class="q-label">${q.label}</span><h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
-      if(q.id === 'faturamento') html += `<span class="q-hint">Essa pergunta determina o impacto financeiro real que vai aparecer no seu diagnóstico.</span>`;
       
       html += `<div class="q-options">`;
       q.options.forEach((opt, i) => {
@@ -235,7 +236,7 @@ const CONFIG = {
                  </div>`;
       });
       html += `
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Usamos apenas para falar sobre este diagnóstico. Nada de spam.</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Usamos esse contato apenas para falar sobre este diagnóstico e nada mais.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
           <button class="btn-primary js-next">Liberar meu diagnóstico <i data-lucide="unlock" width="16"></i></button>
@@ -249,7 +250,7 @@ const CONFIG = {
         const nomeVal = elNome.value.trim();
         if(nomeVal.length < 3 || nomeVal.split(' ').length < 2) {
             hasError = true; elNome.classList.add('error'); 
-            document.getElementById('err-nome').innerText = "Insira nome e sobrenome.";
+            document.getElementById('err-nome').innerText = "Insira seu nome e sobrenome.";
             document.getElementById('err-nome').style.display = 'block';
         } else { textData.nome = nomeVal; }
 
@@ -291,7 +292,6 @@ const CONFIG = {
     const body = document.getElementById('quiz-body');
     const segName = QUESTIONS[0].options[answers.segmento].title;
     
-    // Perda base para o efeito visual piscante
     const fatIndex = answers.faturamento;
     let basePerda = 6500;
     if(fatIndex === 1) basePerda = 14000;
@@ -299,10 +299,10 @@ const CONFIG = {
     if(fatIndex === 3) basePerda = 65000;
     
     const steps = [
-      { icon: 'briefcase', text: `Mapeando gargalos típicos de ${segName}...` },
-      { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
+      { icon: 'briefcase', text: `Mapeando gargalos típicos no setor de ${segName}...` },
+      { icon: 'search', text: `Cruzando dados com empresas de perfil similar em ${leadLocation}...` },
       { icon: 'dollar-sign', text: `Calculando horas perdidas por semana...`, special: true },
-      { icon: 'target', text: 'Priorizando automações com maior retorno...' },
+      { icon: 'target', text: 'Priorizando automações com maior retorno para sua margem...' },
       { icon: 'file-check-2', text: 'Montando seu plano executivo...' }
     ];
   
@@ -316,7 +316,7 @@ const CONFIG = {
               <div class="diag-step-icon"><i data-lucide="${s.icon}" width="16"></i></div>
               <div style="display:flex; flex-direction:column;">
                 <span>${s.text}</span>
-                ${s.special ? `<div class="partial-number" id="flash-num" style="display:none;">Estimativa: R$ ${(basePerda * 0.8).toLocaleString('pt-BR')}...</div>` : ''}
+                ${s.special ? `<div class="partial-number" id="flash-num" style="display:none;">Estimativa parcial: R$ ${(basePerda * 0.8).toLocaleString('pt-BR')} perdidos...</div>` : ''}
               </div>
             </div>
           `).join('')}
@@ -336,7 +336,7 @@ const CONFIG = {
         if(steps[i].special) document.getElementById('flash-num').style.display = 'block';
         lucide.createIcons();
         i++;
-        setTimeout(tick, i === 3 ? 1500 : 1000); // 5 segundos no total
+        setTimeout(tick, i === 3 ? 1500 : 1000); 
       } else {
         setTimeout(showResult, 500);
       }
@@ -349,18 +349,17 @@ const CONFIG = {
     const nome = textData.nome.split(' ')[0];
     const empresa = textData.empresa;
     
-    // 1. O ESPELHO
+    // Copy Humana
     const segTexts = [
-        "Sua construtora chegou num ponto crítico: a operação cresceu, mas os processos não. Cada obra nova exige mais planilhas, mais reuniões e horas de gestão manual.",
-        "Seu escritório chegou num ponto crítico: o volume de clientes cresceu, mas os processos continuam os mesmos. Cada novo processo exige horas de trabalho burocrático.",
-        "Sua operação chegou num ponto crítico: as vendas cresceram, mas a gestão não acompanhou. O giro de pedidos exige um esforço braçal que destrói a eficiência.",
-        "Sua indústria chegou num ponto crítico: a produção roda, mas a gestão do chão de fábrica para o escritório é manual. Cada erro custa matéria-prima e tempo.",
-        "Sua clínica chegou num ponto crítico: o fluxo de pacientes aumentou, mas agendamento e faturamento não se conversam. O atendimento fica engessado.",
-        "Sua agência chegou num ponto crítico: os contratos cresceram, mas a gestão de horas e entregas virou um caos de planilhas. A margem do projeto some."
+        "Sua construtora chegou num ponto crítico. A operação cresceu, mas os processos não. Cada obra nova exige mais planilhas, mais reuniões e horas de gestão manual.",
+        "Seu escritório chegou num ponto crítico. O volume de processos cresceu, mas o trabalho continua manual. Cada novo cliente exige horas de burocracia.",
+        "Sua operação chegou num ponto crítico. As vendas cresceram, mas a gestão não acompanhou. O giro de pedidos exige um esforço braçal que destrói a eficiência.",
+        "Sua indústria chegou num ponto crítico. A produção roda, mas a gestão do chão de fábrica para o escritório é manual. Cada erro custa matéria-prima e tempo.",
+        "Sua clínica chegou num ponto crítico. O fluxo de pacientes aumentou, mas o agendamento e o faturamento não conversam. O atendimento fica engessado.",
+        "Sua agência chegou num ponto crítico. Os contratos cresceram, mas a gestão de horas e entregas virou um caos de planilhas. A margem do projeto some rapidamente."
     ];
-    let mirrorText = segTexts[answers.segmento] || "Sua empresa chegou num ponto crítico: a operação cresceu, mas os processos não acompanharam.";
+    let mirrorText = segTexts[answers.segmento] || "Sua empresa chegou num ponto crítico. A operação cresceu, mas os processos não acompanharam.";
 
-    // 2. A DOR FINANCEIRA E ROI
     const fatIndex = answers.faturamento;
     const matIndex = answers.maturidade;
     
@@ -369,10 +368,9 @@ const CONFIG = {
     if(fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
     if(fatIndex === 3) { minLoss = 65000; maxLoss = 98000; }
     
-    const lostValueStr = `R$ ${minLoss.toLocaleString('pt-BR')} — R$ ${maxLoss.toLocaleString('pt-BR')}/mês`;
+    const lostValueStr = `R$ ${minLoss.toLocaleString('pt-BR')} a R$ ${maxLoss.toLocaleString('pt-BR')} por mês`;
     const workersEquiv = (maxLoss / 3500).toFixed(1);
 
-    // 3. O SCORE E OPORTUNIDADES
     let score = 38; 
     if(matIndex === 1) score = 52;
     if(matIndex === 2) score = 61;
@@ -389,7 +387,7 @@ const CONFIG = {
       <div class="reveal visible">
         <h2 class="q-title" style="font-size: 24px;">${nome}, encontramos o problema.</h2>
         <div class="mirror-text">
-          ${mirrorText} Você sente que a equipe trabalha mais, mas a empresa não cresce proporcionalmente. Isso tem causa e tem solução.
+          ${mirrorText} Você sente que a equipe trabalha mais, porém a empresa não cresce de forma proporcional. Isso tem causa e tem solução.
         </div>
 
         <div class="score-banner">
@@ -405,54 +403,53 @@ const CONFIG = {
            </div>
            <div class="score-text">
              <h4>Você está entre os 34% que já identificaram a dor, mas ainda não resolveram.</h4>
-             <p>As empresas que resolveram têm score médio de 78+. A diferença? Um parceiro de tecnologia que age, não apenas consulta.</p>
+             <p>As empresas que resolveram têm score médio de 78+. A grande diferença é ter um parceiro de tecnologia focado em agir rápido.</p>
            </div>
         </div>
         
         <div class="result-box">
           <div class="alert-tag">CUSTO MENSAL DAS INEFICIÊNCIAS</div>
           <div class="loss-value">${lostValueStr}</div>
-          <div class="loss-desc">Baseado no seu faturamento, tempo perdido e padrão operacional da região. Esse valor sai direto da sua margem de lucro.</div>
+          <div class="loss-desc">Baseado no faturamento e padrão operacional da sua região. Esse valor sai direto da sua margem de lucro.</div>
           <div class="equivalence">Equivale a ${workersEquiv} funcionários trabalhando o mês inteiro só para cobrir retrabalho.</div>
         </div>
 
-        <div style="margin-bottom: 32px;">
+        <div class="opps-box">
           <div class="opp-item">
              <div class="opp-header"><span>1. Automação de tarefas repetitivas</span><span>Alto ROI</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 85%;"></div></div>
-             <div class="opp-sub">Potencial de recuperação: R$ ${recupAuto}/mês</div>
+             <div class="opp-sub">Potencial de recuperação estimado: R$ ${recupAuto} por mês</div>
           </div>
           <div class="opp-item">
              <div class="opp-header"><span>2. Integração dos sistemas atuais</span><span>Médio/Alto</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 65%;"></div></div>
-             <div class="opp-sub">Potencial de recuperação: R$ ${recupInteg}/mês</div>
+             <div class="opp-sub">Potencial de recuperação estimado: R$ ${recupInteg} por mês</div>
           </div>
           <div class="opp-item">
              <div class="opp-header"><span>3. Dashboard de gestão em tempo real</span><span>Estratégico</span></div>
              <div class="opp-bar-wrap"><div class="opp-bar" style="width: 45%;"></div></div>
-             <div class="opp-sub">Impacto em tomada de decisão e escala</div>
+             <div class="opp-sub">Impacto drástico em tomada de decisão e escala</div>
           </div>
-          <div style="margin-top: 16px; font-weight: 800; color: var(--text-heading);">
-             Oportunidade identificada: R$ ${totalRecup}/mês recuperáveis.
+          <div style="margin-top: 24px; font-weight: 800; font-size: 16px; color: var(--text-1);">
+             Oportunidade total mapeada: R$ ${totalRecup} recuperáveis todos os meses.
           </div>
         </div>
         
-        <div style="border-top: 1px solid var(--border-light); padding-top: 24px;">
-          <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
-            ${nome}, o plano está pronto. O próximo passo é uma conversa de 20 minutos com nosso time. Sem apresentação de vendas. <strong>Nosso time já viu esse diagnóstico antes de falar com você.</strong>
+        <div style="border-top: 1px solid var(--border-light); padding-top: 32px;">
+          <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">
+            ${nome}, o plano de ação está pronto. O próximo passo lógico é uma conversa de 20 minutos com nosso time. Sem apresentação de vendas e sem propostas agressivas. <strong>Nosso time de consultores já viu este diagnóstico antes de falar com você.</strong>
           </p>
-          <button class="btn-primary js-wpp" style="width:100%; padding: 18px; font-size: 16px; margin-bottom: 12px;">
+          <button class="btn-primary js-wpp" style="width:100%; padding: 20px; font-size: 16px; margin-bottom: 12px;">
             Quero meu plano para a ${empresa} <i data-lucide="arrow-right" width="18"></i>
           </button>
           <button class="btn-whatsapp js-wpp-direct" style="width:100%;">
-            <i data-lucide="message-circle" width="18"></i> Falar agora — nosso time está online
+            <i data-lucide="message-circle" width="18"></i> Falar agora com nosso time
           </button>
-          <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 12px;">Resposta em até 2 horas úteis · Sem compromisso</p>
+          <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 12px;">Resposta em até 2 horas úteis. Sem compromisso.</p>
         </div>
       </div>`;
     lucide.createIcons();
   
-    // Logic for Webhook & WPP
     const openWpp = () => {
       if(CONFIG.webhookUrl) { 
           fetch(CONFIG.webhookUrl, { 
@@ -465,7 +462,7 @@ const CONFIG = {
               })
           }).catch(()=>{}); 
       }
-      const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Score ${score}/100, custo estimado de até R$ ${(maxLoss/1000).toFixed(0)}k/mês em ineficiências. Quero conversar sobre os próximos passos para a ${empresa}.`;
+      const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Meu score foi ${score}/100 e o custo estimado foi de até R$ ${(maxLoss/1000).toFixed(0)}k mensais em ineficiências. Quero conversar sobre os próximos passos para a ${empresa}.`;
       window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     };
 
