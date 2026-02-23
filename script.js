@@ -1,7 +1,9 @@
 // ==== CONFIGURAÇÕES BG TECH ====
 const CONFIG = {
-  whatsappNumber: '5511999998888', // MUDE AQUI
-  webhookUrl: '' // Webhook do Make.com / n8n
+  whatsappNumber: '5511999998888', // LEMBRE DE COLOCAR O SEU NÚMERO AQUI
+  webhookUrl: '', // Deixe vazio, vamos usar o Supabase
+  supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co', 
+  supabaseKey: 'sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0'
 };
 
 let leadLocation = "sua região";
