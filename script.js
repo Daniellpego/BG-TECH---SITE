@@ -113,18 +113,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === document.getElementById('quiz-overlay')) closeQuiz();
   });
 
-  // Interações Reveal
+  // Interações Reveal (Agora com Stagger e Linhas)
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        if (entry.target.classList.contains('process-steps')) {
+           setTimeout(() => { document.getElementById('process-line').style.width = '100%'; }, 500);
+        }
         observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Contadores Fluidos (Bug do Zero Resolvido)
+  // Contadores Fluidos (Bug do Zero Resolvido Permanentemente)
   const counters = document.querySelectorAll('.counter');
   const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -216,7 +219,7 @@ function renderIntro() {
 
   body.innerHTML = `
     <div class="quiz-intro reveal visible">
-      <h2 style="color: var(--text-heading);">O Diagnóstico BG Tech</h2>
+      <h2 style="color: var(--text-1);">O Diagnóstico BG Tech</h2>
       <p style="color: var(--text-3);">Nos próximos 3 minutos você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e por quê.</p>
       <p style="color: var(--text-3);">Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
       <div class="quiz-intro-hint">
@@ -284,7 +287,7 @@ function renderStep() {
                 <div class="q-error-msg" id="err-${f.id}"></div>
                </div>`;
     });
-    // Cores de texto corrigidas (bug do modal branco sumindo o texto)
+    
     html += `
       <p style="font-size:12px; color:var(--text-3); margin-bottom: 20px;">Usamos esse contato apenas para falar sobre este diagnóstico e nada mais.</p>
       <div class="q-nav">
@@ -293,7 +296,7 @@ function renderStep() {
       </div></div>`;
     body.innerHTML = html;
 
-    // Máscara WPP (Ouro em Conversão)
+    // Máscara WPP BR
     const wppInput = document.getElementById('inp-whatsapp');
     if(wppInput) {
       wppInput.addEventListener('input', function() {
@@ -326,7 +329,7 @@ function renderStep() {
         document.getElementById('err-empresa').style.display = 'block';
       } else { textData.empresa = capitalize(empVal); }
 
-      // Validação de WhatsApp Realista
+      // Validação de WhatsApp
       const wppVal = wppInput.value.trim().replace(/\D/g, ''); 
       if (wppVal.length < 10 || wppVal.length > 13) {
         hasError = true; wppInput.classList.add('error');
@@ -338,7 +341,7 @@ function renderStep() {
     });
 
     q.fields.forEach(f => {
-      if(f.id !== 'whatsapp') { // mascara já lida com o whatsapp
+      if(f.id !== 'whatsapp') { 
         document.getElementById(`inp-${f.id}`).addEventListener('input', function () {
           this.classList.remove('error'); document.getElementById(`err-${f.id}`).style.display = 'none';
         });
@@ -352,7 +355,6 @@ function renderStep() {
 
 function nextStep() {
   if (currentStep === -1) { currentStep = 0; } else { currentStep++; }
-  // Salva na Memoria
   sessionStorage.setItem('bgtech_quiz', JSON.stringify({ answers, textData, step: currentStep }));
   renderStep();
 }
