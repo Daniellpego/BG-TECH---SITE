@@ -10,7 +10,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -44,81 +44,85 @@
     <button class="btn-primary js-open-quiz js-close-menu" style="margin-top: 32px;">Fazer Diagnóstico</button>
   </div>
 
-  <section id="hero" class="dark-section">
-    <div class="grid-overlay"></div>
-    <div class="hero-glow-left"></div>
-    <div class="hero-glow-right"></div>
+  <div class="dark-zone-wrapper">
+    <section id="hero">
+      <div class="grid-overlay"></div>
+      <div class="hero-glow-left"></div>
+      <div class="hero-glow-right"></div>
+      
+      <div class="particle p1"></div>
+      <div class="particle p2"></div>
+      <div class="particle p3"></div>
+      <div class="particle p4"></div>
+      <div class="particle p5"></div>
+      
+      <div class="hero-content">
+        <div class="hero-badge reveal">
+          <span class="pulse-dot"></span>
+          DIAGNÓSTICO B2B · RESULTADO EM 3 MINUTOS
+        </div>
+
+        <h1 class="hero-title reveal delay-1">
+          Sua empresa perde<br>dinheiro onde você<br><span class="hero-highlight">não percebe.</span>
+        </h1>
+
+        <p class="hero-subtitle reveal delay-2">
+          Em 3 minutos nosso time calcula quanto sua empresa perde por mês em ineficiência e mostra exatamente o que fazer nos próximos 7 dias para recuperar essa margem.
+        </p>
+
+        <div class="hero-actions reveal delay-3">
+          <div class="btn-group">
+            <button class="btn-primary btn-shimmer js-open-quiz">
+              Iniciar diagnóstico <i data-lucide="arrow-right" style="width: 18px;"></i>
+            </button>
+            <a href="https://wa.me/5511999998888" target="_blank" class="btn-outline-white">
+              <i data-lucide="message-circle" style="width: 18px;"></i> Falar com consultor
+            </a>
+          </div>
+          <span class="hero-hint"><i data-lucide="shield-check" style="width: 14px;"></i> 100% Gratuito. Sem compromisso.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="trust-bar">
+      <div class="section-inner">
+        <p class="trust-anchor reveal">Desde 2022 otimizando operações de PMEs no Brasil</p>
+        <div class="trust-bar-grid reveal delay-1">
+          <div class="trust-item">
+            <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
+            <div class="trust-label">Empresas Atendidas</div>
+            <div class="trust-context">Operações otimizadas ativamente</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</div>
+            <div class="trust-label">Valor Gerenciado</div>
+            <div class="trust-context">Em economia e escala de clientes</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-number"><span class="counter" data-target="7">0</span> dias</div>
+            <div class="trust-label">Go-Live Médio</div>
+            <div class="trust-context">Para projetos de automação base</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="partners">
+      <p class="partners-label">TECNOLOGIAS DE ALTA PERFORMANCE</p>
+      <div class="partners-row reveal delay-2">
+        <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
+        <span class="partner-chip"><i data-lucide="git-branch"></i> n8n</span>
+        <span class="partner-chip"><i data-lucide="cloud"></i> Google Cloud</span>
+        <span class="partner-chip"><i data-lucide="server"></i> Microsoft Azure</span>
+        <span class="partner-chip"><i data-lucide="zap"></i> Zapier</span>
+        <span class="partner-chip"><i data-lucide="bar-chart-2"></i> Power BI</span>
+      </div>
+    </section>
     
-    <div class="particle p1"></div>
-    <div class="particle p2"></div>
-    <div class="particle p3"></div>
-    <div class="particle p4"></div>
-    <div class="particle p5"></div>
-    
-    <div class="hero-content">
-      <div class="hero-badge reveal">
-        <span class="pulse-dot"></span>
-        DIAGNÓSTICO B2B · RESULTADO EM 3 MINUTOS
-      </div>
+    <div class="fade-to-light"></div>
+  </div>
 
-      <h1 class="hero-title reveal delay-1">
-        Sua empresa perde<br>dinheiro onde você<br><span class="hero-highlight">não percebe.</span>
-      </h1>
-
-      <p class="hero-subtitle reveal delay-2">
-        Em 3 minutos nosso time calcula quanto sua empresa perde por mês em ineficiência e mostra exatamente o que fazer nos próximos 7 dias para recuperar essa margem.
-      </p>
-
-      <div class="hero-actions reveal delay-3">
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
-          <button class="btn-primary btn-shimmer js-open-quiz">
-            Iniciar diagnóstico <i data-lucide="arrow-right" style="width: 18px;"></i>
-          </button>
-          <a href="https://wa.me/5511999998888" target="_blank" class="btn-outline-white">
-            <i data-lucide="message-circle" style="width: 18px;"></i> Falar com consultor
-          </a>
-        </div>
-        <span class="hero-hint" style="margin-top: 16px;"><i data-lucide="shield-check" style="width: 14px;"></i> 100% Gratuito. Sem compromisso.</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="trust-bar" class="trust-fade">
-    <div class="section-inner">
-      <p class="trust-anchor reveal">Desde 2022 otimizando operações de PMEs no Brasil</p>
-      <div class="trust-bar-grid reveal delay-1">
-        <div class="trust-item">
-          <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
-          <div class="trust-label">Empresas Atendidas</div>
-          <div class="trust-context">Operações otimizadas ativamente</div>
-        </div>
-        <div class="trust-item">
-          <div class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</div>
-          <div class="trust-label">Valor Gerenciado</div>
-          <div class="trust-context">Em economia e escala de clientes</div>
-        </div>
-        <div class="trust-item">
-          <div class="trust-number"><span class="counter" data-target="7">0</span> dias</div>
-          <div class="trust-label">Go-Live Médio</div>
-          <div class="trust-context">Para projetos de automação base</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="partners" class="light-section" style="padding-top: 0px;">
-    <p class="partners-label">TECNOLOGIAS DE ALTA PERFORMANCE</p>
-    <div class="partners-row reveal">
-      <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
-      <span class="partner-chip"><i data-lucide="git-branch"></i> n8n</span>
-      <span class="partner-chip"><i data-lucide="cloud"></i> Google Cloud</span>
-      <span class="partner-chip"><i data-lucide="server"></i> Microsoft Azure</span>
-      <span class="partner-chip"><i data-lucide="zap"></i> Zapier</span>
-      <span class="partner-chip"><i data-lucide="bar-chart-2"></i> Power BI</span>
-    </div>
-  </section>
-
-  <section id="problems" class="light-section">
+  <section id="problems" class="light-section section-spacing">
     <div class="section-inner">
       <span class="eyebrow reveal">O QUE ESTÁ TRAVANDO O CRESCIMENTO</span>
       <h2 class="section-title reveal">Sua empresa está perdendo dinheiro. E você sabe disso.</h2>
@@ -126,28 +130,36 @@
 
       <div class="problems-grid">
         <div class="problem-card reveal delay-1">
-          <div class="problem-icon"><i data-lucide="clock"></i></div>
-          <h3 class="problem-title">Equipe presa no manual</h3>
-          <p class="problem-desc">Processos repetitivos consomem horas que deveriam focar em vendas. Planilha preenchida à mão é dinheiro parado.</p>
-          <span class="problem-stat">87% das PMEs perdem +15h por semana</span>
+          <div class="problem-card-top">
+            <div class="problem-icon"><i data-lucide="clock"></i></div>
+            <h3 class="problem-title">Equipe presa no manual</h3>
+            <p class="problem-desc">Processos repetitivos consomem horas que deveriam focar em vendas. Planilha preenchida à mão é dinheiro parado.</p>
+          </div>
+          <div class="problem-stat">87% das PMEs perdem +15h por semana</div>
         </div>
+
         <div class="problem-card reveal delay-2">
-          <div class="problem-icon"><i data-lucide="user-minus"></i></div>
-          <h3 class="problem-title">Leads bons indo embora</h3>
-          <p class="problem-desc">Enquanto sua equipe demora para responder e qualificar, o concorrente já fechou. Velocidade de resposta é o novo diferencial.</p>
-          <span class="problem-stat">67% compram do 1º que atende</span>
+          <div class="problem-card-top">
+            <div class="problem-icon"><i data-lucide="user-minus"></i></div>
+            <h3 class="problem-title">Leads bons indo embora</h3>
+            <p class="problem-desc">Enquanto sua equipe demora para responder e qualificar, o concorrente já fechou. Velocidade de resposta é o novo diferencial.</p>
+          </div>
+          <div class="problem-stat">67% compram do 1º que atende</div>
         </div>
+
         <div class="problem-card reveal delay-3">
-          <div class="problem-icon"><i data-lucide="cable"></i></div>
-          <h3 class="problem-title">Sistemas que não se falam</h3>
-          <p class="problem-desc">Dados duplicados, retrabalho e decisões tomadas no achômetro. A falta de integração entre ferramentas custa muito caro.</p>
-          <span class="problem-stat">Custo operacional 23% maior</span>
+          <div class="problem-card-top">
+            <div class="problem-icon"><i data-lucide="cable"></i></div>
+            <h3 class="problem-title">Sistemas que não se falam</h3>
+            <p class="problem-desc">Dados duplicados, retrabalho e decisões tomadas no achômetro. A falta de integração entre ferramentas custa muito caro.</p>
+          </div>
+          <div class="problem-stat">Custo operacional 23% maior</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="services" class="light-section bg-light-alt">
+  <section id="services" class="light-section bg-light-alt section-spacing">
     <div class="section-inner">
       <span class="eyebrow reveal">ARQUITETURA DE SOLUÇÃO</span>
       <h2 class="section-title reveal">Uma empresa. Tudo que você precisa.</h2>
@@ -155,45 +167,53 @@
 
       <div class="services-grid">
         <div class="service-card reveal delay-1">
-          <div class="service-header">
-            <div class="service-icon"><i data-lucide="cpu"></i></div>
-            <h3 class="service-title">Automações Inteligentes</h3>
+          <div class="service-card-top">
+            <div class="service-header">
+              <div class="service-icon"><i data-lucide="cpu"></i></div>
+              <h3 class="service-title">Automações Inteligentes</h3>
+            </div>
+            <p class="service-desc">Conectamos ferramentas e eliminamos tarefas robóticas. Deixamos os scripts trabalharem para sua equipe focar em receita real.</p>
           </div>
-          <p class="service-desc">Conectamos ferramentas e eliminamos tarefas robóticas. Deixamos os scripts trabalharem para sua equipe focar em receita real.</p>
           <div class="service-anchor">Projetos a partir de R$ 3.500</div>
         </div>
         
         <div class="service-card reveal delay-2">
-          <div class="service-header">
-            <div class="service-icon"><i data-lucide="code-2"></i></div>
-            <h3 class="service-title">Desenvolvimento Back-end</h3>
+          <div class="service-card-top">
+            <div class="service-header">
+              <div class="service-icon"><i data-lucide="code-2"></i></div>
+              <h3 class="service-title">Desenvolvimento Back-end</h3>
+            </div>
+            <p class="service-desc">Sistemas que resolvem problemas reais sem gambiarras. Código limpo feito exclusivamente para blindar a sua regra de negócio.</p>
           </div>
-          <p class="service-desc">Sistemas que resolvem problemas reais sem gambiarras. Código limpo feito exclusivamente para blindar a sua regra de negócio.</p>
           <div class="service-anchor">Projetos a partir de R$ 8.000</div>
         </div>
 
         <div class="service-card reveal delay-1">
-          <div class="service-header">
-            <div class="service-icon"><i data-lucide="shield-check"></i></div>
-            <h3 class="service-title">Suporte TI Gerenciado</h3>
+          <div class="service-card-top">
+            <div class="service-header">
+              <div class="service-icon"><i data-lucide="shield-check"></i></div>
+              <h3 class="service-title">Suporte TI Gerenciado</h3>
+            </div>
+            <p class="service-desc">Monitoramento e manutenção preventiva. Focamos em manter sua operação rodando 24 horas por dia. Sua TI é nossa responsabilidade.</p>
           </div>
-          <p class="service-desc">Monitoramento e manutenção preventiva. Focamos em manter sua operação rodando 24 horas por dia. Sua TI é nossa responsabilidade.</p>
           <div class="service-anchor">Mensalidades a partir de R$ 1.500</div>
         </div>
 
         <div class="service-card reveal delay-2">
-          <div class="service-header">
-            <div class="service-icon"><i data-lucide="compass"></i></div>
-            <h3 class="service-title">Consultoria C-Level</h3>
+          <div class="service-card-top">
+            <div class="service-header">
+              <div class="service-icon"><i data-lucide="compass"></i></div>
+              <h3 class="service-title">Consultoria C-Level</h3>
+            </div>
+            <p class="service-desc">Roadmap tecnológico para sua empresa. Ajudamos a diretoria a identificar onde investir e o que priorizar para crescer com margem.</p>
           </div>
-          <p class="service-desc">Roadmap tecnológico para sua empresa. Ajudamos a diretoria a identificar onde investir e o que priorizar para crescer com margem.</p>
           <div class="service-anchor">Sessões a partir de R$ 1.200</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="process" class="light-section">
+  <section id="process" class="light-section section-spacing">
     <div class="section-inner">
       <span class="eyebrow reveal">A JORNADA</span>
       <h2 class="section-title reveal">Do diagnóstico ao Go-Live.</h2>
@@ -234,9 +254,9 @@
     </div>
   </section>
 
-  <section id="guarantee" class="dark-section">
+  <section id="guarantee" class="dark-section section-spacing">
     <div class="section-inner">
-      <h2 class="section-title reveal" style="margin-bottom: 40px;">O risco é todo nosso.</h2>
+      <h2 class="section-title reveal" style="margin-bottom: 64px;">O risco é todo nosso.</h2>
       <div class="guarantee-grid reveal delay-1">
         <div class="guarantee-card">
           <i data-lucide="file-check-2"></i>
@@ -257,7 +277,7 @@
     </div>
   </section>
 
-  <section id="cases" class="light-section bg-light-alt">
+  <section id="cases" class="light-section bg-light-alt section-spacing">
     <div class="section-inner">
       <span class="eyebrow reveal">RESULTADOS REAIS</span>
       <h2 class="section-title reveal">Não acredite em nós. Acredite nos números.</h2>
@@ -296,7 +316,7 @@
     </div>
   </section>
 
-  <section id="founders" class="light-section">
+  <section id="founders" class="light-section section-spacing">
     <div class="section-inner">
       <div class="founders-layout">
         <div class="founders-content reveal">
@@ -332,7 +352,7 @@
     </div>
   </section>
 
-  <section id="faq" class="light-section bg-light-alt">
+  <section id="faq" class="light-section bg-light-alt section-spacing">
     <div class="section-inner">
       <span class="eyebrow reveal">PERGUNTAS FREQUENTES</span>
       <h2 class="section-title reveal">O que você precisa saber antes de começar.</h2>
@@ -360,12 +380,12 @@
     </div>
   </section>
 
-  <section id="cta-final" class="dark-section">
+  <section id="cta-final" class="dark-section" style="padding-top: 140px; padding-bottom: 140px;">
     <div class="cta-glow"></div>
     <div class="section-inner">
       <div class="cta-box reveal">
         <h2 class="section-title" style="color: white; margin-bottom: 16px;">Pronto para estancar as perdas?</h2>
-        <p style="color: rgba(240, 246, 255, 0.7); font-size: 18px; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <p style="color: rgba(240, 246, 255, 0.7); font-size: 18px; margin-bottom: 48px; max-width: 640px; margin-left: auto; margin-right: auto;">
           O diagnóstico leva apenas 3 minutos. O resultado gerado pode salvar milhares de reais da sua margem ainda este mês.
         </p>
         <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
@@ -381,8 +401,7 @@
   </section>
 
   <div class="footer-top-border"></div>
-  
-  <footer class="site-footer dark-section" style="padding: 64px 0 0 0;">
+  <footer class="site-footer dark-section" style="padding: 80px 0 24px 0;">
     <div class="section-inner footer-grid">
       <div class="footer-brand">
         <span class="logo-name">BG <span class="text-cyan">TECH</span></span>
@@ -402,8 +421,7 @@
         <h4>Contato</h4>
         <a href="https://wa.me/5511999998888" target="_blank">WhatsApp Comercial</a>
         <a href="mailto:contato@bgtech.com.br">contato@bgtech.com.br</a>
-        
-        </div>
+      </div>
     </div>
     <div class="footer-bottom">
       <div class="section-inner" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 13px; color: rgba(240, 246, 255, 0.4);">
