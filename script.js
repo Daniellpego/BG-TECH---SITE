@@ -566,7 +566,8 @@ function showResult() {
     });
   }, 100);
 
-  const webhookPayload = {
+  // PAYLOAD ORGANIZADO PARA O SUPABASE (Seu CRM)
+  const supabasePayload = {
     nome: textData.nome,
     empresa: textData.empresa,
     whatsapp: textData.whatsapp.replace(/\D/g, ''),
@@ -576,28 +577,30 @@ function showResult() {
     faturamento: QUESTIONS[3].options[answers.faturamento]?.title || '',
     maturidade: QUESTIONS[4].options[answers.maturidade]?.title || '',
     score: score,
-    score_categoria: scoreCat.label,
-    custo_min: minLoss,
-    custo_max: maxLoss,
-    localizacao: leadLocation,
-    utm_source: new URLSearchParams(window.location.search).get('utm_source') || 'organico',
-    utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
-    visualizou_resultado: true,
-    timestamp: new Date().toISOString()
+    custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
   };
 
   const openWpp = () => {
-    if (CONFIG.webhookUrl) {
-      fetch(CONFIG.webhookUrl, {
+    // 1. GRAVA NO SUPABASE DE FORMA SILENCIOSA E ULTRA RÁPIDA
+    if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
+      fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookPayload)
-      }).catch(() => { });
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': CONFIG.supabaseKey,
+          'Authorization': `Bearer ${CONFIG.supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(supabasePayload)
+      }).catch(err => console.error("Erro no DB:", err));
     }
+
+    // 2. REDIRECIONA O LEAD PARA O WHATSAPP COM A MENSAGEM PRONTA
     const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero conversar sobre os próximos passos para a ${empresa}.`;
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
+  // Prevenindo Multiplos Event Listeners (Bug fix)
   const wppBtn = body.querySelector('.js-wpp');
   const wppDirectBtn = body.querySelector('.js-wpp-direct');
 
