@@ -16,6 +16,7 @@
 </head>
 <body>
   <div class="reading-progress" id="reading-progress"></div>
+  <div class="cursor" id="custom-cursor"></div>
 
   <header id="site-header">
     <a href="#" class="logo-mark">
@@ -44,10 +45,16 @@
     <button class="btn-primary js-open-quiz js-close-menu" style="margin-top: 32px;">Fazer Diagnóstico</button>
   </div>
 
-  <section id="hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-glow-left"></div>
-    <div class="hero-glow-right"></div>
+  <section id="hero" class="dark-section">
+    <div class="hero-grid"></div>
+    <div class="orb-1"></div>
+    <div class="orb-2"></div>
+    
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
     
     <div class="hero-content">
       <div class="hero-badge reveal">
@@ -65,7 +72,7 @@
 
       <div class="hero-actions reveal delay-3">
         <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
-          <button class="btn-primary js-open-quiz">
+          <button class="btn-primary btn-shimmer js-open-quiz">
             Iniciar diagnóstico <i data-lucide="arrow-right" style="width: 18px;"></i>
           </button>
           <a href="https://wa.me/5511999998888" target="_blank" class="btn-outline-white">
@@ -78,18 +85,18 @@
   </section>
 
   <section id="trust-bar" class="trust-fade">
-    <div class="trust-bar-grid reveal">
-      <div class="trust-item">
+    <div class="trust-bar-grid">
+      <div class="trust-item reveal delay-1">
         <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
         <div class="trust-label">Empresas Atendidas</div>
         <div class="trust-context">Operações otimizadas desde 2022</div>
       </div>
-      <div class="trust-item">
+      <div class="trust-item reveal delay-2">
         <div class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</div>
         <div class="trust-label">Valor Gerenciado</div>
         <div class="trust-context">Em economia e escala de clientes</div>
       </div>
-      <div class="trust-item">
+      <div class="trust-item reveal delay-3">
         <div class="trust-number"><span class="counter" data-target="7">0</span> dias</div>
         <div class="trust-label">Go-Live Médio</div>
         <div class="trust-context">Para projetos de automação base</div>
@@ -97,7 +104,7 @@
     </div>
   </section>
 
-  <section id="partners" class="light-section" style="padding-top: 24px;">
+  <section id="partners" class="light-section" style="padding-top: 0px;">
     <p class="partners-label">TECNOLOGIAS DE ALTA PERFORMANCE</p>
     <div class="partners-row reveal">
       <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
@@ -116,19 +123,19 @@
       <p class="section-subtitle reveal">Três problemas silenciosos retiram até 40% da capacidade de lucro das PMEs todos os dias.</p>
 
       <div class="problems-grid">
-        <div class="problem-card reveal">
+        <div class="problem-card reveal delay-1">
           <div class="problem-icon"><i data-lucide="clock"></i></div>
           <h3 class="problem-title">Equipe presa no manual</h3>
           <p class="problem-desc">Processos repetitivos consomem horas que deveriam focar em vendas. Planilha preenchida à mão é dinheiro parado.</p>
           <span class="problem-stat">87% das PMEs perdem +15h por semana</span>
         </div>
-        <div class="problem-card reveal delay-1">
+        <div class="problem-card reveal delay-2">
           <div class="problem-icon"><i data-lucide="user-minus"></i></div>
           <h3 class="problem-title">Leads bons indo embora</h3>
           <p class="problem-desc">Enquanto sua equipe demora para responder e qualificar, o concorrente já fechou. Velocidade de resposta é o novo diferencial.</p>
           <span class="problem-stat">67% compram do 1º que atende</span>
         </div>
-        <div class="problem-card reveal delay-2">
+        <div class="problem-card reveal delay-3">
           <div class="problem-icon"><i data-lucide="cable"></i></div>
           <h3 class="problem-title">Sistemas que não se falam</h3>
           <p class="problem-desc">Dados duplicados, retrabalho e decisões tomadas no achômetro. A falta de integração entre ferramentas custa muito caro.</p>
@@ -142,10 +149,10 @@
     <div class="section-inner">
       <span class="eyebrow reveal">ARQUITETURA DE SOLUÇÃO</span>
       <h2 class="section-title reveal">Uma empresa. Tudo que você precisa.</h2>
-      <p class="section-subtitle reveal">Não vendemos 'sisteminha'. Criamos a tecnologia exata que o seu negócio precisa para parar de travar e começar a escalar.</p>
+      <p class="section-subtitle reveal">Criamos a tecnologia exata que o seu negócio precisa para parar de travar e começar a escalar rápido.</p>
 
       <div class="services-grid">
-        <div class="service-card reveal">
+        <div class="service-card reveal delay-1">
           <div class="service-header">
             <div class="service-icon"><i data-lucide="cpu"></i></div>
             <h3 class="service-title">Automações Inteligentes</h3>
@@ -154,7 +161,7 @@
           <div class="service-anchor">Projetos a partir de R$ 3.500</div>
         </div>
         
-        <div class="service-card reveal delay-1">
+        <div class="service-card reveal delay-2">
           <div class="service-header">
             <div class="service-icon"><i data-lucide="code-2"></i></div>
             <h3 class="service-title">Desenvolvimento Back-end</h3>
@@ -163,7 +170,7 @@
           <div class="service-anchor">Projetos a partir de R$ 8.000</div>
         </div>
 
-        <div class="service-card reveal">
+        <div class="service-card reveal delay-1">
           <div class="service-header">
             <div class="service-icon"><i data-lucide="shield-check"></i></div>
             <h3 class="service-title">Suporte TI Gerenciado</h3>
@@ -172,7 +179,7 @@
           <div class="service-anchor">Mensalidades a partir de R$ 1.500</div>
         </div>
 
-        <div class="service-card reveal delay-1">
+        <div class="service-card reveal delay-2">
           <div class="service-header">
             <div class="service-icon"><i data-lucide="compass"></i></div>
             <h3 class="service-title">Consultoria C-Level</h3>
@@ -190,6 +197,10 @@
       <h2 class="section-title reveal">Do diagnóstico ao Go-Live.</h2>
       
       <div class="process-steps reveal delay-1">
+        <div class="process-line-wrap">
+           <div class="process-line-fill" id="process-line"></div>
+        </div>
+        
         <div class="process-step">
           <div class="process-circle">01</div>
           <h3 class="process-step-title">3 Minutos</h3>
@@ -217,7 +228,7 @@
       <h2 class="section-title reveal">Não acredite em nós. Acredite nos números.</h2>
       
       <div class="cases-grid">
-        <div class="case-card reveal">
+        <div class="case-card reveal delay-1">
           <div class="case-quote">"Nossa equipe perdia 3 dias fechando comissão. A BG Tech integrou nosso ERP com o banco e hoje isso roda em 15 minutos. Tivemos ROI logo no primeiro mês."</div>
           <div class="case-author">
             <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Marcelo" class="author-img">
@@ -227,7 +238,7 @@
             </div>
           </div>
         </div>
-        <div class="case-card reveal delay-1">
+        <div class="case-card reveal delay-2">
           <div class="case-quote">"Tínhamos gargalo no atendimento comercial e os leads esfriavam. Com o roteamento automático que criaram, nossa taxa de conversão saltou 34%."</div>
           <div class="case-author">
             <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana" class="author-img">
@@ -247,7 +258,7 @@
         <div class="founders-content reveal">
           <span class="eyebrow">A LIDERANÇA</span>
           <h2 class="section-title" style="text-align: left;">Engenharia técnica com visão de negócios.</h2>
-          <p class="section-subtitle" style="text-align: left; margin-left: 0;">Entendemos que você não quer comprar código, você quer comprar lucro e redução de dor de cabeça. A BG Tech nasceu para ser o parceiro estratégico definitivo da sua operação.</p>
+          <p class="section-subtitle" style="text-align: left; margin-left: 0;">Entendemos que você não quer comprar código, você quer comprar lucro e redução de dor de cabeça. A BG Tech nasceu para ser o braço de tecnologia que faltava na sua operação.</p>
           
           <ul class="founders-list">
             <li><i data-lucide="check-circle-2"></i> <strong>Orientação a ROI:</strong> A tecnologia é o meio, a margem é o fim.</li>
@@ -255,8 +266,8 @@
           </ul>
         </div>
 
-        <div class="founders-cards reveal delay-1">
-          <div class="founder-card">
+        <div class="founders-cards">
+          <div class="founder-card reveal delay-1">
             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Bruno" class="founder-photo">
             <div class="founder-info">
               <h4 class="founder-name">Bruno</h4>
@@ -264,7 +275,7 @@
               <p class="founder-bio">Especialista em segurança e estabilidade de sistemas corporativos complexos.</p>
             </div>
           </div>
-          <div class="founder-card">
+          <div class="founder-card reveal delay-2">
             <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Gabriel" class="founder-photo">
             <div class="founder-info">
               <h4 class="founder-name">Gabriel</h4>
@@ -286,19 +297,15 @@
           O diagnóstico leva 3 minutos. O resultado pode salvar milhares de reais da sua margem ainda este mês.
         </p>
         <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-          <button class="btn-primary btn-large js-open-quiz" style="background: white; color: var(--blue-dark);">
+          <button class="btn-primary btn-large btn-shimmer js-open-quiz">
             Fazer Diagnóstico Gratuito <i data-lucide="arrow-right"></i>
           </button>
-          <a href="https://wa.me/5511999998888" target="_blank" class="btn-outline-white btn-large">
-            <i data-lucide="message-circle"></i> Falar no WhatsApp
-          </a>
         </div>
       </div>
     </div>
   </section>
 
   <div class="footer-top-border"></div>
-  
   <footer class="site-footer dark-section">
     <div class="section-inner footer-grid">
       <div class="footer-brand">
