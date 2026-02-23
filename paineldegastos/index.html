@@ -51,19 +51,50 @@
     const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("pt-BR");
     const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-    // BANDO DE DADOS LOCAL (STORAGE)
-    function load(key) { try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; } }
-    function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+  // ============================================================================
+    // BANCO DE DADOS EM NUVEM (SUPABASE)
+    // ============================================================================
+    const DB_CONFIG = {
+      URL: "https://urpuiznydrlwmaqhdids.supabase.co",
+      KEY: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0"
+    };
 
-    function exportCSV(rows, filename) {
-      if (!rows.length) return alert("Nenhum dado para exportar.");
-      const header = Object.keys(rows[0]).join(",");
-      const body = rows.map(r => Object.values(r).map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-      const blob = new Blob(["\uFEFF" + header + "\n" + body], { type: "text/csv;charset=utf-8;" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
+    async function loadCloudData() {
+      if (!DB_CONFIG.URL || !DB_CONFIG.KEY) return { fixos: [], unicos: [] };
+      try {
+        const res = await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
+          headers: { 'apikey': DB_CONFIG.KEY, 'Authorization': `Bearer ${DB_CONFIG.KEY}` }
+        });
+        const data = await res.json();
+        if (data && data.length > 0) {
+          return { fixos: data[0].fixos || [], unicos: data[0].unicos || [] };
+        }
+      } catch (err) {
+        console.error("Erro leitura Supabase:", err);
+      }
+      return { fixos: [], unicos: [] };
+    }
+
+    async function saveCloudData(data) {
+      if (!DB_CONFIG.URL || !DB_CONFIG.KEY) return;
+      try {
+        await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': DB_CONFIG.KEY,
+            'Authorization': `Bearer ${DB_CONFIG.KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            fixos: data.fixos,
+            unicos: data.unicos,
+            updated_at: new Date().toISOString()
+          })
+        });
+      } catch (err) {
+        console.error("Erro escrita Supabase:", err);
+      }
     }
 
     function exportPDF(fixos, unicosFiltrados, totalFixos, totalUnicos, mes, ano) {
