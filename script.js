@@ -43,7 +43,7 @@ const QUESTIONS = [
     type: 'options',
     options: [
       { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação bem azeitada' },
-      { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói mas dá pra ignorar' },
+      { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói, mas dá pra ignorar' },
       { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Está custando dinheiro real todo mês' },
       { icon: 'skull', title: 'Mais de 30 horas', sub: 'O manual virou o modelo de negócio' }
     ]
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Counters
+  // Counters Dinâmicos (Bug do 0 resolvido com observer permissivo)
   const counters = document.querySelectorAll('.counter');
   const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -155,9 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = parseFloat(counter.getAttribute('data-target'));
         const isFloat = counter.getAttribute('data-target').includes('.');
         let startTime = null;
+        const duration = 1800;
+
         const updateCount = (timestamp) => {
           if (!startTime) startTime = timestamp;
-          const progress = Math.min((timestamp - startTime) / 1800, 1);
+          const progress = Math.min((timestamp - startTime) / duration, 1);
           const ease = 1 - Math.pow(1 - progress, 3);
           const current = target * ease;
           counter.innerText = isFloat ? current.toFixed(1) : Math.floor(current);
@@ -168,13 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
         counterObserver.unobserve(counter);
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0 }); // Threshold 0 garante que dispare assim que entrar
   counters.forEach(c => counterObserver.observe(c));
 
-  // Menu Mobile & Header
+  // Menu Mobile
   document.querySelector('.js-toggle-menu').addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('open'));
   document.querySelectorAll('.js-close-menu').forEach(btn => btn.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open')));
   
+  // Header Scrolled
   window.addEventListener('scroll', () => {
     const header = document.getElementById('site-header');
     const progress = document.getElementById('reading-progress');
@@ -184,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
   });
 
-  // Binds Quiz
+  // Quiz Binds
   document.querySelectorAll('.js-open-quiz').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); }));
   document.querySelector('.js-close-quiz').addEventListener('click', closeQuiz);
 });
@@ -276,7 +279,7 @@ function renderStep() {
         const idx = parseInt(this.getAttribute('data-index'));
         answers[q.id] = idx;
 
-        // Lógica dos ECOS de Vendas (Neuromarketing)
+        // ECOS de Vendas
         const ecoText = echos[q.id]?.[idx];
         
         if (q.id === 'segmento') {
@@ -298,7 +301,7 @@ function renderStep() {
       });
     });
   } else {
-    // TELA DE CONTATO (A Provação)
+    // TELA DE CONTATO (A Provação com Live Dot)
     let html = `<div class="reveal visible">
       <span class="q-label"><span class="live-dot"></span> DIAGNÓSTICO PRONTO</span>
       <h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
@@ -334,7 +337,7 @@ function renderStep() {
     body.querySelector('.js-next').addEventListener('click', () => {
       let hasError = false;
 
-      // Validação Name (Mínimo 3 letras)
+      // Validação Name: 3 letras
       const elNome = document.getElementById('inp-nome');
       const nomeVal = elNome.value.trim();
       if (nomeVal.length < 3) {
@@ -350,7 +353,7 @@ function renderStep() {
         hasError = true; elEmpresa.classList.add('error');
         document.getElementById('err-empresa').innerText = "Informe a empresa";
         document.getElementById('err-empresa').style.display = 'block';
-      } else { textData.empresa = empVal; } // <--- FIX DA EMPRESA AQUI
+      } else { textData.empresa = empVal; } 
 
       // Validação WPP
       const wppVal = wppInput.value.trim().replace(/\D/g, ''); 
@@ -454,7 +457,7 @@ function showResult() {
   ];
   let empresaTipo = segTexts[answers.segmento] || "Sua empresa";
   
-  let mirrorText = `${empresaTipo} chegou num ponto crítico. A operação cresceu, mas os processos não. Você sente que a equipe trabalha mais, mas a empresa não cresce proporcionalmente. E o diagnóstico confirma o gargalo principal: <strong>${dorPrincipal}</strong> está travando a escala.`;
+  let mirrorText = `${empresaTipo} chegou num ponto crítico. A operação cresceu, mas os processos não. Você sente que a equipe trabalha mais, mas a empresa não cresce proporcionalmente. E o diagnóstico confirma: <strong>${dorPrincipal}</strong> é o gargalo principal na sua operação.`;
 
   // 2. A DOR FINANCEIRA 
   const fatIndex = answers.faturamento;
@@ -583,7 +586,7 @@ function showResult() {
     });
   }, 100);
 
-  // PAYLOAD ENRIQUECIDO PARA O WEBHOOK (Padrão CRM)
+  // PAYLOAD ENRIQUECIDO PARA O WEBHOOK
   const webhookPayload = {
     nome: textData.nome,
     empresa: textData.empresa,
@@ -616,7 +619,7 @@ function showResult() {
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  // Prevenindo Multiplos Event Listeners
+  // Prevenindo Multiplos Event Listeners 
   const wppBtn = body.querySelector('.js-wpp');
   const wppDirectBtn = body.querySelector('.js-wpp-direct');
 
