@@ -52,8 +52,8 @@
   .text-electric { color: var(--blue); }
   
   /* CLASSE DA LOGO INSERIDA AQUI (Pixel Perfect) */
-  .logo-mark { display: flex; align-items: center; gap: 12px; }
-  .brand-logo { height: 32px; width: auto; object-fit: contain; flex-shrink: 0; }
+ .logo-mark { display: flex; align-items: center; gap: 16px; }
+.brand-logo { height: 56px; width: auto; object-fit: contain; flex-shrink: 0; }
   
   /* Gradiente do Headline (Azul Eletrico + Neon) */
   .hero-highlight { background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
