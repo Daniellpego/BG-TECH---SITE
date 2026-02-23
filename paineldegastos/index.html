@@ -10,12 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
   <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
     body { margin: 0; padding: 0; background: #05070D; }
@@ -264,8 +263,6 @@
       const [p, setP] = useState("");
       const [err, setErr] = useState("");
       const [load, setLoad] = useState(false);
-      
-      useEffect(() => { lucide.createIcons(); }, [err]);
 
       const go = () => {
         setLoad(true);
@@ -300,7 +297,7 @@
               <input style={{...InputStyle, background: "rgba(0,0,0,0.4)"}} type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" />
             </div>
             
-            {err && <p style={{ color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 16, marginTop: -16, fontWeight: 600 }}><i data-lucide="alert-triangle" style={{width:14, verticalAlign:"middle"}}></i> {err}</p>}
+            {err && <p style={{ color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 16, marginTop: -16, fontWeight: 600 }}>⚠️ {err}</p>}
             
             <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "16px", fontSize: 15, opacity: load ? 0.7 : 1 }}>
               {load ? "Autenticando..." : "Acessar Sistema"}
@@ -387,7 +384,7 @@
                 <img src="/logo-bgtech.png" alt="BG Tech" style={{ height: 28 }} onError={(e)=>e.target.style.display='none'}/>
                 <span className="font-display" style={{ fontSize: 20, fontWeight: 900, color: "white" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", justify-content: "space-between" }}>
                 <span style={{ color: TOKENS.neon, fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>Engenharia de Custos</span>
               </div>
             </div>
