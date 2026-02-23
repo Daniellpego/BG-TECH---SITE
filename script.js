@@ -1,16 +1,12 @@
 // ==== CONFIGURAÇÕES ====
 const CONFIG = {
-    whatsappNumber: '5511999998888', // MUDE PARA O SEU NUMERO
-    webhookUrl: '' 
+    whatsappNumber: '5511999998888', // MUDE AQUI
+    webhookUrl: '' // Webhook do Make
   };
   
   let leadLocation = "sua região"; 
   fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{ if(d.city) leadLocation = d.city; }).catch(()=>{});
   
-  function capitalizeName(name) {
-    return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-  }
-
   // A MATRIZ DE VENDAS
   const QUESTIONS = [
     {
@@ -20,11 +16,11 @@ const CONFIG = {
       type: 'options',
       options: [
         { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
-        { icon: 'scale', title: 'Jurídico ou Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
+        { icon: 'scale', title: 'Jurídico e Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
         { icon: 'store', title: 'Comércio e Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
         { icon: 'factory', title: 'Indústria e Manufatura', sub: 'Produção, estoque e operação fabril' },
         { icon: 'stethoscope', title: 'Saúde', sub: 'Clínicas, laboratórios e prestadores de saúde' },
-        { icon: 'briefcase', title: 'Serviços ou Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
+        { icon: 'briefcase', title: 'Serviços e Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
       ]
     },
     {
@@ -34,7 +30,7 @@ const CONFIG = {
       type: 'options',
       options: [
         { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação bem azeitada' },
-        { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói mas dá pra ignorar' },
+        { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói, mas dá pra ignorar' },
         { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Está custando dinheiro real todo mês' },
         { icon: 'skull', title: 'Mais de 30 horas', sub: 'O manual virou o modelo de negócio' }
       ]
@@ -66,15 +62,15 @@ const CONFIG = {
     },
     {
       id: 'maturidade', label: 'PASSO 5 DE 5',
-      title: 'Sendo completamente honesto. Como você descreveria a tecnologia hoje?',
+      title: 'Sendo completamente honesto, como você descreveria a tecnologia hoje?',
       desc: 'A maturidade digital atual da empresa.',
       type: 'options',
       options: [
-        { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual dependente de pessoas' },
-        { icon: 'box', iconColor: 'icon-orange', title: 'Sistemas básicos', sub: 'Até tem ferramenta mas ninguém usa direito' },
-        { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados e muito retrabalho' },
-        { icon: 'server', iconColor: 'icon-blue-light', title: 'Sistemas razoáveis', sub: 'Funciona mas tem muito espaço pra evoluir' },
-        { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa', sub: 'Base sólida e preciso de parceiro estratégico' }
+        { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual, dependente de pessoas' },
+        { icon: 'box', iconColor: 'icon-orange', title: 'Sistemas básicos', sub: 'Até tem ferramenta, mas ninguém usa direito' },
+        { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados, muito retrabalho' },
+        { icon: 'server', iconColor: 'icon-blue-light', title: 'Sistemas razoáveis', sub: 'Funciona, mas tem muito espaço pra evoluir' },
+        { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa', sub: 'Base sólida, preciso de parceiro estratégico' }
       ]
     },
     {
@@ -90,19 +86,36 @@ const CONFIG = {
     }
   ];
   
-  // INIT
+  // INIT E MICRO-INTERAÇÕES
   document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
+    
+    // Custom Cursor
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .q-option').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    // Reveal Animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          if (entry.target.classList.contains('process-steps')) {
+             setTimeout(() => { document.getElementById('process-line').style.width = '100%'; }, 500);
+          }
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   
+    // Contadores Dinâmicos
     const counters = document.querySelectorAll('.counter');
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -111,7 +124,7 @@ const CONFIG = {
           const target = parseFloat(counter.getAttribute('data-target'));
           const isFloat = counter.getAttribute('data-target').includes('.');
           let startTime = null;
-          const duration = 2000;
+          const duration = 1800; // 1.8 segundos
           
           const updateCount = (timestamp) => {
             if(!startTime) startTime = timestamp;
@@ -129,6 +142,7 @@ const CONFIG = {
     }, { threshold: 0.5 });
     counters.forEach(c => counterObserver.observe(c));
   
+    // Header & Mobile
     document.querySelector('.js-toggle-menu').addEventListener('click', () => {
       document.getElementById('mobile-menu').classList.toggle('open');
     });
@@ -145,6 +159,7 @@ const CONFIG = {
       progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
     });
   
+    // Quiz Binds
     document.querySelectorAll('.js-open-quiz').forEach(btn => {
       btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); });
     });
@@ -177,7 +192,7 @@ const CONFIG = {
         <p>Nos próximos 3 minutos você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e por quê.</p>
         <p>Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
         <div class="quiz-intro-hint">
-          Seja completamente honesto. Quanto mais preciso você for nas respostas mais preciso será o diagnóstico.
+          Seja completamente honesto. Quanto mais preciso você for nas respostas, mais exato será o diagnóstico.
         </div>
         <button class="btn-primary btn-large js-start-quiz" style="width: 100%;">Estou pronto <i data-lucide="arrow-right"></i></button>
       </div>
@@ -186,6 +201,11 @@ const CONFIG = {
     body.querySelector('.js-start-quiz').addEventListener('click', () => { currentStep = 0; renderStep(); });
   }
   
+  // Capitaliza nomes corretamente (Ex: "dada" -> "Dada")
+  const capitalize = (str) => {
+    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
   function renderStep() {
     const q = QUESTIONS[currentStep];
     const body = document.getElementById('quiz-body');
@@ -195,7 +215,7 @@ const CONFIG = {
         bar.style.width = '80%';
         bar.classList.add('pulse-progress');
     } else {
-        bar.style.width = `${(currentStep / QUESTIONS.length) * 100}%`;
+        bar.style.width = `${(currentStep / (QUESTIONS.length - 1)) * 100}%`;
         bar.classList.remove('pulse-progress');
     }
   
@@ -240,7 +260,7 @@ const CONFIG = {
                  </div>`;
       });
       html += `
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Usamos apenas para falar sobre este diagnóstico. Nada de lista ou spam.</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Usamos esse contato apenas para falar sobre este diagnóstico e nada mais.</p>
         <div class="q-nav">
           <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
           <button class="btn-primary js-next">Liberar meu diagnóstico <i data-lucide="unlock" width="16"></i></button>
@@ -256,14 +276,15 @@ const CONFIG = {
             hasError = true; elNome.classList.add('error'); 
             document.getElementById('err-nome').innerText = "Insira nome e sobrenome";
             document.getElementById('err-nome').style.display = 'block';
-        } else { textData.nome = capitalizeName(nomeVal); }
+        } else { textData.nome = capitalize(nomeVal); }
 
         const elEmpresa = document.getElementById('inp-empresa');
-        if(elEmpresa.value.trim().length < 2) {
+        const empVal = elEmpresa.value.trim();
+        if(empVal.length < 2) {
             hasError = true; elEmpresa.classList.add('error'); 
             document.getElementById('err-empresa').innerText = "Informe a empresa";
             document.getElementById('err-empresa').style.display = 'block';
-        } else { textData.empresa = elEmpresa.value.trim(); }
+        } else { textData.empresa = capitalize(empVal); }
 
         const elWpp = document.getElementById('inp-whatsapp');
         if(elWpp.value.trim().length < 9) {
@@ -303,8 +324,8 @@ const CONFIG = {
     if(fatIndex === 3) basePerda = 65000;
     
     const steps = [
-      { icon: 'briefcase', text: `Mapeando gargalos típicos de ${segName}...` },
-      { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
+      { icon: 'briefcase', text: `Mapeando gargalos típicos no setor de ${segName}...` },
+      { icon: 'search', text: `Cruzando dados com empresas de perfil similar em ${leadLocation}...` },
       { icon: 'dollar-sign', text: `Calculando horas perdidas por semana...`, special: true },
       { icon: 'target', text: 'Priorizando automações com maior retorno para sua margem...' },
       { icon: 'file-check-2', text: 'Montando seu plano executivo...' }
@@ -350,8 +371,7 @@ const CONFIG = {
   
   function showResult() {
     const body = document.getElementById('quiz-body');
-    const nomeCompleto = textData.nome;
-    const nome = nomeCompleto.split(' ')[0];
+    const nome = textData.nome.split(' ')[0];
     const empresa = textData.empresa;
     
     // Copy Humana sem traços
@@ -442,7 +462,7 @@ const CONFIG = {
           </div>
         </div>
         
-        <div style="border-top: 1px solid var(--border-light); padding-top: 32px;">
+        <div style="border-top: 1px solid var(--border-lt); padding-top: 32px;">
           <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">
             ${nome}, o plano de ação está pronto. O próximo passo lógico é uma conversa de 20 minutos com nosso time. Sem apresentação de vendas e sem propostas agressivas. <strong>Nosso time de consultores já viu este diagnóstico antes de falar com você.</strong>
           </p>
