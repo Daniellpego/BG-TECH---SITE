@@ -51,6 +51,10 @@
   .text-cyan { color: var(--blue); }
   .text-electric { color: var(--blue); }
   
+  /* CLASSE DA LOGO INSERIDA AQUI (Pixel Perfect) */
+  .logo-mark { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { height: 32px; width: auto; object-fit: contain; flex-shrink: 0; }
+  
   /* Gradiente do Headline (Azul Eletrico + Neon) */
   .hero-highlight { background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   
@@ -111,14 +115,13 @@
   .mobile-menu.open { transform: translateX(0); }
   .mobile-link { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--text-hero); }
   
-  /* HERO (Painel de Controle Tech com Malha Hexagonal) */
+  /* HERO */
   #hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 180px 24px 80px; overflow: hidden; background: var(--bg-main);}
   
   /* GRID SVG HEXAGONAL */
   .grid-overlay { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='40' height='69.28203230275509' viewBox='0 0 40 69.28203230275509' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 17.32050807568877l-20 11.547005383792516L0 17.32050807568877V-5.773502691896258l20-11.547005383792516 20 11.547005383792516V17.32050807568877zM20 46.18802153517126l20-11.547005383792516V11.547005383792516L20 23.094010767585032 0 11.547005383792516v23.094010767585032L20 46.18802153517126zM0 63.50852961086002l20-11.547005383792516 20 11.547005383792516V86.60254037844505l-20 11.547005383792516-20-11.547005383792516V63.50852961086002z' fill='%2338D8FF' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E"); animation: grid-move 30s linear infinite; mask-image: radial-gradient(ellipse at top, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at top, black 30%, transparent 80%); pointer-events: none; }
   @keyframes grid-move { from { background-position: 0 0; } to { background-position: 0 69.28px; } }
   
-  /* GLOW AZUL ELÉTRICO E NEON (Aumentado) */
   .hero-glow-left { position: absolute; width: 800px; height: 800px; background: radial-gradient(ellipse 70% 55% at 15% 45%, rgba(0,168,255,0.22) 0%, transparent 60%); top: -100px; left: -200px; filter: blur(80px); pointer-events: none; }
   .hero-glow-right { position: absolute; width: 600px; height: 600px; background: radial-gradient(ellipse 50% 65% at 85% 15%, rgba(56,216,255,0.15) 0%, transparent 55%); top: 0; right: -100px; filter: blur(60px); pointer-events: none; }
   
@@ -347,7 +350,7 @@
   .opp-item { margin-bottom: 20px; }
   .opp-header { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; }
   .opp-header span:first-child { color: var(--text-1); font-weight: 700;}
-  .opp-header span:last-child { color: var(--green-wpp); font-weight: 800;}
+  .opp-header span:last-child { color: #10b981; font-weight: 800;}
   .opp-bar-wrap { height: 8px; background: var(--border-lt); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
   .opp-bar { height: 100%; background: var(--blue); width: 0; transition: width 1s ease-out 1s; }
   .opp-sub { font-size: 13px; color: var(--text-3); font-weight: 500;}
