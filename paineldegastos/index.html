@@ -10,11 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
-  <script src="https://unpkg.com/recharts@2.12.0/umd/Recharts.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
   <style>
     body { margin: 0; padding: 0; background: #05070D; }
@@ -22,7 +23,11 @@
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div style="display:flex; height:100vh; align-items:center; justify-content:center; color:#38D8FF; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800; letter-spacing:0.1em;">
+      INICIANDO NÚCLEO...
+    </div>
+  </div>
 
   <script type="text/babel">
     const { useState, useEffect, useCallback, useRef } = React;
@@ -58,7 +63,7 @@
     const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
     // ============================================================================
-    // STORAGE BLINDADO (SALVA NO NAVEGADOR DO ADMIN)
+    // STORAGE LOCAL (SALVA NO NAVEGADOR DO ADMIN)
     // ============================================================================
     async function load(key) {
       try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } 
@@ -260,13 +265,15 @@
       const [err, setErr] = useState("");
       const [load, setLoad] = useState(false);
       
+      useEffect(() => { lucide.createIcons(); }, [err]);
+
       const go = () => {
         setLoad(true);
         setTimeout(() => {
           if (u.trim().toLowerCase() === ADMIN.user && p === ADMIN.pass) {
             onLogin();
           } else {
-            setErr("Credenciais de administrador rejeitadas.");
+            setErr("Credenciais rejeitadas.");
             setLoad(false);
           }
         }, 800);
@@ -293,7 +300,7 @@
               <input style={{...InputStyle, background: "rgba(0,0,0,0.4)"}} type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" />
             </div>
             
-            {err && <p style={{ color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 16, marginTop: -16, fontWeight: 600 }}>{err}</p>}
+            {err && <p style={{ color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 16, marginTop: -16, fontWeight: 600 }}><i data-lucide="alert-triangle" style={{width:14, verticalAlign:"middle"}}></i> {err}</p>}
             
             <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "16px", fontSize: 15, opacity: load ? 0.7 : 1 }}>
               {load ? "Autenticando..." : "Acessar Sistema"}
@@ -365,13 +372,7 @@
       const TooltipStyle = { background: TOKENS.bgElevated, border: `1px solid ${TOKENS.border}`, borderRadius: 8, color: "white", padding: "12px", boxShadow: "0 10px 25px rgba(0,0,0,0.5)" };
       const SelectStyle = { background: TOKENS.bgElevated, border: `1px solid ${TOKENS.border}`, borderRadius: 8, color: "white", padding: "10px 16px", fontSize: 14, fontFamily: "inherit", outline: "none", cursor: "pointer" };
 
-      if (!ready) return (
-        <div style={{ minHeight: "100vh", background: TOKENS.bgMain, display: "flex", flexDirection:"column", alignItems: "center", justifyContent: "center", color: TOKENS.neon }}>
-           <div style={{width: 40, height: 40, border: `3px solid ${TOKENS.border}`, borderTopColor: TOKENS.electric, borderRadius: "50%", animation: "spin 1s linear infinite", marginBottom: 20}}/>
-           <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-           <span style={{fontFamily:"'Plus Jakarta Sans'", fontWeight:700, letterSpacing:"0.1em"}}>CARREGANDO NÚCLEO...</span>
-        </div>
-      );
+      if (!ready) return null; // fallback inicial resolve o loading
 
       return (
         <div style={{ minHeight: "100vh", display: "flex" }}>
