@@ -1,7 +1,7 @@
 // ==== CONFIGURAÇÕES BG TECH ====
 const CONFIG = {
   whatsappNumber: '5511999998888', // MUDE AQUI PARA O SEU NUMERO REAL
-  webhookUrl: '' // URL do Make.com
+  webhookUrl: '' // Webhook do Make.com / n8n
 };
 
 // 1. Fetch de Localização Blindado (Para FOMO Local)
@@ -25,7 +25,7 @@ const QUESTIONS = [
   {
     id: 'segmento', label: 'PASSO 1 DE 5',
     title: 'Qual o segmento da sua empresa?',
-    desc: 'Isso personaliza a engenharia da nossa análise estrutural.',
+    desc: 'Isso calibra os benchmarks e o vocabulário do seu diagnóstico.',
     type: 'options',
     options: [
       { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
@@ -38,7 +38,7 @@ const QUESTIONS = [
   },
   {
     id: 'horas_perdidas', label: 'PASSO 2 DE 5',
-    title: 'Quanto tempo sua equipe perde por semana em tarefas automáticas?',
+    title: 'Quanto tempo sua equipe perde por semana em tarefas manuais?',
     desc: 'Seja honesto. Some mentalmente as horas de retrabalho antes de responder.',
     type: 'options',
     options: [
@@ -87,7 +87,7 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'contato', label: '', // Removido texto padrão, substituído pelo HTML customizado
+    id: 'contato', label: '', 
     title: 'Seu diagnóstico está pronto.',
     desc: 'Informe para quem enviamos a análise completa da sua operação.',
     type: 'text',
@@ -291,7 +291,7 @@ function renderStep() {
               <p style="color: var(--text-heading); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
             </div>`;
           lucide.createIcons();
-          setTimeout(() => { nextStep(); }, 2500); // Tempo para o lead ler e sentir a dor
+          setTimeout(() => { nextStep(); }, 2500); 
         } else {
           nextStep();
         }
@@ -334,7 +334,7 @@ function renderStep() {
     body.querySelector('.js-next').addEventListener('click', () => {
       let hasError = false;
 
-      // Validação Name: Aceita só o primeiro nome, min 3 letras
+      // Validação Name (Mínimo 3 letras)
       const elNome = document.getElementById('inp-nome');
       const nomeVal = elNome.value.trim();
       if (nomeVal.length < 3) {
@@ -343,13 +343,14 @@ function renderStep() {
         document.getElementById('err-nome').style.display = 'block';
       } else { textData.nome = capitalize(nomeVal); }
 
+      // Validação Empresa (SEM CAPITALIZE para não quebrar Siglas)
       const elEmpresa = document.getElementById('inp-empresa');
       const empVal = elEmpresa.value.trim();
       if (empVal.length < 2) {
         hasError = true; elEmpresa.classList.add('error');
         document.getElementById('err-empresa').innerText = "Informe a empresa";
         document.getElementById('err-empresa').style.display = 'block';
-      } else { textData.empresa = capitalize(empVal); }
+      } else { textData.empresa = empVal; } // <--- FIX DA EMPRESA AQUI
 
       // Validação WPP
       const wppVal = wppInput.value.trim().replace(/\D/g, ''); 
@@ -397,7 +398,7 @@ function runLoading() {
 
   const steps = [
     { icon: 'briefcase', text: `Mapeando gargalos na área de ${segName}...` },
-    { icon: 'search', text: `Cruzando dados de empresas em ${leadLocation}...` },
+    { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
     { icon: 'dollar-sign', text: `Calculando horas perdidas e sangria financeira...`, special: true },
     { icon: 'target', text: 'Priorizando automações com maior retorno...' },
     { icon: 'file-check-2', text: 'Montando plano executivo...' }
@@ -433,7 +434,7 @@ function runLoading() {
       if (steps[i].special) document.getElementById('flash-num').style.display = 'block';
       lucide.createIcons();
       i++;
-      setTimeout(tick, 1000); // 5s total (5 steps x 1s)
+      setTimeout(tick, 1000); 
     } else {
       setTimeout(showResult, 500);
     }
@@ -615,7 +616,7 @@ function showResult() {
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  // Prevenindo Multiplos Event Listeners (Bug fix de clonagem)
+  // Prevenindo Multiplos Event Listeners
   const wppBtn = body.querySelector('.js-wpp');
   const wppDirectBtn = body.querySelector('.js-wpp-direct');
 
