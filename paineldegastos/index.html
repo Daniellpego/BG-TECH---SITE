@@ -1,525 +1,538 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão Financeira | BG Tech</title>
-  
-  <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
-  <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Centro de Custos | BG Tech</title>
+  
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #05070D; color: #E6F2FF; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-    h1, h2, h3, h4, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-    #root { min-height: 100vh; display: flex; flex-direction: column; }
-    
-    .hex-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg width='40' height='69.28' viewBox='0 0 40 69.28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 17.32l-20 11.54L0 17.32V-5.77l20-11.54 20 11.54V17.32zM20 46.18l20-11.54V11.54L20 23.09 0 11.54v23.09L20 46.18zM0 63.5l20-11.54 20 11.54V86.6l-20 11.54-20-11.54V63.5z' fill='%2338D8FF' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E"); }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #05070D; }
-    ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #00A8FF; }
-    
-    .glass-panel { background: rgba(10, 31, 68, 0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(0, 168, 255, 0.15); border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 15, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s ease; }
-    .modal-card { background: #0A1428; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; box-shadow: 0 24px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05); width: 100%; max-width: 540px; padding: 40px; transform: scale(0.98); animation: popUp 0.2s ease forwards; }
-    
-    .btn-glow { transition: all 0.2s ease; position: relative; overflow: hidden; }
-    .btn-glow:hover { box-shadow: 0 0 20px rgba(0, 168, 255, 0.5); transform: translateY(-2px); }
-    .btn-cancelar { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.45); border-radius: 10px; padding: 14px 24px; font-weight: 600; font-size: 14px; transition: all 0.2s; cursor: pointer; }
-    .btn-cancelar:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    h1, h2, h3, h4, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #root { min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Fundo Tecnológico */
+    .hex-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg width='40' height='69.28' viewBox='0 0 40 69.28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 17.32l-20 11.54L0 17.32V-5.77l20-11.54 20 11.54V17.32zM20 46.18l20-11.54V11.54L20 23.09 0 11.54v23.09L20 46.18zM0 63.5l20-11.54 20 11.54V86.6l-20 11.54-20-11.54V63.5z' fill='%230ea5e9' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E"); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+    
+    /* Modais e Painéis */
+    .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(14, 165, 233, 0.1); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 15, 0.9); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.2s ease; }
+    .modal-card { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 24px 80px rgba(0,0,0,0.9); width: 100%; max-width: 500px; padding: 32px; transform: scale(0.98); animation: popUp 0.2s ease forwards; max-height: 90vh; overflow-y: auto; }
+    
+    /* Inputs e Botões */
+    .btn-glow { transition: all 0.2s ease; position: relative; overflow: hidden; }
+    .btn-glow:hover { box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); transform: translateY(-2px); }
+    .btn-cancelar { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); border-radius: 10px; padding: 14px 20px; font-weight: 600; font-size: 14px; transition: all 0.2s; cursor: pointer; }
+    .btn-cancelar:hover { border-color: rgba(255,255,255,0.2); color: white; }
 
-    .modal-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; color: #fff; padding: 14px 16px; font-size: 15px; outline: none; font-family: inherit; transition: all 0.2s; width: 100%; }
-    .modal-input:focus { border-color: rgba(0,168,255,0.6); box-shadow: 0 0 0 3px rgba(0,168,255,0.15); background: rgba(0,168,255,0.05); }
+    .modal-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #f8fafc; padding: 14px 16px; font-size: 15px; outline: none; font-family: inherit; transition: all 0.2s; width: 100%; }
+    .modal-input:focus { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
 
-    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 16px; animation: fadeIn 0.4s ease; }
-    .empty-state h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: rgba(255,255,255,0.7); margin: 0 0 8px; }
-    .empty-state p { font-size: 14px; color: rgba(255,255,255,0.4); margin: 0; }
+    .select-periodo { appearance: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #f8fafc; padding: 10px 36px 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: 0.2s; }
+    .select-periodo:hover { border-color: rgba(14, 165, 233, 0.4); }
 
-    .select-periodo { appearance: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; padding: 12px 36px 12px 16px; font-size: 14px; font-weight: 600; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: 0.2s; }
-    .select-periodo:hover { border-color: rgba(0,168,255,0.4); }
+    /* Empty States */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.05); border-radius: 16px; animation: fadeIn 0.4s ease; background: rgba(0,0,0,0.2); }
+    .empty-state svg { width: 48px; height: 48px; color: rgba(255,255,255,0.15); margin-bottom: 16px; }
+    .empty-state h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: rgba(255,255,255,0.6); margin: 0 0 8px; }
+    .empty-state p { font-size: 13px; color: rgba(255,255,255,0.3); margin: 0; }
 
-    .table-row { transition: all 0.2s ease; border-bottom: 1px solid rgba(255,255,255,0.05); animation: fadeInSlide 0.3s ease forwards; }
-    .table-row:hover { background: rgba(0, 168, 255, 0.05); border-left: 3px solid #00A8FF; padding-left: 21px; }
+    /* LAYOUT BASE DESKTOP */
+    .layout-wrapper { display: flex; min-height: 100vh; }
+    .sidebar { width: 280px; background: rgba(2, 6, 15, 0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; backdrop-filter: blur(20px); }
+    .main-content { margin-left: 280px; flex: 1; padding: 48px 56px 100px; position: relative; z-index: 1; max-width: 1400px; }
+    .mobile-nav { display: none; }
+    
+    .desktop-table-row { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: all 0.2s ease; animation: fadeInSlide 0.3s ease forwards; }
+    .desktop-table-row:hover { background: rgba(14, 165, 233, 0.05); border-left: 3px solid #0ea5e9; padding-left: 21px; }
 
-    @keyframes pulse-glow { 0% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); } 50% { text-shadow: 0 0 30px rgba(56, 216, 255, 0.8); transform: scale(1.02); } 100% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes popUp { to { transform: scale(1); } }
-    @keyframes fadeInSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
+    /* RESPONSIVIDADE MOBILE ABSOLUTA */
+    @media (max-width: 900px) {
+      .layout-wrapper { flex-direction: column; }
+      .sidebar { display: none; } /* Oculta a sidebar lateral */
+      .main-content { margin-left: 0; padding: 24px 16px 100px; } /* Ajusta o padding da tela inteira */
+      
+      /* Header enxuto */
+      .header-mobile { flex-direction: column; align-items: flex-start !important; gap: 16px; margin-bottom: 24px !important; }
+      .header-mobile h1 { font-size: 24px !important; }
+      .header-mobile .filters { width: 100%; display: flex; gap: 8px; }
+      .header-mobile .filters select { flex: 1; padding: 12px; }
+      .search-box { width: 100% !important; margin-top: 12px !important; }
+      
+      /* Grids em 1 coluna */
+      .stats-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      .charts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      .chart-container { padding: 20px !important; }
+      
+      /* Tabela vira Card */
+      .desktop-table-row { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); border-left: none !important; background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 12px; }
+      .desktop-table-row:hover { background: rgba(255,255,255,0.04); padding-left: 16px; }
+      .row-value-box { width: 100%; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
+      .row-actions { margin-left: 0 !important; width: 100%; display: flex; gap: 8px; justify-content: flex-end; }
+      .row-actions button { padding: 8px 16px !important; }
+
+      /* Modais tela cheia */
+      .modal-card { max-width: 100%; height: 100%; border-radius: 0; padding: 24px 16px; border: none; }
+      .form-grid-mobile { grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 16px !important; }
+
+      /* Menu Inferior Nativo */
+      .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2, 6, 15, 0.98); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; padding: 8px 16px 20px; justify-content: space-between; }
+      .nav-btn-mobile { display: flex; flex-direction: column; align-items: center; gap: 4px; color: rgba(255,255,255,0.4); font-size: 10px; font-weight: 600; padding: 8px; border-radius: 8px; transition: 0.2s; flex: 1; background: transparent; border: none; }
+      .nav-btn-mobile.active { color: #0ea5e9; }
+      .nav-btn-mobile.active svg { color: #0ea5e9; }
+    }
+
+    @keyframes pulse-glow { 0% { text-shadow: 0 0 10px rgba(14, 165, 233, 0.2); transform: scale(1); } 50% { text-shadow: 0 0 30px rgba(14, 165, 233, 0.6); transform: scale(1.02); } 100% { text-shadow: 0 0 10px rgba(14, 165, 233, 0.2); transform: scale(1); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popUp { to { transform: scale(1); } }
+    @keyframes fadeInSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body>
-  <div id="root">
-    <div style="display:flex; height:100vh; flex-direction:column; align-items:center; justify-content:center; background:#05070D;">
-      <div style="color:#38D8FF; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800; letter-spacing:0.15em; animation:pulse-glow 1.5s infinite;">INICIANDO NÚCLEO...</div>
-    </div>
-  </div>
+  <div id="root">
+    <div style="display:flex; height:100vh; flex-direction:column; align-items:center; justify-content:center; background:#020617;">
+      <div style="color:#0ea5e9; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800; letter-spacing:0.15em; animation:pulse-glow 1.5s infinite;">INICIANDO NÚCLEO...</div>
+    </div>
+  </div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useCallback, useRef } = React;
-    const { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } = window.Recharts;
+  <script type="text/babel">
+    const { useState, useEffect, useCallback, useRef } = React;
+    const { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } = window.Recharts;
 
-    const ADMIN = { user: "bgtech", pass: "admin2024" };
-    
-    const CATS_RECEITA = ["Projeto de Automação", "Mensalidade Guardião", "Consultoria Estratégica", "Outros"];
-    const CATS_FIXO  = ["Infraestrutura", "Software/SaaS", "Marketing", "Pessoal", "Escritório", "Financeiro", "Outros"];
-    const CATS_UNICO = ["Equipamento", "Serviço Pontual", "Licença", "Viagem", "Marketing", "Investimento", "Outros"];
+    const ADMIN = { user: "bgtech", pass: "admin2024" };
+    
+    // Categorias Estritas de Despesas
+    const CATS_FIXO  = ["Infraestrutura Nuvem", "Software/SaaS", "Pessoal/Pró-labore", "Contabilidade/Jurídico", "Marketing Fixo", "Escritório", "Outros"];
+    const CATS_UNICO = ["Equipamento", "Serviço Terceirizado", "Licença Anual", "Tráfego/Ads", "Taxas Bancárias", "Investimento", "Outros"];
 
-    const TOKENS = {
-      electric: "#00A8FF", neon: "#38D8FF", textHero: "#E6F2FF", textMuted: "rgba(230, 242, 255, 0.5)",
-      red: "#ef4444", green: "#10b981", chartColors: ["#00A8FF", "#8B5CF6", "#10B981", "#F59E0B", "#EC4899", "#38D8FF"]
-    };
+    const TOKENS = {
+      electric: "#0ea5e9", // Sky Blue
+      electricDark: "#0284c7",
+      red: "#ef4444",      // Rose Red para saídas
+      redDark: "#b91c1c",
+      textMuted: "#94a3b8",
+      chartColors: ["#0ea5e9", "#ef4444", "#8b5cf6", "#f59e0b", "#10b981", "#64748b"]
+    };
 
-    const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    const fmt = v => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v || 0);
-    const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("pt-BR");
-    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const fmt = v => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v || 0);
+    const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("pt-BR", {day: '2-digit', month: 'short'});
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-    // ============================================================================
-    // COMPONENTE NATIVO DE ÍCONES (A SOLUÇÃO DO CRASH)
-    // ============================================================================
-    const Icon = ({ name, color = "currentColor", size = 20, style }) => {
-      const paths = {
-        "layout-dashboard": <><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></>,
-        "arrow-up-circle": <><circle cx="12" cy="12" r="10"/><polyline points="16 12 12 8 8 12"/><line x1="12" y1="16" x2="12" y2="8"/></>,
-        "anchor": <><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></>,
-        "zap": <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>,
-        "search": <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
-        "pie-chart": <><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></>,
-        "bar-chart-2": <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>,
-        "inbox": <><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></>
-      };
-      return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
-          {paths[name]}
-        </svg>
-      );
-    };
+    // ============================================================================
+    // ÍCONES NATIVOS
+    // ============================================================================
+    const Icon = ({ name, color = "currentColor", size = 20, style }) => {
+      const paths = {
+        "layout-dashboard": <><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></>,
+        "anchor": <><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></>,
+        "zap": <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>,
+        "search": <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
+        "pie-chart": <><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></>,
+        "bar-chart-2": <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>,
+        "inbox": <><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></>,
+        "plus": <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>,
+        "log-out": <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>
+      };
+      return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>{paths[name]}</svg>;
+    };
 
-    // ============================================================================
-    // SEU SUPABASE
-    // ============================================================================
-    const DB_CONFIG = {
-      URL: "https://urpuiznydrlwmaqhdids.supabase.co",
-      KEY: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0"
-    };
+    // ============================================================================
+    // SUPABASE (MOTOR)
+    // ============================================================================
+    const DB_CONFIG = {
+      URL: "https://urpuiznydrlwmaqhdids.supabase.co",
+      KEY: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0"
+    };
 
-    async function loadCloudData() {
-      try {
-        const res = await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
-          headers: { 'apikey': DB_CONFIG.KEY, 'Authorization': `Bearer ${DB_CONFIG.KEY}` }
-        });
-        const data = await res.json();
-        if (data && data.length > 0) return { fixos: data[0].fixos || [], unicos: data[0].unicos || [], receitas: data[0].receitas || [] };
-      } catch (err) { console.error(err); }
-      return { fixos: [], unicos: [], receitas: [] };
-    }
+    async function loadCloudData() {
+      try {
+        const res = await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
+          headers: { 'apikey': DB_CONFIG.KEY, 'Authorization': `Bearer ${DB_CONFIG.KEY}` }
+        });
+        const data = await res.json();
+        if (data && data.length > 0) return { fixos: data[0].fixos || [], unicos: data[0].unicos || [] };
+      } catch (err) {}
+      return { fixos: [], unicos: [] };
+    }
 
-    async function saveCloudData(data) {
-      try {
-        await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'apikey': DB_CONFIG.KEY, 'Authorization': `Bearer ${DB_CONFIG.KEY}`, 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ fixos: data.fixos, unicos: data.unicos, receitas: data.receitas, updated_at: new Date().toISOString() })
-        });
-      } catch (err) {}
-    }
+    async function saveCloudData(data) {
+      try {
+        await fetch(`${DB_CONFIG.URL}/rest/v1/painel_gastos?id=eq.1`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'apikey': DB_CONFIG.KEY, 'Authorization': `Bearer ${DB_CONFIG.KEY}`, 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ fixos: data.fixos, unicos: data.unicos, updated_at: new Date().toISOString() })
+        });
+      } catch (err) {}
+    }
 
-    // ============================================================================
-    // COMPONENTES DE UI
-    // ============================================================================
-    const PrimaryBtnStyle = { padding: "14px 28px", background: `linear-gradient(135deg, ${TOKENS.electric}, ${TOKENS.neon})`, border: "none", borderRadius: 10, color: "#05070D", fontWeight: 800, fontSize: 15, cursor: "pointer", fontFamily: "inherit" };
-    function Lbl({ children }) { return <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: TOKENS.neon, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{children}</label>; }
+    // ============================================================================
+    // COMPONENTES DE UI
+    // ============================================================================
+    const PrimaryBtnStyle = { padding: "14px 24px", background: `linear-gradient(135deg, ${TOKENS.electric}, ${TOKENS.electricDark})`, border: "none", borderRadius: 10, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, justifyContent: "center" };
+    function Lbl({ children }) { return <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: TOKENS.textMuted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>{children}</label>; }
 
-    function Modal({ title, onClose, children }) {
-      return (
-        <div className="modal-backdrop" onClick={onClose}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, borderBottom: "1px solid rgba(0, 168, 255, 0.15)", paddingBottom: 16 }}>
-              <h3 className="font-display" style={{ color: TOKENS.textHero, margin: 0, fontSize: 22, fontWeight: 800 }}>{title}</h3>
-              <button onClick={onClose} style={{ background: "transparent", border: "none", color: TOKENS.textMuted, cursor: "pointer", fontSize: 18 }}>✕</button>
-            </div>
-            {children}
-          </div>
-        </div>
-      );
-    }
+    // FORMULÁRIO RESPONSIVO
+    function Form({ type, onSave, onClose, initial, cats }) {
+      const getToday = () => { const d = new Date(); return new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0,10); };
+      const [f, setF] = useState(initial || { nome: "", fornecedor: "", valor: "", categoria: cats[0], descricao: "", data: getToday(), status: "Pago" });
+      const up = k => v => setF(p => ({ ...p, [k]: v }));
+      
+      const go = () => {
+        if (!f.nome || !f.valor) return alert("Preencha o Título e o Valor.");
+        const val = parseFloat(String(f.valor).replace(",", "."));
+        if(isNaN(val)) return alert("Valor inválido.");
+        onSave({ ...f, valor: val, id: f.id || uid(), createdAt: f.createdAt || new Date().toISOString() });
+        onClose();
+      };
 
-    // FORMULÁRIO BLINDADO
-    function Form({ type, onSave, onClose, initial, cats }) {
-      const getToday = () => { const d = new Date(); return new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0,10); };
-      const [f, setF] = useState(initial || { nome: "", fornecedor: "", valor: "", categoria: cats[0], descricao: "", data: getToday(), status: "Pago" });
-      const up = k => v => setF(p => ({ ...p, [k]: v }));
-      
-      const go = () => {
-        if (!f.nome || !f.valor) return alert("Preencha o Título e o Valor.");
-        // Converte virgula pra ponto com segurança
-        const val = parseFloat(String(f.valor).replace(",", "."));
-        if(isNaN(val)) return alert("Valor numérico inválido.");
-        
-        onSave({ ...f, valor: val, id: f.id || uid(), createdAt: f.createdAt || new Date().toISOString() });
-        onClose();
-      };
+      return (
+        <React.Fragment>
+          <div style={{ marginBottom: 20 }}>
+            <Lbl>O que foi gasto? *</Lbl>
+            <input className="modal-input" value={f.nome} onChange={e => up("nome")(e.target.value)} placeholder="Ex: Servidor AWS, Make.com" autoFocus />
+          </div>
+          <div className="form-grid-mobile" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+            <div><Lbl>Valor (R$) *</Lbl><input className="modal-input" type="number" step="0.01" value={f.valor} onChange={e => up("valor")(e.target.value)} placeholder="0.00" /></div>
+            <div><Lbl>Data de Pagamento</Lbl><input className="modal-input" type="date" value={f.data} onChange={e => up("data")(e.target.value)} /></div>
+          </div>
+          <div className="form-grid-mobile" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+            <div>
+              <Lbl>Categoria</Lbl>
+              <select className="modal-input" value={f.categoria} onChange={e => up("categoria")(e.target.value)} style={{cursor:"pointer"}}>{cats.map(c => <option key={c} value={c} style={{background:"#0f172a"}}>{c}</option>)}</select>
+            </div>
+            <div>
+              <Lbl>Status</Lbl>
+              <select className="modal-input" value={f.status} onChange={e => up("status")(e.target.value)} style={{cursor:"pointer"}}>
+                <option value="Pago" style={{background:"#0f172a"}}>✔️ Efetuado (Pago)</option>
+                <option value="Pendente" style={{background:"#0f172a"}}>⏳ Pendente (A Pagar)</option>
+              </select>
+            </div>
+          </div>
+          <div style={{ marginBottom: 32 }}>
+            <Lbl>Fornecedor ou Observação</Lbl>
+            <input className="modal-input" value={f.descricao} onChange={e => up("descricao")(e.target.value)} placeholder="Detalhes (Opcional)" />
+          </div>
+          <div style={{ display: "flex", gap: 16 }}>
+            <button onClick={onClose} className="btn-cancelar" style={{ flex: 1 }}>Cancelar</button>
+            <button onClick={go} className="btn-glow" style={{ ...PrimaryBtnStyle, flex: 2 }}>Salvar Saída</button>
+          </div>
+        </React.Fragment>
+      );
+    }
 
-      const getNomePlaceholder = () => {
-        if (f.categoria === "Pessoal") return "Ex: Pró-labore Gabriel";
-        if (f.categoria === "Software/SaaS") return "Ex: Assinatura Mensal Make";
-        if (type === "receita") return "Ex: Projeto Automação Clínica X";
-        return "Ex: Servidor AWS";
-      };
+    function StatCard({ label, value, sub, color, type }) {
+      const glowStr = type === "danger" ? "rgba(239,68,68,0.06)" : "rgba(14,165,233,0.06)";
+      return (
+        <div className="glass-panel" style={{ padding: "28px 24px", flex: 1, minWidth: 200, position: "relative", overflow: "hidden", boxShadow: `0 0 24px ${glowStr}` }}>
+          <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: color }} />
+          <div style={{ fontSize: 11, color: TOKENS.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{label}</div>
+          <div className="font-display" style={{ fontSize: "clamp(1.8rem, 3vw, 2.5rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", marginBottom: 4 }}>{value}</div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{sub}</div>
+        </div>
+      );
+    }
 
-      return (
-        <React.Fragment>
-          <div style={{ marginBottom: 20 }}>
-            <Lbl>{type === "receita" ? "Título da Receita *" : "Título do Gasto *"}</Lbl>
-            <input className="modal-input" value={f.nome} onChange={e => up("nome")(e.target.value)} placeholder={getNomePlaceholder()} autoFocus />
-          </div>
-          <div style={{ marginBottom: 20 }}>
-            <Lbl>{type === "receita" ? "Cliente Beneficiário" : "Fornecedor / Emitente"}</Lbl>
-            <input className="modal-input" value={f.fornecedor} onChange={e => up("fornecedor")(e.target.value)} placeholder={type === "receita" ? "Ex: LogMax S/A" : "Ex: Amazon Web Services"} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
-            <div><Lbl>Valor (R$) *</Lbl><input className="modal-input" type="number" step="0.01" value={f.valor} onChange={e => up("valor")(e.target.value)} placeholder="0.00" /></div>
-            <div><Lbl>{type === "fixo" ? "Data Base Mês" : "Data da Movimentação"}</Lbl><input className="modal-input" type="date" value={f.data} onChange={e => up("data")(e.target.value)} /></div>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
-            <div>
-              <Lbl>Categoria Estratégica</Lbl>
-              <select className="modal-input" value={f.categoria} onChange={e => up("categoria")(e.target.value)} style={{cursor:"pointer"}}>{cats.map(c => <option key={c} value={c} style={{background:"#0A1428"}}>{c}</option>)}</select>
-            </div>
-            <div>
-              <Lbl>Status do Pagamento</Lbl>
-              <select className="modal-input" value={f.status} onChange={e => up("status")(e.target.value)} style={{cursor:"pointer"}}>
-                <option value="Pago" style={{background:"#0A1428"}}>✔️ Efetuado (Pago)</option>
-                <option value="Pendente" style={{background:"#0A1428"}}>⏳ Pendente (A Pagar)</option>
-              </select>
-            </div>
-          </div>
-          <div style={{ marginBottom: 32 }}><Lbl>Contexto / Justificativa</Lbl><input className="modal-input" value={f.descricao} onChange={e => up("descricao")(e.target.value)} placeholder="Registro de contrato ou notas..." /></div>
-          <div style={{ display: "flex", gap: 16 }}>
-            <button onClick={onClose} className="btn-cancelar" style={{ flex: 1 }}>Cancelar</button>
-            <button onClick={go} className="btn-glow" style={{ ...PrimaryBtnStyle, flex: 2 }}>Registrar Operação</button>
-          </div>
-        </React.Fragment>
-      );
-    }
+    // LINHA DE DADOS RESPONSIVA
+    function DataRow({ item, type, onEdit, onDelete }) {
+      const [confirm, setConfirm] = useState(false);
+      const isPending = item.status === "Pendente";
 
-    function StatCard({ label, value, sub, color, type }) {
-      const glowStr = type === "positive" ? "rgba(34,197,94,0.08)" : type === "negative" ? "rgba(239,68,68,0.08)" : "rgba(0,168,255,0.08)";
-      return (
-        <div style={{ background: `linear-gradient(135deg, ${glowStr} 0%, rgba(10,31,68,0.5) 60%)`, border: `1px solid ${color}`, borderRadius: 16, padding: "32px 24px", flex: 1, minWidth: 200, position: "relative", overflow: "hidden", boxShadow: `0 0 24px ${glowStr}` }}>
-          <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: color }} />
-          <div style={{ fontSize: 11, color: TOKENS.textMuted, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{label}</div>
-          <div className="font-display" style={{ fontSize: "clamp(2rem, 3.5vw, 2.8rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", marginBottom: 4 }}>{value}</div>
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>{sub}</div>
-        </div>
-      );
-    }
+      return (
+        <div className="desktop-table-row" style={{ opacity: isPending ? 0.7 : 1 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <div style={{ color: "white", fontWeight: 600, fontSize: 15 }}>{item.nome}</div>
+              {isPending && <span style={{ background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", padding: "2px 6px", borderRadius: 4, fontSize: 10, fontWeight: 800, textTransform: "uppercase" }}>A Pagar</span>}
+            </div>
+            <div style={{ color: TOKENS.textMuted, fontSize: 12, marginTop: 4, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ color: TOKENS.electric, fontWeight: 600 }}>{item.categoria}</span>
+              <span style={{ opacity: 0.3 }}>•</span> 
+              <span>{fmtDate(item.data)}</span>
+            </div>
+            {item.descricao && <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, marginTop: 4 }}>{item.descricao}</div>}
+          </div>
+          
+          <div className="row-value-box">
+            <div className="font-display" style={{ fontWeight: 700, color: type === "fixo" ? TOKENS.electric : TOKENS.red, fontSize: 16 }}>
+              {fmt(item.valor)}
+            </div>
+            <div className="row-actions" style={{ display: "flex", gap: 8, marginLeft: 24 }}>
+              <button onClick={() => onEdit(item)} style={{ background: "rgba(255,255,255,0.05)", border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, color: "white", padding: "6px 12px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>Editar</button>
+              {confirm
+                ? <button onClick={() => { onDelete(item.id); setConfirm(false); }} style={{ background: "rgba(239,68,68,0.15)", border: "1px solid #ef4444", borderRadius: 8, color: "#ef4444", padding: "6px 12px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>Certeza?</button>
+                : <button onClick={() => setConfirm(true)} style={{ background: "transparent", border: `1px solid transparent`, borderRadius: 8, color: TOKENS.textMuted, padding: "6px 12px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>Del</button>}
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-    function DataRow({ item, type, onEdit, onDelete }) {
-      const [confirm, setConfirm] = useState(false);
-      const isPending = item.status === "Pendente";
-      const isReceita = type === "receita";
+    // ============================================================================
+    // DASHBOARD PRINCIPAL (CFO VIEW)
+    // ============================================================================
+    function Dashboard({ onLogout }) {
+      const [tab, setTab] = useState("overview"); 
+      const [fixos, setFixos] = useState([]); 
+      const [unicos, setUnicos] = useState([]);
+      
+      const [modal, setModal] = useState(null); 
+      const [mes, setMes] = useState(new Date().getMonth()); 
+      const [ano, setAno] = useState(new Date().getFullYear());
+      const [search, setSearch] = useState(""); 
+      
+      const [ready, setReady] = useState(false); 
+      const [syncing, setSyncing] = useState(false); 
+      const pollRef = useRef(null);
 
-      return (
-        <div className="table-row" style={{ display: "flex", alignItems: "center", gap: 16, padding: "18px 24px", borderLeft: "3px solid transparent", opacity: isPending ? 0.6 : 1 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ color: "white", fontWeight: 700, fontSize: 16 }}>{item.nome}</div>
-              {isPending && <span style={{ background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 800, textTransform: "uppercase" }}>A Pagar</span>}
-            </div>
-            <div style={{ color: TOKENS.textMuted, fontSize: 12, marginTop: 6, display: "flex", gap: 8, alignItems: "center" }}>
-              <span style={{ background: isReceita ? "rgba(16, 185, 129, 0.15)" : "rgba(0,168,255,0.1)", border: `1px solid ${isReceita ? "rgba(16, 185, 129, 0.3)" : "rgba(0,168,255,0.2)"}`, color: isReceita ? TOKENS.green : TOKENS.neon, padding: "4px 8px", borderRadius: 4, fontSize: 10, fontWeight: 800, textTransform: "uppercase" }}>{item.categoria}</span>
-              <span>•</span> <span>{fmtDate(item.data)}</span>
-              {item.fornecedor && <><span>•</span> <span style={{fontWeight: 600, color:"#94a3b8"}}>{isReceita ? 'Cliente:' : 'Fornec:'} {item.fornecedor}</span></>}
-            </div>
-            {item.descricao && <div style={{ color: "rgba(230,242,255,0.3)", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>"{item.descricao}"</div>}
-          </div>
-          <div className="font-display" style={{ fontWeight: 800, color: isReceita ? TOKENS.green : "white", fontSize: 18, minWidth: 130, textAlign: "right" }}>{isReceita ? '+' : '-'} {fmt(item.valor)}</div>
-          <div style={{ display: "flex", gap: 8, flexShrink: 0, marginLeft: 24 }}>
-            <button onClick={() => onEdit(item)} style={{ background: "rgba(255,255,255,0.05)", border: `1px solid rgba(255,255,255,0.2)`, borderRadius: 8, color: "white", padding: "8px 16px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Editar</button>
-            {confirm
-              ? <button onClick={() => { onDelete(item.id); setConfirm(false); }} style={{ background: "rgba(239,68,68,0.1)", border: "1px solid #ef4444", borderRadius: 8, color: "#ef4444", padding: "8px 16px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Apagar!</button>
-              : <button onClick={() => setConfirm(true)} style={{ background: "transparent", border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, color: TOKENS.textMuted, padding: "8px 16px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Del</button>}
-          </div>
-        </div>
-      );
-    }
+      const refresh = useCallback(async (silent = false) => {
+        if(!silent) setSyncing(true);
+        const data = await loadCloudData();
+        setFixos(data.fixos || []); setUnicos(data.unicos || []);
+        setReady(true); setSyncing(false);
+      }, []);
 
-    // ============================================================================
-    // DASHBOARD PRINCIPAL
-    // ============================================================================
-    function Dashboard({ onLogout }) {
-      const [tab, setTab] = useState("overview"); 
-      const [fixos, setFixos] = useState([]); 
-      const [unicos, setUnicos] = useState([]);
-      const [receitas, setReceitas] = useState([]); 
-      
-      const [modal, setModal] = useState(null); 
-      const [mes, setMes] = useState(new Date().getMonth()); 
-      const [ano, setAno] = useState(new Date().getFullYear());
-      const [search, setSearch] = useState(""); 
-      
-      const [ready, setReady] = useState(false); 
-      const [syncing, setSyncing] = useState(false); 
-      const pollRef = useRef(null);
+      useEffect(() => { refresh(); pollRef.current = setInterval(() => refresh(true), 15000); return () => clearInterval(pollRef.current); }, [refresh]);
 
-      const refresh = useCallback(async (silent = false) => {
-        if(!silent) setSyncing(true);
-        const data = await loadCloudData();
-        setFixos(data.fixos || []); setUnicos(data.unicos || []); setReceitas(data.receitas || []);
-        setReady(true); setSyncing(false);
-      }, []);
+      const persist = async (newFixos, newUnicos) => { 
+        setFixos(newFixos); setUnicos(newUnicos); 
+        setSyncing(true); 
+        await saveCloudData({ fixos: newFixos, unicos: newUnicos }); 
+        setSyncing(false); 
+      };
+      
+      const saveFixo = async item => await persist(fixos.find(i => i.id === item.id) ? fixos.map(i => i.id === item.id ? item : i) : [...fixos, item], unicos);
+      const saveUnico = async item => await persist(fixos, unicos.find(i => i.id === item.id) ? unicos.map(i => i.id === item.id ? item : i) : [...unicos, item]);
+      
+      const delFixo = async id => await persist(fixos.filter(i => i.id !== id), unicos);
+      const delUnico = async id => await persist(fixos, unicos.filter(i => i.id !== id));
 
-      useEffect(() => { refresh(); pollRef.current = setInterval(() => refresh(true), 15000); return () => clearInterval(pollRef.current); }, [refresh]);
+      const fMês = (arr) => arr.filter(u => { const d = new Date(u.data + "T12:00:00"); return d.getMonth() === mes && d.getFullYear() === ano; });
+      const uf = fMês(unicos); const ff = fMês(fixos); 
 
-      // SALVAMENTO OTIMIZADO (A tela atualiza antes da nuvem = 0 travamentos)
-      const persist = async (newFixos, newUnicos, newReceitas) => { 
-        setFixos(newFixos); setUnicos(newUnicos); setReceitas(newReceitas); 
-        setSyncing(true); 
-        await saveCloudData({ fixos: newFixos, unicos: newUnicos, receitas: newReceitas }); 
-        setSyncing(false); 
-      };
-      
-      const saveFixo = async item => await persist(fixos.find(i => i.id === item.id) ? fixos.map(i => i.id === item.id ? item : i) : [...fixos, item], unicos, receitas);
-      const saveUnico = async item => await persist(fixos, unicos.find(i => i.id === item.id) ? unicos.map(i => i.id === item.id ? item : i) : [...unicos, item], receitas);
-      const saveReceita = async item => await persist(fixos, unicos, receitas.find(i => i.id === item.id) ? receitas.map(i => i.id === item.id ? item : i) : [...receitas, item]);
-      
-      const delFixo = async id => await persist(fixos.filter(i => i.id !== id), unicos, receitas);
-      const delUnico = async id => await persist(fixos, unicos.filter(i => i.id !== id), receitas);
-      const delReceita = async id => await persist(fixos, unicos, receitas.filter(i => i.id !== id));
+      const tF = ff.reduce((a, b) => a + (b.valor || 0), 0); 
+      const tU = uf.reduce((a, b) => a + (b.valor || 0), 0);
+      const totalMes = tF + tU;
 
-      const fMês = (arr) => arr.filter(u => { const d = new Date(u.data + "T12:00:00"); return d.getMonth() === mes && d.getFullYear() === ano; });
-      const uf = fMês(unicos); const ur = fMês(receitas); const ff = fMês(fixos); 
+      const searchStr = search.toLowerCase();
+      const filteredF = ff.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.categoria).toLowerCase().includes(searchStr));
+      const filteredU = uf.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.categoria).toLowerCase().includes(searchStr));
 
-      const tF = ff.reduce((a, b) => a + (b.valor || 0), 0); 
-      const tU = uf.reduce((a, b) => a + (b.valor || 0), 0);
-      const tR = ur.reduce((a, b) => a + (b.valor || 0), 0);
-      const margem = tR - (tF + tU); 
+      const catF = CATS_FIXO.map(c => ({ name: c, value: ff.filter(f => f.categoria === c).reduce((a, b) => a + b.valor, 0) })).filter(d => d.value > 0);
+      
+      const bar = Array.from({ length: 6 }, (_, i) => {
+        const d = new Date(); d.setMonth(d.getMonth() - (5 - i)); const m = d.getMonth(), a = d.getFullYear();
+        const mF = fixos.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
+        const mU = unicos.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
+        return { name: MONTHS[m], Fixos: mF, Variaveis: mU, Total: mF + mU };
+      });
 
-      const searchStr = search.toLowerCase();
-      const filteredF = ff.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
-      const filteredU = uf.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
-      const filteredR = ur.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
+      const TooltipStyle = { background: "#0f172a", border: `1px solid rgba(255,255,255,0.05)`, borderRadius: 8, color: "white", padding: "12px", fontSize: 13 };
 
-      const catF = CATS_FIXO.map(c => ({ name: c, value: ff.filter(f => f.categoria === c).reduce((a, b) => a + b.valor, 0) })).filter(d => d.value > 0);
-      const catU = CATS_UNICO.map(c => ({ name: c, value: uf.filter(f => f.categoria === c).reduce((a, b) => a + b.valor, 0) })).filter(d => d.value > 0);
-      
-      const bar = Array.from({ length: 6 }, (_, i) => {
-        const d = new Date(); d.setMonth(d.getMonth() - (5 - i)); const m = d.getMonth(), a = d.getFullYear();
-        const mR = receitas.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
-        const mF = fixos.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
-        const mU = unicos.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
-        return { name: MONTHS[m], Entrada: mR, Saída: mF + mU };
-      });
+      if (!ready) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background:"#020617" }}><div style={{ color: TOKENS.electric, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "0.2em", fontSize: 12, animation: "pulse-glow 1.5s infinite" }}>SINCRONIZANDO DADOS...</div></div>;
+      const semDadosDRE = bar.every(d => d.Total === 0);
 
-      const TooltipStyle = { background: "#020617", border: `1px solid ${TOKENS.border}`, borderRadius: 12, color: "white", padding: "16px" };
-      const compReceita = tR > 0 ? (((tF + tU) / tR) * 100).toFixed(0) : 0;
-      const compColor = compReceita < 40 ? TOKENS.green : compReceita < 70 ? "#f59e0b" : TOKENS.red;
+      return (
+        <div className="layout-wrapper">
+          <div className="hex-bg" />
+          
+          {/* SIDEBAR DESKTOP */}
+          <div className="sidebar">
+            <div style={{ padding: "40px 24px 32px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                <span className="font-display" style={{ fontSize: 20, fontWeight: 900, color: "white", letterSpacing: "-0.02em" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ color: TOKENS.textMuted, fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>Centro de Custos</span>
+                <span style={{ width: 6, height: 6, background: syncing ? TOKENS.electric : TOKENS.green, borderRadius: "50%", opacity: syncing ? 1 : 0.4 }} title="Status"/>
+              </div>
+            </div>
+            
+            <nav style={{ flex: 1, padding: "0 16px" }}>
+              {[{ id: "overview", label: "Visão Geral", icon: "layout-dashboard" }, { id: "fixos", label: "Carga Fixa (OPEX)", icon: "anchor" }, { id: "unicos", label: "Despesas Variáveis", icon: "zap" }].map(n => (
+                <button key={n.id} onClick={() => {setTab(n.id); setSearch("");}} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "12px 16px", borderRadius: 10, border: "none", background: tab === n.id ? "rgba(14, 165, 233, 0.1)" : "transparent", color: tab === n.id ? "white" : TOKENS.textMuted, fontWeight: tab === n.id ? 700 : 500, fontSize: 14, cursor: "pointer", fontFamily: "inherit", marginBottom: 4, transition: "0.2s" }}>
+                  <Icon name={n.icon} size={16} color={tab === n.id ? TOKENS.electric : "currentColor"} />
+                  {n.label}
+                </button>
+              ))}
+            </nav>
+            
+            <div style={{ padding: "24px 16px", borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+              <button onClick={onLogout} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "12px", background: "transparent", border: "none", color: TOKENS.textMuted, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                <Icon name="log-out" size={16} /> Sair do Sistema
+              </button>
+            </div>
+          </div>
 
-      if (!ready) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background:"#05070D" }}><div style={{ color: TOKENS.neon, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "0.2em", fontSize: 12, animation: "pulse-glow 1.5s infinite" }}>SINCRONIZANDO DADOS...</div></div>;
-      const semDadosDRE = bar.every(d => d.Entrada === 0 && d.Saída === 0);
+          {/* MAIN CONTENT */}
+          <div className="main-content">
+            <div className="header-mobile" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40 }}>
+              <div>
+                <h1 className="font-display" style={{ color: "white", fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 800, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                  {tab === 'overview' ? 'Visão Consolidada' : tab === 'fixos' ? 'Carga Fixa (OPEX)' : 'Despesas Variáveis'}
+                </h1>
+                
+                {tab !== 'overview' && (
+                  <div className="search-box" style={{ position: "relative", width: 300, marginTop: 16 }}>
+                    <div style={{ position: "absolute", left: 14, top: 13, color: "rgba(255,255,255,0.3)" }}><Icon name="search" size={16} /></div>
+                    <input className="modal-input" type="text" placeholder="Buscar lançamento..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 40, paddingRight: 16, paddingTop: 10, paddingBottom: 10, fontSize: 13, background:"rgba(255,255,255,0.03)" }} />
+                  </div>
+                )}
+              </div>
+              
+              <div className="filters" style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <select value={mes} onChange={e => setMes(Number(e.target.value))} className="select-periodo">{MONTHS.map((m, i) => <option key={i} value={i} style={{background:"#0f172a"}}>{m}</option>)}</select>
+                <select value={ano} onChange={e => setAno(Number(e.target.value))} className="select-periodo">{[2024, 2025, 2026, 2027].map(a => <option key={a} value={a} style={{background:"#0f172a"}}>{a}</option>)}</select>
+              </div>
+            </div>
 
-      return (
-        <div style={{ minHeight: "100vh", display: "flex" }}>
-          <div className="hex-bg" style={{position:"fixed"}}/>
-          
-          <div style={{ width: 280, background: "rgba(2, 6, 15, 0.95)", borderRight: `1px solid rgba(255,255,255,0.05)`, display: "flex", flexDirection: "column", position: "fixed", top: 0, bottom: 0, left: 0, zIndex: 100, backdropFilter:"blur(20px)" }}>
-            <div style={{ padding: "40px 32px 32px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                <img src="/logo-bgtech.png" alt="BG Tech" style={{ height: 28 }} onError={(e)=>e.target.style.display='none'}/>
-                <span className="font-display" style={{ fontSize: 22, fontWeight: 900, color: "white" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: 2 }}>
-                <span style={{ color: TOKENS.neon, fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>Engenharia</span>
-                {syncing ? <span style={{ width: 8, height: 8, background: TOKENS.neon, borderRadius: "50%", boxShadow: `0 0 12px ${TOKENS.neon}`, animation: "pulse-glow 1s infinite" }} title="Sincronizando..."/> 
-                         : <span style={{ width: 8, height: 8, background: TOKENS.green, borderRadius: "50%", opacity: 0.5 }} title="Online"/>}
-              </div>
-            </div>
-            
-            <nav style={{ flex: 1, padding: "0 20px" }}>
-              <Lbl style={{ paddingLeft: 12, marginBottom: 16, opacity: 0.6 }}>Menu de Controle</Lbl>
-              {[{ id: "overview", label: "Visão CFO", icon: "layout-dashboard" }, { id: "receitas", label: "Entradas / MRR", color: TOKENS.green, icon: "arrow-up-circle" }, { id: "fixos", label: "Carga Fixa (Mês)", icon: "anchor" }, { id: "unicos", label: "Custos Variáveis", icon: "zap" }].map(n => (
-                <button key={n.id} onClick={() => {setTab(n.id); setSearch("");}} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "14px 16px", borderRadius: 12, border: "none", background: tab === n.id ? "rgba(255,255,255,0.05)" : "transparent", color: tab === n.id ? "white" : TOKENS.textMuted, fontWeight: tab === n.id ? 800 : 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit", marginBottom: 8, textAlign: "left", transition: "all 0.2s", borderLeft: tab === n.id ? `3px solid ${n.color || TOKENS.electric}` : "3px solid transparent" }}>
-                  <Icon name={n.icon} size={18} color={tab === n.id ? (n.color || TOKENS.electric) : "currentColor"} style={{opacity: tab===n.id ? 1 : 0.6}} />
-                  {n.label}
-                </button>
-              ))}
-            </nav>
-            
-            <div style={{ padding: "24px", borderTop: `1px solid rgba(255,255,255,0.05)` }}>
-              <button onClick={onLogout} style={{ width: "100%", padding: "12px", background: "transparent", border: "none", color: TOKENS.textMuted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Sair do Sistema</button>
-            </div>
-          </div>
+            {/* OVERVIEW TAB */}
+            {tab === "overview" && (
+              <div style={{ animation: "fadeIn 0.3s ease-out" }}>
+                <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 32 }}>
+                  <StatCard label="Saída Total (Mês)" value={fmt(totalMes)} sub={`Referência: ${MONTHS[mes]}`} color={TOKENS.red} type="danger" />
+                  <StatCard label="Custo Fixo Base" value={fmt(tF)} sub={`${ff.length} despesas mapeadas`} color={TOKENS.electric} type="normal" />
+                  <StatCard label="Gasto Variável" value={fmt(tU)} sub={`${uf.length} saídas extras`} color="#f59e0b" type="normal" />
+                </div>
 
-          <div style={{ marginLeft: 280, flex: 1, padding: "56px 64px", position: "relative", zIndex: 1, maxWidth: 1400 }}>
-            
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
-              <div>
-                <h1 className="font-display" style={{ color: "white", fontSize: "clamp(28px, 4vw, 36px)", fontWeight: 800, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
-                  {tab === 'overview' ? 'Visão Executiva' : tab === 'receitas' ? 'Gestão de Receitas' : tab === 'fixos' ? 'Carga Fixa Operacional' : 'Despesas Variáveis'}
-                </h1>
-                <p style={{ color: TOKENS.textMuted, fontSize: 13, margin: 0 }}>Período: {MONTHS[mes]} de {ano}</p>
-                
-                {tab !== 'overview' && (
-                  <div style={{ position: "relative", width: 300, marginTop: 24 }}>
-                    <div style={{ position: "absolute", left: 14, top: 14, color: "rgba(255,255,255,0.3)" }}><Icon name="search" size={16} /></div>
-                    <input className="modal-input" type="text" placeholder="Buscar título ou cliente..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 40, background:"rgba(255,255,255,0.03)" }} />
-                  </div>
-                )}
-              </div>
-              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                <select value={mes} onChange={e => setMes(Number(e.target.value))} className="select-periodo">{MONTHS.map((m, i) => <option key={i} value={i} style={{background:"#0A1428"}}>{m}</option>)}</select>
-                <select value={ano} onChange={e => setAno(Number(e.target.value))} className="select-periodo">{[2024, 2025, 2026, 2027].map(a => <option key={a} value={a} style={{background:"#0A1428"}}>{a}</option>)}</select>
-              </div>
-            </div>
+                <div className="charts-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
+                  <div className="glass-panel chart-container" style={{ padding: 32 }}>
+                    <h3 className="font-display" style={{ color: "white", margin: "0 0 32px", fontSize: 16, fontWeight: 700 }}>Curva de Saída — Histórico Semestral</h3>
+                    {semDadosDRE ? (
+                      <div className="empty-state" style={{ height: 240, border: "none", background: "transparent" }}><Icon name="bar-chart-2" size={40} /><p>Registre custos para ver o histórico.</p></div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height={280}>
+                        <AreaChart data={bar} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorFixos" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={TOKENS.electric} stopOpacity={0.3}/><stop offset="95%" stopColor={TOKENS.electric} stopOpacity={0}/></linearGradient>
+                            <linearGradient id="colorVar" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/><stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/></linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                          <XAxis dataKey="name" stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 12 }} tickMargin={12} />
+                          <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 12 }} tickFormatter={v => `R$${(v/1000).toFixed(0)}k`} width={50} />
+                          <Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} />
+                          <Legend wrapperStyle={{paddingTop: 20, fontSize: 13, color: TOKENS.textMuted}} iconType="circle" />
+                          <Area type="monotone" dataKey="Fixos" stroke={TOKENS.electric} strokeWidth={2} fillOpacity={1} fill="url(#colorFixos)" />
+                          <Area type="monotone" dataKey="Variaveis" name="Variáveis" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorVar)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
 
-            {tab === "overview" && tR > 0 && (
-              <div style={{ marginBottom: 40, background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontSize: 13, fontWeight: 700, color: "white" }}>
-                  <span>Comprometimento da Receita</span>
-                  <span style={{ color: compColor }}>{compReceita}% consumido</span>
-                </div>
-                <div style={{ width: "100%", height: 6, background: "rgba(255,255,255,0.1)", borderRadius: 3, overflow: "hidden" }}>
-                  <div style={{ width: `${Math.min(compReceita, 100)}%`, height: "100%", background: compColor, transition: "width 1s ease" }}></div>
-                </div>
-              </div>
-            )}
+                  <div className="glass-panel chart-container" style={{ padding: 32 }}>
+                    <h3 className="font-display" style={{ color: "white", margin: "0 0 24px", fontSize: 16, fontWeight: 700 }}>Composição Fixo</h3>
+                    {catF.length > 0 ? ( 
+                      <ResponsiveContainer width="100%" height={280}>
+                        <PieChart>
+                          <Pie data={catF} cx="50%" cy="40%" innerRadius={60} outerRadius={80} paddingAngle={2} dataKey="value" stroke="none">
+                            {catF.map((_, i) => <Cell key={i} fill={TOKENS.chartColors[i % TOKENS.chartColors.length]} />)}
+                          </Pie>
+                          <Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} itemStyle={{color:"white", fontSize: 12}} />
+                          <Legend iconType="circle" layout="vertical" verticalAlign="bottom" wrapperStyle={{fontSize: 11, color: TOKENS.textMuted}} />
+                        </PieChart>
+                      </ResponsiveContainer> 
+                    ) : <div className="empty-state" style={{ height: 240, border: "none", background: "transparent" }}><Icon name="pie-chart" size={40} /><p>Sem dados.</p></div>}
+                  </div>
+                </div>
+              </div>
+            )}
 
-            {tab === "overview" && (
-              <div style={{ animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24, marginBottom: 40 }}>
-                  <StatCard label="Receita Bruta" value={fmt(tR)} sub={`${ur.length} contratos no mês`} color={TOKENS.green} type="positive" />
-                  <StatCard label="Saída Total (Fixo+Var)" value={fmt(tF + tU)} sub={`${ff.length + uf.length} despesas no mês`} color={TOKENS.red} type="negative" />
-                  <StatCard label="Margem / Resultado" value={fmt(margem)} sub="Lucro Operacional" color={margem >= 0 ? TOKENS.green : TOKENS.red} type={margem >= 0 ? "positive" : "negative"} />
-                </div>
+            {/* FIXOS TAB */}
+            {tab === "fixos" && (
+              <div style={{ animation: "fadeIn 0.3s ease-out" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
+                  <button onClick={() => setModal({ type: "fixo", item: null })} className="btn-glow" style={{...PrimaryBtnStyle, width: window.innerWidth < 900 ? "100%" : "auto"}}><Icon name="plus" size={16}/> Registrar Custo Fixo</button>
+                </div>
+                {filteredF.length === 0 ? <div className="empty-state"><Icon name="inbox" size={48} /><h3>Sem registros</h3><p>Nenhum custo fixo encontrado.</p></div> : (
+                  <div className="glass-panel" style={{ overflow: "hidden" }}>
+                    {filteredF.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="fixo" onEdit={item => setModal({ type: "fixo", item })} onDelete={delFixo} />)}
+                    <div style={{ padding: "20px 24px", background: "rgba(0,0,0,0.3)", textAlign: "right", borderTop: "1px solid rgba(255,255,255,0.05)" }}><span style={{fontSize: 12, color: TOKENS.textMuted, marginRight: 16, textTransform: "uppercase", fontWeight: 700}}>Total Fixo:</span><span className="font-display" style={{ color: TOKENS.electric, fontSize: 24, fontWeight: 800 }}>{fmt(tF)}</span></div>
+                  </div>
+                )}
+              </div>
+            )}
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
-                  <div className="glass-panel" style={{ padding: 32 }}>
-                    <h3 className="font-display" style={{ color: "white", margin: "0 0 32px", fontSize: 18, fontWeight: 800 }}>Distribuição da Carga Fixa</h3>
-                    {catF.length > 0 ? ( <ResponsiveContainer width="100%" height={260}><PieChart><Pie data={catF} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={4} dataKey="value" stroke="none">{catF.map((_, i) => <Cell key={i} fill={TOKENS.chartColors[i % TOKENS.chartColors.length]} />)}</Pie><Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} itemStyle={{color:"white", fontWeight: 700}} /><Legend iconType="circle" wrapperStyle={{fontSize: 13, color: TOKENS.textMuted, paddingTop: 20}} /></PieChart></ResponsiveContainer> ) : <div className="empty-state"><Icon name="pie-chart" size={48} /><p>Sem gastos fixos.</p></div>}
-                  </div>
-                  <div className="glass-panel" style={{ padding: 32 }}>
-                    <h3 className="font-display" style={{ color: "white", margin: "0 0 32px", fontSize: 18, fontWeight: 800 }}>Histórico Variável</h3>
-                    {catU.length > 0 ? ( <ResponsiveContainer width="100%" height={260}><PieChart><Pie data={catU} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={4} dataKey="value" stroke="none">{catU.map((_, i) => <Cell key={i} fill={TOKENS.chartColors[i % TOKENS.chartColors.length]} />)}</Pie><Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} itemStyle={{color:"white", fontWeight: 700}} /><Legend iconType="circle" wrapperStyle={{fontSize: 13, color: TOKENS.textMuted, paddingTop: 20}} /></PieChart></ResponsiveContainer> ) : <div className="empty-state"><Icon name="pie-chart" size={48} /><p>Sem gastos variáveis.</p></div>}
-                  </div>
-                </div>
+            {/* UNICOS TAB */}
+            {tab === "unicos" && (
+              <div style={{ animation: "fadeIn 0.3s ease-out" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
+                  <button onClick={() => setModal({ type: "unico", item: null })} className="btn-glow" style={{...PrimaryBtnStyle, background: `linear-gradient(135deg, #ef4444, #b91c1c)`, width: window.innerWidth < 900 ? "100%" : "auto"}}><Icon name="plus" size={16}/> Lançar Gasto Variável</button>
+                </div>
+                {filteredU.length === 0 ? <div className="empty-state"><Icon name="inbox" size={48} /><h3>Sem registros</h3><p>Nenhuma despesa variável encontrada.</p></div> : (
+                  <div className="glass-panel" style={{ overflow: "hidden" }}>
+                    {filteredU.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="unico" onEdit={item => setModal({ type: "unico", item })} onDelete={delUnico} />)}
+                    <div style={{ padding: "20px 24px", background: "rgba(0,0,0,0.3)", textAlign: "right", borderTop: "1px solid rgba(255,255,255,0.05)" }}><span style={{fontSize: 12, color: TOKENS.textMuted, marginRight: 16, textTransform: "uppercase", fontWeight: 700}}>Total Variável:</span><span className="font-display" style={{ color: TOKENS.red, fontSize: 24, fontWeight: 800 }}>{fmt(tU)}</span></div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-                <div className="glass-panel" style={{ padding: 40 }}>
-                  <h3 className="font-display" style={{ color: "white", margin: "0 0 40px", fontSize: 18, fontWeight: 800 }}>DRE — Receita vs Saída (Últimos 6 Meses)</h3>
-                  {semDadosDRE ? (
-                    <div className="empty-state" style={{ height: 280 }}><Icon name="bar-chart-2" size={48} /><h3>Gráfico Vazio</h3><p>Registre sua primeira receita ou despesa.</p></div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={320}>
-                      <AreaChart data={bar} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorEntrada" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={TOKENS.green} stopOpacity={0.3}/><stop offset="95%" stopColor={TOKENS.green} stopOpacity={0}/></linearGradient>
-                          <linearGradient id="colorSaida" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={TOKENS.red} stopOpacity={0.3}/><stop offset="95%" stopColor={TOKENS.red} stopOpacity={0}/></linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                        <XAxis dataKey="name" stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 }} tickMargin={16} />
-                        <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} />
-                        <Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} />
-                        <Legend wrapperStyle={{paddingTop: 24, fontSize: 14, fontWeight: 600, color: "white"}}/>
-                        <Area type="monotone" dataKey="Entrada" stroke={TOKENS.green} strokeWidth={3} fillOpacity={1} fill="url(#colorEntrada)" activeDot={{ r: 6, strokeWidth: 0 }} />
-                        <Area type="monotone" dataKey="Saída" stroke={TOKENS.red} strokeWidth={3} fillOpacity={1} fill="url(#colorSaida)" activeDot={{ r: 6, strokeWidth: 0 }} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-              </div>
-            )}
+          {/* MOBILE BOTTOM NAVIGATION */}
+          <div className="mobile-nav">
+            {[{ id: "overview", label: "Painel", icon: "layout-dashboard" }, { id: "fixos", label: "Fixos", icon: "anchor" }, { id: "unicos", label: "Variáveis", icon: "zap" }].map(n => (
+              <button key={n.id} className={`nav-btn-mobile ${tab === n.id ? 'active' : ''}`} onClick={() => {setTab(n.id); setSearch("");}}>
+                <Icon name={n.icon} size={20} />
+                {n.label}
+              </button>
+            ))}
+          </div>
 
-            {tab === "receitas" && (
-              <div style={{ animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
-                  <button onClick={() => setModal({ type: "receita", item: null })} className="btn-glow" style={{...PrimaryBtnStyle, background: `linear-gradient(135deg, #10b981, #059669)`}}>+ Lançar Contrato / Receita</button>
-                </div>
-                {filteredR.length === 0 ? <div className="empty-state"><Icon name="inbox" size={48} /><h3>Nenhuma receita</h3><p>Sem entradas para {MONTHS[mes]}.</p></div> : (
-                  <div className="glass-panel" style={{ overflow: "hidden" }}>
-                    {filteredR.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="receita" onEdit={item => setModal({ type: "receita", item })} onDelete={delReceita} />)}
-                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: TOKENS.green, fontSize: 28, fontWeight: 900 }}>{fmt(tR)}</span></div>
-                  </div>
-                )}
-              </div>
-            )}
+          {/* MODAL DE CRIAÇÃO/EDIÇÃO */}
+          {modal && (
+            <Modal title={modal.item ? "Editar Lançamento" : modal.type === "fixo" ? "Novo Custo Fixo" : "Novo Gasto Variável"} onClose={() => setModal(null)}>
+              <Form type={modal.type} onSave={modal.type === "fixo" ? saveFixo : saveUnico} onClose={() => setModal(null)} initial={modal.item} cats={modal.type === "fixo" ? CATS_FIXO : CATS_UNICO} />
+            </Modal>
+          )}
+        </div>
+      );
+    }
 
-            {tab === "fixos" && (
-              <div style={{ animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
-                  <button onClick={() => setModal({ type: "fixo", item: null })} className="btn-glow" style={PrimaryBtnStyle}>+ Registrar Novo Fixo</button>
-                </div>
-                {filteredF.length === 0 ? <div className="empty-state"><Icon name="inbox" size={48} /><h3>Sem registros</h3><p>Nenhum custo fixo em {MONTHS[mes]}.</p></div> : (
-                  <div className="glass-panel" style={{ overflow: "hidden" }}>
-                    {filteredF.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="fixo" onEdit={item => setModal({ type: "fixo", item })} onDelete={delFixo} />)}
-                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: "white", fontSize: 28, fontWeight: 900 }}>{fmt(tF)}</span></div>
-                  </div>
-                )}
-              </div>
-            )}
+    function Login({ onLogin }) {
+      const [u, setU] = useState(""); const [p, setP] = useState(""); const [err, setErr] = useState(""); const [load, setLoad] = useState(false);
+      const go = () => {
+        setLoad(true);
+        setTimeout(() => { if (u.trim().toLowerCase() === ADMIN.user && p === ADMIN.pass) onLogin(); else { setErr("Acesso Negado."); setLoad(false); } }, 800);
+      };
+      return (
+        <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <div className="hex-bg" />
+          <div className="glass-panel" style={{ padding: "40px 32px", width: "100%", maxWidth: 400, zIndex: 10 }}>
+            <div style={{ textAlign: "center", marginBottom: 40 }}>
+              <h1 className="font-display" style={{ color: "white", fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
+              <p style={{ color: TOKENS.electric, fontSize: 10, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.2em" }}>Centro de Custos CFO</p>
+            </div>
+            <div style={{ marginBottom: 20 }}><Lbl>ID de Acesso</Lbl><input className="modal-input" value={u} onChange={e => { setU(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="Usuário root" autoFocus /></div>
+            <div style={{ marginBottom: 32 }}><Lbl>Chave de Segurança</Lbl><input className="modal-input" type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" /></div>
+            {err && <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 8, padding: 12, color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 24, fontWeight: 700 }}>⚠️ {err}</div>}
+            <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "16px", fontSize: 15 }}>{load ? "Autenticando..." : "Acessar"}</button>
+          </div>
+        </div>
+      );
+    }
 
-            {tab === "unicos" && (
-              <div style={{ animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
-                  <button onClick={() => setModal({ type: "unico", item: null })} className="btn-glow" style={PrimaryBtnStyle}>+ Lançar Variável</button>
-                </div>
-                {filteredU.length === 0 ? <div className="empty-state"><Icon name="inbox" size={48} /><h3>Sem registros</h3><p>Nenhuma despesa variável em {MONTHS[mes]}.</p></div> : (
-                  <div className="glass-panel" style={{ overflow: "hidden" }}>
-                    {filteredU.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="unico" onEdit={item => setModal({ type: "unico", item })} onDelete={delUnico} />)}
-                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: "white", fontSize: 28, fontWeight: 900 }}>{fmt(tU)}</span></div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+    function App() {
+      const [logged, setLogged] = useState(false);
+      return <React.Fragment>{logged ? <Dashboard onLogout={() => setLogged(false)} /> : <Login onLogin={() => setLogged(true)} />}</React.Fragment>;
+    }
 
-          {modal && (
-            <Modal title={modal.item ? "Editar Lançamento" : modal.type === "receita" ? "Nova Receita" : modal.type === "fixo" ? "Novo Custo Fixo" : "Novo Custo Variável"} onClose={() => setModal(null)}>
-              <Form type={modal.type} onSave={modal.type === "fixo" ? saveFixo : modal.type === "receita" ? saveReceita : saveUnico} onClose={() => setModal(null)} initial={modal.item} cats={modal.type === "receita" ? CATS_RECEITA : modal.type === "fixo" ? CATS_FIXO : CATS_UNICO} />
-            </Modal>
-          )}
-        </div>
-      );
-    }
-
-    function Login({ onLogin }) {
-      const [u, setU] = useState(""); const [p, setP] = useState(""); const [err, setErr] = useState(""); const [load, setLoad] = useState(false);
-      const go = () => {
-        setLoad(true);
-        setTimeout(() => { if (u.trim().toLowerCase() === ADMIN.user && p === ADMIN.pass) onLogin(); else { setErr("Acesso Negado."); setLoad(false); } }, 800);
-      };
-      return (
-        <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="hex-bg" />
-          <div className="glass-panel" style={{ padding: "48px", width: "100%", maxWidth: 440, zIndex: 10 }}>
-            <div style={{ textAlign: "center", marginBottom: 40 }}>
-              <h1 className="font-display" style={{ color: "white", fontSize: 26, fontWeight: 800, margin: "0 0 8px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
-              <p style={{ color: TOKENS.neon, fontSize: 11, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.25em" }}>Painel Financeiro B2B</p>
-            </div>
-            <div style={{ marginBottom: 24 }}><Lbl>ID de Acesso</Lbl><input className="modal-input" value={u} onChange={e => { setU(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="Usuário root" autoFocus /></div>
-            <div style={{ marginBottom: 32 }}><Lbl>Chave de Segurança</Lbl><input className="modal-input" type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" /></div>
-            {err && <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 8, padding: 12, color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 24, fontWeight: 700 }}>⚠️ {err}</div>}
-            <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "18px", fontSize: 16 }}>{load ? "Autenticando..." : "Acessar Sistema"}</button>
-          </div>
-        </div>
-      );
-    }
-
-    function App() {
-      const [logged, setLogged] = useState(false);
-      return <React.Fragment>{logged ? <Dashboard onLogout={() => setLogged(false)} /> : <Login onLogin={() => setLogged(true)} />}</React.Fragment>;
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
