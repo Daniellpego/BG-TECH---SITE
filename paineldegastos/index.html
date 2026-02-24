@@ -231,7 +231,7 @@
         <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div className="hex-bg" />
           <div className="glass-panel" style={{ padding: "48px", width: "100%", maxWidth: 440, zIndex: 10 }}>
-            <div style={{ textAlign: "center", margin-bottom: 40 }}>
+            <div style={{ textAlign: "center", marginBottom: 40 }}>
               <h1 className="font-display" style={{ color: "white", fontSize: 26, fontWeight: 800, margin: "0 0 8px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
               <p style={{ color: TOKENS.neon, fontSize: 11, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.25em" }}>Painel Financeiro B2B</p>
             </div>
@@ -248,12 +248,12 @@
       const [tab, setTab] = useState("overview"); 
       const [fixos, setFixos] = useState([]); 
       const [unicos, setUnicos] = useState([]);
-      const [receitas, setReceitas] = useState([]); // NOVO ESTADO DE RECEITAS
+      const [receitas, setReceitas] = useState([]); 
       
       const [modal, setModal] = useState(null); 
       const [mes, setMes] = useState(new Date().getMonth()); 
       const [ano, setAno] = useState(new Date().getFullYear());
-      const [search, setSearch] = useState(""); // SISTEMA DE BUSCA
+      const [search, setSearch] = useState(""); 
       
       const [ready, setReady] = useState(false); 
       const [syncing, setSyncing] = useState(false); 
@@ -288,14 +288,12 @@
       
       const uf = fMês(unicos);
       const ur = fMês(receitas);
-      
-      // Custo Fixo a gente considera o total ativo, mas pra simplificar histórico filtramos também
       const ff = fMês(fixos); 
 
       const tF = ff.reduce((a, b) => a + (b.valor || 0), 0); 
       const tU = uf.reduce((a, b) => a + (b.valor || 0), 0);
       const tR = ur.reduce((a, b) => a + (b.valor || 0), 0);
-      const margem = tR - (tF + tU); // CÁLCULO DE MARGEM
+      const margem = tR - (tF + tU); 
 
       // Filtros de Busca
       const searchStr = search.toLowerCase();
@@ -345,7 +343,6 @@
 
           <div style={{ marginLeft: 280, flex: 1, padding: "56px 64px", position: "relative", zIndex: 1, maxWidth: 1400 }}>
             
-            {/* CABEÇALHO GLOBAL DE FILTRO (Fica em todas as abas agora) */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
               <div>
                 <h1 className="font-display" style={{ color: "white", fontSize: 36, fontWeight: 800, margin: "0 0 12px" }}>
