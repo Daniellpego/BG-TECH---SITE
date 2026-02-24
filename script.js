@@ -562,7 +562,7 @@ function showResult() {
     });
   }, 100);
 
-  // PREPARA O ENVIO PARA O SUPABASE
+ // PREPARA O ENVIO PARA O SUPABASE
   const supabasePayload = {
     nome: textData.nome,
     empresa: textData.empresa,
@@ -576,22 +576,23 @@ function showResult() {
     custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
   };
 
-  const openWpp = () => {
-    // 1. Grava no banco de dados Supabase na surdina
-    if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
-      fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': CONFIG.supabaseKey,
-          'Authorization': `Bearer ${CONFIG.supabaseKey}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(supabasePayload)
-      }).catch(err => console.error("Erro no DB:", err));
-    }
+  // 🔥 MUDANÇA CRÍTICA: SALVA NO BANCO IMEDIATAMENTE (Sem esperar o clique)
+  // Isso garante que mesmo se o lead fechar a tela, você tem o telefone dele.
+  if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
+    fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': CONFIG.supabaseKey,
+        'Authorization': `Bearer ${CONFIG.supabaseKey}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(supabasePayload)
+    }).catch(err => console.error("Erro no DB:", err));
+  }
 
-    // 2. Dispara o lead pro WhatsApp com a copy focada no agendamento de 20 min
+  // O botão agora apenas redireciona, porque o dado já está seguro.
+  const openWpp = () => {
     const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero agendar a conversa de 20 min para a ${empresa}.`;
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
@@ -609,4 +610,4 @@ function showResult() {
     newWppBtn.addEventListener('click', openWpp);
     newWppDirectBtn.addEventListener('click', openWpp);
   }
-}
+} // Fim do script.js
