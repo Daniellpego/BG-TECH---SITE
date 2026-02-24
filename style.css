@@ -315,7 +315,30 @@
   /* ==========================================================================
      📱 OTIMIZAÇÃO MOBILE (A MÁGICA ACONTECE AQUI)
      ========================================================================== */
-  @media (max-width: 900px) {
+  /* ==========================================================================
+   ATUALIZAÇÕES DE CONVERSÃO (Pós-Auditoria)
+   ========================================================================== */
+
+/* Animação do Scroll Mouse na Hero */
+.scroll-indicator { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); opacity: 0.6; }
+.mouse { width: 24px; height: 36px; border: 2px solid rgba(230, 242, 255, 0.4); border-radius: 12px; display: flex; justify-content: center; padding-top: 6px; }
+.mouse::before { content: ''; width: 4px; height: 6px; background: rgba(230, 242, 255, 0.6); border-radius: 2px; animation: scrollBounce 1.5s infinite; }
+@keyframes scrollBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(6px); opacity: 0; } }
+
+/* Ícones diferenciados para os problemas */
+.icon-blue-bg { background: rgba(0, 168, 255, 0.1); color: #00A8FF; border-color: rgba(0, 168, 255, 0.2); }
+.icon-red-bg { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+.icon-yellow-bg { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+
+/* Badge Mais Contratado na seção de Serviços */
+.popular-badge { position: absolute; top: -12px; right: 24px; background: var(--green-wpp); color: white; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 6px 12px; border-radius: 100px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); z-index: 2; }
+
+/* Card de Destaque da Oportunidade Financeira no Quiz */
+.opportunity-highlight-card { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 24px; margin: 24px 0; display: flex; flex-direction: column; gap: 8px; border-left: 4px solid var(--green-wpp); }
+.opp-highlight-label { color: #064e3b; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; }
+.opp-highlight-value { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: #065f46; letter-spacing: -0.02em; }
+
+@media (max-width: 900px) {
     .section-spacing { padding: 80px 0; }
     .nav-links, .header-cta { display: none; }
     .hamburger { display: flex; }
