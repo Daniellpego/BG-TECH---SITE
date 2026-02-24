@@ -37,17 +37,7 @@
     body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
     h1, h2, h3, .font-title { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Utilitários */
-    .w-full { width: 100%; }
-    .text-right { text-align: right; }
-    .text-center { text-align: center; }
-    .p-0 { padding: 0 !important; }
-    .mt-4 { margin-top: 24px; }
-    .p-lg { padding: 20px; font-size: 16px; }
-    .overflow-hidden { overflow: hidden; }
-    .cursor-pointer { cursor: pointer; }
-
-    /* Scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
@@ -58,130 +48,109 @@
     .bg-glow-1 { position: fixed; width: 800px; height: 800px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 60%); top: -300px; right: -200px; z-index: -1; pointer-events: none; }
     .bg-glow-2 { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 60%); bottom: -200px; left: -100px; z-index: -1; pointer-events: none; }
 
-    /* Login */
-    .login-wrapper { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); }
-    .login-glow { top: 50%; left: 50%; transform: translate(-50%,-50%); width: 1000px; height: 1000px; }
-    .login-box { width: 100%; max-width: 440px; text-align: center; padding: 56px 40px; }
-    .logo-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
-    .logo-header h1 { font-size: 36px; letter-spacing: -0.03em; }
-    .logo-header span { color: var(--primary); }
-    .login-badge { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3); color: var(--primary); padding: 6px 16px; border-radius: 100px; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; display: inline-block; margin-bottom: 48px; }
-
     /* Layout Geral */
-    .app-container { display: flex; min-height: 100vh; }
+    .app-container { display: flex; min-height: 100vh; width: 100%; overflow: hidden; }
     .sidebar { width: 280px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(24px); border-right: 1px solid var(--border); padding: 40px 24px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50; }
-    .logo-container { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-left: 8px; }
-    .logo-container h1 { font-size: 24px; }
-    .logo-container span { color: var(--primary); }
-    .nav-menu { flex: 1; }
-    .main-content { flex: 1; margin-left: 280px; padding: 48px 56px; max-width: 1600px; }
+    .main-content { flex: 1; margin-left: 280px; padding: 48px clamp(20px, 5vw, 56px); max-width: 1600px; width: 100%; }
 
     /* Componentes Premium */
-    .glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--glass-shadow); padding: 32px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-    .glass-card:hover { transform: translateY(-4px); border-color: rgba(14, 165, 233, 0.2); }
+    .glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--glass-shadow); padding: clamp(20px, 4vw, 32px); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .glass-card:hover { border-color: rgba(14, 165, 233, 0.2); }
 
-    .btn-action { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px var(--primary-glow), inset 0 1px 1px rgba(255,255,255,0.3); transition: 0.2s; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 12px 32px var(--primary-glow), inset 0 1px 1px rgba(255,255,255,0.4); filter: brightness(1.1); }
+    .btn-action { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px var(--primary-glow), inset 0 1px 1px rgba(255,255,255,0.3); transition: 0.2s; white-space: nowrap; }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 12px 32px var(--primary-glow); filter: brightness(1.1); }
     .btn-action:active { transform: scale(0.98); }
 
     .nav-btn { display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 20px; border-radius: 16px; border: 1px solid transparent; background: transparent; color: var(--text-muted); font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-bottom: 8px; }
     .nav-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.03); }
     .nav-btn.active { background: linear-gradient(90deg, rgba(14,165,233,0.1), transparent); color: var(--primary); border-left: 2px solid var(--primary); }
 
-    /* Top Header */
-    .top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
-    .top-header h2 { font-size: 40px; margin-bottom: 8px; }
-    .text-subtitle { color: var(--text-muted); font-size: 15px; }
-    .header-actions { display: flex; align-items: center; gap: 24px; }
-    .filters-box { display: flex; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 100px; padding: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
-    .filter-select { background: transparent; color: var(--text-main); border: none; padding: 10px 20px; font-weight: 700; font-size: 15px; cursor: pointer; appearance: none; }
+    /* Formulários e Inputs */
+    .input-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; width: 100%; }
+    .input-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .input-field { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 14px; padding: 16px; color: white; font-size: 16px; transition: 0.3s; box-shadow: inset 0 2px 6px rgba(0,0,0,0.5); }
+    .input-field:focus { border-color: var(--primary); background: rgba(14,165,233,0.03); box-shadow: 0 0 0 4px var(--primary-glow), inset 0 2px 6px rgba(0,0,0,0.5); }
+
+    /* Header & Filters */
+    .top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 20px; flex-wrap: wrap; }
+    .header-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .filters-box { display: flex; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 100px; padding: 6px; flex-wrap: nowrap; }
+    .filter-select { background: transparent; color: var(--text-main); border: none; padding: 10px 16px; font-weight: 700; font-size: 14px; cursor: pointer; appearance: none; }
     .filter-select option { background: var(--bg-surface); }
-    .divider { width: 1px; background: var(--border); margin: 8px 0; }
 
-    /* Dashboard Grids */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px; }
-    .stat-header { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-    .stat-number { font-size: 44px; margin-bottom: 8px; }
-    .stat-danger { border-top: 4px solid var(--danger); }
-    .stat-primary { border-top: 4px solid var(--primary); }
-    .stat-warning { border-top: 4px solid var(--warning); }
-
+    /* Dashboards */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 32px; }
     .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    .chart-box { height: 460px; }
-    .chart-title { margin-bottom: 24px; font-size: 18px; }
-    .chart-container { width: 100%; height: 350px; }
-    .donut-center { display: flex; align-items: center; justify-content: center; }
+    .chart-box { min-height: 420px; display: flex; flex-direction: column; }
+    .chart-container { flex: 1; width: 100%; min-height: 300px; }
 
-    /* Tabela de Dados */
-    .data-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .data-table th { padding: 20px 24px; color: var(--text-muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
-    .data-table td { padding: 24px; border-bottom: 1px solid var(--border); vertical-align: middle; transition: background 0.2s; }
+    /* Tabela Responsiva */
+    .table-responsive-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
+    .data-table { width: 100%; min-width: 800px; border-collapse: collapse; text-align: left; }
+    .data-table th { padding: 20px; color: var(--text-muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .data-table td { padding: 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-    .data-table tr:last-child td { border-bottom: none; }
 
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+    /* Badges & Icons */
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
     .status-badge.pago { background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
     .status-badge.pendente { background: rgba(245,158,11,0.1); color: var(--warning); border: 1px solid rgba(245,158,11,0.2); }
 
-    .empty-state { display: none; text-align: center; padding: 80px 20px; color: var(--text-muted); }
-    .empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .action-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 8px; border-radius: 8px; transition: 0.2s; }
+    .action-icon:hover { color: white; background: rgba(255,255,255,0.05); }
+    .action-icon.del:hover { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
 
-    .action-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; margin-right: 12px; transition: 0.2s; }
-    .action-icon:hover { color: white; }
-    .action-icon.del:hover { color: var(--danger); }
-
-    /* Drawer */
+    /* Drawer Lateral (Responsivo) */
     .drawer-overlay { position: fixed; inset: 0; background: rgba(3,7,18,0.8); backdrop-filter: blur(8px); z-index: 999; opacity: 0; pointer-events: none; transition: 0.4s ease; }
-    .drawer { position: fixed; top: 0; right: -600px; width: 100%; max-width: 500px; height: 100vh; background: var(--bg-surface); border-left: 1px solid var(--border); z-index: 1000; padding: 40px; box-shadow: -20px 0 60px rgba(0,0,0,0.8); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+    .drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 540px; height: 100vh; background: var(--bg-surface); border-left: 1px solid var(--border); z-index: 1000; padding: clamp(24px, 5vw, 40px); box-shadow: -20px 0 60px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
     .drawer.open { right: 0; }
     .drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-    .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-    .btn-close { background: transparent; border: none; color: white; cursor: pointer; transition: 0.2s; }
-    .btn-close:hover { color: var(--danger); transform: scale(1.1); }
-
-    /* Form inputs */
-    .input-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .input-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-    .input-field { background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 14px; padding: 18px; color: white; font-size: 16px; transition: 0.3s; box-shadow: inset 0 2px 6px rgba(0,0,0,0.5); }
-    .input-field:focus { border-color: var(--primary); background: rgba(14,165,233,0.03); box-shadow: 0 0 0 4px var(--primary-glow), inset 0 2px 6px rgba(0,0,0,0.5); }
-    .input-money { font-size: 20px; font-weight: 700; color: var(--primary); }
-
+    
     .type-switcher { display: flex; background: rgba(0,0,0,0.5); border-radius: 16px; padding: 8px; margin-bottom: 32px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.5); }
-    .type-btn { flex: 1; padding: 14px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+    .type-btn { flex: 1; padding: 14px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; font-size: clamp(12px, 2vw, 14px); }
     .type-btn.active { background: var(--bg-card); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1); }
 
-    /* Sync & Toasts */
-    .sync-status { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted); padding-left: 16px; }
-    .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
-    .sync-dot.loading { background: var(--warning); box-shadow: 0 0 10px var(--warning); animation: pulse 1s infinite; }
+    /* ==========================================================================
+       MODO RESPONSIVO MOBILE (Onde a mágica acontece)
+       ========================================================================== */
+    @media (max-width: 1000px) {
+      .sidebar { display: none; }
+      
+      /* Ajuste do container principal */
+      .main-content { margin-left: 0; padding: 32px 16px 120px; }
+      
+      /* Header 100% Flexível */
+      .top-header { flex-direction: column; align-items: flex-start; margin-bottom: 32px; gap: 16px; }
+      .header-actions { width: 100%; flex-direction: column; align-items: stretch; gap: 16px; }
+      .filters-box { width: 100%; display: flex; justify-content: space-between; }
+      .filter-select { flex: 1; text-align: center; }
+      
+      /* Ajuste de Texto */
+      #page-title { font-size: clamp(28px, 8vw, 36px); }
+      .stat-number { font-size: clamp(32px, 8vw, 40px) !important; }
 
+      /* Grids em 1 Coluna */
+      .charts-grid { grid-template-columns: 1fr; }
+      .form-grid-mobile { display: flex !important; flex-direction: column !important; gap: 0 !important; }
+      
+      /* Menu Inferior Fixo */
+      .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(3,7,18,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 12px 16px; z-index: 100; justify-content: space-around; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+      .m-nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; transition: 0.3s; }
+      .m-nav-btn.active { color: var(--primary); transform: translateY(-4px); filter: drop-shadow(0 4px 8px var(--primary-glow)); }
+
+      /* Telas de Login */
+      .login-box { padding: 40px 24px; margin: 16px; border-radius: 20px; }
+    }
+    @media (min-width: 1001px) { .mobile-nav { display: none; } }
+
+    /* Toasts e Sync */
     #toast-container { position: fixed; bottom: 32px; right: 32px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; }
     .toast { background: var(--bg-surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 16px 24px; border-radius: 16px; color: white; font-weight: 600; font-size: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); transform: translateX(120%); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 12px; }
     .toast.show { transform: translateX(0); }
     .toast.error { border-left-color: var(--danger); }
-
-    /* Mobile */
-    @media (max-width: 1000px) {
-      .sidebar { display: none; }
-      .main-content { margin-left: 0; padding: 24px 20px 100px; }
-      .top-header { flex-direction: column; align-items: flex-start; gap: 24px; }
-      .header-actions { flex-direction: column; align-items: stretch; width: 100%; }
-      .filters-box { width: 100%; display: flex; }
-      .filter-select { flex: 1; text-align: center; }
-      
-      .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(3,7,18,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 12px 16px 24px; z-index: 100; justify-content: space-around; }
-      .m-nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; transition: 0.3s; }
-      .m-nav-btn.active { color: var(--primary); transform: translateY(-4px); filter: drop-shadow(0 4px 8px var(--primary-glow)); }
-      
-      .data-table th:nth-child(3), .data-table td:nth-child(3),
-      .data-table th:nth-child(4), .data-table td:nth-child(4) { display: none; }
-      .drawer { padding: 32px 24px; right: -100%; }
-      .charts-grid { grid-template-columns: 1fr; }
-    }
-    @media (min-width: 1001px) { .mobile-nav { display: none; } }
-
+    
+    .sync-status { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted); padding-left: 16px; }
+    .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
   </style>
 </head>
@@ -190,20 +159,20 @@
   <div id="login-screen" class="login-wrapper">
     <div class="bg-grid"></div><div class="bg-glow-1 login-glow"></div>
     <div class="glass-card login-box">
-      <div class="logo-header">
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom: 24px;">
         <i data-lucide="cpu" color="#0ea5e9" style="width:40px; height:40px;"></i>
-        <h1 class="font-title">BG <span>TECH</span></h1>
+        <h1 class="font-title" style="font-size: clamp(28px, 6vw, 36px); letter-spacing:-0.03em;">BG <span>TECH</span></h1>
       </div>
-      <div class="login-badge">ACESSO RESTRITO CFO</div>
+      <div style="background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.3); color:var(--primary); padding:6px 16px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:0.15em; display:inline-block; margin-bottom: 40px;">ACESSO RESTRITO CFO</div>
       
-      <div class="input-wrapper">
+      <div class="input-wrapper" style="text-align: left;">
         <input type="text" id="login-user" class="input-field" placeholder="Identificação">
       </div>
-      <div class="input-wrapper" style="margin-bottom: 40px;">
+      <div class="input-wrapper" style="text-align: left; margin-bottom: 32px;">
         <input type="password" id="login-pass" class="input-field" placeholder="Senha do Cofre">
       </div>
       
-      <button class="btn-action w-full" onclick="app.login()">
+      <button class="btn-action" style="width: 100%; padding: 18px;" onclick="app.login()">
         Destrancar Núcleo <i data-lucide="unlock" style="width:18px;"></i>
       </button>
     </div>
@@ -213,18 +182,18 @@
     <div class="bg-grid"></div><div class="bg-glow-1"></div><div class="bg-glow-2"></div>
 
     <aside class="sidebar">
-      <div class="logo-container">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom: 48px; padding-left: 8px;">
         <i data-lucide="cpu" color="#0ea5e9" style="width:28px; height:28px;"></i>
-        <h1 class="font-title">BG <span>TECH</span></h1>
+        <h1 class="font-title" style="font-size: 24px;">BG <span>TECH</span></h1>
       </div>
       
-      <nav class="nav-menu">
+      <nav style="flex:1;">
         <button class="nav-btn active" onclick="app.setTab('overview')"><i data-lucide="layout-dashboard"></i> Inteligência Geral</button>
         <button class="nav-btn" onclick="app.setTab('fixos')"><i data-lucide="anchor"></i> Estrutura Fixa</button>
         <button class="nav-btn" onclick="app.setTab('unicos')"><i data-lucide="zap"></i> Gastos Variáveis</button>
       </nav>
 
-      <div class="sync-status">
+      <div class="sync-status" style="margin-bottom: 24px;">
         <div class="sync-dot" id="sync-indicator"></div> <span id="sync-text">Conectado à Nuvem</span>
       </div>
     </aside>
@@ -232,59 +201,82 @@
     <main class="main-content">
       <header class="top-header">
         <div>
-          <h2 class="font-title" id="page-title">Resumo Financeiro</h2>
-          <p class="text-subtitle">Monitoramento de despesas operacionais da base.</p>
+          <h2 class="font-title" id="page-title" style="margin-bottom: 8px;">Resumo Financeiro</h2>
+          <p style="color: var(--text-muted); font-size: 15px;">Monitoramento de despesas operacionais da base.</p>
         </div>
         <div class="header-actions">
           <div class="filters-box">
             <select id="filter-month" class="filter-select" onchange="app.render()"></select>
-            <div class="divider"></div>
+            <div style="width:1px; background:var(--border); margin:8px 0;"></div>
             <select id="filter-year" class="filter-select" onchange="app.render()">
               <option value="2025">2025</option><option value="2026" selected>2026</option>
             </select>
           </div>
-          <button class="btn-action" onclick="app.openDrawer()"><i data-lucide="plus"></i> Adicionar</button>
+          <button class="btn-action" style="width: 100%;" onclick="app.openDrawer()">
+            <i data-lucide="plus"></i> Adicionar
+          </button>
         </div>
       </header>
 
       <div id="view-overview">
         <div class="stats-grid">
-          <div class="glass-card stat-danger">
-            <div class="stat-header"><span>Sangria Total (Mês)</span><i data-lucide="trending-down" color="#ef4444"></i></div>
-            <h2 class="font-title stat-number" id="val-total">R$ 0,00</h2>
+          <div class="glass-card" style="border-top: 4px solid var(--danger);">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 16px;">
+              <span style="font-size:13px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Sangria Total (Mês)</span>
+              <i data-lucide="trending-down" color="#ef4444"></i>
+            </div>
+            <h2 class="font-title stat-number" id="val-total" style="margin-bottom: 8px;">R$ 0,00</h2>
           </div>
-          <div class="glass-card stat-primary">
-            <div class="stat-header"><span>Custo Operacional Fixo</span><i data-lucide="anchor" color="#0ea5e9"></i></div>
-            <h2 class="font-title stat-number" id="val-fixos">R$ 0,00</h2>
+          
+          <div class="glass-card" style="border-top: 4px solid var(--primary);">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 16px;">
+              <span style="font-size:13px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Custo Fixo</span>
+              <i data-lucide="anchor" color="#0ea5e9"></i>
+            </div>
+            <h2 class="font-title stat-number" id="val-fixos" style="margin-bottom: 8px;">R$ 0,00</h2>
           </div>
-          <div class="glass-card stat-warning">
-            <div class="stat-header"><span>Imprevistos e Variáveis</span><i data-lucide="zap" color="#f59e0b"></i></div>
-            <h2 class="font-title stat-number" id="val-unicos">R$ 0,00</h2>
+
+          <div class="glass-card" style="border-top: 4px solid var(--warning);">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 16px;">
+              <span style="font-size:13px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Variáveis</span>
+              <i data-lucide="zap" color="#f59e0b"></i>
+            </div>
+            <h2 class="font-title stat-number" id="val-unicos" style="margin-bottom: 8px;">R$ 0,00</h2>
           </div>
         </div>
 
         <div class="charts-grid">
           <div class="glass-card chart-box">
-            <h3 class="font-title chart-title">Curva de Sangria (6 Meses)</h3>
+            <h3 class="font-title" style="margin-bottom: 24px; font-size: 18px;">Curva de Sangria (6 Meses)</h3>
             <div id="chart-area" class="chart-container"></div>
           </div>
           <div class="glass-card chart-box">
-            <h3 class="font-title chart-title">Distribuição Fixa</h3>
+            <h3 class="font-title" style="margin-bottom: 24px; font-size: 18px;">Distribuição Fixa</h3>
             <div id="chart-donut" class="chart-container donut-center"></div>
           </div>
         </div>
       </div>
 
       <div id="view-list" style="display: none;">
-        <div class="glass-card p-0 overflow-hidden">
-          <table class="data-table">
-            <thead>
-              <tr><th>Data</th><th>Descrição do Lançamento</th><th>Categoria</th><th>Status</th><th class="text-right">Valor</th><th class="text-center">Gestão</th></tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-          </table>
-          <div id="empty-table" class="empty-state">
-            <i data-lucide="check-circle"></i>
+        <div class="glass-card" style="padding: 0; overflow: hidden;">
+          <div class="table-responsive-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Descrição do Lançamento</th>
+                  <th>Categoria</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Valor</th>
+                  <th style="text-align:center;">Gestão</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                </tbody>
+            </table>
+          </div>
+          <div id="empty-table" style="display:none; text-align:center; padding: 80px 20px; color:var(--text-muted);">
+            <i data-lucide="check-circle" style="width:48px; height:48px; margin-bottom:16px; opacity:0.5;"></i>
             <h3>Nenhum registro encontrado.</h3>
           </div>
         </div>
@@ -299,16 +291,16 @@
 
     <div class="drawer-overlay" id="drawer-overlay" onclick="app.closeDrawer()"></div>
     <div class="drawer" id="drawer">
-      <div class="drawer-header">
-        <h2 class="font-title" id="drawer-title">Novo Registro</h2>
-        <button class="btn-close" onclick="app.closeDrawer()"><i data-lucide="x"></i></button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 32px;">
+        <h2 class="font-title" id="drawer-title" style="font-size: clamp(20px, 5vw, 24px);">Novo Registro</h2>
+        <button style="background:rgba(255,255,255,0.05); border:none; color:white; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="app.closeDrawer()"><i data-lucide="x"></i></button>
       </div>
 
       <input type="hidden" id="form-id">
       
       <div class="type-switcher">
-        <button class="type-btn active" id="btn-t-fixos" onclick="app.setFormType('fixos')">Custo Fixo Base</button>
-        <button class="type-btn" id="btn-t-unicos" onclick="app.setFormType('unicos')">Custo Variável</button>
+        <button class="type-btn active" id="btn-t-fixos" onclick="app.setFormType('fixos')">Custo Fixo</button>
+        <button class="type-btn" id="btn-t-unicos" onclick="app.setFormType('unicos')">Variável</button>
       </div>
 
       <div class="input-wrapper">
@@ -316,7 +308,7 @@
         <input type="text" id="form-nome" class="input-field" placeholder="Ex: Assinatura AWS, Escritório...">
       </div>
 
-      <div class="form-grid-2">
+      <div class="form-grid-mobile" style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div class="input-wrapper">
           <label class="input-label">Valor (R$) *</label>
           <input type="text" id="form-valor" class="input-field input-money" placeholder="0,00" oninput="app.maskCurrency(event)">
@@ -329,12 +321,12 @@
 
       <div class="input-wrapper">
         <label class="input-label">Categoria Estratégica</label>
-        <select id="form-categoria" class="input-field cursor-pointer"></select>
+        <select id="form-categoria" class="input-field" style="cursor: pointer;"></select>
       </div>
 
       <div class="input-wrapper">
         <label class="input-label">Status do Pagamento</label>
-        <select id="form-status" class="input-field cursor-pointer">
+        <select id="form-status" class="input-field" style="cursor: pointer;">
           <option value="Pago">✔️ Já Descontou (Pago)</option>
           <option value="Pendente">⏳ A Pagar (Agendado)</option>
         </select>
@@ -345,8 +337,8 @@
         <input type="text" id="form-desc" class="input-field" placeholder="Detalhes, motivo da despesa...">
       </div>
 
-      <button class="btn-action w-full mt-4 p-lg" onclick="app.saveData()">
-        Registrar no Sistema <i data-lucide="check-circle-2"></i>
+      <button class="btn-action" style="width: 100%; margin-top: 16px; padding: 20px; font-size: 16px;" onclick="app.saveData()">
+        Salvar Registro <i data-lucide="check-circle-2"></i>
       </button>
     </div>
   </div>
@@ -354,20 +346,9 @@
   <div id="toast-container"></div>
 
   <script>
-    const DB = { 
-      url: "https://urpuiznydrlwmaqhdids.supabase.co/rest/v1/painel_gastos?id=eq.1", 
-      key: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0" 
-    };
-
-    const CONF = { 
-      admin: "bgtech", pass: "admin2024", 
-      months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"] 
-    };
-
-    const CATS = { 
-      fixos: ["Software e Automação", "Nuvem e Infra", "Pró-labore e Equipe", "Marketing Fixo", "Estrutura", "Outros Custos"], 
-      unicos: ["Hardware e Peças", "Tráfego Pago", "Impostos e Taxas", "Terceirizados", "Eventos", "Gasto Não Previsto"] 
-    };
+    const DB = { url: "https://urpuiznydrlwmaqhdids.supabase.co/rest/v1/painel_gastos?id=eq.1", key: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0" };
+    const CONF = { admin: "bgtech", pass: "admin2024", months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"] };
+    const CATS = { fixos: ["Software e Automação", "Nuvem e Infra", "Pró-labore e Equipe", "Marketing Fixo", "Estrutura", "Outros Custos"], unicos: ["Hardware e Peças", "Tráfego Pago", "Impostos e Taxas", "Terceirizados", "Eventos", "Gasto Não Previsto"] };
 
     const app = {
       state: { tab: 'overview', fType: 'fixos', data: { fixos: [], unicos: [] } },
@@ -404,7 +385,7 @@
         document.getElementById('view-overview').style.display = t === 'overview' ? 'block' : 'none';
         document.getElementById('view-list').style.display = t !== 'overview' ? 'block' : 'none';
         
-        const titles = { overview: 'Resumo Financeiro', fixos: 'Estrutura Fixa Operacional', unicos: 'Mapeamento de Variáveis' };
+        const titles = { overview: 'Resumo Financeiro', fixos: 'Estrutura Fixa', unicos: 'Variáveis e Extras' };
         document.getElementById('page-title').innerText = titles[t];
         app.render();
       },
@@ -432,17 +413,13 @@
             body: JSON.stringify({ fixos: app.state.data.fixos, unicos: app.state.data.unicos, updated_at: new Date().toISOString() })
           });
           app.syncUI('online');
-        } catch(e) { 
-          app.toast("Aviso: Falha ao enviar para a nuvem.", "error"); 
-          app.syncUI('error'); 
-        }
+        } catch(e) { app.toast("Erro ao sincronizar nuvem.", "error"); app.syncUI('error'); }
       },
 
       syncUI(state) {
         const dot = document.getElementById('sync-indicator');
         const txt = document.getElementById('sync-text');
-        dot.className = 'sync-dot';
-        if(state === 'loading') { dot.classList.add('loading'); txt.innerText = "Sincronizando..."; }
+        if(state === 'loading') { dot.style.background = 'var(--warning)'; dot.style.boxShadow = '0 0 10px var(--warning)'; txt.innerText = "Sincronizando..."; }
         else if(state === 'online') { dot.style.background = 'var(--success)'; dot.style.boxShadow = '0 0 10px var(--success)'; txt.innerText = "Nuvem Conectada"; }
         else { dot.style.background = 'var(--danger)'; dot.style.boxShadow = '0 0 10px var(--danger)'; txt.innerText = "Modo Offline"; }
       },
@@ -489,7 +466,7 @@
                 <td><span style="background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; color:var(--text-muted);">${i.categoria}</span></td>
                 <td><span class="status-badge ${i.status==='Pendente'?'pendente':'pago'}"><i data-lucide="${i.status==='Pendente'?'clock':'check'}" style="width:12px;"></i> ${i.status}</span></td>
                 <td class="font-title" style="text-align:right; font-size:16px; font-weight:800; color:${i.status==='Pendente'?'var(--text-muted)':'white'};">${app.fmtR(i.valor)}</td>
-                <td style="text-align:center;">
+                <td style="text-align:center; white-space:nowrap;">
                   <button class="action-icon" onclick="app.editItem('${i.id}')"><i data-lucide="edit-2" style="width:18px;"></i></button>
                   <button class="action-icon del" onclick="app.deleteItem('${i.id}')"><i data-lucide="trash-2" style="width:18px;"></i></button>
                 </td>
@@ -504,11 +481,11 @@
       initCharts() {
         const optArea = {
           series: [{ name: 'Gasto Total', data: [] }],
-          chart: { type: 'area', height: 350, toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter' },
+          chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter' },
           colors: ['#0ea5e9'],
           fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.6, opacityTo: 0.05, stops: [0, 90, 100] } },
           dataLabels: { enabled: false },
-          stroke: { curve: 'smooth', width: 4 },
+          stroke: { curve: 'smooth', width: 3 },
           grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
           xaxis: { categories: [], labels: { style: { colors: '#94a3b8', fontWeight: 600 } }, axisBorder: { show: false }, axisTicks: { show: false } },
           yaxis: { labels: { style: { colors: '#94a3b8' }, formatter: (v) => `R$${(v/1000).toFixed(0)}k` } },
@@ -520,7 +497,7 @@
 
         const optDonut = {
           series: [], labels: [],
-          chart: { type: 'donut', height: 300, background: 'transparent', fontFamily: 'Inter' },
+          chart: { type: 'donut', height: '100%', background: 'transparent', fontFamily: 'Inter' },
           colors: ['#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#0284c7', '#0369a1'],
           stroke: { show: true, colors: ['#0f172a'], width: 2 },
           dataLabels: { enabled: false },
