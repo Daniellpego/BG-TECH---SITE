@@ -8,12 +8,13 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
   <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
@@ -28,17 +29,36 @@
     ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #00A8FF; }
     
-    .glass-panel { background: rgba(10, 31, 68, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(0, 168, 255, 0.15); border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    /* MODAL PREMIUM E GLASSMORPHISM */
+    .glass-panel { background: rgba(10, 31, 68, 0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(0, 168, 255, 0.15); border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 15, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-card { background: #0A1428; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; box-shadow: 0 24px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05); width: 100%; max-width: 540px; padding: 40px; }
+    
+    /* BOTÕES OTIMIZADOS */
     .btn-glow { transition: all 0.2s ease; position: relative; overflow: hidden; }
     .btn-glow:hover { box-shadow: 0 0 20px rgba(0, 168, 255, 0.5); transform: translateY(-2px); }
-    .table-row { transition: all 0.2s ease; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .table-row:hover { background: rgba(0, 168, 255, 0.08); border-left: 3px solid #00A8FF; padding-left: 21px; }
+    .btn-cancelar { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.45); border-radius: 10px; padding: 14px 24px; font-weight: 600; font-size: 14px; transition: all 0.2s; cursor: pointer; }
+    .btn-cancelar:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
 
-    @keyframes pulse-glow {
-      0% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); }
-      50% { text-shadow: 0 0 30px rgba(56, 216, 255, 0.8); transform: scale(1.02); }
-      100% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); }
-    }
+    /* INPUTS COM FOCUS ESTILIZADO */
+    .modal-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; color: #fff; padding: 14px 16px; font-size: 15px; outline: none; font-family: inherit; transition: all 0.2s; width: 100%; }
+    .modal-input:focus { border-color: rgba(0,168,255,0.6); box-shadow: 0 0 0 3px rgba(0,168,255,0.15); background: rgba(0,168,255,0.05); }
+
+    /* EMPTY STATES */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 16px; }
+    .empty-state svg { width: 56px; height: 56px; color: rgba(255,255,255,0.2); margin-bottom: 20px; }
+    .empty-state h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: rgba(255,255,255,0.7); margin: 0 0 8px; }
+    .empty-state p { font-size: 14px; color: rgba(255,255,255,0.4); margin: 0; }
+
+    /* SELECTORS NATIVOS OCULTOS */
+    .select-periodo { appearance: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; padding: 12px 36px 12px 16px; font-size: 14px; font-weight: 600; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: 0.2s; }
+    .select-periodo:hover { border-color: rgba(0,168,255,0.4); }
+
+    .table-row { transition: all 0.2s ease; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .table-row:hover { background: rgba(0, 168, 255, 0.05); border-left: 3px solid #00A8FF; padding-left: 21px; }
+
+    /* ANIMAÇÃO DE LOADING */
+    @keyframes pulse-glow { 0% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); } 50% { text-shadow: 0 0 30px rgba(56, 216, 255, 0.8); transform: scale(1.02); } 100% { text-shadow: 0 0 10px rgba(56, 216, 255, 0.2); transform: scale(1); } }
   </style>
 </head>
 <body>
@@ -49,19 +69,18 @@
   </div>
 
   <script type="text/babel">
-    const { useState, useEffect, useCallback, useRef, useMemo } = React;
-    const { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } = window.Recharts;
+    const { useState, useEffect, useCallback, useRef } = React;
+    const { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } = window.Recharts;
 
     const ADMIN = { user: "bgtech", pass: "admin2024" };
     
-    // Novas Categorias (Incluindo Receita)
     const CATS_RECEITA = ["Projeto de Automação", "Mensalidade Guardião", "Consultoria Estratégica", "Outros"];
     const CATS_FIXO  = ["Infraestrutura", "Software/SaaS", "Marketing", "Pessoal", "Escritório", "Financeiro", "Outros"];
     const CATS_UNICO = ["Equipamento", "Serviço Pontual", "Licença", "Viagem", "Marketing", "Investimento", "Outros"];
 
     const TOKENS = {
       electric: "#00A8FF", neon: "#38D8FF", textHero: "#E6F2FF", textMuted: "rgba(230, 242, 255, 0.5)",
-      red: "#ef4444", green: "#10b981", chartColors: ["#00A8FF", "#38D8FF", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#E6F2FF"]
+      red: "#ef4444", green: "#10b981", chartColors: ["#00A8FF", "#8B5CF6", "#10B981", "#F59E0B", "#EC4899", "#38D8FF"]
     };
 
     const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
@@ -70,7 +89,7 @@
     const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
     // ============================================================================
-    // SEU SUPABASE
+    // SUPABASE (MOTOR)
     // ============================================================================
     const DB_CONFIG = {
       URL: "https://urpuiznydrlwmaqhdids.supabase.co",
@@ -101,25 +120,10 @@
     // ============================================================================
     // COMPONENTES DE UI
     // ============================================================================
-    const InputStyle = { width: "100%", padding: "14px 16px", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(0, 168, 255, 0.15)", borderRadius: 10, color: TOKENS.textHero, fontSize: 15, outline: "none", fontFamily: "inherit" };
     const PrimaryBtnStyle = { padding: "14px 28px", background: `linear-gradient(135deg, ${TOKENS.electric}, ${TOKENS.neon})`, border: "none", borderRadius: 10, color: "#05070D", fontWeight: 800, fontSize: 15, cursor: "pointer", fontFamily: "inherit" };
     function Lbl({ children }) { return <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: TOKENS.neon, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{children}</label>; }
 
-    function Modal({ title, onClose, children }) {
-      return (
-        <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(2, 6, 15, 0.85)", backdropFilter: "blur(12px)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-          <div className="glass-panel" onClick={e => e.stopPropagation()} style={{ padding: 40, width: "100%", maxWidth: 540, maxHeight: "90vh", overflowY: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, borderBottom: "1px solid rgba(0, 168, 255, 0.15)", paddingBottom: 16 }}>
-              <h3 className="font-display" style={{ color: TOKENS.textHero, margin: 0, fontSize: 22, fontWeight: 800 }}>{title}</h3>
-              <button onClick={onClose} style={{ background: "transparent", border: "none", color: TOKENS.textMuted, cursor: "pointer", fontSize: 18 }}>✕</button>
-            </div>
-            {children}
-          </div>
-        </div>
-      );
-    }
-
-    // FORMULÁRIO COM TODAS AS MELHORIAS DA AUDITORIA
+    // FORMULÁRIO MAGICO COM PLACEHOLDERS DINÂMICOS
     function Form({ type, onSave, onClose, initial, cats }) {
       const getToday = () => { const d = new Date(); return new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0,10); };
       const [f, setF] = useState(initial || { nome: "", fornecedor: "", valor: "", categoria: cats[0], descricao: "", data: getToday(), status: "Pago" });
@@ -133,11 +137,10 @@
         onClose();
       };
 
-      // Dinâmica de Placeholder (Auditoria item 10)
       const getNomePlaceholder = () => {
         if (f.categoria === "Pessoal") return "Ex: Pró-labore Gabriel";
         if (f.categoria === "Software/SaaS") return "Ex: Assinatura Mensal Make";
-        if (type === "receita") return "Ex: Projeto de Automação V2";
+        if (type === "receita") return "Ex: Projeto Automação Clínica X";
         return "Ex: Servidor AWS";
       };
 
@@ -145,49 +148,53 @@
         <React.Fragment>
           <div style={{ marginBottom: 20 }}>
             <Lbl>{type === "receita" ? "Título da Receita *" : "Título do Gasto *"}</Lbl>
-            <input style={InputStyle} value={f.nome} onChange={e => up("nome")(e.target.value)} placeholder={getNomePlaceholder()} autoFocus />
+            <input className="modal-input" value={f.nome} onChange={e => up("nome")(e.target.value)} placeholder={getNomePlaceholder()} autoFocus />
           </div>
           <div style={{ marginBottom: 20 }}>
             <Lbl>{type === "receita" ? "Cliente Beneficiário" : "Fornecedor / Emitente"}</Lbl>
-            <input style={InputStyle} value={f.fornecedor} onChange={e => up("fornecedor")(e.target.value)} placeholder={type === "receita" ? "Ex: LogMax S/A" : "Ex: Amazon Web Services"} />
+            <input className="modal-input" value={f.fornecedor} onChange={e => up("fornecedor")(e.target.value)} placeholder={type === "receita" ? "Ex: LogMax S/A" : "Ex: Amazon Web Services"} />
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
-            <div><Lbl>Valor (R$) *</Lbl><input style={InputStyle} type="number" step="0.01" value={f.valor} onChange={e => up("valor")(e.target.value)} placeholder="0.00" /></div>
-            <div><Lbl>{type === "fixo" ? "Data Base Mês" : "Data da Movimentação"}</Lbl><input style={InputStyle} type="date" value={f.data} onChange={e => up("data")(e.target.value)} /></div>
+            <div><Lbl>Valor (R$) *</Lbl><input className="modal-input" type="number" step="0.01" value={f.valor} onChange={e => up("valor")(e.target.value)} placeholder="0.00" /></div>
+            <div><Lbl>{type === "fixo" ? "Data Base Mês" : "Data da Movimentação"}</Lbl><input className="modal-input" type="date" value={f.data} onChange={e => up("data")(e.target.value)} /></div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
             <div>
               <Lbl>Categoria Estratégica</Lbl>
-              <select style={InputStyle} value={f.categoria} onChange={e => up("categoria")(e.target.value)}>{cats.map(c => <option key={c} value={c} style={{background:"#0A1F44"}}>{c}</option>)}</select>
+              <select className="modal-input" value={f.categoria} onChange={e => up("categoria")(e.target.value)} style={{cursor:"pointer"}}>{cats.map(c => <option key={c} value={c} style={{background:"#0A1428"}}>{c}</option>)}</select>
             </div>
             <div>
               <Lbl>Status do Pagamento</Lbl>
-              <select style={InputStyle} value={f.status} onChange={e => up("status")(e.target.value)}>
-                <option value="Pago" style={{background:"#0A1F44"}}>✔️ Efetuado (Pago)</option>
-                <option value="Pendente" style={{background:"#0A1F44"}}>⏳ Pendente (A Pagar)</option>
+              <select className="modal-input" value={f.status} onChange={e => up("status")(e.target.value)} style={{cursor:"pointer"}}>
+                <option value="Pago" style={{background:"#0A1428"}}>✔️ Efetuado (Pago)</option>
+                <option value="Pendente" style={{background:"#0A1428"}}>⏳ Pendente (A Pagar)</option>
               </select>
             </div>
           </div>
-          <div style={{ marginBottom: 32 }}><Lbl>Contexto / Justificativa</Lbl><input style={InputStyle} value={f.descricao} onChange={e => up("descricao")(e.target.value)} placeholder="Registro de contrato ou notas..." /></div>
+          <div style={{ marginBottom: 32 }}><Lbl>Contexto / Justificativa</Lbl><input className="modal-input" value={f.descricao} onChange={e => up("descricao")(e.target.value)} placeholder="Registro de contrato ou notas..." /></div>
           <div style={{ display: "flex", gap: 16 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "14px", background: "transparent", border: `1px solid rgba(255,255,255,0.15)`, borderRadius: 10, color: TOKENS.textHero, fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
+            <button onClick={onClose} className="btn-cancelar" style={{ flex: 1 }}>Cancelar</button>
             <button onClick={go} className="btn-glow" style={{ ...PrimaryBtnStyle, flex: 2 }}>Registrar Operação</button>
           </div>
         </React.Fragment>
       );
     }
 
-    function StatCard({ label, value, sub, color = TOKENS.electric }) {
+    // CARDS COM GLOW E ALMA
+    function StatCard({ label, value, sub, color, type }) {
+      const glowStr = type === "positive" ? "rgba(34,197,94,0.08)" : type === "negative" ? "rgba(239,68,68,0.08)" : "rgba(0,168,255,0.08)";
+      
       return (
-        <div className="glass-panel" style={{ padding: "28px 24px", flex: 1, minWidth: 200, borderLeft: `4px solid ${color}` }}>
-          <div style={{ fontSize: 12, color: TOKENS.textMuted, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>{label}</div>
-          <div className="font-display" style={{ fontSize: 32, fontWeight: 800, color: TOKENS.textHero, letterSpacing: "-0.02em", marginBottom: 4 }}>{value}</div>
-          <div style={{ fontSize: 13, color: "rgba(230,242,255,0.4)", fontWeight: 600 }}>{sub}</div>
+        <div style={{ background: `linear-gradient(135deg, ${glowStr} 0%, rgba(10,31,68,0.5) 60%)`, border: `1px solid ${color}`, borderRadius: 16, padding: "32px 24px", flex: 1, minWidth: 200, position: "relative", overflow: "hidden", boxShadow: `0 0 24px ${glowStr}` }}>
+          <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: color }} />
+          <div style={{ fontSize: 11, color: TOKENS.textMuted, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{label}</div>
+          <div className="font-display" style={{ fontSize: "clamp(2rem, 3.5vw, 2.8rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", marginBottom: 4 }}>{value}</div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>{sub}</div>
         </div>
       );
     }
 
-    // LINHA DE DADOS MELHORADA COM STATUS E FORNECEDOR
+    // LINHA DE DADOS MELHORADA COM STATUS
     function DataRow({ item, type, onEdit, onDelete }) {
       const [confirm, setConfirm] = useState(false);
       const isPending = item.status === "Pendente";
@@ -197,7 +204,7 @@
         <div className="table-row" style={{ display: "flex", alignItems: "center", gap: 16, padding: "18px 24px", borderLeft: "3px solid transparent", opacity: isPending ? 0.6 : 1 }}>
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ color: TOKENS.textHero, fontWeight: 700, fontSize: 16 }}>{item.nome}</div>
+              <div style={{ color: "white", fontWeight: 700, fontSize: 16 }}>{item.nome}</div>
               {isPending && <span style={{ background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 800, textTransform: "uppercase" }}>A Pagar</span>}
             </div>
             <div style={{ color: TOKENS.textMuted, fontSize: 12, marginTop: 6, display: "flex", gap: 8, alignItems: "center" }}>
@@ -207,7 +214,7 @@
             </div>
             {item.descricao && <div style={{ color: "rgba(230,242,255,0.3)", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>"{item.descricao}"</div>}
           </div>
-          <div className="font-display" style={{ fontWeight: 800, color: isReceita ? TOKENS.green : TOKENS.textHero, fontSize: 18, minWidth: 130, textAlign: "right" }}>{isReceita ? '+' : '-'} {fmt(item.valor)}</div>
+          <div className="font-display" style={{ fontWeight: 800, color: isReceita ? TOKENS.green : "white", fontSize: 18, minWidth: 130, textAlign: "right" }}>{isReceita ? '+' : '-'} {fmt(item.valor)}</div>
           <div style={{ display: "flex", gap: 8, flexShrink: 0, marginLeft: 24 }}>
             <button onClick={() => onEdit(item)} style={{ background: "rgba(255,255,255,0.05)", border: `1px solid rgba(255,255,255,0.2)`, borderRadius: 8, color: "white", padding: "8px 16px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Editar</button>
             {confirm
@@ -218,32 +225,9 @@
       );
     }
 
-    function Login({ onLogin }) {
-      const [u, setU] = useState(""); const [p, setP] = useState(""); const [err, setErr] = useState(""); const [load, setLoad] = useState(false);
-      const go = () => {
-        setLoad(true);
-        setTimeout(() => {
-          if (u.trim().toLowerCase() === ADMIN.user && p === ADMIN.pass) onLogin();
-          else { setErr("Acesso Negado."); setLoad(false); }
-        }, 800);
-      };
-      return (
-        <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="hex-bg" />
-          <div className="glass-panel" style={{ padding: "48px", width: "100%", maxWidth: 440, zIndex: 10 }}>
-            <div style={{ textAlign: "center", marginBottom: 40 }}>
-              <h1 className="font-display" style={{ color: "white", fontSize: 26, fontWeight: 800, margin: "0 0 8px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
-              <p style={{ color: TOKENS.neon, fontSize: 11, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.25em" }}>Painel Financeiro B2B</p>
-            </div>
-            <div style={{ marginBottom: 24 }}><Lbl>ID de Acesso</Lbl><input style={{...InputStyle, background: "rgba(0,0,0,0.5)"}} value={u} onChange={e => { setU(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="Usuário root" autoFocus /></div>
-            <div style={{ marginBottom: 32 }}><Lbl>Chave de Segurança</Lbl><input style={{...InputStyle, background: "rgba(0,0,0,0.5)"}} type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" /></div>
-            {err && <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 8, padding: 12, color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 24, fontWeight: 700 }}>⚠️ {err}</div>}
-            <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "18px", fontSize: 16 }}>{load ? "Autenticando..." : "Acessar Sistema"}</button>
-          </div>
-        </div>
-      );
-    }
-
+    // ============================================================================
+    // DASHBOARD PRINCIPAL
+    // ============================================================================
     function Dashboard({ onLogout }) {
       const [tab, setTab] = useState("overview"); 
       const [fixos, setFixos] = useState([]); 
@@ -258,6 +242,9 @@
       const [ready, setReady] = useState(false); 
       const [syncing, setSyncing] = useState(false); 
       const pollRef = useRef(null);
+
+      // INICIA OS ÍCONES LUCIDE
+      useEffect(() => { if(window.lucide) window.lucide.createIcons(); });
 
       const refresh = useCallback(async (silent = false) => {
         if(!silent) setSyncing(true);
@@ -274,7 +261,6 @@
         setSyncing(false); 
       };
       
-      // CRUDS
       const saveFixo = async item => await persist(fixos.find(i => i.id === item.id) ? fixos.map(i => i.id === item.id ? item : i) : [...fixos, item], unicos, receitas);
       const saveUnico = async item => await persist(fixos, unicos.find(i => i.id === item.id) ? unicos.map(i => i.id === item.id ? item : i) : [...unicos, item], receitas);
       const saveReceita = async item => await persist(fixos, unicos, receitas.find(i => i.id === item.id) ? receitas.map(i => i.id === item.id ? item : i) : [...receitas, item]);
@@ -283,27 +269,24 @@
       const delUnico = async id => await persist(fixos, unicos.filter(i => i.id !== id), receitas);
       const delReceita = async id => await persist(fixos, unicos, receitas.filter(i => i.id !== id));
 
-      // CÁLCULOS DO MÊS SELECIONADO
       const fMês = (arr) => arr.filter(u => { const d = new Date(u.data + "T12:00:00"); return d.getMonth() === mes && d.getFullYear() === ano; });
-      
-      const uf = fMês(unicos);
-      const ur = fMês(receitas);
-      const ff = fMês(fixos); 
+      const uf = fMês(unicos); const ur = fMês(receitas); const ff = fMês(fixos); 
 
       const tF = ff.reduce((a, b) => a + (b.valor || 0), 0); 
       const tU = uf.reduce((a, b) => a + (b.valor || 0), 0);
       const tR = ur.reduce((a, b) => a + (b.valor || 0), 0);
       const margem = tR - (tF + tU); 
 
-      // Filtros de Busca
       const searchStr = search.toLowerCase();
       const filteredF = ff.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
       const filteredU = uf.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
       const filteredR = ur.filter(i => i.nome.toLowerCase().includes(searchStr) || (i.fornecedor||"").toLowerCase().includes(searchStr));
 
-      // Gráficos
+      // Gráficos de Rosca
       const catF = CATS_FIXO.map(c => ({ name: c, value: ff.filter(f => f.categoria === c).reduce((a, b) => a + b.valor, 0) })).filter(d => d.value > 0);
+      const catU = CATS_UNICO.map(c => ({ name: c, value: uf.filter(f => f.categoria === c).reduce((a, b) => a + b.valor, 0) })).filter(d => d.value > 0);
       
+      // Gráfico DRE (Linhas Gradient)
       const bar = Array.from({ length: 6 }, (_, i) => {
         const d = new Date(); d.setMonth(d.getMonth() - (5 - i)); const m = d.getMonth(), a = d.getFullYear();
         const mR = receitas.filter(u => { const dd = new Date(u.data + "T12:00:00"); return dd.getMonth() === m && dd.getFullYear() === a; }).reduce((s, u) => s + u.valor, 0);
@@ -312,27 +295,41 @@
         return { name: MONTHS[m], Entrada: mR, Saída: mF + mU };
       });
 
-      const TooltipStyle = { background: "#020617", border: `1px solid ${TOKENS.border}`, borderRadius: 12, color: "white", padding: "16px" };
-      const SelectStyle = { background: "rgba(0,0,0,0.3)", border: `1px solid ${TOKENS.border}`, borderRadius: 8, color: "white", padding: "12px 20px", fontSize: 14, fontFamily: "inherit", outline: "none", cursor: "pointer", fontWeight: 600 };
+      const TooltipStyle = { background: "#0A1428", border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 12, color: "white", padding: "16px", boxShadow: "0 20px 40px rgba(0,0,0,0.8)" };
 
-      if (!ready) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background:"#05070D" }}><div style={{ color: TOKENS.neon, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "0.2em", fontSize: 12 }}>CARREGANDO DADOS...</div></div>;
+      if (!ready) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background:"#05070D" }}><div style={{ color: TOKENS.neon, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "0.2em", fontSize: 12, animation: "pulse-glow 1.5s infinite" }}>SINCRONIZANDO NÚCLEO...</div></div>;
+
+      const semDadosDRE = bar.every(d => d.Entrada === 0 && d.Saída === 0);
+
+      // Calcula % de comprometimento de receita (Magia 3)
+      const compReceita = tR > 0 ? (((tF + tU) / tR) * 100).toFixed(0) : 0;
+      const compColor = compReceita < 40 ? TOKENS.green : compReceita < 70 ? "#f59e0b" : TOKENS.red;
 
       return (
         <div style={{ minHeight: "100vh", display: "flex" }}>
           <div className="hex-bg" style={{position:"fixed"}}/>
           
+          {/* SIDEBAR COM ÍCONES */}
           <div style={{ width: 280, background: "rgba(2, 6, 15, 0.95)", borderRight: `1px solid rgba(255,255,255,0.05)`, display: "flex", flexDirection: "column", position: "fixed", top: 0, bottom: 0, left: 0, zIndex: 100, backdropFilter:"blur(20px)" }}>
             <div style={{ padding: "40px 32px 32px" }}>
-              <h1 className="font-display" style={{ fontSize: 24, fontWeight: 900, color: "white", margin: "0 0 4px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <img src="/logo-bgtech.png" alt="BG Tech" style={{ height: 28 }} onError={(e)=>e.target.style.display='none'}/>
+                <span className="font-display" style={{ fontSize: 22, fontWeight: 900, color: "white" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: 2 }}>
                 <span style={{ color: TOKENS.neon, fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>Engenharia</span>
-                <span style={{ width: 8, height: 8, background: syncing ? TOKENS.neon : TOKENS.green, borderRadius: "50%" }}/>
+                {syncing ? <span style={{ width: 8, height: 8, background: TOKENS.neon, borderRadius: "50%", boxShadow: `0 0 12px ${TOKENS.neon}`, animation: "pulse-glow 1s infinite" }} title="Sincronizando..."/> 
+                         : <span style={{ width: 8, height: 8, background: TOKENS.green, borderRadius: "50%", opacity: 0.5 }} title="Online"/>}
               </div>
             </div>
             
             <nav style={{ flex: 1, padding: "0 20px" }}>
-              {[{ id: "overview", label: "Visão CFO" }, { id: "receitas", label: "Entradas / MRR", color: TOKENS.green }, { id: "fixos", label: "Carga Fixa (Mês)" }, { id: "unicos", label: "Custos Variáveis" }].map(n => (
-                <button key={n.id} onClick={() => {setTab(n.id); setSearch("");}} style={{ width: "100%", padding: "16px", borderRadius: 12, border: "none", background: tab === n.id ? "rgba(255,255,255,0.05)" : "transparent", color: tab === n.id ? "white" : TOKENS.textMuted, fontWeight: tab === n.id ? 800 : 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit", marginBottom: 8, textAlign: "left", transition: "all 0.2s", borderLeft: tab === n.id ? `3px solid ${n.color || TOKENS.electric}` : "3px solid transparent" }}>{n.label}</button>
+              <Lbl style={{ paddingLeft: 12, marginBottom: 16, opacity: 0.6 }}>Menu de Controle</Lbl>
+              {[{ id: "overview", label: "Visão CFO", icon: "layout-dashboard" }, { id: "receitas", label: "Entradas / MRR", color: TOKENS.green, icon: "arrow-up-circle" }, { id: "fixos", label: "Carga Fixa (Mês)", icon: "anchor" }, { id: "unicos", label: "Custos Variáveis", icon: "zap" }].map(n => (
+                <button key={n.id} onClick={() => {setTab(n.id); setSearch("");}} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "14px 16px", borderRadius: 12, border: "none", background: tab === n.id ? "rgba(255,255,255,0.05)" : "transparent", color: tab === n.id ? "white" : TOKENS.textMuted, fontWeight: tab === n.id ? 800 : 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit", marginBottom: 8, textAlign: "left", transition: "all 0.2s", borderLeft: tab === n.id ? `3px solid ${n.color || TOKENS.electric}` : "3px solid transparent" }}>
+                  <i data-lucide={n.icon} style={{ width: 18, opacity: tab === n.id ? 1 : 0.6, color: tab === n.id ? (n.color || TOKENS.electric) : "inherit" }}></i>
+                  {n.label}
+                </button>
               ))}
             </nav>
             
@@ -345,41 +342,77 @@
             
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
               <div>
-                <h1 className="font-display" style={{ color: "white", fontSize: 36, fontWeight: 800, margin: "0 0 12px" }}>
+                <h1 className="font-display" style={{ color: "white", fontSize: "clamp(28px, 4vw, 36px)", fontWeight: 800, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
                   {tab === 'overview' ? 'Visão Executiva' : tab === 'receitas' ? 'Gestão de Receitas' : tab === 'fixos' ? 'Carga Fixa Operacional' : 'Despesas Variáveis'}
                 </h1>
+                <p style={{ color: TOKENS.textMuted, fontSize: 13, margin: 0 }}>Período: {MONTHS[mes]} de {ano}</p>
+                
                 {tab !== 'overview' && (
                   <div style={{ position: "relative", width: 300, marginTop: 24 }}>
-                    <input type="text" placeholder="Buscar lançamento ou fornecedor..." value={search} onChange={e => setSearch(e.target.value)} style={{...InputStyle, padding: "10px 16px", background:"rgba(255,255,255,0.05)", fontSize: 14}} />
+                    <i data-lucide="search" style={{ position: "absolute", left: 14, top: 12, width: 16, color: "rgba(255,255,255,0.3)" }}></i>
+                    <input className="modal-input" type="text" placeholder="Buscar título ou cliente..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 40, background:"rgba(255,255,255,0.03)" }} />
                   </div>
                 )}
               </div>
-              <div style={{ display: "flex", gap: 16 }}>
-                <select value={mes} onChange={e => setMes(Number(e.target.value))} style={SelectStyle}>{MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}</select>
-                <select value={ano} onChange={e => setAno(Number(e.target.value))} style={SelectStyle}>{[2024, 2025, 2026, 2027].map(a => <option key={a} value={a}>{a}</option>)}</select>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                <select value={mes} onChange={e => setMes(Number(e.target.value))} className="select-periodo">{MONTHS.map((m, i) => <option key={i} value={i} style={{background:"#0A1428"}}>{m}</option>)}</select>
+                <select value={ano} onChange={e => setAno(Number(e.target.value))} className="select-periodo">{[2024, 2025, 2026, 2027].map(a => <option key={a} value={a} style={{background:"#0A1428"}}>{a}</option>)}</select>
               </div>
             </div>
 
+            {/* SAÚDE FINANCEIRA NO TOPO */}
+            {tab === "overview" && tR > 0 && (
+              <div style={{ marginBottom: 40, background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontSize: 13, fontWeight: 700, color: "white" }}>
+                  <span>Comprometimento da Receita</span>
+                  <span style={{ color: compColor }}>{compReceita}% consumido</span>
+                </div>
+                <div style={{ width: "100%", height: 6, background: "rgba(255,255,255,0.1)", borderRadius: 3, overflow: "hidden" }}>
+                  <div style={{ width: `${Math.min(compReceita, 100)}%`, height: "100%", background: compColor, transition: "width 1s ease" }}></div>
+                </div>
+              </div>
+            )}
+
             {tab === "overview" && (
               <div style={{ animation: "fadeIn 0.4s ease-out" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24, marginBottom: 48 }}>
-                  <StatCard label="Receita Bruta" value={fmt(tR)} sub={`${ur.length} contratos fechados`} color={TOKENS.green} />
-                  <StatCard label="Saída Total (Fixo+Var)" value={fmt(tF + tU)} sub={`${ff.length + uf.length} despesas contabilizadas`} color={TOKENS.red} />
-                  <StatCard label="Margem / Resultado" value={fmt(margem)} sub="Lucro Operacional" color={margem >= 0 ? TOKENS.green : TOKENS.red} />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24, marginBottom: 40 }}>
+                  <StatCard label="Receita Bruta" value={fmt(tR)} sub={`${ur.length} contratos no mês`} color={TOKENS.green} type="positive" />
+                  <StatCard label="Saída Total (Fixo+Var)" value={fmt(tF + tU)} sub={`${ff.length + uf.length} despesas no mês`} color={TOKENS.red} type="negative" />
+                  <StatCard label="Margem / Resultado" value={fmt(margem)} sub="Lucro Operacional" color={margem >= 0 ? TOKENS.green : TOKENS.red} type={margem >= 0 ? "positive" : "negative"} />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                  <div className="glass-panel" style={{ padding: 32 }}>
+                    <h3 className="font-display" style={{ color: "white", margin: "0 0 32px", fontSize: 18, fontWeight: 800 }}>Distribuição da Carga Fixa</h3>
+                    {catF.length > 0 ? ( <ResponsiveContainer width="100%" height={260}><PieChart><Pie data={catF} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={4} dataKey="value" stroke="none">{catF.map((_, i) => <Cell key={i} fill={TOKENS.chartColors[i % TOKENS.chartColors.length]} />)}</Pie><Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} itemStyle={{color:"white", fontWeight: 700}} /><Legend iconType="circle" wrapperStyle={{fontSize: 13, color: TOKENS.textMuted, paddingTop: 20}} /></PieChart></ResponsiveContainer> ) : <div className="empty-state"><i data-lucide="pie-chart"></i><p>Sem gastos fixos.</p></div>}
+                  </div>
+                  <div className="glass-panel" style={{ padding: 32 }}>
+                    <h3 className="font-display" style={{ color: "white", margin: "0 0 32px", fontSize: 18, fontWeight: 800 }}>Histórico Variável</h3>
+                    {catU.length > 0 ? ( <ResponsiveContainer width="100%" height={260}><PieChart><Pie data={catU} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={4} dataKey="value" stroke="none">{catU.map((_, i) => <Cell key={i} fill={TOKENS.chartColors[i % TOKENS.chartColors.length]} />)}</Pie><Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} itemStyle={{color:"white", fontWeight: 700}} /><Legend iconType="circle" wrapperStyle={{fontSize: 13, color: TOKENS.textMuted, paddingTop: 20}} /></PieChart></ResponsiveContainer> ) : <div className="empty-state"><i data-lucide="pie-chart"></i><p>Sem gastos variáveis.</p></div>}
+                  </div>
                 </div>
 
                 <div className="glass-panel" style={{ padding: 40 }}>
                   <h3 className="font-display" style={{ color: "white", margin: "0 0 40px", fontSize: 18, fontWeight: 800 }}>DRE — Receita vs Saída (Últimos 6 Meses)</h3>
-                  <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={bar} barGap={8} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                      <XAxis dataKey="name" stroke={TOKENS.border} tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: 600 }} tickMargin={16} />
-                      <YAxis stroke={TOKENS.border} tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: 600 }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} />
-                      <Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} cursor={{fill: "rgba(255,255,255,0.03)"}}/>
-                      <Legend wrapperStyle={{paddingTop: 24, fontSize: 14, fontWeight: 600, color: "white"}}/>
-                      <Bar dataKey="Entrada" fill={TOKENS.green} radius={[6, 6, 0, 0]} />
-                      <Bar dataKey="Saída" fill={TOKENS.red} radius={[6, 6, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {semDadosDRE ? (
+                    <div className="empty-state" style={{ height: 280 }}><i data-lucide="bar-chart-2"></i><h3>Gráfico Vazio</h3><p>Registre sua primeira receita ou despesa para visualizar o DRE histórico.</p></div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={320}>
+                      <AreaChart data={bar} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorEntrada" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={TOKENS.green} stopOpacity={0.3}/><stop offset="95%" stopColor={TOKENS.green} stopOpacity={0}/></linearGradient>
+                          <linearGradient id="colorSaida" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={TOKENS.red} stopOpacity={0.3}/><stop offset="95%" stopColor={TOKENS.red} stopOpacity={0}/></linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                        <XAxis dataKey="name" stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 }} tickMargin={16} />
+                        <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} />
+                        <Tooltip formatter={v => fmt(v)} contentStyle={TooltipStyle} />
+                        <Legend wrapperStyle={{paddingTop: 24, fontSize: 14, fontWeight: 600, color: "white"}}/>
+                        <Area type="monotone" dataKey="Entrada" stroke={TOKENS.green} strokeWidth={3} fillOpacity={1} fill="url(#colorEntrada)" activeDot={{ r: 6, strokeWidth: 0 }} />
+                        <Area type="monotone" dataKey="Saída" stroke={TOKENS.red} strokeWidth={3} fillOpacity={1} fill="url(#colorSaida)" activeDot={{ r: 6, strokeWidth: 0 }} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  )}
                 </div>
               </div>
             )}
@@ -387,9 +420,9 @@
             {tab === "receitas" && (
               <div style={{ animation: "fadeIn 0.4s ease-out" }}>
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
-                  <button onClick={() => setModal({ type: "receita", item: null })} className="btn-glow" style={{...PrimaryBtnStyle, background: `linear-gradient(135deg, #10b981, #059669)`}}>+ Lançar Contrato / Receita</button>
+                  <button onClick={() => setModal({ type: "receita", item: null })} className="btn-glow" style={{...PrimaryBtnStyle, background: `linear-gradient(135deg, #10b981, #059669)`}}>+ Lançar Contrato</button>
                 </div>
-                {filteredR.length === 0 ? <p style={{ color: TOKENS.textMuted }}>Nenhuma receita encontrada no período.</p> : (
+                {filteredR.length === 0 ? <div className="empty-state"><i data-lucide="inbox"></i><h3>Nenhuma receita encontrada</h3><p>Nenhuma entrada contabilizada para {MONTHS[mes]}.</p></div> : (
                   <div className="glass-panel" style={{ overflow: "hidden" }}>
                     {filteredR.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="receita" onEdit={item => setModal({ type: "receita", item })} onDelete={delReceita} />)}
                     <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: TOKENS.green, fontSize: 28, fontWeight: 900 }}>{fmt(tR)}</span></div>
@@ -403,10 +436,10 @@
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
                   <button onClick={() => setModal({ type: "fixo", item: null })} className="btn-glow" style={PrimaryBtnStyle}>+ Registrar Novo Fixo</button>
                 </div>
-                {filteredF.length === 0 ? <p style={{ color: TOKENS.textMuted }}>Nenhum custo fixo no período.</p> : (
+                {filteredF.length === 0 ? <div className="empty-state"><i data-lucide="inbox"></i><h3>Sem registros</h3><p>Nenhum custo fixo em {MONTHS[mes]}.</p></div> : (
                   <div className="glass-panel" style={{ overflow: "hidden" }}>
                     {filteredF.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="fixo" onEdit={item => setModal({ type: "fixo", item })} onDelete={delFixo} />)}
-                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: TOKENS.textHero, fontSize: 28, fontWeight: 900 }}>{fmt(tF)}</span></div>
+                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: "white", fontSize: 28, fontWeight: 900 }}>{fmt(tF)}</span></div>
                   </div>
                 )}
               </div>
@@ -417,10 +450,10 @@
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
                   <button onClick={() => setModal({ type: "unico", item: null })} className="btn-glow" style={PrimaryBtnStyle}>+ Lançar Variável</button>
                 </div>
-                {filteredU.length === 0 ? <p style={{ color: TOKENS.textMuted }}>Nenhuma saída em {MONTHS[mes]}/{ano}.</p> : (
+                {filteredU.length === 0 ? <div className="empty-state"><i data-lucide="inbox"></i><h3>Sem registros</h3><p>Nenhuma despesa variável em {MONTHS[mes]}.</p></div> : (
                   <div className="glass-panel" style={{ overflow: "hidden" }}>
                     {filteredU.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => <DataRow key={item.id} item={item} type="unico" onEdit={item => setModal({ type: "unico", item })} onDelete={delUnico} />)}
-                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: TOKENS.textHero, fontSize: 28, fontWeight: 900 }}>{fmt(tU)}</span></div>
+                    <div style={{ padding: "24px 32px", background: "rgba(0,0,0,0.5)", textAlign: "right" }}><span className="font-display" style={{ color: "white", fontSize: 28, fontWeight: 900 }}>{fmt(tU)}</span></div>
                   </div>
                 )}
               </div>
@@ -428,16 +461,41 @@
           </div>
 
           {modal && (
-            <Modal title={modal.item ? "Editar Lançamento" : modal.type === "receita" ? "Nova Receita" : modal.type === "fixo" ? "Novo Custo Fixo" : "Novo Custo Variável"} onClose={() => setModal(null)}>
-              <Form 
-                type={modal.type}
-                onSave={modal.type === "fixo" ? saveFixo : modal.type === "receita" ? saveReceita : saveUnico} 
-                onClose={() => setModal(null)} 
-                initial={modal.item} 
-                cats={modal.type === "receita" ? CATS_RECEITA : modal.type === "fixo" ? CATS_FIXO : CATS_UNICO} 
-              />
-            </Modal>
+            <div className="modal-backdrop" onClick={() => setModal(null)}>
+              <div className="modal-card" onClick={e => e.stopPropagation()}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: 16 }}>
+                  <h3 className="font-display" style={{ color: "white", margin: 0, fontSize: 20, fontWeight: 800 }}>
+                    {modal.item ? "Editar Lançamento" : modal.type === "receita" ? "Nova Receita" : modal.type === "fixo" ? "Novo Custo Fixo" : "Novo Custo Variável"}
+                  </h3>
+                  <button onClick={() => setModal(null)} style={{ background: "transparent", border: "none", color: TOKENS.textMuted, cursor: "pointer", fontSize: 18 }}>✕</button>
+                </div>
+                <Form type={modal.type} onSave={modal.type === "fixo" ? saveFixo : modal.type === "receita" ? saveReceita : saveUnico} onClose={() => setModal(null)} initial={modal.item} cats={modal.type === "receita" ? CATS_RECEITA : modal.type === "fixo" ? CATS_FIXO : CATS_UNICO} />
+              </div>
+            </div>
           )}
+        </div>
+      );
+    }
+
+    function Login({ onLogin }) {
+      const [u, setU] = useState(""); const [p, setP] = useState(""); const [err, setErr] = useState(""); const [load, setLoad] = useState(false);
+      const go = () => {
+        setLoad(true);
+        setTimeout(() => { if (u.trim().toLowerCase() === ADMIN.user && p === ADMIN.pass) onLogin(); else { setErr("Acesso Negado."); setLoad(false); } }, 800);
+      };
+      return (
+        <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="hex-bg" />
+          <div className="glass-panel" style={{ padding: "48px", width: "100%", maxWidth: 440, zIndex: 10 }}>
+            <div style={{ textAlign: "center", marginBottom: 40 }}>
+              <h1 className="font-display" style={{ color: "white", fontSize: 26, fontWeight: 800, margin: "0 0 8px" }}>BG <span style={{ color: TOKENS.electric }}>TECH</span></h1>
+              <p style={{ color: TOKENS.neon, fontSize: 11, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.25em" }}>Painel Financeiro B2B</p>
+            </div>
+            <div style={{ marginBottom: 24 }}><Lbl>ID de Acesso</Lbl><input className="modal-input" value={u} onChange={e => { setU(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="Usuário root" autoFocus /></div>
+            <div style={{ marginBottom: 32 }}><Lbl>Chave de Segurança</Lbl><input className="modal-input" type="password" value={p} onChange={e => { setP(e.target.value); setErr(""); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="••••••••" /></div>
+            {err && <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 8, padding: 12, color: TOKENS.red, fontSize: 13, textAlign: "center", marginBottom: 24, fontWeight: 700 }}>⚠️ {err}</div>}
+            <button onClick={go} disabled={load} className="btn-glow" style={{ ...PrimaryBtnStyle, width: "100%", padding: "18px", fontSize: 16 }}>{load ? "Autenticando..." : "Acessar Sistema"}</button>
+          </div>
         </div>
       );
     }
