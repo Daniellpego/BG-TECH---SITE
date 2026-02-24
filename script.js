@@ -88,7 +88,7 @@ const QUESTIONS = [
   {
     id: 'contato', label: '', 
     title: 'Seu diagnóstico está pronto.',
-    desc: 'Informe para quem enviamos a análise completa da sua operação.',
+    desc: 'Informe para quem enviamos a análise completa da sua operation.',
     type: 'text',
     fields: [
       { id: 'nome', placeholder: 'Como você prefere ser chamado?' },
@@ -429,7 +429,7 @@ function runLoading() {
   tick();
 }
 
-// ==== NOVO SHOW RESULT OTMIZADO E ANIMADO ====
+// ==== SHOW RESULT OTMIZADO E ANIMADO ====
 function showResult() {
   const body = document.getElementById('quiz-body');
   const nome = textData.nome.split(' ')[0];
@@ -542,12 +542,15 @@ function showResult() {
 
   // ATIVA AS ANIMAÇÕES DE FORMA SEGURA E ASSÍNCRONA
   setTimeout(() => {
+    // 1. Reflow mágico pro SVG do Score animar do zero
     const elCirc = document.getElementById('anim-circle');
     if (elCirc) {
+      elCirc.getBoundingClientRect(); // <--- O SEGREDO TÁ AQUI
       elCirc.style.transition = 'stroke-dashoffset 1.5s ease-out';
       elCirc.style.strokeDashoffset = circleOffset;
     }
 
+    // 2. Barras de oportunidade descendo em "escadinha"
     [0, 1, 2].forEach((i, index) => {
       setTimeout(() => {
         const barEl = document.getElementById(`bar-${i}`);
@@ -555,7 +558,7 @@ function showResult() {
           barEl.style.transition = 'width 1s ease-out';
           barEl.style.width = barEl.getAttribute('data-target');
         }
-      }, 500 + (index * 300)); // Delay em cascata (Escadinha)
+      }, 500 + (index * 300));
     });
   }, 100);
 
