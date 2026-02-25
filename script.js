@@ -1,481 +1,613 @@
-// BG Tech - Sistema Completo (Nível Apple)
-// Zero bugs, performance A+, experiência impecável
-
-const App = {
-  init() {
-    this.initAnimations();
-    this.initHeader();
-    this.initCounters();
-    this.initProcessLine();
-    lucide.createIcons();
-  },
-
-  initAnimations() {
-    // Intersection Observer para animações de entrada
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          el.classList.add('visible');
-          
-          // Trigger process line if it's the process section
-          if (el.classList.contains('process-steps')) {
-            document.getElementById('processLine').style.width = '100%';
-          }
-          
-          observer.unobserve(el);
-        }
-      });
-    }, observerOptions);
-
-    // Observe all animated elements
-    document.querySelectorAll('.animate-in, .animate-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
-
-    // Initial animation for hero elements
-    setTimeout(() => {
-      document.querySelectorAll('.animate-in').forEach(el => {
-        el.classList.add('visible');
-      });
-    }, 100);
-  },
-
-  initHeader() {
-    const header = document.getElementById('header');
-    const progress = document.getElementById('scrollProgress');
-    
-    window.addEventListener('scroll', () => {
-      // Header background
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-      
-      // Progress bar
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0) {
-        const scrollPercent = (window.scrollY / docHeight) * 100;
-        progress.style.width = scrollPercent + '%';
-      }
-    }, { passive: true });
-  },
-
-  initCounters() {
-    const counters = document.querySelectorAll('.counter');
-    
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const counter = entry.target;
-          const target = parseFloat(counter.dataset.target);
-          const decimals = parseInt(counter.dataset.decimals) || 0;
-          const duration = 2000;
-          let startTime = null;
-          
-          const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
-          
-          const animate = (timestamp) => {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-            const current = target * easeOutQuart(progress);
-            
-            counter.textContent = current.toFixed(decimals);
-            
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            } else {
-              counter.textContent = target.toFixed(decimals);
-            }
-          };
-          
-          requestAnimationFrame(animate);
-          counterObserver.unobserve(counter);
-        }
-      });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => counterObserver.observe(counter));
-  },
-
-  initProcessLine() {
-    // Triggered by intersection observer in initAnimations
-  },
-
-  toggleMenu() {
-    const toggle = document.getElementById('menuToggle');
-    const menu = document.getElementById('mobileMenu');
-    toggle.classList.toggle('active');
-    menu.classList.toggle('active');
-    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
-  },
-
-  closeMenu() {
-    const toggle = document.getElementById('menuToggle');
-    const menu = document.getElementById('mobileMenu');
-    toggle.classList.remove('active');
-    menu.classList.remove('active');
-    document.body.style.overflow = '';
-  }
+// ==== CONFIGURAÇÕES BG TECH ====
+const CONFIG = {
+  whatsappNumber: '5511999998888', // LEMBRE DE COLOCAR O SEU NÚMERO AQUI
+  webhookUrl: '', // Deixe vazio, vamos usar o Supabase
+  supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co', 
+  supabaseKey: 'sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0'
 };
 
-const Quiz = {
-  currentStep: 0,
-  answers: {},
-  data: {},
-  
-  questions: [
-    {
-      id: 'segmento',
-      step: 'PASSO 1 DE 5',
-      title: 'Qual o segmento da sua empresa?',
-      desc: 'Isso calibra os benchmarks do seu diagnóstico.',
-      type: 'options',
-      options: [
-        { icon: 'hard-hat', title: 'Construção Civil', desc: 'Obras e gestão de equipe' },
-        { icon: 'scale', title: 'Jurídico/Contábil', desc: 'Escritórios e processos' },
-        { icon: 'store', title: 'Comércio/Varejo', desc: 'Loja física ou online' },
-        { icon: 'factory', title: 'Indústria', desc: 'Produção e manufatura' },
-        { icon: 'stethoscope', title: 'Saúde', desc: 'Clínicas e laboratórios' },
-        { icon: 'briefcase', title: 'Serviços', desc: 'Consultorias e agências' }
-      ]
-    },
-    {
-      id: 'horas',
-      step: 'PASSO 2 DE 5',
-      title: 'Quanto tempo sua equipe perde em tarefas manuais?',
-      desc: 'Seja honesto. Some as horas de retrabalho.',
-      type: 'options',
-      options: [
-        { icon: 'timer', title: 'Menos de 5 horas', desc: 'Operação bem azeitada' },
-        { icon: 'refresh-ccw', title: '5 a 15 horas', desc: 'Já dói, mas dá pra ignorar' },
-        { icon: 'flame', title: '15 a 30 horas', desc: 'Custa dinheiro real' },
-        { icon: 'skull', title: 'Mais de 30 horas', desc: 'Manual virou o modelo' }
-      ]
-    },
-    {
-      id: 'problema',
-      step: 'PASSO 3 DE 5',
-      title: 'O que mais trava seu crescimento?',
-      desc: 'Escolha o que mais corrói seu lucro.',
-      type: 'options',
-      options: [
-        { icon: 'clock', title: 'Processos manuais', desc: '30% do dia vai pro lixo' },
-        { icon: 'cable', title: 'Sistemas desconectados', desc: 'Ferramentas não se falam' },
-        { icon: 'alert-circle', title: 'TI lento', desc: 'Cada hora parada custa caro' },
-        { icon: 'bar-chart', title: 'Falta de visão', desc: 'Decisões no feeling' }
-      ]
-    },
-    {
-      id: 'faturamento',
-      step: 'PASSO 4 DE 5',
-      title: 'Faturamento mensal atual?',
-      desc: 'Determine o impacto financeiro real.',
-      type: 'options',
-      options: [
-        { icon: 'wallet', title: 'Até R$ 50 mil', desc: 'Fase de validação' },
-        { icon: 'trending-up', title: 'R$ 50k a 200k', desc: 'Ganhando tração' },
-        { icon: 'landmark', title: 'R$ 200k a 500k', desc: 'Operação sólida' },
-        { icon: 'gem', title: 'Acima de R$ 500k', desc: 'Estrutura robusta' }
-      ]
-    },
-    {
-      id: 'maturidade',
-      step: 'PASSO 5 DE 5',
-      title: 'Como descreveria sua tecnologia hoje?',
-      desc: 'Nível de maturidade digital atual.',
-      type: 'options',
-      options: [
-        { icon: 'file-text', title: 'Papel ou Excel', desc: 'Tudo manual' },
-        { icon: 'box', title: 'Sistemas básicos', desc: 'Ninguém usa direito' },
-        { icon: 'boxes', title: 'Sem integração', desc: 'Dados espalhados' },
-        { icon: 'server', title: 'Razoável', desc: 'Tem espaço pra evoluir' },
-        { icon: 'rocket', title: 'Boa', desc: 'Preciso de parceiro estratégico' }
-      ]
-    },
-    {
-      id: 'contato',
-      step: '',
-      title: 'Seu diagnóstico está pronto.',
-      desc: 'Para quem enviamos a análise completa?',
-      type: 'form',
-      fields: [
-        { id: 'nome', placeholder: 'Como você prefere ser chamado?', type: 'text' },
-        { id: 'empresa', placeholder: 'Nome da empresa', type: 'text' },
-        { id: 'whatsapp', placeholder: 'WhatsApp (com DDD)', type: 'tel' }
-      ]
-    }
+let leadLocation = "sua região";
+const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 3000);
+
+fetch('https://ipapi.co/json/', { signal: controller.signal })
+  .then(r => r.json())
+  .then(d => { if (d.city) leadLocation = d.city; })
+  .catch(() => {}) 
+  .finally(() => clearTimeout(timeout));
+
+const capitalize = (str) => {
+  return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+};
+
+const QUESTIONS = [
+  {
+    id: 'segmento', label: 'PASSO 1 DE 5',
+    title: 'Qual o segmento da sua empresa?',
+    desc: 'Isso calibra os benchmarks e o vocabulário do seu diagnóstico.',
+    type: 'options',
+    options: [
+      { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
+      { icon: 'scale', title: 'Jurídico e Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
+      { icon: 'store', title: 'Comércio e Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
+      { icon: 'factory', title: 'Indústria e Manufatura', sub: 'Produção, estoque e operação fabril' },
+      { icon: 'stethoscope', title: 'Saúde', sub: 'Clínicas, laboratórios e prestadores de saúde' },
+      { icon: 'briefcase', title: 'Serviços e Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
+    ]
+  },
+  {
+    id: 'horas_perdidas', label: 'PASSO 2 DE 5',
+    title: 'Quanto tempo sua equipe perde por semana em tarefas manuais?',
+    desc: 'Seja honesto. Some mentalmente as horas de retrabalho antes de responder.',
+    type: 'options',
+    options: [
+      { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação bem azeitada' },
+      { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói, mas dá pra ignorar' },
+      { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Está custando dinheiro real todo mês' },
+      { icon: 'skull', title: 'Mais de 30 horas', sub: 'O manual virou o modelo de negócio' }
+    ]
+  },
+  {
+    id: 'dor', label: 'PASSO 3 DE 5',
+    title: 'O que mais trava o crescimento da empresa hoje?',
+    desc: 'Escolha a opção que mais corrói o seu lucro.',
+    type: 'options',
+    options: [
+      { icon: 'clock', title: 'Processos manuais', sub: 'Sua equipe é boa. Só que 30% do dia dela vai pro lixo.' },
+      { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Você paga por ferramentas que não se falam.' },
+      { icon: 'alert-circle', title: 'Suporte de TI lento', sub: 'Cada hora parada custa dinheiro. Você sabe disso.' },
+      { icon: 'bar-chart', title: 'Falta de visibilidade', sub: 'Você decide com base no feeling e não em dados exatos.' },
+      { icon: 'users', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais. Não devia ser assim.' }
+    ]
+  },
+  {
+    id: 'faturamento', label: 'PASSO 4 DE 5',
+    title: 'Qual faixa melhor representa o faturamento mensal atual?',
+    desc: 'Isso determina o impacto financeiro exato que vai aparecer no seu diagnóstico.',
+    type: 'options',
+    options: [
+      { icon: 'wallet', title: 'Até R$ 50 mil', sub: 'Fase de validação do modelo' },
+      { icon: 'trending-up', title: 'Entre R$ 50k e R$ 200 mil', sub: 'Ganhando tração e corpo' },
+      { icon: 'landmark', title: 'Entre R$ 200k e R$ 500 mil', sub: 'Operação sólida buscando escala' },
+      { icon: 'gem', title: 'Acima de R$ 500 mil', sub: 'Estrutura robusta' }
+    ]
+  },
+  {
+    id: 'maturidade', label: 'PASSO 5 DE 5',
+    title: 'Sendo completamente honesto, como você descreveria a tecnologia hoje?',
+    desc: 'O nível de maturidade digital atual da empresa.',
+    type: 'options',
+    options: [
+      { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual dependente de pessoas' },
+      { icon: 'box', iconColor: 'icon-orange', title: 'Sistemas básicos', sub: 'Até tem ferramenta mas ninguém usa direito' },
+      { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados e muito retrabalho' },
+      { icon: 'server', iconColor: 'icon-blue-light', title: 'Sistemas razoáveis', sub: 'Funciona mas tem muito espaço pra evoluir' },
+      { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa', sub: 'Base sólida, preciso de um parceiro estratégico' }
+    ]
+  },
+  {
+    id: 'contato', label: '', 
+    title: 'Seu diagnóstico está pronto.',
+    desc: 'Informe para quem enviamos a análise completa da sua operation.',
+    type: 'text',
+    fields: [
+      { id: 'nome', placeholder: 'Como você prefere ser chamado?' },
+      { id: 'empresa', placeholder: 'Nome da empresa' },
+      { id: 'whatsapp', placeholder: 'WhatsApp (com DDD)' }
+    ]
+  }
+];
+
+const echos = {
+  horas_perdidas: [
+    null,
+    "Esse padrão de fuga de horas aparece em 62% das empresas no seu estágio de crescimento.",
+    "Atenção. Com esse volume sua equipe perde efetivamente quase 2 dias inteiros por semana em rotinas braçais.",
+    "Custo crítico. Acima de 30h semanais o desperdício invisível supera facilmente o salário de um gestor."
   ],
+  dor: [
+    "Processos manuais não escalam. É a maior trava de crescimento documentada no B2B atual.",
+    "Sistemas desconectados geram retrabalho infinito e furos graves de informação.",
+    "A falta de suporte técnico drena não só dinheiro, mas a moral da equipe inteira.",
+    "Decidir sem dados em tempo real é o que separa empresas que estagnam das que lideram o mercado.",
+    "Sobrecarga operacional gera turnover alto. A automação resolve isso direto na raiz."
+  ],
+  faturamento: [
+    null,
+    "Ótimo. Nessa faixa cada R$1.000 economizado em operação vira lucro direto no fim do mês.",
+    "Uma operação desse porte precisa de tecnologia robusta para não implodir sob o próprio peso.",
+    "Com esse volume qualquer ineficiência de 2% já representa dezenas de milhares de reais perdidos."
+  ]
+};
 
-  open() {
-    this.currentStep = 0;
-    this.answers = {};
-    document.getElementById('quizModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    this.render();
-  },
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
 
-  close() {
-    document.getElementById('quizModal').classList.remove('active');
-    document.body.style.overflow = '';
-  },
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeQuiz(); });
+  document.getElementById('quiz-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('quiz-overlay')) closeQuiz();
+  });
 
-  render() {
-    const q = this.questions[this.currentStep];
-    const body = document.getElementById('quizBody');
-    const progress = ((this.currentStep) / (this.questions.length - 1)) * 100;
-    document.getElementById('quizProgress').style.width = progress + '%';
-    
-    if (q.type === 'options') {
-      body.innerHTML = `
-        <div class="animate-in visible">
-          <div class="quiz-step-label">${q.step}</div>
-          <h3 class="quiz-question">${q.title}</h3>
-          <p class="quiz-description">${q.desc}</p>
-          <div class="quiz-options">
-            ${q.options.map((opt, i) => `
-              <button class="quiz-option" onclick="quiz.select(${i})">
-                <div class="quiz-option-icon">
-                  <i data-lucide="${opt.icon}"></i>
-                </div>
-                <div class="quiz-option-content">
-                  <span class="quiz-option-title">${opt.title}</span>
-                  <span class="quiz-option-desc">${opt.desc}</span>
-                </div>
-              </button>
-            `).join('')}
-          </div>
-          ${this.currentStep > 0 ? `
-            <div class="quiz-nav">
-              <button class="btn btn-ghost" onclick="quiz.prev()">
-                <i data-lucide="arrow-left"></i> Voltar
-              </button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    } else {
-      body.innerHTML = `
-        <div class="animate-in visible">
-          <div class="quiz-step-label"><span class="live-dot"></span> DIAGNÓSTICO PRONTO</div>
-          <h3 class="quiz-question">${q.title}</h3>
-          <p class="quiz-description">${q.desc}</p>
-          ${q.fields.map(f => `
-            <div class="quiz-input-group">
-              <input type="${f.type}" class="quiz-input" id="field-${f.id}" placeholder="${f.placeholder}">
-              <div class="quiz-error" id="error-${f.id}">Campo obrigatório</div>
-            </div>
-          `).join('')}
-          <p style="font-size: 13px; color: var(--text-dark-3); margin: 20px 0; text-align: center;">
-            Usamos apenas para enviar o diagnóstico.
-          </p>
-          <div class="quiz-nav">
-            <button class="btn btn-ghost" onclick="quiz.prev()">
-              <i data-lucide="arrow-left"></i> Voltar
-            </button>
-            <button class="btn btn-primary" onclick="quiz.submit()">
-              Ver Resultado <i data-lucide="arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      `;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if (entry.target.classList.contains('process-steps')) {
+           setTimeout(() => { document.getElementById('process-line').style.width = '100%'; }, 500);
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const counters = document.querySelectorAll('.counter');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const counter = entry.target;
+        const target = parseFloat(counter.getAttribute('data-target'));
+        const isFloat = counter.getAttribute('data-target').includes('.');
+        let startTime = null;
+        const duration = 1800;
+
+        const updateCount = (timestamp) => {
+          if (!startTime) startTime = timestamp;
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const current = target * ease;
+          counter.innerText = isFloat ? current.toFixed(1) : Math.floor(current);
+          if (progress < 1) requestAnimationFrame(updateCount);
+          else counter.innerText = target;
+        };
+        requestAnimationFrame(updateCount);
+        counterObserver.unobserve(counter);
+      }
+    });
+  }, { threshold: 0 }); 
+  counters.forEach(c => counterObserver.observe(c));
+
+  document.querySelector('.js-toggle-menu').addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('open'));
+  document.querySelectorAll('.js-close-menu').forEach(btn => btn.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open')));
+  
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('site-header');
+    const progress = document.getElementById('reading-progress');
+    if (window.scrollY > 50) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
+  });
+
+  document.querySelectorAll('.js-open-quiz').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); }));
+  document.querySelector('.js-close-quiz').addEventListener('click', closeQuiz);
+});
+
+let currentStep = -1;
+let answers = {};
+let textData = {};
+
+function openQuiz() {
+  const savedAnswers = sessionStorage.getItem('bgtech_quiz');
+  if (savedAnswers) {
+    const saved = JSON.parse(savedAnswers);
+    answers = saved.answers || {};
+    textData = saved.textData || {};
+    currentStep = saved.step ?? -1;
+  } else {
+    currentStep = -1; answers = {}; textData = {};
+  }
+  document.getElementById('quiz-overlay').classList.add('open');
+  document.body.classList.add('modal-open');
+  if (currentStep === -1) renderIntro(); else renderStep();
+}
+
+function closeQuiz() {
+  document.getElementById('quiz-overlay').classList.remove('open');
+  document.body.classList.remove('modal-open');
+  if (currentStep >= QUESTIONS.length) sessionStorage.removeItem('bgtech_quiz');
+}
+
+function renderIntro() {
+  const body = document.getElementById('quiz-body');
+  document.getElementById('quiz-progress-fill').style.width = '0%';
+
+  body.innerHTML = `
+    <div class="quiz-intro reveal visible">
+      <h2 style="color: var(--text-1);">O Diagnóstico BG Tech</h2>
       
-      // Máscara de telefone
-      const phoneInput = document.getElementById('field-whatsapp');
-      if (phoneInput) {
-        phoneInput.addEventListener('input', (e) => {
-          let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-          if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-          if (v.length > 10) v = `${v.slice(0,10)}-${v.slice(10)}`;
-          e.target.value = v;
+      <div class="intro-social-proof">
+        <span><i data-lucide="check-circle" width="16"></i> 847 empresas já diagnosticadas</span>
+        <span><i data-lucide="check-circle" width="16"></i> Resultado em menos de 3 minutos</span>
+      </div>
+
+      <p style="color: var(--text-3);">Nos próximos 3 minutos você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e o porquê.</p>
+      <p style="color: var(--text-3);">Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
+      
+      <div class="quiz-intro-hint">
+        Seja completamente honesto. Quanto mais preciso você for nas respostas, mais exato será o resultado.
+      </div>
+      <button class="btn-primary btn-large js-start-quiz" style="width: 100%;">Estou pronto <i data-lucide="arrow-right"></i></button>
+    </div>
+  `;
+  lucide.createIcons();
+  body.querySelector('.js-start-quiz').addEventListener('click', () => { nextStep(); });
+}
+
+function renderStep() {
+  const q = QUESTIONS[currentStep];
+  const body = document.getElementById('quiz-body');
+  const bar = document.getElementById('quiz-progress-fill');
+
+  if (q.id === 'contato') {
+    bar.style.width = '80%';
+    bar.classList.add('pulse-progress');
+  } else {
+    bar.style.width = `${(currentStep / (QUESTIONS.length - 1)) * 100}%`;
+    bar.classList.remove('pulse-progress');
+  }
+
+  if (q.type === 'options') {
+    let html = `<div class="reveal visible"><span class="q-label">${q.label}</span><h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
+    html += `<div class="q-options">`;
+    q.options.forEach((opt, i) => {
+      const iconClass = opt.iconColor ? opt.iconColor : '';
+      const isSelected = answers[q.id] === i ? 'selected' : '';
+      html += `
+        <div class="q-option ${isSelected}" data-index="${i}">
+          <div class="q-icon"><i data-lucide="${opt.icon}" class="${iconClass}"></i></div>
+          <div class="q-text"><strong>${opt.title}</strong><span>${opt.sub}</span></div>
+        </div>`;
+    });
+    html += `</div>`;
+    if (currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
+    html += `</div>`;
+    body.innerHTML = html;
+
+    body.querySelectorAll('.q-option').forEach(opt => {
+      opt.addEventListener('click', function () {
+        const idx = parseInt(this.getAttribute('data-index'));
+        answers[q.id] = idx;
+
+        const ecoText = echos[q.id]?.[idx];
+        
+        if (q.id === 'segmento') {
+          const segName = q.options[idx].title;
+          body.innerHTML = `<div class="micro-validation"><i data-lucide="check-circle-2" style="margin-bottom:12px;width:32px;height:32px;"></i><br>Calibrando diagnóstico para ${segName}...</div>`;
+          lucide.createIcons();
+          setTimeout(() => { nextStep(); }, 1200);
+        } else if (ecoText) {
+          body.innerHTML = `
+            <div class="micro-validation" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 60px 20px;">
+              <i data-lucide="zap" style="color:var(--blue); width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
+              <p style="color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
+            </div>`;
+          lucide.createIcons();
+          setTimeout(() => { nextStep(); }, 2500); 
+        } else {
+          nextStep();
+        }
+      });
+    });
+  } else {
+    let html = `<div class="reveal visible">
+      <span class="q-label"><span class="live-dot"></span> DIAGNÓSTICO PRONTO</span>
+      <h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
+      
+    q.fields.forEach(f => {
+      html += `<div class="q-input-group">
+                <input type="text" class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" value="${textData[f.id] || ''}">
+                <div class="q-error-msg" id="err-${f.id}"></div>
+               </div>`;
+    });
+    
+    html += `
+      <p style="font-size:12px; color:var(--text-3); margin-bottom: 20px; text-align:center;">Usamos esse contato apenas para enviar e debater o diagnóstico.</p>
+      <div class="q-nav">
+        <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
+        <button class="btn-primary js-next">Liberar meu diagnóstico <i data-lucide="unlock" width="16"></i></button>
+      </div></div>`;
+    body.innerHTML = html;
+
+    const wppInput = document.getElementById('inp-whatsapp');
+    if(wppInput) {
+      wppInput.addEventListener('input', function() {
+        let v = this.value.replace(/\D/g, '').slice(0,11);
+        if(v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+        if(v.length > 10) v = v.slice(0,10) + '-' + v.slice(10);
+        this.value = v;
+        this.classList.remove('error');
+        document.getElementById('err-whatsapp').style.display = 'none';
+      });
+    }
+
+    body.querySelector('.js-next').addEventListener('click', () => {
+      let hasError = false;
+
+      const elNome = document.getElementById('inp-nome');
+      const nomeVal = elNome.value.trim();
+      if (nomeVal.length < 3) {
+        hasError = true; elNome.classList.add('error');
+        document.getElementById('err-nome').innerText = "Insira um nome válido";
+        document.getElementById('err-nome').style.display = 'block';
+      } else { textData.nome = capitalize(nomeVal); }
+
+      const elEmpresa = document.getElementById('inp-empresa');
+      const empVal = elEmpresa.value.trim();
+      if (empVal.length < 2) {
+        hasError = true; elEmpresa.classList.add('error');
+        document.getElementById('err-empresa').innerText = "Informe a empresa";
+        document.getElementById('err-empresa').style.display = 'block';
+      } else { textData.empresa = empVal; } 
+
+      const wppVal = wppInput.value.trim().replace(/\D/g, ''); 
+      if (wppVal.length < 10 || wppVal.length > 13) {
+        hasError = true; wppInput.classList.add('error');
+        document.getElementById('err-whatsapp').innerText = "Número inválido. Inclua o DDD.";
+        document.getElementById('err-whatsapp').style.display = 'block';
+      } else { textData.whatsapp = wppInput.value; }
+
+      if (!hasError) runLoading();
+    });
+
+    q.fields.forEach(f => {
+      if(f.id !== 'whatsapp') { 
+        document.getElementById(`inp-${f.id}`).addEventListener('input', function () {
+          this.classList.remove('error'); document.getElementById(`err-${f.id}`).style.display = 'none';
         });
       }
-    }
-    
-    lucide.createIcons();
-  },
-
-  select(index) {
-    this.answers[this.questions[this.currentStep].id] = index;
-    
-    // Mostrar feedback visual rápido
-    const options = document.querySelectorAll('.quiz-option');
-    options[index].classList.add('selected');
-    
-    setTimeout(() => {
-      if (this.currentStep < this.questions.length - 1) {
-        this.currentStep++;
-        this.render();
-      }
-    }, 300);
-  },
-
-  prev() {
-    if (this.currentStep > 0) {
-      this.currentStep--;
-      this.render();
-    }
-  },
-
-  submit() {
-    const fields = this.questions[this.currentStep].fields;
-    let valid = true;
-    
-    fields.forEach(f => {
-      const input = document.getElementById(`field-${f.id}`);
-      const error = document.getElementById(`error-${f.id}`);
-      
-      if (!input.value.trim()) {
-        input.classList.add('error');
-        error.style.display = 'block';
-        valid = false;
-      } else {
-        input.classList.remove('error');
-        error.style.display = 'none';
-        this.data[f.id] = input.value;
-      }
     });
-    
-    if (valid) {
-      this.showLoading();
-    }
-  },
+  }
 
-  showLoading() {
-    const body = document.getElementById('quizBody');
-    body.innerHTML = `
-      <div class="quiz-loading">
-        <div class="quiz-spinner"></div>
-        <h3 style="font-family: var(--font-display); font-size: 20px; color: var(--text-dark); margin-bottom: 32px;">
-          Compilando seu diagnóstico...
-        </h3>
-        <div class="quiz-loading-steps">
-          <div class="quiz-loading-step active">
-            <i data-lucide="briefcase"></i>
-            <span>Mapeando gargalos...</span>
-          </div>
-          <div class="quiz-loading-step">
-            <i data-lucide="search"></i>
-            <span>Cruzando dados...</span>
-          </div>
-          <div class="quiz-loading-step">
-            <i data-lucide="dollar-sign"></i>
-            <span>Calculando perdas...</span>
-          </div>
-          <div class="quiz-loading-step">
-            <i data-lucide="file-check"></i>
-            <span>Gerando plano de ação...</span>
-          </div>
-        </div>
-      </div>
-    `;
-    lucide.createIcons();
-    
-    // Animate steps
-    const steps = document.querySelectorAll('.quiz-loading-step');
-    let current = 0;
-    
-    const interval = setInterval(() => {
-      if (current > 0) {
-        steps[current - 1].classList.remove('active');
-        steps[current - 1].classList.add('done');
-        steps[current - 1].innerHTML = '<i data-lucide="check"></i><span>Concluído</span>';
-        lucide.createIcons();
-      }
-      
-      if (current < steps.length) {
-        steps[current].classList.add('active');
-        current++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => this.showResults(), 500);
-      }
-    }, 800);
-  },
+  if (body.querySelector('.js-prev')) body.querySelector('.js-prev').addEventListener('click', () => { currentStep--; renderStep(); });
+  lucide.createIcons();
+}
 
-  showResults() {
-    const body = document.getElementById('quizBody');
-    const score = Math.floor(Math.random() * (95 - 35) + 35); // Simulação - substituir por lógica real
-    const categories = [
-      { min: 0, max: 40, label: 'Operação em Risco', color: '#ef4444' },
-      { min: 41, max: 60, label: 'Alerta Crítico', color: '#f97316' },
-      { min: 61, max: 75, label: 'Em Transição', color: '#eab308' },
-      { min: 76, max: 88, label: 'Estruturado', color: '#3b82f6' },
-      { min: 89, max: 100, label: 'Alta Performance', color: '#10b981' }
-    ];
-    const category = categories.find(c => score >= c.min && score <= c.max);
-    const offset = 251 - (251 * (score / 100));
-    
-    body.innerHTML = `
-      <div class="animate-in visible">
-        <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; text-align: center;">
-          ${this.data.nome.split(' ')[0]}, encontramos o problema.
-        </h3>
-        <p style="text-align: center; color: var(--text-dark-3); margin-bottom: 32px;">
-          Diagnóstico da <strong>${this.data.empresa}</strong>
-        </p>
-        
-        <div class="quiz-result-score">
-          <div class="score-circle">
-            <svg viewBox="0 0 100 100">
-              <circle class="score-bg" cx="50" cy="50" r="40"></circle>
-              <circle class="score-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: ${offset};"></circle>
-            </svg>
-            <div class="score-text">
-              <span class="score-number">${score}</span>
-              <span class="score-label">/100</span>
+function nextStep() {
+  if (currentStep === -1) { currentStep = 0; } else { currentStep++; }
+  sessionStorage.setItem('bgtech_quiz', JSON.stringify({ answers, textData, step: currentStep }));
+  renderStep();
+}
+
+function runLoading() {
+  const bar = document.getElementById('quiz-progress-fill');
+  bar.classList.remove('pulse-progress');
+  bar.style.width = '100%';
+
+  const body = document.getElementById('quiz-body');
+  const segName = QUESTIONS[0].options[answers.segmento].title;
+
+  const fatIndex = answers.faturamento;
+  let basePerda = 6500;
+  if (fatIndex === 1) basePerda = 14000;
+  if (fatIndex === 2) basePerda = 32000;
+  if (fatIndex === 3) basePerda = 65000;
+
+  const steps = [
+    { icon: 'briefcase', text: `Mapeando gargalos na área de ${segName}...` },
+    { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
+    { icon: 'dollar-sign', text: `Calculando horas perdidas e sangria financeira...`, special: true },
+    { icon: 'target', text: 'Priorizando automações com maior retorno...' },
+    { icon: 'file-check-2', text: 'Montando plano executivo...' }
+  ];
+
+  body.innerHTML = `
+    <div class="diag-loading reveal visible">
+      <div class="diag-loading-ring"></div>
+      <h2 class="q-title" style="margin-bottom: 32px;">Compilando o diagnóstico da ${textData.empresa}...</h2>
+      <div class="diag-loading-steps">
+        ${steps.map((s, i) => `
+          <div class="diag-step" id="dls-${i}">
+            <div class="diag-step-icon"><i data-lucide="${s.icon}" width="16"></i></div>
+            <div style="display:flex; flex-direction:column;">
+              <span style="color: var(--text-2);">${s.text}</span>
+              ${s.special ? `<div class="partial-number" id="flash-num" style="display:none;">⚡ Estimativa parcial: <strong>R$ ${(basePerda * 0.8).toLocaleString('pt-BR')}</strong> detectados...</div>` : ''}
             </div>
           </div>
-          <div class="score-info">
-            <h4>Maturidade Operacional</h4>
-            <div class="score-category" style="color: ${category.color};">${category.label}</div>
+        `).join('')}
+      </div>
+    </div>`;
+  lucide.createIcons();
+
+  let i = 0;
+  const tick = () => {
+    if (i > 0) {
+      document.getElementById(`dls-${i - 1}`).classList.replace('active', 'done');
+      document.getElementById(`dls-${i - 1}`).querySelector('.diag-step-icon').innerHTML = '<i data-lucide="check" width="16"></i>';
+      if (steps[i - 1].special) document.getElementById('flash-num').style.display = 'none';
+    }
+    if (i < steps.length) {
+      document.getElementById(`dls-${i}`).classList.add('active');
+      if (steps[i].special) document.getElementById('flash-num').style.display = 'block';
+      lucide.createIcons();
+      i++;
+      setTimeout(tick, 1000); 
+    } else {
+      setTimeout(showResult, 500);
+    }
+  };
+  tick();
+}
+
+// ==== SHOW RESULT OTMIZADO E ANIMADO ====
+function showResult() {
+  const body = document.getElementById('quiz-body');
+  const nome = textData.nome.split(' ')[0];
+  const empresa = textData.empresa;
+  const dorPrincipal = QUESTIONS[2].options[answers.dor].title;
+
+  const segTexts = [
+    "Sua construtora", "Seu escritório", "Sua operação", "Sua indústria", "Sua clínica", "Sua agência"
+  ];
+  let empresaTipo = segTexts[answers.segmento] || "Sua empresa";
+  
+  let mirrorText = `${empresaTipo} chegou num ponto crítico. A operação cresceu, mas os processos não. Você sente que a equipe trabalha mais, mas a empresa não cresce proporcionalmente. E o diagnóstico confirma o gargalo principal: <strong>${dorPrincipal}</strong> está travando a escala.`;
+
+  const fatIndex = answers.faturamento;
+  const matIndex = answers.maturidade;
+
+  let minLoss = 4200, maxLoss = 8500;
+  if (fatIndex === 1) { minLoss = 14500; maxLoss = 22000; }
+  if (fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
+  if (fatIndex === 3) { minLoss = 65000; maxLoss = 98000; }
+
+  const lostValueStr = `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`;
+  const workersEquiv = (maxLoss / 3500).toFixed(1);
+
+  let score = 38; 
+  if (matIndex === 1) score = 52;
+  if (matIndex === 2) score = 61;
+  if (matIndex === 3) score = 78;
+  if (matIndex === 4) score = 92;
+
+  const scoreLabels = [
+    { max: 40, label: 'Operação em Risco', color: '#ef4444' },
+    { max: 60, label: 'Alerta Crítico', color: '#f97316' },
+    { max: 75, label: 'Em Transição', color: '#eab308' },
+    { max: 88, label: 'Estruturado', color: '#3b82f6' },
+    { max: 100, label: 'Alta Performance', color: '#10b981' },
+  ];
+  const scoreCat = scoreLabels.find(s => score <= s.max);
+  const circleOffset = 251 - (251 * (score / 100));
+
+  const recupAuto = (maxLoss * 0.6 / 1000).toFixed(1);
+  const recupInteg = (maxLoss * 0.35 / 1000).toFixed(1);
+
+  body.innerHTML = `
+    <div class="reveal visible" style="animation: fadeIn 0.5s ease-out;">
+      <h2 class="q-title" style="font-size: 24px; margin-bottom: 8px;">${nome}, encontramos o problema.</h2>
+      <p class="q-desc" style="font-size: 15px;">Processamos os dados da <strong>${empresa}</strong> contra o benchmark do seu setor.</p>
+      
+      <div class="score-banner">
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="score-track" cx="50" cy="50" r="40"></circle>
+            <circle class="score-fill" id="anim-circle" cx="50" cy="50" r="40" style="stroke-dasharray: 251; stroke-dashoffset: 251;"></circle>
+          </svg>
+          <div class="score-number">
+            <span class="score-val">${score}</span>
+            <span class="score-max">/100</span>
           </div>
         </div>
-        
-        <div style="background: var(--bg-light-2); border-radius: 12px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #ef4444;">
-          <div style="font-size: 12px; color: #ef4444; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
-            Custo Invisível Estimado
-          </div>
-          <div style="font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--text-dark);">
-            R$ ${(Math.random() * 50 + 10).toFixed(1)}k <span style="font-size: 16px; color: var(--text-dark-3);">/mês</span>
-          </div>
+        <div class="score-text">
+          <span style="font-size: 13px; color: var(--text-3);">Maturidade Operacional</span>
+          <span class="score-category" style="color: ${scoreCat.color};">${scoreCat.label}</span>
         </div>
+      </div>
+
+      <div class="result-box">
+        <span class="alert-tag">Custo Invisível Estimado</span>
+        <div class="loss-value">${lostValueStr} <span style="font-size: 16px; color: var(--text-3); font-weight: 500;">/mês</span></div>
+        <p style="font-size: 14px; color: var(--text-2); margin-top: 8px;">Equivale a <strong>${workersEquiv} funcionários</strong> trabalhando o mês inteiro apenas para cobrir ineficiências e retrabalho manual.</p>
+      </div>
+
+      <div class="opportunity-highlight-card">
+        <div class="opp-highlight-label"><i data-lucide="trending-up" style="width: 16px;"></i> Oportunidade Identificada</div>
+        <div class="opp-highlight-value">R$ ${(maxLoss / 1000).toFixed(0)}k <span style="font-size: 16px; font-weight: 600; color: #064e3b;">/mês recuperáveis</span></div>
+      </div>
+
+      <div class="opps-box">
+        <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text-1); margin-bottom: 20px;">Plano de Ação Sugerido:</h3>
         
-        <div style="background: rgba(16, 185, 129, 0.08); border-radius: 12px; padding: 20px; margin-bottom: 32px; border: 1px solid rgba(16, 185, 129, 0.3);">
-          <div style="font-size: 12px; color: #065f46; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
-            Oportunidade Identificada
-          </div>
-          <div style="font-family: var(--font-display); font-size: 28px; font-weight: 800; color: #065f46;">
-            R$ ${(Math.random() * 30 + 20).toFixed(0)}k <span style="font-size: 14px;">recuperáveis</span>
-          </div>
+        <div class="opp-item">
+          <div class="opp-header"><span>1. Automação de Tarefas</span><span>R$ ${recupAuto}k</span></div>
+          <div class="opp-bar-wrap"><div class="opp-bar" id="bar-0" style="width: 0%;" data-target="85%"></div></div>
         </div>
-        
-        <button class="btn btn-primary btn-large" style="width: 100%;" onclick="window.open('https://wa.me/5543999999999?text=Olá! Fiz o diagnóstico e quero agendar uma conversa.', '_blank')">
-          Agendar Conversa Gratuita
-          <i data-lucide="arrow-right"></i>
+        <div class="opp-item">
+          <div class="opp-header"><span>2. Integração de Sistemas</span><span>R$ ${recupInteg}k</span></div>
+          <div class="opp-bar-wrap"><div class="opp-bar" id="bar-1" style="width: 0%; background: var(--cyan);" data-target="65%"></div></div>
+        </div>
+        <div class="opp-item">
+          <div class="opp-header"><span>3. Dashboards de Controle</span><span>Alto Valor</span></div>
+          <div class="opp-bar-wrap"><div class="opp-bar" id="bar-2" style="width: 0%; background: var(--text-3);" data-target="40%"></div></div>
+        </div>
+      </div>
+
+      <div class="urgency-bar">
+        <i data-lucide="clock" style="width: 16px;"></i> Restam apenas 4 agendas para novos clientes esta semana.
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 32px;">
+        <button class="btn-ghost-whatsapp js-wpp-direct" style="width: 100%;">
+          Agendar minha conversa de 20 min gratuita
+        </button>
+        <button class="btn-primary js-wpp" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px;">
+          Quero meu plano estrutural para a ${empresa}
         </button>
       </div>
-    `;
-    lucide.createIcons();
+    </div>
+  `;
+  
+  lucide.createIcons();
+
+  // ATIVA AS ANIMAÇÕES DE FORMA SEGURA E ASSÍNCRONA
+  setTimeout(() => {
+    // 1. Reflow mágico pro SVG do Score animar do zero
+    const elCirc = document.getElementById('anim-circle');
+    if (elCirc) {
+      elCirc.getBoundingClientRect(); // <--- O SEGREDO TÁ AQUI
+      elCirc.style.transition = 'stroke-dashoffset 1.5s ease-out';
+      elCirc.style.strokeDashoffset = circleOffset;
+    }
+
+    // 2. Barras de oportunidade descendo em "escadinha"
+    [0, 1, 2].forEach((i, index) => {
+      setTimeout(() => {
+        const barEl = document.getElementById(`bar-${i}`);
+        if (barEl) {
+          barEl.style.transition = 'width 1s ease-out';
+          barEl.style.width = barEl.getAttribute('data-target');
+        }
+      }, 500 + (index * 300));
+    });
+  }, 100);
+
+ // PREPARA O ENVIO PARA O SUPABASE
+  const supabasePayload = {
+    nome: textData.nome,
+    empresa: textData.empresa,
+    whatsapp: textData.whatsapp.replace(/\D/g, ''),
+    segmento: QUESTIONS[0].options[answers.segmento]?.title || '',
+    horas_perdidas: QUESTIONS[1].options[answers.horas_perdidas]?.title || '',
+    dor_principal: QUESTIONS[2].options[answers.dor]?.title || '',
+    faturamento: QUESTIONS[3].options[answers.faturamento]?.title || '',
+    maturidade: QUESTIONS[4].options[answers.maturidade]?.title || '',
+    score: score,
+    custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
+  };
+
+  // 🔥 MUDANÇA CRÍTICA: SALVA NO BANCO IMEDIATAMENTE (Sem esperar o clique)
+  // Isso garante que mesmo se o lead fechar a tela, você tem o telefone dele.
+  if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
+    fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': CONFIG.supabaseKey,
+        'Authorization': `Bearer ${CONFIG.supabaseKey}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(supabasePayload)
+    }).catch(err => console.error("Erro no DB:", err));
   }
-};
 
-// Menu Toggle
-document.getElementById('menuToggle')?.addEventListener('click', () => {
-  App.toggleMenu();
-});
+  // O botão agora apenas redireciona, porque o dado já está seguro.
+  const openWpp = () => {
+    const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero agendar a conversa de 20 min para a ${empresa}.`;
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  App.init();
-});
+  // Previne duplicação de cliques
+  const wppBtn = document.querySelector('.js-wpp');
+  const wppDirectBtn = document.querySelector('.js-wpp-direct');
 
-// Expose globally
-window.app = App;
-window.quiz = Quiz;
+  if (wppBtn && wppDirectBtn) {
+    const newWppBtn = wppBtn.cloneNode(true);
+    const newWppDirectBtn = wppDirectBtn.cloneNode(true);
+    wppBtn.parentNode.replaceChild(newWppBtn, wppBtn);
+    wppDirectBtn.parentNode.replaceChild(newWppDirectBtn, wppDirectBtn);
+
+    newWppBtn.addEventListener('click', openWpp);
+    newWppDirectBtn.addEventListener('click', openWpp);
+  }
+} // Fim do script.js
