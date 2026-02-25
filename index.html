@@ -2,48 +2,45 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#05070D">
   <title>BG Tech | Engenharia Digital para Empresas Inteligentes</title>
-  <link rel="canonical" href="https://www.bgtechsolucoes.com.br/">
   <meta name="description" content="Automatizamos o que trava sua empresa. Construímos o sistema que escala seu negócio.">
-  
-  <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="apple-touch-icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="style.css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Progress Bar -->
-  <div class="progress-bar" id="reading-progress"></div>
+
+  <!-- Progress Indicator -->
+  <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- Header -->
-  <header class="header" id="site-header">
-    <div class="header__container">
-      <a href="#" class="logo">
-        <div class="logo__mark">BG</div>
-        <div class="logo__text">
-          <span class="logo__name">BG <span class="text-gradient">TECH</span></span>
-          <span class="logo__tagline">Engenharia Digital para Empresas Inteligentes</span>
+  <header class="site-header" id="header">
+    <div class="container header-container">
+      <a href="#" class="brand">
+        <div class="brand-mark">BG</div>
+        <div class="brand-text">
+          <span class="brand-name">BG <span class="text-accent">TECH</span></span>
+          <span class="brand-tagline">Engenharia Digital</span>
         </div>
       </a>
-      
-      <nav class="nav header__nav">
-        <a href="#services" class="nav__link">Arquitetura</a>
-        <a href="#process" class="nav__link">Automação</a>
-        <a href="#cases" class="nav__link">Performance</a>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#services" class="nav-item">Arquitetura</a>
+        <a href="#process" class="nav-item">Automação</a>
+        <a href="#cases" class="nav-item">Performance</a>
       </nav>
-      
-      <button class="btn btn-secondary header-cta js-open-quiz" style="padding: 10px 20px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">
+
+      <button class="btn btn-small btn-outline header-cta" onclick="quiz.open()">
         Diagnóstico Inteligente
       </button>
-      
-      <button class="mobile-menu-toggle js-toggle-menu" aria-label="Menu">
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
         <span></span>
         <span></span>
         <span></span>
@@ -52,415 +49,385 @@
   </header>
 
   <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="#services" class="mobile-link js-close-menu">Arquitetura</a>
-    <a href="#process" class="mobile-link js-close-menu">Automação</a>
-    <a href="#cases" class="mobile-link js-close-menu">Performance</a>
-    <button class="btn btn-primary js-open-quiz js-close-menu" style="margin-top: 32px;">
-      Diagnóstico Inteligente
-    </button>
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-nav">
+      <a href="#services" class="mobile-nav-item" onclick="app.closeMenu()">Arquitetura</a>
+      <a href="#process" class="mobile-nav-item" onclick="app.closeMenu()">Automação</a>
+      <a href="#cases" class="mobile-nav-item" onclick="app.closeMenu()">Performance</a>
+      <button class="btn btn-primary" onclick="app.closeMenu(); quiz.open()" style="margin-top: 2rem;">
+        Iniciar Diagnóstico
+      </button>
+    </nav>
   </div>
 
   <!-- Hero Section -->
   <section class="hero" id="hero">
-    <div class="hero__grid"></div>
-    <div class="orb orb--1"></div>
-    <div class="orb orb--2"></div>
-    <div class="orb orb--3"></div>
-    
-    <div class="container">
-      <div class="hero__content">
-        <div class="badge badge-live reveal" style="margin-bottom: var(--space-8);">
-          <span class="pulse-ring" style="width: 8px; height: 8px; background: var(--color-emerald-400); border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-          <span class="badge-text-desktop">SISTEMAS QUE PENSAM. NEGÓCIOS QUE ESCALAM.</span>
-          <span class="badge-text-mobile">DIAGNÓSTICO B2B · 3 MINUTOS</span>
-        </div>
-
-        <h1 class="hero__title reveal" style="animation-delay: 0.1s;">
-          Automatizamos o que trava<br>
-          a sua <span class="text-gradient-animated">empresa.</span>
-        </h1>
-
-        <p class="hero__subtitle reveal" style="animation-delay: 0.2s;">
-          Em 3 minutos nossa inteligência calcula quanto você perde por mês e mostra exatamente o que estruturar para recuperar sua margem.
-        </p>
-
-        <div class="hero__actions reveal" style="animation-delay: 0.3s;">
-          <button class="btn btn-primary btn-shimmer js-open-quiz magnetic">
-            Iniciar Diagnóstico Inteligente
-            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-          </button>
-          <a href="https://wa.me/5543999999999" target="_blank" class="btn btn-secondary">
-            <i data-lucide="message-circle" style="width: 18px; height: 18px;"></i>
-            Falar pelo WhatsApp
-          </a>
-          <span class="hero-hint" style="margin-top: var(--space-4); display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: var(--text-tertiary);">
-            <i data-lucide="lock" style="width: 14px; height: 14px;"></i>
-            Análise segura. 100% Gratuito.
-          </span>
-        </div>
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow hero-glow--left"></div>
+      <div class="hero-glow hero-glow--right"></div>
+      <div class="hero-particles">
+        <span class="particle particle-1"></span>
+        <span class="particle particle-2"></span>
+        <span class="particle particle-3"></span>
       </div>
     </div>
-    
-    <div class="scroll-indicator reveal" style="animation-delay: 0.4s;">
-      <div class="mouse"></div>
-      <span style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;">Scroll</span>
+
+    <div class="container hero-content">
+      <div class="hero-badge animate-in">
+        <span class="badge-dot"></span>
+        <span class="badge-text">SISTEMAS QUE PENSAM · DIAGNÓSTICO B2B</span>
+      </div>
+
+      <h1 class="hero-title animate-in" data-delay="100">
+        Automatizamos o que trava<br>
+        a sua <span class="gradient-text">empresa.</span>
+      </h1>
+
+      <p class="hero-subtitle animate-in" data-delay="200">
+        Em 3 minutos nossa inteligência calcula quanto você perde por mês e mostra 
+        exatamente o que estruturar para recuperar sua margem.
+      </p>
+
+      <div class="hero-actions animate-in" data-delay="300">
+        <button class="btn btn-primary btn-glow" onclick="quiz.open()">
+          Iniciar Diagnóstico Inteligente
+          <i data-lucide="arrow-right" class="icon-sm"></i>
+        </button>
+        <a href="https://wa.me/5543999999999" target="_blank" class="btn btn-secondary">
+          <i data-lucide="message-circle" class="icon-sm"></i>
+          Falar pelo WhatsApp
+        </a>
+      </div>
+
+      <div class="hero-note animate-in" data-delay="400">
+        <i data-lucide="shield-check" class="icon-xs"></i>
+        <span>Análise segura. 100% Gratuito.</span>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="mouse-wheel"></div>
+      </div>
     </div>
   </section>
 
   <!-- Trust Bar -->
-  <section class="trust-bar" id="trust-bar">
+  <section class="trust-section">
     <div class="container">
-      <p class="section__eyebrow reveal" style="color: var(--text-tertiary); margin-bottom: var(--space-8);">DESDE 2022 · MAIS DE 47 EMPRESAS</p>
-      <div class="trust-grid reveal stagger-children">
-        <div class="trust-item">
-          <span class="trust-number"><span class="counter" data-target="47">0</span>+</span>
+      <p class="section-eyebrow text-center animate-on-scroll">DESDE 2022 · MAIS DE 47 EMPRESAS</p>
+      
+      <div class="trust-grid">
+        <div class="trust-item animate-on-scroll">
+          <div class="trust-value">
+            <span class="counter" data-target="47">0</span>+
+          </div>
           <div class="trust-label">Empresas</div>
-          <div class="trust-context">Operações otimizadas ativamente</div>
+          <div class="trust-desc">Operações otimizadas</div>
         </div>
-        <div class="trust-item">
-          <span class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</span>
+        
+        <div class="trust-item animate-on-scroll" data-delay="100">
+          <div class="trust-value">
+            R$ <span class="counter" data-target="4.8" data-decimals="1">0</span>M
+          </div>
           <div class="trust-label">Valor Protegido</div>
-          <div class="trust-context">Economizados nos últimos 24 meses</div>
+          <div class="trust-desc">Economizados em 24 meses</div>
         </div>
-        <div class="trust-item">
-          <span class="trust-number"><span class="counter" data-target="7">0</span> dias</span>
+        
+        <div class="trust-item animate-on-scroll" data-delay="200">
+          <div class="trust-value">
+            <span class="counter" data-target="7">0</span> dias
+          </div>
           <div class="trust-label">Go-Live</div>
-          <div class="trust-context">Para projetos de automação ágil</div>
+          <div class="trust-desc">Automação ágil</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Partners -->
-  <section class="section section--light" id="partners" style="padding: var(--space-16) 0;">
-    <div class="container" style="text-align: center;">
-      <p class="partners-label" style="font-size: 12px; font-weight: 800; color: var(--color-slate-500); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: var(--space-6);">INFRAESTRUTURA DE ALTA PERFORMANCE</p>
-      <div class="partners-row reveal stagger-children" style="display: flex; justify-content: center; gap: var(--space-8); flex-wrap: wrap;">
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="layers" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> Make.com
-        </span>
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="git-branch" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> n8n
-        </span>
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="cloud" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> Google Cloud
-        </span>
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="server" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> Microsoft Azure
-        </span>
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="zap" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> Zapier
-        </span>
-        <span class="partner-chip" style="display: flex; align-items: center; gap: var(--space-2); color: var(--color-slate-700); font-weight: 700; font-size: 15px; opacity: 0.8;">
-          <i data-lucide="bar-chart-2" style="width: 20px; height: 20px; color: var(--color-slate-400);"></i> Power BI
-        </span>
+  <section class="partners-section">
+    <div class="container">
+      <p class="partners-label animate-on-scroll">INFRAESTRUTURA DE ALTA PERFORMANCE</p>
+      <div class="partners-logos animate-on-scroll">
+        <span class="partner-logo"><i data-lucide="layers"></i> Make.com</span>
+        <span class="partner-logo"><i data-lucide="git-branch"></i> n8n</span>
+        <span class="partner-logo"><i data-lucide="cloud"></i> Google Cloud</span>
+        <span class="partner-logo"><i data-lucide="server"></i> Azure</span>
+        <span class="partner-logo"><i data-lucide="zap"></i> Zapier</span>
+        <span class="partner-logo"><i data-lucide="bar-chart-2"></i> Power BI</span>
       </div>
     </div>
   </section>
 
-  <!-- Problems Section -->
-  <section class="section section--light" id="problems">
+  <!-- Problems -->
+  <section class="problems-section" id="problems">
     <div class="container">
-      <div class="section__header">
-        <span class="section__eyebrow reveal">O GARGALO INVISÍVEL</span>
-        <h2 class="section__title reveal">Sua empresa está perdendo dinheiro. E você sabe disso.</h2>
-        <p class="section__subtitle reveal">Três problemas estruturais destroem até 40% da capacidade de lucro de operações consolidadas todos os dias.</p>
-      </div>
+      <header class="section-header animate-on-scroll">
+        <span class="section-eyebrow">O GARGALO INVISÍVEL</span>
+        <h2 class="section-title">Sua empresa está perdendo dinheiro.<br>E você sabe disso.</h2>
+        <p class="section-desc">Três problemas estruturais destroem até 40% da capacidade de lucro.</p>
+      </header>
 
-      <div class="problems-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin-top: var(--space-12);">
-        <div class="problem-card reveal delay-1">
-          <div class="problem-card__icon problem-card__icon--info">
-            <i data-lucide="clock" style="width: 28px; height: 28px;"></i>
+      <div class="cards-grid cards-grid--3">
+        <article class="problem-card animate-on-scroll" data-delay="0">
+          <div class="card-icon icon-blue">
+            <i data-lucide="clock"></i>
           </div>
-          <h3 class="problem-card__title">Equipe presa no manual</h3>
-          <p class="problem-card__text">Processos repetitivos consomem horas da equipe. Planilha preenchida à mão é dinheiro parado.</p>
-          <div class="problem-card__stat">
-            <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
-            87% das PMEs perdem +15h por semana
-          </div>
-        </div>
+          <h3 class="card-title">Equipe presa no manual</h3>
+          <p class="card-text">Processos repetitivos consomem horas da equipe. Planilha preenchida à mão é dinheiro parado.</p>
+          <div class="card-badge">87% das PMEs perdem +15h/semana</div>
+        </article>
 
-        <div class="problem-card reveal delay-2">
-          <div class="problem-card__icon problem-card__icon--danger">
-            <i data-lucide="user-minus" style="width: 28px; height: 28px;"></i>
+        <article class="problem-card animate-on-scroll" data-delay="100">
+          <div class="card-icon icon-red">
+            <i data-lucide="user-minus"></i>
           </div>
-          <h3 class="problem-card__title">Leads bons indo embora</h3>
-          <p class="problem-card__text">Enquanto sua equipe demora para responder e qualificar, o concorrente já fechou a venda.</p>
-          <div class="problem-card__stat">
-            <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
-            67% compram do 1º que atende
-          </div>
-        </div>
+          <h3 class="card-title">Leads bons indo embora</h3>
+          <p class="card-text">Enquanto sua equipe demora para responder, o concorrente já fechou a venda.</p>
+          <div class="card-badge">67% compram do 1º que atende</div>
+        </article>
 
-        <div class="problem-card reveal delay-3">
-          <div class="problem-card__icon problem-card__icon--warning">
-            <i data-lucide="cable" style="width: 28px; height: 28px;"></i>
+        <article class="problem-card animate-on-scroll" data-delay="200">
+          <div class="card-icon icon-yellow">
+            <i data-lucide="cable"></i>
           </div>
-          <h3 class="problem-card__title">Sistemas que não se falam</h3>
-          <p class="problem-card__text">Dados duplicados e decisões no achômetro. A falta de fluxo de dados custa muito caro.</p>
-          <div class="problem-card__stat">
-            <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
-            Custo operacional 23% maior
-          </div>
-        </div>
+          <h3 class="card-title">Sistemas que não se falam</h3>
+          <p class="card-text">Dados duplicados e decisões no achômetro. A falta de fluxo de dados custa caro.</p>
+          <div class="card-badge">Custo operacional 23% maior</div>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- Services Section -->
-  <section class="section section--light" id="services" style="background: var(--color-slate-100);">
+  <!-- Services -->
+  <section class="services-section" id="services">
     <div class="container">
-      <div class="section__header">
-        <span class="section__eyebrow reveal">A SOLUÇÃO</span>
-        <h2 class="section__title reveal">Nós não vendemos software. Nós vendemos escala estruturada.</h2>
-        <p class="section__subtitle reveal">Criamos a arquitetura tecnológica exata que o seu negócio precisa para ganhar performance e controle absoluto.</p>
-      </div>
+      <header class="section-header animate-on-scroll">
+        <span class="section-eyebrow">A SOLUÇÃO</span>
+        <h2 class="section-title">Não vendemos software.<br>Vendemos escala estruturada.</h2>
+        <p class="section-desc">Arquitetura tecnológica exata para ganhar performance e controle absoluto.</p>
+      </header>
 
-      <div class="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--space-6); margin-top: var(--space-12);">
-        <div class="service-card reveal delay-1" style="position: relative;">
-          <div class="service-card__popular">Mais Contratado</div>
-          <div class="service-card__header">
-            <div class="service-card__icon">
-              <i data-lucide="cpu" style="width: 24px; height: 24px;"></i>
+      <div class="cards-grid cards-grid--2">
+        <article class="service-card animate-on-scroll" data-delay="0">
+          <div class="service-badge">Mais Contratado</div>
+          <div class="service-header">
+            <div class="service-icon">
+              <i data-lucide="cpu"></i>
             </div>
-            <h3 class="service-card__title">Automação Inteligente</h3>
+            <h3 class="service-title">Automação Inteligente</h3>
           </div>
-          <p class="service-card__desc">Conectamos ferramentas e automatizamos fluxos complexos. O sistema trabalha pela sua equipe para você focar no controle da receita.</p>
-          <div class="service-anchor" style="display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: rgba(0, 168, 255, 0.08); border: 1px solid rgba(0, 168, 255, 0.2); border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: var(--color-electric-500);">
-            Projetos a partir de R$ 3.500
-          </div>
-        </div>
+          <p class="service-desc">Conectamos ferramentas e automatizamos fluxos complexos. O sistema trabalha pela sua equipe.</p>
+          <div class="service-price">Projetos a partir de R$ 3.500</div>
+        </article>
 
-        <div class="service-card reveal delay-2">
-          <div class="service-card__header">
-            <div class="service-card__icon">
-              <i data-lucide="code-2" style="width: 24px; height: 24px;"></i>
+        <article class="service-card animate-on-scroll" data-delay="100">
+          <div class="service-header">
+            <div class="service-icon">
+              <i data-lucide="code-2"></i>
             </div>
-            <h3 class="service-card__title">Engenharia de Software</h3>
+            <h3 class="service-title">Engenharia de Software</h3>
           </div>
-          <p class="service-card__desc">Sistemas que resolvem problemas reais com precisão. Código modular feito exclusivamente para blindar a sua estrutura de negócio.</p>
-          <div class="service-anchor" style="display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: rgba(0, 168, 255, 0.08); border: 1px solid rgba(0, 168, 255, 0.2); border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: var(--color-electric-500);">
-            Projetos a partir de R$ 8.000
-          </div>
-        </div>
+          <p class="service-desc">Sistemas que resolvem problemas reais com precisão. Código modular para blindar seu negócio.</p>
+          <div class="service-price">Projetos a partir de R$ 8.000</div>
+        </article>
 
-        <div class="service-card reveal delay-1">
-          <div class="service-card__header">
-            <div class="service-card__icon">
-              <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+        <article class="service-card animate-on-scroll" data-delay="200">
+          <div class="service-header">
+            <div class="service-icon">
+              <i data-lucide="shield-check"></i>
             </div>
-            <h3 class="service-card__title">Suporte TI Gerenciado</h3>
+            <h3 class="service-title">Suporte TI Gerenciado</h3>
           </div>
-          <p class="service-card__desc">Monitoramento contínuo e suporte de segurança. Focamos em manter sua operação rodando 24 horas. A estabilidade é garantida.</p>
-          <div class="service-anchor" style="display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: rgba(0, 168, 255, 0.08); border: 1px solid rgba(0, 168, 255, 0.2); border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: var(--color-electric-500);">
-            Mensalidades a partir de R$ 1.500
-          </div>
-        </div>
+          <p class="service-desc">Monitoramento contínuo e suporte de segurança. Estabilidade garantida 24/7.</p>
+          <div class="service-price">Mensalidades a partir de R$ 1.500</div>
+        </article>
 
-        <div class="service-card reveal delay-2">
-          <div class="service-card__header">
-            <div class="service-card__icon">
-              <i data-lucide="compass" style="width: 24px; height: 24px;"></i>
+        <article class="service-card animate-on-scroll" data-delay="300">
+          <div class="service-header">
+            <div class="service-icon">
+              <i data-lucide="compass"></i>
             </div>
-            <h3 class="service-card__title">Consultoria Estratégica</h3>
+            <h3 class="service-title">Consultoria Estratégica</h3>
           </div>
-          <p class="service-card__desc">Desenho do roadmap tecnológico. Sentamos com a diretoria para mapear onde investir a inteligência para crescer com segurança.</p>
-          <div class="service-anchor" style="display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: rgba(0, 168, 255, 0.08); border: 1px solid rgba(0, 168, 255, 0.2); border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: var(--color-electric-500);">
-            Sessões a partir de R$ 1.200
-          </div>
-        </div>
+          <p class="service-desc">Desenho do roadmap tecnológico. Mapeamos onde investir para crescer com segurança.</p>
+          <div class="service-price">Sessões a partir de R$ 1.200</div>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- Process Section -->
-  <section class="section section--light" id="process">
+  <!-- Process -->
+  <section class="process-section" id="process">
     <div class="container">
-      <div class="section__header">
-        <span class="section__eyebrow reveal">AUTOMAÇÃO COM ARQUITETURA</span>
-        <h2 class="section__title reveal">Do diagnóstico ao sistema operando.</h2>
-      </div>
+      <header class="section-header animate-on-scroll">
+        <span class="section-eyebrow">AUTOMAÇÃO COM ARQUITETURA</span>
+        <h2 class="section-title">Do diagnóstico ao sistema operando.</h2>
+      </header>
 
-      <div class="process reveal delay-1" style="margin: var(--space-16) 0;">
-        <div class="process__line">
-          <div class="process__line-fill" id="process-line"></div>
+      <div class="process-steps animate-on-scroll">
+        <div class="process-line">
+          <div class="process-line-fill" id="processLine"></div>
         </div>
         
-        <div class="process__steps">
-          <div class="process__step">
-            <div class="process__circle">01</div>
-            <h3 class="process__title">Diagnóstico Preciso</h3>
-            <p class="process__desc">Você mapeia sua maturidade em 3 minutos e nossa inteligência cruza seus dados operacionais na hora.</p>
-          </div>
-          
-          <div class="process__step">
-            <div class="process__circle">02</div>
-            <h3 class="process__title">Desenho do Fluxo</h3>
-            <p class="process__desc">Apresentamos a arquitetura digital exata para resolver as travas da sua empresa com alta performance.</p>
-          </div>
-          
-          <div class="process__step">
-            <div class="process__circle">03</div>
-            <h3 class="process__title">Go-Live em 7 Dias</h3>
-            <p class="process__desc">Implementamos o código e entregamos a organização invisível para você escalar.</p>
-          </div>
+        <div class="step">
+          <div class="step-number">01</div>
+          <h4 class="step-title">Diagnóstico Preciso</h4>
+          <p class="step-desc">Mapeie sua maturidade em 3 minutos e nossa IA cruza seus dados.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">02</div>
+          <h4 class="step-title">Desenho do Fluxo</h4>
+          <p class="step-desc">Apresentamos a arquitetura exata para resolver as travas da sua empresa.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">03</div>
+          <h4 class="step-title">Go-Live em 7 Dias</h4>
+          <p class="step-desc">Implementamos o código e entregamos a organização invisível.</p>
         </div>
       </div>
 
-      <div class="after-diag-box reveal delay-2" style="background: var(--color-slate-100); border: 1px solid var(--color-slate-200); border-radius: var(--radius-xl); padding: var(--space-8); max-width: 800px; margin: 0 auto;">
-        <h3 style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 800; color: var(--color-slate-900); margin-bottom: var(--space-5);">O que acontece após iniciar o Diagnóstico?</h3>
-        <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-4);">
-          <li style="display: flex; align-items: center; gap: var(--space-3); color: var(--color-slate-700);">
-            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-electric-500); flex-shrink: 0;"></i>
-            Você preenche 5 pontos da sua operação de forma confidencial.
-          </li>
-          <li style="display: flex; align-items: center; gap: var(--space-3); color: var(--color-slate-700);">
-            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-electric-500); flex-shrink: 0;"></i>
-            A análise revela o seu custo invisível imediatamente na tela.
-          </li>
-          <li style="display: flex; align-items: center; gap: var(--space-3); color: var(--color-slate-700);">
-            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-electric-500); flex-shrink: 0;"></i>
-            Um consultor entra em contato com você em até 2 horas.
-          </li>
-          <li style="display: flex; align-items: center; gap: var(--space-3); color: var(--color-emerald-600); font-weight: 700;">
-            <i data-lucide="check-circle" style="width: 20px; height: 20px; color: var(--color-emerald-500); flex-shrink: 0;"></i>
-            Decidimos juntos o próximo passo. Sem pressão comercial.
-          </li>
+      <div class="info-box animate-on-scroll">
+        <h4>O que acontece após iniciar o Diagnóstico?</h4>
+        <ul class="checklist">
+          <li><i data-lucide="check"></i> Você preenche 5 pontos da sua operação</li>
+          <li><i data-lucide="check"></i> Análise revela custo invisível imediatamente</li>
+          <li><i data-lucide="check"></i> Consultor entra em contato em até 2 horas</li>
+          <li class="highlight"><i data-lucide="check-circle"></i> Decidimos juntos o próximo passo</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Guarantee Section -->
-  <section class="section" id="guarantee" style="background: var(--bg-primary);">
+  <!-- Guarantee -->
+  <section class="guarantee-section" id="guarantee">
     <div class="container">
-      <div class="section__header">
-        <h2 class="section__title reveal" style="color: var(--text-primary); font-size: clamp(36px, 5vw, 56px);">O controle é seu. O risco é nosso.</h2>
-      </div>
-      
-      <div class="guarantee-grid reveal delay-1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); margin-top: var(--space-12);">
-        <div class="guarantee-card" style="background: rgba(230, 242, 255, 0.03); border: 1px solid rgba(0, 168, 255, 0.25); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
-          <i data-lucide="file-check-2" style="width: 32px; height: 32px; color: var(--color-electric-400); margin-bottom: var(--space-5);"></i>
-          <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">Diagnóstico 100% Gratuito</h4>
-          <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6;">Sem nenhum compromisso financeiro. Você só decide avançar após validar a arquitetura que desenhamos.</p>
+      <header class="section-header animate-on-scroll">
+        <h2 class="section-title text-white">O controle é seu.<br>O risco é nosso.</h2>
+      </header>
+
+      <div class="cards-grid cards-grid--3">
+        <div class="guarantee-card animate-on-scroll" data-delay="0">
+          <i data-lucide="file-check-2" class="guarantee-icon"></i>
+          <h4>Diagnóstico 100% Gratuito</h4>
+          <p>Sem compromisso financeiro. Você só decide avançar após validar a arquitetura.</p>
         </div>
-        
-        <div class="guarantee-card" style="background: rgba(230, 242, 255, 0.03); border: 1px solid rgba(0, 168, 255, 0.25); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
-          <i data-lucide="shield" style="width: 32px; height: 32px; color: var(--color-electric-400); margin-bottom: var(--space-5);"></i>
-          <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">90 Dias de Suporte Inclusos</h4>
-          <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6;">A proteção da sua operação. Todo projeto entregue conta com 3 meses de garantia total de estabilidade e funcionamento.</p>
+
+        <div class="guarantee-card animate-on-scroll" data-delay="100">
+          <i data-lucide="shield" class="guarantee-icon"></i>
+          <h4>90 Dias de Suporte</h4>
+          <p>Todo projeto conta com 3 meses de garantia total de estabilidade.</p>
         </div>
-        
-        <div class="guarantee-card" style="background: rgba(230, 242, 255, 0.03); border: 1px solid rgba(0, 168, 255, 0.25); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
-          <i data-lucide="calendar-check" style="width: 32px; height: 32px; color: var(--color-electric-400); margin-bottom: var(--space-5);"></i>
-          <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">Entrega Garantida</h4>
-          <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6;">Precisão de prazo é o nosso lema. Se não entregarmos no escopo acordado, você não paga a fatura final do projeto.</p>
+
+        <div class="guarantee-card animate-on-scroll" data-delay="200">
+          <i data-lucide="calendar-check" class="guarantee-icon"></i>
+          <h4>Entrega Garantida</h4>
+          <p>Se não entregarmos no escopo acordado, você não paga a fatura final.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Cases Section -->
-  <section class="section section--light" id="cases" style="background: var(--color-slate-100);">
+  <!-- Cases -->
+  <section class="cases-section" id="cases">
     <div class="container">
-      <div class="section__header">
-        <span class="section__eyebrow reveal">PERFORMANCE COMPROVADA</span>
-        <h2 class="section__title reveal">Não acredite em nós. Acredite nos resultados.</h2>
-      </div>
+      <header class="section-header animate-on-scroll">
+        <span class="section-eyebrow">PERFORMANCE COMPROVADA</span>
+        <h2 class="section-title">Não acredite em nós.<br>Acredite nos resultados.</h2>
+      </header>
 
-      <div class="cases-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: var(--space-6); margin-top: var(--space-12);">
-        <div class="case-card reveal delay-1" style="background: white; border: 1px solid var(--color-slate-200); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow-sm);">
-          <div class="case-header" style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--color-slate-200);">
-            <img src="https://ui-avatars.com/api/?name=Log+Max&background=0A1F44&color=00A8FF&rounded=true&font-size=0.4" alt="Logo LogMax" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,168,255,0.2);">
+      <div class="cards-grid cards-grid--2">
+        <article class="case-card animate-on-scroll" data-delay="0">
+          <div class="case-header">
+            <img src="https://ui-avatars.com/api/?name=Log+Max&background=0A1F44&color=00A8FF&rounded=true" alt="LogMax" class="case-avatar">
             <div>
-              <strong style="display: block; color: var(--color-slate-900); font-size: 16px; font-weight: 800;">Distribuidora LogMax</strong>
-              <span style="color: var(--color-slate-500); font-size: 13px;">Comércio e Varejo</span>
+              <h4 class="case-company">Distribuidora LogMax</h4>
+              <span class="case-industry">Comércio e Varejo</span>
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-            <div style="font-size: 14px; color: var(--color-slate-700); line-height: 1.6;">
-              <strong style="color: var(--color-slate-900);">O Problema:</strong> O fechamento de comissão levava 3 dias e ocorria de forma 100% manual com planilhas densas.
-            </div>
-            <div style="font-size: 14px; color: var(--color-slate-700); line-height: 1.6;">
-              <strong style="color: var(--color-slate-900);">A Solução:</strong> Engenharia de integração automatizada entre o ERP da empresa e o sistema bancário.
-            </div>
-            <div style="background: rgba(16, 185, 129, 0.08); padding: var(--space-4); border-radius: var(--radius-lg); border-left: 4px solid var(--color-emerald-500); color: #065f46; font-weight: 600; font-size: 14px; line-height: 1.6;">
-              <strong style="color: #064e3b;">O Resultado:</strong> O processo roda de forma silenciosa em 15 minutos. Lucro devolvido e ROI no primeiro mês.
+          <div class="case-content">
+            <p><strong>Problema:</strong> Fechamento de comissão levava 3 dias manualmente.</p>
+            <p><strong>Solução:</strong> Integração automatizada entre ERP e sistema bancário.</p>
+            <div class="case-result">
+              <strong>Resultado:</strong> Processo rodando em 15 minutos. ROI no primeiro mês.
             </div>
           </div>
-        </div>
+        </article>
 
-        <div class="case-card reveal delay-2" style="background: white; border: 1px solid var(--color-slate-200); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow-sm);">
-          <div class="case-header" style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--color-slate-200);">
-            <img src="https://ui-avatars.com/api/?name=Clinica+Vitality&background=0A1F44&color=00A8FF&rounded=true&font-size=0.4" alt="Logo Vitality" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,168,255,0.2);">
+        <article class="case-card animate-on-scroll" data-delay="100">
+          <div class="case-header">
+            <img src="https://ui-avatars.com/api/?name=Vitality&background=0A1F44&color=00A8FF&rounded=true" alt="Vitality" class="case-avatar">
             <div>
-              <strong style="display: block; color: var(--color-slate-900); font-size: 16px; font-weight: 800;">Clínica Vitality</strong>
-              <span style="color: var(--color-slate-500); font-size: 13px;">Saúde e Bem-estar</span>
+              <h4 class="case-company">Clínica Vitality</h4>
+              <span class="case-industry">Saúde e Bem-estar</span>
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-            <div style="font-size: 14px; color: var(--color-slate-700); line-height: 1.6;">
-              <strong style="color: var(--color-slate-900);">O Problema:</strong> Falta de fluxo de dados no atendimento. Os leads de alto valor que chegavam esfriavam rapidamente.
-            </div>
-            <div style="font-size: 14px; color: var(--color-slate-700); line-height: 1.6;">
-              <strong style="color: var(--color-slate-900);">A Solução:</strong> Roteamento inteligente de leads e integração direta e segura com a agenda médica.
-            </div>
-            <div style="background: rgba(16, 185, 129, 0.08); padding: var(--space-4); border-radius: var(--radius-lg); border-left: 4px solid var(--color-emerald-500); color: #065f46; font-weight: 600; font-size: 14px; line-height: 1.6;">
-              <strong style="color: #064e3b;">O Resultado:</strong> A taxa de conversão da clínica saltou 34% em apenas 45 dias de operação estruturada.
+          <div class="case-content">
+            <p><strong>Problema:</strong> Leads esfriavam por falta de fluxo de dados.</p>
+            <p><strong>Solução:</strong> Roteamento inteligente integrado à agenda médica.</p>
+            <div class="case-result">
+              <strong>Resultado:</strong> Taxa de conversão saltou 34% em 45 dias.
             </div>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- Founders Section -->
-  <section class="section section--light" id="founders">
+  <!-- Founders -->
+  <section class="founders-section" id="founders">
     <div class="container">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start;">
-        <div class="reveal">
-          <span class="section__eyebrow" style="text-align: left;">A LIDERANÇA</span>
-          <h2 class="section__title" style="text-align: left; margin-bottom: var(--space-6);">Engenharia com visão de negócios.</h2>
-          <p class="section__subtitle" style="text-align: left; margin-left: 0; margin-bottom: var(--space-8);">Entendemos perfeitamente que você não quer comprar código. Você quer controle absoluto e redução de dor de cabeça. A BG Tech nasceu para ser o parceiro tecnológico da sua empresa.</p>
+      <div class="founders-layout">
+        <div class="founders-content animate-on-scroll">
+          <span class="section-eyebrow">A LIDERANÇA</span>
+          <h2 class="section-title">Engenharia com<br>visão de negócios.</h2>
+          <p class="section-desc">Entendemos que você não quer comprar código. Quer controle absoluto e redução de dor de cabeça.</p>
           
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-4);">
-            <li style="display: flex; align-items: flex-start; gap: var(--space-3); color: var(--color-slate-700); font-size: 15px; line-height: 1.6;">
-              <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: var(--color-electric-500); flex-shrink: 0; margin-top: 2px;"></i>
-              <div><strong style="color: var(--color-slate-900);">Orientação a Performance.</strong> A tecnologia é a estrutura, a eficiência é a meta.</div>
+          <ul class="feature-list">
+            <li>
+              <i data-lucide="check-circle-2"></i>
+              <div>
+                <strong>Orientação a Performance.</strong> A tecnologia é a estrutura, a eficiência é a meta.
+              </div>
             </li>
-            <li style="display: flex; align-items: flex-start; gap: var(--space-3); color: var(--color-slate-700); font-size: 15px; line-height: 1.6;">
-              <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: var(--color-electric-500); flex-shrink: 0; margin-top: 2px;"></i>
-              <div><strong style="color: var(--color-slate-900);">Sem Jargões.</strong> Comunicação limpa e transparente de dono para dono.</div>
+            <li>
+              <i data-lucide="check-circle-2"></i>
+              <div>
+                <strong>Sem Jargões.</strong> Comunicação limpa e transparente de dono para dono.
+              </div>
             </li>
           </ul>
         </div>
 
-        <div class="stagger-children">
-          <div class="founder-card reveal" style="background: white; border: 1px solid var(--color-slate-200); padding: var(--space-5); border-radius: var(--radius-xl); display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); box-shadow: var(--shadow-sm);">
-            <img src="daniel.png" alt="Daniel Pego" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,168,255,0.2); flex-shrink: 0;">
-            <div>
-              <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--color-slate-900); margin-bottom: 2px;">Daniel Pego</h4>
-              <span style="color: var(--color-electric-600); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: var(--space-2);">Head de Estratégia B2B</span>
-              <p style="font-size: 13px; color: var(--color-slate-600); line-height: 1.5;">Sua missão é entender a fundo a dor do empresário e desenhar o caminho exato de como a tecnologia vai devolver o lucro e a paz para a operação.</p>
+        <div class="founders-grid">
+          <div class="founder-card animate-on-scroll" data-delay="0">
+            <img src="daniel.png" alt="Daniel Pego" class="founder-photo" onerror="this.src='https://ui-avatars.com/api/?name=Daniel+Pego&background=00A8FF&color=fff'">
+            <div class="founder-info">
+              <h4>Daniel Pego</h4>
+              <span>Head de Estratégia B2B</span>
+              <p>Desenha o caminho exato de como a tecnologia devolve o lucro e a paz para a operação.</p>
             </div>
           </div>
 
-          <div class="founder-card reveal" style="background: white; border: 1px solid var(--color-slate-200); padding: var(--space-5); border-radius: var(--radius-xl); display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); box-shadow: var(--shadow-sm);">
-            <img src="gu.png" alt="Gustavo Batista" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,168,255,0.2); flex-shrink: 0;">
-            <div>
-              <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--color-slate-900); margin-bottom: 2px;">Gustavo Batista</h4>
-              <span style="color: var(--color-electric-600); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: var(--space-2);">Head de Inovação & IA</span>
-              <p style="font-size: 13px; color: var(--color-slate-600); line-height: 1.5;">Especialista em transformar gargalos complexos em soluções digitais simples. Focado em criar inteligências que a sua equipe realmente goste de usar no dia a dia.</p>
+          <div class="founder-card animate-on-scroll" data-delay="100">
+            <img src="gu.png" alt="Gustavo Batista" class="founder-photo" onerror="this.src='https://ui-avatars.com/api/?name=Gustavo+Batista&background=00A8FF&color=fff'">
+            <div class="founder-info">
+              <h4>Gustavo Batista</h4>
+              <span>Head de Inovação & IA</span>
+              <p>Especialista em transformar gargalos complexos em soluções digitais simples.</p>
             </div>
           </div>
 
-          <div class="founder-card reveal" style="background: white; border: 1px solid var(--color-slate-200); padding: var(--space-5); border-radius: var(--radius-xl); display: flex; align-items: center; gap: var(--space-4); box-shadow: var(--shadow-sm);">
-            <img src="bryan.png" alt="Bryan Gradi" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,168,255,0.2); flex-shrink: 0;">
-            <div>
-              <h4 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--color-slate-900); margin-bottom: 2px;">Bryan Gradi</h4>
-              <span style="color: var(--color-electric-600); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: var(--space-2);">Head de Engenharia de Software</span>
-              <p style="font-size: 13px; color: var(--color-slate-600); line-height: 1.5;">O arquiteto dos bastidores. Constrói a infraestrutura, o código e as integrações que garantem que sua empresa rode de forma 100% automática, segura e sem quedas.</p>
+          <div class="founder-card animate-on-scroll" data-delay="200">
+            <img src="bryan.png" alt="Bryan Gradi" class="founder-photo" onerror="this.src='https://ui-avatars.com/api/?name=Bryan+Gradi&background=00A8FF&color=fff'">
+            <div class="founder-info">
+              <h4>Bryan Gradi</h4>
+              <span>Head de Engenharia</span>
+              <p>Arquiteto dos bastidores. Garante que sua empresa rode 100% automática.</p>
             </div>
           </div>
         </div>
@@ -468,96 +435,89 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="section" id="cta-final" style="background: var(--bg-primary); padding: var(--space-24) 0;">
+  <!-- CTA Final -->
+  <section class="cta-section">
     <div class="container">
-      <div class="cta-section reveal">
-        <div class="cta-content">
-          <h2 class="cta-title" style="color: var(--text-primary); margin-bottom: var(--space-4);">Pronto para estancar as perdas?</h2>
-          <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: var(--space-8); max-width: 600px; margin-left: auto; margin-right: auto;">
-            O diagnóstico leva apenas 3 minutos. O resultado gerado pode salvar milhares de reais da sua margem este mês.
-          </p>
-          <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap;">
-            <button class="btn btn-primary btn-shimmer js-open-quiz" style="padding: var(--space-4) var(--space-8); font-size: 16px;">
-              Iniciar Diagnóstico Inteligente
-              <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
-            </button>
-            <a href="https://wa.me/5543999999999" target="_blank" class="btn btn-secondary" style="padding: var(--space-4) var(--space-8); font-size: 16px;">
-              <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i>
-              Falar pelo WhatsApp
-            </a>
-          </div>
+      <div class="cta-box animate-on-scroll">
+        <h2 class="cta-title">Pronto para estancar as perdas?</h2>
+        <p class="cta-text">O diagnóstico leva apenas 3 minutos. O resultado pode salvar milhares da sua margem este mês.</p>
+        <div class="cta-actions">
+          <button class="btn btn-primary btn-large" onclick="quiz.open()">
+            Iniciar Diagnóstico Inteligente
+            <i data-lucide="arrow-right"></i>
+          </button>
+          <a href="https://wa.me/5543999999999" target="_blank" class="btn btn-secondary btn-large">
+            <i data-lucide="message-circle"></i>
+            Falar pelo WhatsApp
+          </a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(0,168,255,0.4) 50%, transparent 100%); width: 100%; opacity: 0.6;"></div>
-  
-  <footer style="background: var(--bg-primary); padding: var(--space-16) 0 var(--space-6);">
+  <footer class="site-footer">
     <div class="container">
-      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-10); margin-bottom: var(--space-10);">
-        <div>
-          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-            <div class="logo__mark" style="width: 36px; height: 36px; font-size: 16px;">BG</div>
-            <span style="font-family: var(--font-display); font-size: 24px; font-weight: 800; color: white;">BG <span class="text-gradient">TECH</span></span>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand">
+            <div class="brand-mark">BG</div>
+            <span class="brand-name">BG <span class="text-accent">TECH</span></span>
           </div>
-          <p style="color: var(--text-tertiary); line-height: 1.6; font-size: 14px; margin-bottom: var(--space-3);">Engenharia Digital para Empresas Inteligentes.</p>
-          <p style="font-size: 13px; color: rgba(230, 242, 255, 0.3);">CNPJ: 54.551.488/0001-20</p>
-        </div>
-        
-        <div>
-          <h4 style="color: white; font-family: var(--font-display); font-size: 16px; font-weight: 800; margin-bottom: var(--space-5);">Empresa</h4>
-          <nav style="display: flex; flex-direction: column; gap: var(--space-3);">
-            <a href="#services" style="color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">Arquitetura</a>
-            <a href="#process" style="color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">A Jornada</a>
-            <a href="#cases" style="color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">Casos de Sucesso</a>
-            <a href="#founders" style="color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">A Liderança</a>
-          </nav>
+          <p>Engenharia Digital para Empresas Inteligentes.</p>
+          <span class="footer-cnpj">CNPJ: 54.551.488/0001-20</span>
         </div>
 
-        <div>
-          <h4 style="color: white; font-family: var(--font-display); font-size: 16px; font-weight: 800; margin-bottom: var(--space-5);">Contato</h4>
-          <nav style="display: flex; flex-direction: column; gap: var(--space-3);">
-            <a href="https://wa.me/5543999999999" target="_blank" style="display: flex; align-items: center; gap: var(--space-2); color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">
-              <i data-lucide="phone" style="width: 16px; height: 16px;"></i> WhatsApp Comercial
-            </a>
-            <a href="mailto:contato@bgtechsolucoes.com.br" style="display: flex; align-items: center; gap: var(--space-2); color: var(--text-tertiary); font-size: 14px; transition: color 0.2s; text-decoration: none;">
-              <i data-lucide="mail" style="width: 16px; height: 16px;"></i> contato@bgtechsolucoes.com.br
-            </a>
-          </nav>
+        <div class="footer-links">
+          <h5>Empresa</h5>
+          <a href="#services">Arquitetura</a>
+          <a href="#process">A Jornada</a>
+          <a href="#cases">Casos de Sucesso</a>
+          <a href="#founders">A Liderança</a>
+        </div>
+
+        <div class="footer-links">
+          <h5>Contato</h5>
+          <a href="https://wa.me/5543999999999" target="_blank">
+            <i data-lucide="phone" class="icon-xs"></i> WhatsApp
+          </a>
+          <a href="mailto:contato@bgtechsolucoes.com.br">
+            <i data-lucide="mail" class="icon-xs"></i> Email
+          </a>
         </div>
       </div>
       
-      <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-6); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); font-size: 13px; color: var(--text-tertiary);">
-        <span>© 2026 BG Tecnologia e Automação LTDA. Todos os direitos reservados.</span>
-        <div style="display: flex; gap: var(--space-3); align-items: center;">
-          <a href="/privacidade.html" style="text-decoration: underline; color: inherit; transition: 0.2s;">Privacidade de Dados</a>
-          <span style="opacity: 0.5;">·</span>
-          <a href="/termos.html" style="text-decoration: underline; color: inherit; transition: 0.2s;">Termos de Uso</a>
+      <div class="footer-bottom">
+        <span>© 2026 BG Tecnologia e Automação LTDA.</span>
+        <div>
+          <a href="/privacidade.html">Privacidade</a>
+          <span>·</span>
+          <a href="/termos.html">Termos</a>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- Quiz Modal -->
-  <div class="modal-overlay" id="quiz-overlay">
-    <div class="modal">
-      <div class="modal__header">
-        <div style="display: flex; align-items: center; gap: var(--space-2);">
-          <div class="logo__mark" style="width: 32px; height: 32px; font-size: 14px;">BG</div>
-          <span style="font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--color-slate-900);">BG <span style="color: var(--color-electric-500);">TECH</span></span>
+  <div class="quiz-modal" id="quizModal">
+    <div class="quiz-backdrop" onclick="quiz.close()"></div>
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <div class="brand">
+          <div class="brand-mark small">BG</div>
+          <span class="brand-name small">BG <span class="text-accent">TECH</span></span>
         </div>
-        <button class="quiz-close js-close-quiz" style="background: none; border: none; cursor: pointer; padding: var(--space-2); border-radius: var(--radius-md); transition: background 0.2s;">
-          <i data-lucide="x" style="width: 24px; height: 24px; color: var(--color-slate-500);"></i>
+        <button class="quiz-close" onclick="quiz.close()">
+          <i data-lucide="x"></i>
         </button>
       </div>
-      <div class="modal__progress">
-        <div class="modal__progress-bar" id="quiz-progress-fill"></div>
+      
+      <div class="quiz-progress">
+        <div class="quiz-progress-bar" id="quizProgress"></div>
       </div>
-      <div class="modal__body" id="quiz-body">
-        <!-- Quiz content will be injected here -->
+      
+      <div class="quiz-body" id="quizBody">
+        <!-- Quiz content injected here -->
       </div>
     </div>
   </div>
