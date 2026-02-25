@@ -10,20 +10,19 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
   
-  <link rel="stylesheet" href="style.css">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
+  <link rel="stylesheet" href="style.css">
+  
+  </head>
 <body>
   <div class="reading-progress" id="reading-progress"></div>
 
   <header id="site-header">
-    <a href="#" class="logo-mark">
-      <img src="logo-bgtech.png" alt="Logo BG Tech" class="brand-logo" onerror="this.style.display='none'">
+    <a href="#" class="logo-mark" aria-label="Ir para o início">
+      <img src="logo-bgtech.png" alt="Logo BG Tech" class="brand-logo" width="40" height="40" onerror="this.style.display='none'">
       <div class="logo-text">
         <span class="logo-name">BG <span class="text-electric">TECH</span></span>
         <span class="logo-tagline">Engenharia Digital para Empresas Inteligentes</span>
@@ -35,7 +34,8 @@
       <a href="#cases" class="nav-link">Performance</a>
     </nav>
     <button class="header-cta js-open-quiz">Diagnóstico Inteligente</button>
-    <button class="hamburger js-toggle-menu">
+    
+    <button class="hamburger js-toggle-menu" aria-label="Abrir menu de navegação">
       <span></span><span></span><span></span>
     </button>
   </header>
@@ -78,7 +78,7 @@
           <button class="btn-primary btn-shimmer js-open-quiz">
             Iniciar Diagnóstico Inteligente <i data-lucide="arrow-right" style="width: 18px;"></i>
           </button>
-          <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white">
+          <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white" rel="noopener noreferrer">
             <i data-lucide="message-circle" style="width: 18px;"></i> Falar pelo WhatsApp
           </a>
         </div>
@@ -296,7 +296,7 @@
       <div class="cases-grid">
         <div class="case-card reveal delay-1">
           <div class="case-header">
-            <img src="logo max logo.png" alt="Logo LogMax" class="author-img" style="object-fit: cover; border-radius: 50%;">
+            <img src="logo max logo.png" alt="Logo LogMax" class="author-img" loading="lazy" width="60" height="60" style="object-fit: cover; border-radius: 50%;">
             <div>
               <strong>Distribuidora LogMax</strong>
               <span>Comércio e Varejo</span>
@@ -311,7 +311,7 @@
         
         <div class="case-card reveal delay-2">
           <div class="case-header">
-            <img src="clinica vitaltily logo.png" alt="Logo Vitality" class="author-img" style="object-fit: cover; border-radius: 50%;">
+            <img src="clinica vitaltily logo.png" alt="Logo Vitality" class="author-img" loading="lazy" width="60" height="60" style="object-fit: cover; border-radius: 50%;">
             <div>
               <strong>Clínica Vitality</strong>
               <span>Saúde e Bem-estar</span>
@@ -349,7 +349,7 @@
 
         <div class="founders-cards">
           <div class="founder-card reveal delay-1">
-            <img src="daniel.png" alt="Daniel Pego" class="founder-photo" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
+            <img src="daniel.png" alt="Daniel Pego" class="founder-photo" loading="lazy" width="90" height="90" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
             <div class="founder-info">
               <h4 class="founder-name">Daniel Pego</h4>
               <span class="founder-role">Head de Estratégia B2B</span>
@@ -358,7 +358,7 @@
           </div>
           
           <div class="founder-card reveal delay-2">
-            <img src="gu.png" alt="Gustavo Batista" class="founder-photo" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
+            <img src="gu.png" alt="Gustavo Batista" class="founder-photo" loading="lazy" width="90" height="90" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
             <div class="founder-info">
               <h4 class="founder-name">Gustavo Batista</h4>
               <span class="founder-role">Head de Inovação & IA</span>
@@ -367,7 +367,7 @@
           </div>
 
           <div class="founder-card reveal delay-3">
-            <img src="bryan.png" alt="Bryan Gradi" class="founder-photo" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
+            <img src="bryan.png" alt="Bryan Gradi" class="founder-photo" loading="lazy" width="90" height="90" style="object-fit: cover; object-position: top; border-radius: 50%; aspect-ratio: 1/1;">
             <div class="founder-info">
               <h4 class="founder-name">Bryan Gradi</h4>
               <span class="founder-role">Head de Engenharia de Software</span>
@@ -391,7 +391,7 @@
           <button class="btn-primary btn-large btn-shimmer js-open-quiz">
             Iniciar Diagnóstico Inteligente <i data-lucide="arrow-right"></i>
           </button>
-          <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white btn-large">
+          <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white btn-large" rel="noopener noreferrer">
             <i data-lucide="message-circle"></i> Falar pelo WhatsApp
           </a>
         </div>
@@ -406,7 +406,7 @@
       
       <div class="footer-brand">
         <div class="mobile-hide-logo" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <img src="logo-bgtech.png" alt="Logo BG Tech" class="brand-logo" style="height: 36px;" onerror="this.style.display='none'">
+          <img src="logo-bgtech.png" alt="Logo BG Tech" class="brand-logo" width="36" height="36" style="height: 36px; width: 36px; object-fit: contain;" onerror="this.style.display='none'">
           <span class="logo-name" style="font-size: 24px; color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">BG <span style="color: #00A8FF;">TECH</span></span>
         </div>
         <p style="color: rgba(230, 242, 255, 0.55); line-height: 1.6; font-size: 14px;">Engenharia Digital para Empresas Inteligentes.</p>
@@ -424,7 +424,7 @@
       <div class="footer-links">
         <h4 style="color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 20px;">Contato</h4>
         
-        <a href="https://wa.me/5543999999999" target="_blank" style="display: flex; align-items: center; gap: 8px; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">
+        <a href="https://wa.me/5543999999999" target="_blank" style="display: flex; align-items: center; gap: 8px; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;" rel="noopener noreferrer">
           <i data-lucide="phone" style="width: 16px;"></i> WhatsApp Comercial
         </a>
         
@@ -450,16 +450,17 @@
     <div class="quiz-container">
       <div class="quiz-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <img src="logo-bgtech.png" alt="Logo" class="brand-logo" style="height: 36px;" onerror="this.style.display='none'">
+          <img src="logo-bgtech.png" alt="Logo" class="brand-logo" width="36" height="36" style="height: 36px; width: 36px; object-fit: contain;" onerror="this.style.display='none'">
           <span class="logo-name" style="font-size: 22px; color: #0A1F44; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">BG <span style="color: #00A8FF;">TECH</span></span>
         </div>
-        <button class="quiz-close js-close-quiz"><i data-lucide="x"></i></button>
+        <button class="quiz-close js-close-quiz" aria-label="Fechar diagnóstico"><i data-lucide="x"></i></button>
       </div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
       <div class="quiz-body" id="quiz-body"></div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
