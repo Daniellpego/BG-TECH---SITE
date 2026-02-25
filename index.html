@@ -49,9 +49,21 @@
   </div>
 
   <section id="hero" class="dark-section apple-hero">
+    <div class="grid-overlay"></div>
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
+    
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    
     <div class="hero-content">
       <div class="hero-badge reveal">
-        <span class="badge-text-desktop">Sistemas que pensam. Negócios que escalam.</span>
+        <span class="pulse-dot"></span>
+        <span class="badge-text-desktop" style="margin-left: 8px;">Sistemas que pensam. Negócios que escalam.</span>
+        <span class="badge-text-mobile" style="margin-left: 8px;">DIAGNÓSTICO B2B · 3 MINUTOS</span>
       </div>
 
       <h1 class="hero-title reveal delay-1">
@@ -64,33 +76,54 @@
 
       <div class="hero-actions reveal delay-3">
         <div class="btn-group">
-          <button class="btn-primary btn-pill js-open-quiz">
+          <button class="btn-primary btn-pill js-open-quiz btn-shimmer">
             Iniciar Diagnóstico Inteligente <i data-lucide="arrow-right" style="width: 18px;"></i>
           </button>
           <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white btn-pill">
             <i data-lucide="message-circle" style="width: 18px;"></i> Falar pelo WhatsApp
           </a>
         </div>
+        <span class="hero-hint" style="margin-top: 24px;"><i data-lucide="lock" style="width: 14px;"></i> Análise segura. 100% Gratuito.</span>
       </div>
+    </div>
+    
+    <div class="scroll-indicator reveal delay-3">
+      <div class="mouse"></div>
     </div>
   </section>
 
   <section id="trust-bar" class="trust-fade">
     <div class="section-inner">
+      <p class="trust-anchor reveal">DESDE 2022 · MAIS DE 47 EMPRESAS</p>
       <div class="trust-bar-grid reveal delay-1">
         <div class="trust-item">
           <div class="trust-number"><span class="counter" data-target="47">0</span>+</div>
-          <div class="trust-label">Empresas otimizadas</div>
+          <div class="trust-label">Empresas</div>
+          <div class="trust-context">Operações otimizadas</div>
         </div>
         <div class="trust-item">
           <div class="trust-number">R$ <span class="counter" data-target="4.8">0</span>M</div>
           <div class="trust-label">Valor Protegido</div>
+          <div class="trust-context">Economizados ativamente</div>
         </div>
         <div class="trust-item">
           <div class="trust-number"><span class="counter" data-target="7">0</span> dias</div>
-          <div class="trust-label">Go-Live médio</div>
+          <div class="trust-label">Go-Live</div>
+          <div class="trust-context">Implementação ágil</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="partners" class="dark-section" style="padding-bottom: 64px; text-align: center;">
+    <p class="eyebrow reveal">INFRAESTRUTURA DE ALTA PERFORMANCE</p>
+    <div class="partners-row reveal delay-1">
+      <span class="partner-chip"><i data-lucide="layers"></i> Make.com</span>
+      <span class="partner-chip"><i data-lucide="git-branch"></i> n8n</span>
+      <span class="partner-chip"><i data-lucide="cloud"></i> Google Cloud</span>
+      <span class="partner-chip"><i data-lucide="server"></i> Microsoft Azure</span>
+      <span class="partner-chip"><i data-lucide="zap"></i> Zapier</span>
+      <span class="partner-chip"><i data-lucide="bar-chart-2"></i> Power BI</span>
     </div>
   </section>
 
@@ -106,19 +139,19 @@
           <div class="problem-icon icon-blue-bg"><i data-lucide="clock"></i></div>
           <h3 class="bento-title">Equipe presa no manual.</h3>
           <p class="bento-desc">Processos repetitivos consomem horas da equipe. Planilha preenchida à mão é dinheiro parado.</p>
-          <div class="bento-stat">87% das PMEs perdem +15h por semana</div>
+          <div class="bento-stat" style="margin-top:24px;">87% das PMEs perdem +15h por semana</div>
         </div>
 
         <div class="bento-card reveal delay-2">
           <div class="problem-icon icon-red-bg"><i data-lucide="user-minus"></i></div>
           <h3 class="bento-title">Leads bons indo embora.</h3>
-          <p class="bento-desc">Enquanto sua equipe demora para responder, o concorrente já fechou.</p>
+          <p class="bento-desc">Enquanto sua equipe demora para responder, o concorrente já fechou a venda.</p>
         </div>
 
         <div class="bento-card reveal delay-3">
           <div class="problem-icon icon-yellow-bg"><i data-lucide="cable"></i></div>
           <h3 class="bento-title">Sistemas mudos.</h3>
-          <p class="bento-desc">Dados duplicados e decisões no achômetro. Falta de fluxo de dados custa caro.</p>
+          <p class="bento-desc">Dados duplicados e decisões no achômetro. A falta de fluxo de dados custa muito caro.</p>
         </div>
       </div>
     </div>
@@ -142,7 +175,135 @@
         <div class="bento-card dark-card reveal delay-2">
           <div class="service-icon"><i data-lucide="code-2"></i></div>
           <h3 class="bento-title">Engenharia de Software.</h3>
-          <p class="bento-desc">Sistemas que resolvem problemas reais com precisão militar.</p>
+          <p class="bento-desc">Sistemas que resolvem problemas reais com precisão militar. Código modular para blindar o negócio.</p>
+        </div>
+
+        <div class="bento-card dark-card reveal delay-1">
+          <div class="service-icon"><i data-lucide="shield-check"></i></div>
+          <h3 class="bento-title">Suporte TI Gerenciado.</h3>
+          <p class="bento-desc">Monitoramento contínuo e suporte de segurança para manter sua operação 24 horas.</p>
+        </div>
+
+        <div class="bento-card dark-card reveal delay-2">
+          <div class="service-icon"><i data-lucide="compass"></i></div>
+          <h3 class="bento-title">Consultoria Estratégica.</h3>
+          <p class="bento-desc">Desenho do roadmap tecnológico. Mapeamos onde investir a inteligência para crescer com segurança.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="light-section section-spacing">
+    <div class="section-inner">
+      <div class="apple-header-text reveal">
+        <span class="eyebrow">Automação com Arquitetura</span>
+        <h2 class="section-title">Do diagnóstico ao sistema operando.</h2>
+      </div>
+      
+      <div class="process-steps reveal delay-1">
+        <div class="process-line-wrap"><div class="process-line-fill" id="process-line"></div></div>
+        
+        <div class="process-step">
+          <div class="process-circle">01</div>
+          <h3 class="process-step-title">Diagnóstico</h3>
+          <p class="process-step-desc">Mapeie sua maturidade em 3 minutos.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-circle">02</div>
+          <h3 class="process-step-title">Desenho do Fluxo</h3>
+          <p class="process-step-desc">A arquitetura exata para as travas da empresa.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-circle">03</div>
+          <h3 class="process-step-title">Go-Live em 7 Dias</h3>
+          <p class="process-step-desc">Entregamos a organização invisível operando.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guarantee" class="dark-section section-spacing">
+    <div class="section-inner">
+      <h2 class="section-title reveal" style="text-align: center; margin-bottom: 64px;">O controle é seu.<br>O risco é nosso.</h2>
+      <div class="bento-grid reveal delay-1">
+        <div class="bento-card dark-card" style="grid-column: span 4; padding: 32px;">
+          <i data-lucide="file-check-2" style="color:var(--cyan); width:32px; height:32px; margin-bottom:16px;"></i>
+          <h4 style="font-size:20px; font-weight:700; margin-bottom:12px; color:#fff;">Diagnóstico Gratuito</h4>
+          <p class="bento-desc" style="font-size:15px;">Você só decide avançar após validar a arquitetura que desenhamos.</p>
+        </div>
+        <div class="bento-card dark-card" style="grid-column: span 4; padding: 32px;">
+          <i data-lucide="shield" style="color:var(--cyan); width:32px; height:32px; margin-bottom:16px;"></i>
+          <h4 style="font-size:20px; font-weight:700; margin-bottom:12px; color:#fff;">90 Dias Inclusos</h4>
+          <p class="bento-desc" style="font-size:15px;">Todo projeto conta com 3 meses de garantia total de funcionamento.</p>
+        </div>
+        <div class="bento-card dark-card" style="grid-column: span 4; padding: 32px;">
+          <i data-lucide="calendar-check" style="color:var(--cyan); width:32px; height:32px; margin-bottom:16px;"></i>
+          <h4 style="font-size:20px; font-weight:700; margin-bottom:12px; color:#fff;">Entrega Garantida</h4>
+          <p class="bento-desc" style="font-size:15px;">Se não entregarmos no prazo, você não paga a fatura final do projeto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cases" class="light-section section-spacing">
+    <div class="section-inner">
+      <div class="apple-header-text reveal">
+        <span class="eyebrow">Performance Comprovada</span>
+        <h2 class="section-title">Acredite nos resultados.</h2>
+      </div>
+      
+      <div class="bento-grid">
+        <div class="bento-card reveal delay-1" style="grid-column: span 6;">
+          <div class="case-header">
+            <img src="https://ui-avatars.com/api/?name=Log+Max&background=0A1F44&color=00A8FF&rounded=true" alt="Logo LogMax" class="author-img">
+            <div>
+              <strong>Distribuidora LogMax</strong>
+              <span style="color:var(--text-3); font-size:13px;">Comércio e Varejo</span>
+            </div>
+          </div>
+          <p class="bento-desc" style="margin-top:16px;"><strong>O Problema:</strong> Fechamento manual levava 3 dias.<br><strong>O Resultado:</strong> O processo roda silencioso em 15 minutos.</p>
+        </div>
+        
+        <div class="bento-card reveal delay-2" style="grid-column: span 6;">
+          <div class="case-header">
+            <img src="https://ui-avatars.com/api/?name=Clinica+Vitality&background=0A1F44&color=00A8FF&rounded=true" alt="Logo Vitality" class="author-img">
+            <div>
+              <strong>Clínica Vitality</strong>
+              <span style="color:var(--text-3); font-size:13px;">Saúde e Bem-estar</span>
+            </div>
+          </div>
+          <p class="bento-desc" style="margin-top:16px;"><strong>O Problema:</strong> Leads esfriavam rapidamente.<br><strong>O Resultado:</strong> Conversão saltou 34% em 45 dias com roteamento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="founders" class="dark-section section-spacing">
+    <div class="section-inner">
+      <div class="apple-header-text reveal">
+        <span class="eyebrow">A Liderança</span>
+        <h2 class="section-title">Engenharia com visão de negócios.</h2>
+        <p class="section-subtitle">Sem jargões. Comunicação limpa e transparente de dono para dono.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card dark-card reveal delay-1" style="grid-column: span 4; align-items:center; text-align:center; padding:32px;">
+          <img src="daniel.png" alt="Daniel Pego" class="founder-photo">
+          <h4 class="founder-name">Daniel Pego</h4>
+          <span class="founder-role">Head de Estratégia B2B</span>
+          <p class="founder-bio">Especialista em desenhar o caminho exato de como a tecnologia vai devolver lucro à operação.</p>
+        </div>
+        <div class="bento-card dark-card reveal delay-2" style="grid-column: span 4; align-items:center; text-align:center; padding:32px;">
+          <img src="gu.png" alt="Gustavo Batista" class="founder-photo">
+          <h4 class="founder-name">Gustavo Batista</h4>
+          <span class="founder-role">Head de Inovação & IA</span>
+          <p class="founder-bio">Focado em criar inteligências que a sua equipe realmente goste de usar no dia a dia.</p>
+        </div>
+        <div class="bento-card dark-card reveal delay-3" style="grid-column: span 4; align-items:center; text-align:center; padding:32px;">
+          <img src="bryan.png" alt="Bryan Gradi" class="founder-photo">
+          <h4 class="founder-name">Bryan Gradi</h4>
+          <span class="founder-role">Head de Engenharia</span>
+          <p class="founder-bio">O arquiteto dos bastidores que garante a infraestrutura segura e 100% automática.</p>
         </div>
       </div>
     </div>
@@ -153,7 +314,7 @@
       <div class="cta-box apple-cta reveal">
         <h2 class="section-title">Pronto para estancar as perdas?</h2>
         <p class="section-subtitle">O diagnóstico leva apenas 3 minutos. O resultado gerado pode salvar milhares de reais da sua margem este mês.</p>
-        <div class="btn-group">
+        <div class="btn-group" style="margin-top: 32px;">
           <button class="btn-primary btn-large btn-pill js-open-quiz">
             Iniciar Diagnóstico Inteligente
           </button>
@@ -162,11 +323,53 @@
     </div>
   </section>
 
+  <footer class="site-footer dark-section" style="padding: 80px 0 32px 0; border-top: 1px solid rgba(255,255,255,0.05);">
+    <div class="section-inner footer-grid">
+      <div class="footer-brand">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <img src="logo-bgtech.png" alt="Logo BG Tech" class="brand-logo" onerror="this.style.display='none'">
+          <span class="logo-name">BG <span style="color: var(--blue);">TECH</span></span>
+        </div>
+        <p style="color: var(--text-muted); line-height: 1.6; font-size: 15px; font-weight: 500;">Engenharia Digital para Empresas Inteligentes.</p>
+        <p style="margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.3);">CNPJ: 54.551.488/0001-20</p>
+      </div>
+      
+      <div class="footer-links">
+        <h4 style="color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 24px;">Empresa</h4>
+        <a href="/#services" style="display: block; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">Arquitetura</a>
+        <a href="/#process" style="display: block; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">A Jornada</a>
+        <a href="/#cases" style="display: block; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">Casos de Sucesso</a>
+        <a href="/#founders" style="display: block; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">A Liderança</a>
+      </div>
+
+      <div class="footer-links">
+        <h4 style="color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 24px;">Contato</h4>
+        <a href="https://wa.me/5543999999999" target="_blank" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">
+          <i data-lucide="phone" style="width: 16px;"></i> WhatsApp Comercial
+        </a>
+        <a href="mailto:contato@bgtechsolucoes.com.br" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin-bottom: 16px; font-size: 14px; transition: 0.3s; font-weight: 500;">
+          <i data-lucide="mail" style="width: 16px;"></i> contato@bgtechsolucoes.com.br
+        </a>
+      </div>
+    </div>
+    
+    <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 32px; margin-top: 48px;">
+      <div class="section-inner" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 13px; color: rgba(255,255,255,0.3); font-weight: 500;">
+        <span>© 2026 BG Tecnologia e Automação LTDA. Todos os direitos reservados.</span>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <a href="/privacidade.html" style="transition: 0.2s;">Privacidade</a>
+          <span style="opacity: 0.3;">|</span>
+          <a href="/termos.html" style="transition: 0.2s;">Termos</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
   <div class="quiz-overlay" id="quiz-overlay">
     <div class="quiz-container">
       <div class="quiz-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-name" style="font-size: 22px; color: #0A1F44; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">BG <span style="color: #00A8FF;">TECH</span></span>
+          <span class="logo-name" style="font-size: 22px; color: #1d1d1f; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">BG <span style="color: var(--blue);">TECH</span></span>
         </div>
         <button class="quiz-close js-close-quiz"><i data-lucide="x"></i></button>
       </div>
