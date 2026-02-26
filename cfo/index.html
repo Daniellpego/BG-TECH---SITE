@@ -56,7 +56,30 @@
 
         #login-screen { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #0a0f1a 0%, #030712 100%); perspective: 1000px; }
         .app { display: none; min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--transition), transform 0.6s var(--transition); }
-        .app.visible { display: flex; opacity: 1; transform: translateY(0); }
+        .app.visible { display: flex; opacity: 1; transform: translateY(0); flex-direction: column; }
+
+        /* MENSAGEM DO GUSTAVO */
+        #msg-gustavo {
+            display: none;
+            margin: 40px clamp(24px, 5vw, 60px) 0 clamp(calc(var(--sidebar-w) + 24px), 5vw, calc(var(--sidebar-w) + 60px));
+            padding: 24px;
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.15), rgba(0, 0, 0, 0.5));
+            border-left: 4px solid var(--primary);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            z-index: 10;
+        }
+        #msg-gustavo.active {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
 
         .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w); background: linear-gradient(180deg, rgba(3, 7, 18, 0.98) 0%, rgba(13, 17, 23, 0.95) 100%); border-right: 1px solid var(--color-border); backdrop-filter: blur(20px) saturate(180%); display: flex; flex-direction: column; padding: 32px 20px; z-index: 100; transition: transform 0.4s var(--transition); }
         .sidebar-logo { display: flex; align-items: center; gap: 14px; padding: 0 12px 48px; position: relative; }
@@ -304,7 +327,7 @@
                 <span class="login-badge"><i data-lucide="shield-check" width="16" height="16"></i> Acesso Restrito CFO</span>
             </div>
             <div class="login-field">
-                <input type="text" id="lu" class="login-input" placeholder="ID de Acesso" autocomplete="username" aria-label="ID de Acesso">
+                <input type="text" id="lu" class="login-input" placeholder="ID de Acesso (ex: gustavo)" autocomplete="username" aria-label="ID de Acesso">
                 <i data-lucide="user" width="20" height="20" class="login-icon"></i>
             </div>
             <div class="login-field" style="margin-bottom:40px;">
@@ -318,6 +341,17 @@
     </div>
 
     <div class="app" id="app">
+        
+        <div id="msg-gustavo">
+            <div style="padding: 12px; background: rgba(14, 165, 233, 0.2); border-radius: 50%;">
+                <i data-lucide="trending-up" width="32" height="32" style="color: var(--primary);"></i>
+            </div>
+            <div>
+                <h2 class="font-title" style="font-size: 24px; font-weight: 900; color: white; margin-bottom: 4px;">Seja bem vindo, Gustavo... o CFO mais foda da porra toda 🚀</h2>
+                <p style="color: var(--primary); font-weight: 600; font-size: 14px;">Seu cockpit financeiro da BG Tech está 100% sincronizado e pronto para operar.</p>
+            </div>
+        </div>
+
         <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navegação principal">
             <div class="sidebar-logo">
                 <i data-lucide="cpu" width="28" height="28"></i>
@@ -357,7 +391,7 @@
             </div>
         </aside>
 
-        <main class="main" role="main">
+        <main class="main" role="main" id="main-content">
             <header class="page-header">
                 <div>
                     <h2 class="page-title font-title" id="page-title">Painel Geral</h2>
@@ -834,12 +868,10 @@
                 });
             },
 
-            // --- 🛡️ Geração de IDs Blindada ---
             genId(prefix) {
                 return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
             },
 
-            // --- 🛡️ Persistência Local Completa ---
             saveLocal() {
                 try {
                     localStorage.setItem('bg_cfo_data', JSON.stringify({
@@ -865,15 +897,25 @@
             login() {
                 const u = document.getElementById('lu').value.trim().toLowerCase(), p = document.getElementById('lp').value, lc = document.getElementById('login-card');
                 const btn = document.getElementById('btn-login');
-                if (u === 'bgtech' && p === 'admin2024') {
+                if ((u === 'bgtech' || u === 'gustavo') && p === 'admin2024') {
                     if(btn) btn.classList.add('loading');
                     lc.style.animation = 'none'; lc.style.transform = 'scale(1.05)'; lc.style.opacity = '0'; lc.style.transition = 'all 0.5s ease';
                     setTimeout(() => {
                         document.getElementById('login-screen').style.display = 'none';
                         document.getElementById('app').classList.add('visible');
+                        
+                        // Lógica para exibir a mensagem especial para o Gustavo
+                        if (u === 'gustavo') {
+                            const msg = document.getElementById('msg-gustavo');
+                            if (msg) msg.classList.add('active');
+                            
+                            // Ajusta o padding do main-content para não sobrepor a mensagem
+                            document.getElementById('main-content').style.paddingTop = '10px';
+                        }
+
                         A.loadProjecoes();
                         A.initCharts(); 
-                        A.fetchSync(); // Fetch vai fazer o fallback para local cache automaticamente se falhar
+                        A.fetchSync(); 
                         setInterval(() => A.fetchSync(true), 15000);
                         A.onReportTipoChange();
                         lucide.createIcons();
@@ -936,8 +978,8 @@
 
             async fetchSync(silent = false) {
                 if (!silent) A.syncUI('load');
-                A.loadLocal(); // Proteção: sempre carregar da RAM local primeiro
-                A.render(); // Renderiza na hora, sem esperar o banco
+                A.loadLocal(); 
+                A.render(); 
 
                 try {
                     const r = await fetch(DB.url, { headers: { apikey: DB.key, Authorization: `Bearer ${DB.key}`, 'Cache-Control': 'no-cache' } });
@@ -947,7 +989,7 @@
                         A.state.data.fixos = Array.isArray(d[0].fixos) ? d[0].fixos : JSON.parse(d[0].fixos || '[]');
                         A.state.data.unicos = Array.isArray(d[0].unicos) ? d[0].unicos : JSON.parse(d[0].unicos || '[]');
                         A.state.data.entradas = Array.isArray(d[0].entradas) ? d[0].entradas : JSON.parse(d[0].entradas || '[]');
-                        A.saveLocal(); // Sobrescreve local apenas se o banco respondeu com sucesso
+                        A.saveLocal(); 
                     }
                     A.syncUI('ok'); 
                     A.render();
@@ -959,7 +1001,7 @@
 
             async pushSync() {
                 A.syncUI('load');
-                A.saveLocal(); // Garantia 100% que o dado já está salvo na máquina
+                A.saveLocal(); 
                 try {
                     const payload = { fixos: A.state.data.fixos || [], unicos: A.state.data.unicos || [], updated_at: new Date().toISOString() };
                     if (A.state.supportsEntradas) payload.entradas = A.state.data.entradas || [];
@@ -1005,7 +1047,6 @@
                 const saldo = sumE - sumSaidas;
                 const margem = sumE > 0 ? ((saldo / sumE) * 100).toFixed(1) : '0.0';
 
-                // --- 🤖 INTELIGÊNCIA CFO (Alertas automáticos no Painel Geral) ---
                 if(t === 'overview') {
                     A.animateValue('v-receita-ov', sumE, false, 'var(--success)');
                     A.animateValue('v-mrr-ov', sumMRR);
@@ -1029,7 +1070,6 @@
                         }
                     }
 
-                    // Renderiza CFO Insights se estiver vendo um Mês Específico
                     const insightsEl = document.getElementById('cfo-insights');
                     if(insightsEl) {
                         if(mVal !== 'anual') {
@@ -1204,7 +1244,6 @@
                 else { A.ch.donut.updateSeries([1]); A.ch.donut.updateOptions({ labels: ['Sem dados'], colors: ['#1e293b'] }); }
             },
 
-            // ── DRAWER REAL ──
             setModo(modo) {
                 A.state.modo = modo;
                 document.getElementById('tab-modo-despesa').classList.toggle('active', modo === 'despesa');
@@ -1278,7 +1317,7 @@
 
             async save() {
                 const btn = document.getElementById('btn-save');
-                if(btn.classList.contains('loading')) return; // Bloqueio UI Duplo Clique
+                if(btn.classList.contains('loading')) return; 
 
                 const nome = document.getElementById('f-nome').value.trim(), valor = A.cleanMoney(document.getElementById('f-valor').value);
                 if (!nome || valor <= 0) { A.toast("Preencha nome e valor válido.", "err"); document.getElementById('f-nome').focus(); return; }
@@ -1329,7 +1368,6 @@
                 }
             },
 
-            // ── RELATÓRIOS ──
             onReportTipoChange() {
                 const tipo = document.getElementById('report-tipo').value;
                 const sel = document.getElementById('report-period'); sel.innerHTML = '';
@@ -1387,7 +1425,6 @@
                 lucide.createIcons();
             },
 
-            // ── PROJEÇÕES MÓDULO ISOLADO ──
             loadProjecoes() {
                 try {
                     const stored = localStorage.getItem('bg_projecoes');
@@ -1585,7 +1622,6 @@
                 lucide.createIcons();
             },
 
-            // ── EXPORT DE DADOS REAIS ──
             openExportModal() { document.getElementById('export-modal').classList.add('open'); document.getElementById('export-overlay').classList.add('open'); },
             closeExportModal() { document.getElementById('export-modal').classList.remove('open'); document.getElementById('export-overlay').classList.remove('open'); },
             
