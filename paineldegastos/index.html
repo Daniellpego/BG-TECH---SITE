@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BG Tech | CFO Dashboard</title>
+    <title>BG Tech | CFO Dashboard Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -125,7 +124,6 @@
         }
 
         @keyframes float {
-
             0%,
             100% {
                 transform: translate(0, 0) scale(1);
@@ -219,7 +217,6 @@
         }
 
         @keyframes pulse {
-
             0%,
             100% {
                 filter: drop-shadow(0 0 12px rgba(14, 165, 233, 0.6));
@@ -347,7 +344,6 @@
         }
 
         @keyframes ping {
-
             75%,
             100% {
                 transform: scale(2);
@@ -575,21 +571,10 @@
             position: relative;
         }
 
-        .stat-card.c-danger {
-            border-top-color: var(--danger);
-        }
-
-        .stat-card.c-primary {
-            border-top-color: var(--primary);
-        }
-
-        .stat-card.c-warning {
-            border-top-color: var(--warning);
-        }
-
-        .stat-card.c-success {
-            border-top-color: var(--success);
-        }
+        .stat-card.c-danger { border-top-color: var(--danger); }
+        .stat-card.c-primary { border-top-color: var(--primary); }
+        .stat-card.c-warning { border-top-color: var(--warning); }
+        .stat-card.c-success { border-top-color: var(--success); }
 
         .stat-label {
             font-size: 12px;
@@ -733,29 +718,6 @@
             letter-spacing: -0.02em;
         }
 
-        .month-tile-sub {
-            font-size: 12px;
-            color: var(--text-dim);
-            margin-top: 6px;
-        }
-
-        .month-tile-bar {
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.06);
-            margin-top: 16px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .month-tile-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, #38bdf8 100%);
-            border-radius: 2px;
-            transition: width 0.8s var(--transition);
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
         .table-wrap {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -791,17 +753,9 @@
             transition: all 0.3s ease;
         }
 
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tr {
-            transition: all 0.3s ease;
-        }
-
-        .data-table tr:hover td {
-            background: rgba(14, 165, 233, 0.04);
-        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr { transition: all 0.3s ease; }
+        .data-table tr:hover td { background: rgba(14, 165, 233, 0.04); }
 
         .item-name {
             font-size: 15px;
@@ -833,16 +787,8 @@
             transition: all 0.3s ease;
         }
 
-        .cat-badge:hover {
-            background: rgba(14, 165, 233, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .cat-badge.income {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border-color: rgba(16, 185, 129, 0.2);
-        }
+        .cat-badge:hover { background: rgba(14, 165, 233, 0.2); transform: translateY(-1px); }
+        .cat-badge.income { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2); }
 
         .recur-badge {
             display: inline-flex;
@@ -857,17 +803,8 @@
             transition: all 0.3s ease;
         }
 
-        .recur-badge.sim {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .recur-badge.nao {
-            background: rgba(148, 163, 184, 0.08);
-            color: var(--text-dim);
-            border: 1px solid rgba(148, 163, 184, 0.15);
-        }
+        .recur-badge.sim { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .recur-badge.nao { background: rgba(148, 163, 184, 0.08); color: var(--text-dim); border: 1px solid rgba(148, 163, 184, 0.15); }
 
         .status-badge {
             display: inline-flex;
@@ -883,19 +820,8 @@
             transition: all 0.3s ease;
         }
 
-        .status-badge.pago {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
-        }
-
-        .status-badge.pendente {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.1);
-        }
+        .status-badge.pago { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); box-shadow: 0 0 10px rgba(16, 185, 129, 0.1); }
+        .status-badge.pendente { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.25); box-shadow: 0 0 10px rgba(245, 158, 11, 0.1); }
 
         .amount-cell {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -919,17 +845,8 @@
             justify-content: center;
         }
 
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text);
-            transform: scale(1.1);
-        }
-
-        .action-btn.del:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            transform: scale(1.1) rotate(5deg);
-        }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); transform: scale(1.1); }
+        .action-btn.del:hover { background: rgba(239, 68, 68, 0.15); color: var(--danger); transform: scale(1.1) rotate(5deg); }
 
         .empty-state {
             text-align: center;
@@ -937,817 +854,132 @@
             color: var(--text-muted);
         }
 
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            opacity: 0.2;
-            margin-bottom: 24px;
-            stroke-width: 1.5;
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .empty-state p {
-            font-size: 14px;
-            color: var(--text-dim);
-            max-width: 300px;
-            margin: 0 auto;
-        }
+        .empty-state svg { width: 64px; height: 64px; opacity: 0.2; margin-bottom: 24px; stroke-width: 1.5; }
+        .empty-state h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+        .empty-state p { font-size: 14px; color: var(--text-dim); max-width: 300px; margin: 0 auto; }
 
         .drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
 
-        .drawer-overlay.open {
-            opacity: 1;
-            pointer-events: all;
-        }
+        .drawer-overlay.open { opacity: 1; pointer-events: all; }
 
         .drawer {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            bottom: 0;
-            width: min(600px, 100vw);
-            background: linear-gradient(180deg, #0d1117 0%, #070a0f 100%);
-            border-left: 1px solid var(--color-border);
-            z-index: 201;
-            padding: clamp(32px, 6vw, 48px);
-            overflow-y: auto;
-            transition: right 0.5s var(--transition);
-            box-shadow: -40px 0 80px rgba(0, 0, 0, 0.8);
+            position: fixed; top: 0; right: -100%; bottom: 0; width: min(600px, 100vw); background: linear-gradient(180deg, #0d1117 0%, #070a0f 100%); border-left: 1px solid var(--color-border); z-index: 201; padding: clamp(32px, 6vw, 48px); overflow-y: auto; transition: right 0.5s var(--transition); box-shadow: -40px 0 80px rgba(0, 0, 0, 0.8);
         }
 
-        .drawer.open {
-            right: 0;
-        }
+        .drawer.open { right: 0; }
 
         .drawer-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--color-border);
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--color-border);
         }
 
-        .drawer-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 26px;
-            font-weight: 900;
-            color: var(--text);
-        }
+        .drawer-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 900; color: var(--text); }
 
         .type-tabs {
-            display: flex;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-sm);
-            padding: 6px;
-            gap: 6px;
-            margin-bottom: 32px;
-            position: relative;
+            display: flex; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 6px; gap: 6px; margin-bottom: 32px; position: relative;
         }
 
         .type-tab {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s var(--transition);
-            position: relative;
-            z-index: 1;
+            flex: 1; padding: 14px; border: none; background: transparent; color: var(--text-muted); font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.3s var(--transition); position: relative; z-index: 1;
         }
 
-        .type-tab.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
+        .type-tab.active { background: rgba(255, 255, 255, 0.08); color: var(--text); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 16px 18px;
-            border-radius: var(--radius-sm);
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--color-border);
-            color: var(--text);
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .form-input:focus {
-            border-color: var(--primary);
-            background: rgba(14, 165, 233, 0.04);
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-        }
-
-        .form-input::placeholder {
-            color: var(--text-dim);
-        }
+        .form-group { margin-bottom: 24px; }
+        .form-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .form-input { width: 100%; padding: 16px 18px; border-radius: var(--radius-sm); background: rgba(0, 0, 0, 0.5); border: 1px solid var(--color-border); color: var(--text); font-size: 15px; font-weight: 500; transition: all 0.3s ease; outline: none; }
+        .form-input:focus { border-color: var(--primary); background: rgba(14, 165, 233, 0.04); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1); }
+        .form-input::placeholder { color: var(--text-dim); }
 
         select.form-input {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
-            padding-right: 48px;
+            cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; padding-right: 48px;
         }
+        select.form-input option { background: #0d1117; padding: 12px; }
 
-        select.form-input option {
-            background: #0d1117;
-            padding: 12px;
-        }
+        .form-hint { font-size: 12px; color: var(--text-dim); margin-top: 8px; font-weight: 500; display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: rgba(255, 255, 255, 0.02); border-radius: 8px; border-left: 3px solid var(--primary); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-        .form-hint {
-            font-size: 12px;
-            color: var(--text-dim);
-            margin-top: 8px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            border-left: 3px solid var(--primary);
-        }
+        .form-save { width: 100%; padding: 18px; border-radius: var(--radius-sm); border: none; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 6px 30px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2); transition: all 0.3s var(--transition); margin-top: 32px; position: relative; overflow: hidden; }
+        .form-save::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transform: translateX(-100%); transition: transform 0.6s ease; }
+        .form-save:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 10px 40px var(--primary-glow); }
+        .form-save:hover::before { transform: translateX(100%); }
+        .form-save.save-income { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); box-shadow: 0 6px 30px var(--success-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+        .form-save.save-income:hover { box-shadow: 0 10px 40px var(--success-glow); }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .login-card { width: 100%; max-width: 440px; margin: 24px; padding: 56px 48px; transform-style: preserve-3d; animation: cardFloat 6s ease-in-out infinite; }
+        @keyframes cardFloat { 0%, 100% { transform: translateY(0) rotateX(0); } 50% { transform: translateY(-10px) rotateX(2deg); } }
 
-        .form-save {
-            width: 100%;
-            padding: 18px;
-            border-radius: var(--radius-sm);
-            border: none;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 6px 30px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.3s var(--transition);
-            margin-top: 32px;
-            position: relative;
-            overflow: hidden;
-        }
+        .login-logo { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px; }
+        .login-logo h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 42px; font-weight: 900; color: var(--text); }
+        .login-logo span { color: var(--primary); text-shadow: 0 0 30px var(--primary-glow); }
+        .login-logo svg { color: var(--primary); filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.8)); animation: spin 20s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .form-save::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
+        .login-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 99px; background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.3); color: var(--primary); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 48px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.1); }
+        .login-field { position: relative; margin-bottom: 20px; }
+        .login-input { width: 100%; padding: 18px 18px 18px 52px; border-radius: var(--radius-sm); background: rgba(0, 0, 0, 0.6); border: 1px solid var(--color-border); color: var(--text); font-size: 16px; transition: all 0.3s ease; }
+        .login-input:focus { border-color: var(--primary); background: rgba(14, 165, 233, 0.05); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1); }
+        .login-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-dim); transition: all 0.3s ease; }
+        .login-input:focus+.login-icon { color: var(--primary); transform: translateY(-50%) scale(1.1); }
 
-        .form-save:hover {
-            filter: brightness(1.1);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px var(--primary-glow);
-        }
+        input:-webkit-autofill, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 50px #0d1117 inset; -webkit-text-fill-color: white; transition: background-color 5000s ease-in-out 0s; }
 
-        .form-save:hover::before {
-            transform: translateX(100%);
-        }
+        #toast-wrap { position: fixed; bottom: 32px; right: 32px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .toast { background: rgba(13, 17, 23, 0.95); border: 1px solid var(--color-border); border-left: 4px solid var(--primary); padding: 16px 24px; border-radius: var(--radius-sm); color: var(--text); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 12px; transform: translateX(120%) scale(0.9); opacity: 0; transition: all 0.5s var(--transition); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px); max-width: 380px; pointer-events: all; }
+        .toast.show { transform: translateX(0) scale(1); opacity: 1; }
+        .toast.err { border-left-color: var(--danger); }
 
-        .form-save.save-income {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            box-shadow: 0 6px 30px var(--success-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
+        .report-filters { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+        .report-filters .filter-group { flex: 1; min-width: 180px; }
+        .report-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .report-kpi { padding: 24px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); text-align: center; transition: all 0.3s var(--transition); }
+        .report-kpi:hover { border-color: rgba(14, 165, 233, 0.3); transform: translateY(-2px); }
+        .report-kpi-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 10px; }
+        .report-kpi-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 900; }
+        .report-kpi-value.positive { color: var(--success); }
+        .report-kpi-value.negative { color: var(--danger); }
+        .report-cat-list { margin-bottom: 32px; }
+        .report-cat-item { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--color-border); }
+        .report-cat-item:last-child { border-bottom: none; }
+        .report-cat-name { flex: 1; font-size: 14px; font-weight: 600; }
+        .report-cat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; min-width: 120px; text-align: right; }
+        .report-cat-bar-wrap { flex: 2; height: 8px; background: rgba(255, 255, 255, 0.06); border-radius: 4px; overflow: hidden; }
+        .report-cat-bar { height: 100%; border-radius: 4px; transition: width 0.8s var(--transition); }
+        .report-cat-bar.income { background: linear-gradient(90deg, var(--success), #34d399); }
+        .report-cat-bar.expense { background: linear-gradient(90deg, var(--danger), #f87171); }
+        .export-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+        .export-btns .btn-primary, .export-btns .btn-ghost { flex: 1; min-width: 160px; justify-content: center; }
 
-        .form-save.save-income:hover {
-            box-shadow: 0 10px 40px var(--success-glow);
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 440px;
-            margin: 24px;
-            padding: 56px 48px;
-            transform-style: preserve-3d;
-            animation: cardFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes cardFloat {
-
-            0%,
-            100% {
-                transform: translateY(0) rotateX(0);
-            }
-
-            50% {
-                transform: translateY(-10px) rotateX(2deg);
-            }
-        }
-
-        .login-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-
-        .login-logo h1 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 42px;
-            font-weight: 900;
-            color: var(--text);
-        }
-
-        .login-logo span {
-            color: var(--primary);
-            text-shadow: 0 0 30px var(--primary-glow);
-        }
-
-        .login-logo svg {
-            color: var(--primary);
-            filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.8));
-            animation: spin 20s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .login-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
-            border-radius: 99px;
-            background: rgba(14, 165, 233, 0.1);
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            color: var(--primary);
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 48px;
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
-        }
-
-        .login-field {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 18px 18px 18px 52px;
-            border-radius: var(--radius-sm);
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--color-border);
-            color: var(--text);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .login-input:focus {
-            border-color: var(--primary);
-            background: rgba(14, 165, 233, 0.05);
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-        }
-
-        .login-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            transition: all 0.3s ease;
-        }
-
-        .login-input:focus+.login-icon {
-            color: var(--primary);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        input:-webkit-autofill,
-        input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0 50px #0d1117 inset;
-            -webkit-text-fill-color: white;
-            transition: background-color 5000s ease-in-out 0s;
-        }
-
-        #toast-wrap {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: rgba(13, 17, 23, 0.95);
-            border: 1px solid var(--color-border);
-            border-left: 4px solid var(--primary);
-            padding: 16px 24px;
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateX(120%) scale(0.9);
-            opacity: 0;
-            transition: all 0.5s var(--transition);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-            max-width: 380px;
-            pointer-events: all;
-        }
-
-        .toast.show {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-        }
-
-        .toast.err {
-            border-left-color: var(--danger);
-        }
-
-        /* ─── REPORT STYLES ─── */
-        .report-filters {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 32px;
-        }
-
-        .report-filters .filter-group {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .report-kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .report-kpi {
-            padding: 24px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-sm);
-            text-align: center;
-            transition: all 0.3s var(--transition);
-        }
-
-        .report-kpi:hover {
-            border-color: rgba(14, 165, 233, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .report-kpi-label {
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-dim);
-            margin-bottom: 10px;
-        }
-
-        .report-kpi-value {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-        }
-
-        .report-kpi-value.positive {
-            color: var(--success);
-        }
-
-        .report-kpi-value.negative {
-            color: var(--danger);
-        }
-
-        .report-cat-list {
-            margin-bottom: 32px;
-        }
-
-        .report-cat-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .report-cat-item:last-child {
-            border-bottom: none;
-        }
-
-        .report-cat-name {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .report-cat-val {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 15px;
-            font-weight: 800;
-            min-width: 120px;
-            text-align: right;
-        }
-
-        .report-cat-bar-wrap {
-            flex: 2;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .report-cat-bar {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.8s var(--transition);
-        }
-
-        .report-cat-bar.income {
-            background: linear-gradient(90deg, var(--success), #34d399);
-        }
-
-        .report-cat-bar.expense {
-            background: linear-gradient(90deg, var(--danger), #f87171);
-        }
-
-        .export-btns {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .export-btns .btn-primary,
-        .export-btns .btn-ghost {
-            flex: 1;
-            min-width: 160px;
-            justify-content: center;
-        }
-
-        .mobile-bar {
-            display: none;
-        }
-
+        .mobile-bar { display: none; }
         @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 24px 20px 100px;
-            }
-
-            .charts-row {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .page-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 20px;
-            }
-
-            .header-right {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .filter-group {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .btn-primary,
-            .btn-success {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .mobile-bar {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(3, 7, 18, 0.98);
-                border-top: 1px solid var(--color-border);
-                padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-                z-index: 150;
-                justify-content: space-around;
-                backdrop-filter: blur(20px);
-                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-                overflow-x: auto;
-                gap: 2px;
-            }
-
-            .m-btn {
-                background: none;
-                border: none;
-                color: var(--text-dim);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                font-size: 10px;
-                font-weight: 700;
-                cursor: pointer;
-                padding: 6px 10px;
-                border-radius: 12px;
-                transition: all 0.3s var(--transition);
-                position: relative;
-                white-space: nowrap;
-            }
-
-            .m-btn.active {
-                color: var(--primary);
-                background: rgba(14, 165, 233, 0.1);
-            }
-
-            .m-btn.active::before {
-                content: '';
-                position: absolute;
-                top: -8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 4px;
-                height: 4px;
-                background: var(--primary);
-                border-radius: 50%;
-                box-shadow: 0 0 10px var(--primary);
-            }
-
-            .report-filters {
-                flex-direction: column;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 100px; }
+            .charts-row, .form-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: stretch; gap: 20px; }
+            .header-right { flex-direction: column; width: 100%; }
+            .filter-group { width: 100%; justify-content: space-between; }
+            .btn-primary, .btn-success { width: 100%; justify-content: center; }
+            .mobile-bar { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(3, 7, 18, 0.98); border-top: 1px solid var(--color-border); padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); z-index: 150; justify-content: space-around; backdrop-filter: blur(20px); box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5); overflow-x: auto; gap: 2px; }
+            .m-btn { background: none; border: none; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; cursor: pointer; padding: 6px 10px; border-radius: 12px; transition: all 0.3s var(--transition); position: relative; white-space: nowrap; }
+            .m-btn.active { color: var(--primary); background: rgba(14, 165, 233, 0.1); }
+            .m-btn.active::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
+            .report-filters { flex-direction: column; }
         }
 
-        .view {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
+        .view { display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .view.active { display: block; opacity: 1; transform: translateY(0); }
 
-        .view.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .search-wrap { padding: 20px 24px; border-bottom: 1px solid var(--color-border); background: rgba(0, 0, 0, 0.2); }
+        .search-input { width: 100%; padding: 14px 18px 14px 48px; border-radius: var(--radius-sm); background: rgba(0, 0, 0, 0.4); border: 1px solid var(--color-border); color: var(--text); font-size: 14px; font-weight: 500; transition: all 0.3s ease; outline: none; position: relative; }
+        .search-input:focus { border-color: var(--primary); background: rgba(14, 165, 233, 0.04); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
+        .search-input::placeholder { color: var(--text-dim); }
+        .search-wrap .search-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
 
-        .skeleton {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-
-            100% {
-                background-position: 200% 0;
-            }
-        }
-
-        *:focus-visible {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        ::selection {
-            background: rgba(14, 165, 233, 0.3);
-            color: var(--text);
-        }
-
-        /* ─── SEARCH INPUT ─── */
-        .search-wrap {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--color-border);
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 18px 14px 48px;
-            border-radius: var(--radius-sm);
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--color-border);
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            outline: none;
-            position: relative;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            background: rgba(14, 165, 233, 0.04);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-        }
-
-        .search-input::placeholder {
-            color: var(--text-dim);
-        }
-
-        .search-wrap .search-icon {
-            position: absolute;
-            left: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            pointer-events: none;
-        }
-
-        /* ─── PERIOD BADGE ─── */
-        .period-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(14, 165, 233, 0.08);
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            color: var(--primary);
-            font-size: 13px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        /* ─── VARIATION INDICATOR ─── */
-        .stat-variation {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: 800;
-            padding: 3px 10px;
-            border-radius: 20px;
-        }
-
-        .stat-variation.up {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .stat-variation.down {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .stat-variation.neutral {
-            background: rgba(148, 163, 184, 0.1);
-            color: var(--text-dim);
-        }
-
-        .stat-variation.income-up {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .stat-variation.income-down {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        /* ─── SAVE BUTTON LOADING ─── */
-        .form-save.loading {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .form-save.loading::after {
-            content: '';
-            width: 18px;
-            height: 18px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-left: 8px;
-        }
-
-        /* ─── TABLE COUNT BADGE ─── */
-        .table-count {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            10%,
-            30%,
-            50%,
-            70%,
-            90% {
-                transform: translateX(-5px);
-            }
-
-            20%,
-            40%,
-            60%,
-            80% {
-                transform: translateX(5px);
-            }
-        }
-
-        .shake {
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        .shake { animation: shake 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 
@@ -1756,7 +988,6 @@
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
 
-    <!-- LOGIN SCREEN -->
     <div id="login-screen">
         <div class="card login-card" id="login-card">
             <div class="login-logo">
@@ -1764,27 +995,22 @@
                 <h1>BG <span>TECH</span></h1>
             </div>
             <div style="text-align:center;">
-                <span class="login-badge"><i data-lucide="shield-check" width="16" height="16"></i> Acesso Restrito
-                    CFO</span>
+                <span class="login-badge"><i data-lucide="shield-check" width="16" height="16"></i> Acesso Restrito CFO</span>
             </div>
             <div class="login-field">
-                <input type="text" id="lu" class="login-input" placeholder="ID de Acesso" autocomplete="username"
-                    aria-label="ID de Acesso">
+                <input type="text" id="lu" class="login-input" placeholder="ID de Acesso" autocomplete="username" aria-label="ID de Acesso">
                 <i data-lucide="user" width="20" height="20" class="login-icon"></i>
             </div>
             <div class="login-field" style="margin-bottom:40px;">
-                <input type="password" id="lp" class="login-input" placeholder="Senha do Cofre"
-                    autocomplete="current-password" aria-label="Senha">
+                <input type="password" id="lp" class="login-input" placeholder="Senha do Cofre" autocomplete="current-password" aria-label="Senha">
                 <i data-lucide="key" width="20" height="20" class="login-icon"></i>
             </div>
-            <button class="btn-primary" style="width:100%;padding:18px;font-size:16px;justify-content:center;"
-                onclick="A.login()">
+            <button class="btn-primary" style="width:100%;padding:18px;font-size:16px;justify-content:center;" onclick="A.login()">
                 Destrancar Sistema <i data-lucide="arrow-right" width="20" height="20"></i>
             </button>
         </div>
     </div>
 
-    <!-- MAIN APPLICATION -->
     <div class="app" id="app">
         <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navegação principal">
             <div class="sidebar-logo">
@@ -1799,6 +1025,7 @@
                 <button class="nav-btn" data-tab="annual" onclick="A.tab('annual')">
                     <i data-lucide="calendar-range" width="18" height="18"></i> Balanço Anual
                 </button>
+                
                 <div class="nav-section-label">Financeiro</div>
                 <button class="nav-btn" data-tab="entradas" onclick="A.tab('entradas')">
                     <i data-lucide="wallet" width="18" height="18"></i> Entradas
@@ -1809,9 +1036,13 @@
                 <button class="nav-btn" data-tab="unicos" onclick="A.tab('unicos')">
                     <i data-lucide="zap" width="18" height="18"></i> Gastos Variáveis
                 </button>
+                
                 <div class="nav-section-label">Análise</div>
                 <button class="nav-btn" data-tab="relatorios" onclick="A.tab('relatorios')">
                     <i data-lucide="file-bar-chart" width="18" height="18"></i> Relatórios
+                </button>
+                <button class="nav-btn" data-tab="projecoes" onclick="A.tab('projecoes')">
+                    <i data-lucide="line-chart" width="18" height="18"></i> Projeções
                 </button>
             </nav>
             <div class="sidebar-footer">
@@ -1824,11 +1055,10 @@
             <header class="page-header">
                 <div>
                     <h2 class="page-title font-title" id="page-title">Painel Geral</h2>
-                    <p class="page-sub" id="page-sub"><i data-lucide="activity" width="16" height="16"></i>
-                        Monitoramento de despesas operacionais em tempo real</p>
+                    <p class="page-sub" id="page-sub"><i data-lucide="activity" width="16" height="16"></i> Monitoramento de despesas operacionais em tempo real</p>
                 </div>
                 <div class="header-right">
-                    <div class="filter-group">
+                    <div class="filter-group" id="main-filters">
                         <select id="fMonth" class="filter-select" onchange="A.render()" aria-label="Selecionar mês">
                             <option value="anual">📊 Balanço Anual</option>
                         </select>
@@ -1838,72 +1068,56 @@
                             <option value="2026" selected>2026</option>
                         </select>
                     </div>
-                    <button class="btn-primary" id="btn-add-main" onclick="A.openDrawer()"
-                        aria-label="Adicionar novo gasto">
+                    <button class="btn-primary" id="btn-add-main" onclick="A.openDrawer()" aria-label="Adicionar novo registro">
                         <i data-lucide="plus" width="18" height="18"></i> <span id="btn-add-label">Novo Gasto</span>
                     </button>
                 </div>
             </header>
 
-            <!-- VIEW: OVERVIEW -->
             <div id="view-overview" class="view active" role="tabpanel">
                 <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
                     <div class="card stat-card c-success">
-                        <div class="stat-label">Receita Total <i data-lucide="trending-up" width="18" height="18"
-                                style="color:var(--success)"></i></div>
+                        <div class="stat-label">Receita Total <i data-lucide="trending-up" width="18" height="18" style="color:var(--success)"></i></div>
                         <div class="stat-value font-title" id="v-receita-ov" style="color:var(--success)">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="wallet" width="14" height="14"></i> Faturamento do período
-                        </div>
+                        <div class="stat-sub"><i data-lucide="wallet" width="14" height="14"></i> Faturamento do período</div>
                     </div>
                     <div class="card stat-card c-primary">
-                        <div class="stat-label">MRR <i data-lucide="repeat" width="18" height="18"
-                                style="color:var(--primary)"></i></div>
+                        <div class="stat-label">MRR <i data-lucide="repeat" width="18" height="18" style="color:var(--primary)"></i></div>
                         <div class="stat-value font-title" id="v-mrr-ov">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="layers" width="14" height="14"></i> Receitas recorrentes
-                            mensais</div>
+                        <div class="stat-sub"><i data-lucide="layers" width="14" height="14"></i> Receitas recorrentes mensais</div>
                     </div>
                     <div class="card stat-card c-danger">
-                        <div class="stat-label">Sangria Total <i data-lucide="trending-down" width="18" height="18"
-                                style="color:var(--danger)"></i></div>
+                        <div class="stat-label">Sangria Total <i data-lucide="trending-down" width="18" height="18" style="color:var(--danger)"></i></div>
                         <div class="stat-value font-title" id="v-total">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="minus-circle" width="14" height="14"></i> Custos Fixos +
-                            Variáveis</div>
+                        <div class="stat-sub"><i data-lucide="minus-circle" width="14" height="14"></i> Custos Fixos + Variáveis</div>
                     </div>
                     <div class="card stat-card c-primary">
-                        <div class="stat-label">Custo Fixo <i data-lucide="anchor" width="18" height="18"
-                                style="color:var(--primary)"></i></div>
+                        <div class="stat-label">Custo Fixo <i data-lucide="anchor" width="18" height="18" style="color:var(--primary)"></i></div>
                         <div class="stat-value font-title" id="v-fixos">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="repeat" width="14" height="14"></i> Despesas recorrentes
-                            mensais</div>
+                        <div class="stat-sub"><i data-lucide="repeat" width="14" height="14"></i> Despesas recorrentes mensais</div>
                     </div>
                     <div class="card stat-card c-warning">
-                        <div class="stat-label">Variáveis <i data-lucide="zap" width="18" height="18"
-                                style="color:var(--warning)"></i></div>
+                        <div class="stat-label">Variáveis <i data-lucide="zap" width="18" height="18" style="color:var(--warning)"></i></div>
                         <div class="stat-value font-title" id="v-unicos">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="sparkles" width="14" height="14"></i> Gastos pontuais e
-                            extras</div>
+                        <div class="stat-sub"><i data-lucide="sparkles" width="14" height="14"></i> Gastos pontuais e extras</div>
                     </div>
                     <div class="card stat-card" id="card-saldo-ov" style="border-top:3px solid var(--success);">
-                        <div class="stat-label">Saldo Líquido <i data-lucide="scale" width="18" height="18"
-                                id="icon-saldo-ov" style="color:var(--success)"></i></div>
+                        <div class="stat-label">Saldo Líquido <i data-lucide="scale" width="18" height="18" id="icon-saldo-ov" style="color:var(--success)"></i></div>
                         <div class="stat-value font-title" id="v-saldo-ov" style="color:var(--success)">R$ 0,00</div>
-                        <div class="stat-sub" id="v-saldo-ov-sub"><i data-lucide="info" width="14" height="14"></i>
-                            Receitas − Despesas</div>
+                        <div class="stat-sub" id="v-saldo-ov-sub"><i data-lucide="info" width="14" height="14"></i> Receitas − Despesas</div>
                     </div>
                 </div>
                 <div class="charts-row">
                     <div class="card chart-card">
                         <div class="chart-header">
-                            <span class="chart-title font-title"><i data-lucide="activity" width="20" height="20"
-                                    style="color:var(--primary)"></i> Curva de Gastos</span>
+                            <span class="chart-title font-title"><i data-lucide="activity" width="20" height="20" style="color:var(--primary)"></i> Curva de Gastos</span>
                             <span class="chart-sub">Últimos 6 meses</span>
                         </div>
                         <div id="chart-area"></div>
                     </div>
                     <div class="card chart-card">
                         <div class="chart-header">
-                            <span class="chart-title font-title"><i data-lucide="pie-chart" width="20" height="20"
-                                    style="color:var(--primary)"></i> Distribuição Fixos</span>
+                            <span class="chart-title font-title"><i data-lucide="pie-chart" width="20" height="20" style="color:var(--primary)"></i> Distribuição Fixos</span>
                             <span class="chart-sub">Por categoria</span>
                         </div>
                         <div id="chart-donut"></div>
@@ -1911,44 +1125,27 @@
                 </div>
             </div>
 
-            <!-- VIEW: ANNUAL BALANCE -->
             <div id="view-annual" class="view" role="tabpanel">
                 <div class="card" style="padding:32px;margin-bottom:24px;">
-                    <div
-                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px;">
                         <div>
-                            <div class="chart-title font-title" style="font-size:24px;margin-bottom:8px;"
-                                id="annual-title">Balanço Anual 2026</div>
-                            <div
-                                style="font-size:14px;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
-                                <i data-lucide="mouse-pointer-2" width="14" height="14"></i> Clique em um mês para
-                                visualizar os detalhes
+                            <div class="chart-title font-title" style="font-size:24px;margin-bottom:8px;" id="annual-title">Balanço Anual 2026</div>
+                            <div style="font-size:14px;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
+                                <i data-lucide="mouse-pointer-2" width="14" height="14"></i> Clique em um mês para visualizar os detalhes
                             </div>
                         </div>
                         <div style="display:flex;gap:16px;flex-wrap:wrap;">
-                            <div
-                                style="text-align:center;padding:16px 20px;background:rgba(16,185,129,0.08);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.25);">
-                                <div
-                                    style="font-size:11px;color:var(--success);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
-                                    Faturamento Ano</div>
-                                <div class="font-title" style="font-size:22px;font-weight:900;color:var(--success);"
-                                    id="annual-total-in">R$ 0,00</div>
+                            <div style="text-align:center;padding:16px 20px;background:rgba(16,185,129,0.08);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.25);">
+                                <div style="font-size:11px;color:var(--success);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Faturamento Ano</div>
+                                <div class="font-title" style="font-size:22px;font-weight:900;color:var(--success);" id="annual-total-in">R$ 0,00</div>
                             </div>
-                            <div
-                                style="text-align:center;padding:16px 20px;background:rgba(239,68,68,0.08);border-radius:var(--radius-sm);border:1px solid rgba(239,68,68,0.25);">
-                                <div
-                                    style="font-size:11px;color:var(--danger);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
-                                    Gastos Ano</div>
-                                <div class="font-title" style="font-size:22px;font-weight:900;color:var(--danger);"
-                                    id="annual-total-out">R$ 0,00</div>
+                            <div style="text-align:center;padding:16px 20px;background:rgba(239,68,68,0.08);border-radius:var(--radius-sm);border:1px solid rgba(239,68,68,0.25);">
+                                <div style="font-size:11px;color:var(--danger);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Gastos Ano</div>
+                                <div class="font-title" style="font-size:22px;font-weight:900;color:var(--danger);" id="annual-total-out">R$ 0,00</div>
                             </div>
-                            <div
-                                style="text-align:center;padding:16px 20px;background:rgba(0,0,0,0.3);border-radius:var(--radius-sm);border:1px solid var(--color-border);">
-                                <div
-                                    style="font-size:11px;color:var(--text-dim);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
-                                    Saldo Anual</div>
-                                <div class="font-title" style="font-size:22px;font-weight:900;" id="annual-saldo">R$
-                                    0,00</div>
+                            <div style="text-align:center;padding:16px 20px;background:rgba(0,0,0,0.3);border-radius:var(--radius-sm);border:1px solid var(--color-border);">
+                                <div style="font-size:11px;color:var(--text-dim);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Saldo Anual</div>
+                                <div class="font-title" style="font-size:22px;font-weight:900;" id="annual-saldo">R$ 0,00</div>
                             </div>
                         </div>
                     </div>
@@ -1956,16 +1153,14 @@
                 </div>
             </div>
 
-            <!-- VIEW: LIST (FIXOS/UNICOS) -->
             <div id="view-list" class="view" role="tabpanel">
                 <div class="card" style="overflow:hidden;">
                     <div class="search-wrap" style="position:relative;">
-                        <input type="text" id="search-gastos" class="search-input"
-                            placeholder="Buscar por nome, categoria..." oninput="A.render()">
+                        <input type="text" id="search-gastos" class="search-input" placeholder="Buscar por nome, categoria..." oninput="A.render()">
                         <i data-lucide="search" width="16" height="16" class="search-icon"></i>
                     </div>
                     <div class="table-wrap">
-                        <table class="data-table" role="table" aria-label="Lista de gastos">
+                        <table class="data-table" role="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Data</th>
@@ -1988,47 +1183,36 @@
                 </div>
             </div>
 
-            <!-- VIEW: ENTRADAS (INCOME) -->
             <div id="view-entradas" class="view" role="tabpanel">
                 <div class="stats-grid" id="entradas-stats">
                     <div class="card stat-card c-success">
-                        <div class="stat-label">Receita Total <i data-lucide="trending-up" width="18" height="18"
-                                style="color:var(--success)"></i></div>
+                        <div class="stat-label">Receita Total <i data-lucide="trending-up" width="18" height="18" style="color:var(--success)"></i></div>
                         <div class="stat-value font-title" id="v-receita-total">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="wallet" width="14" height="14"></i> Entradas do período
-                        </div>
+                        <div class="stat-sub"><i data-lucide="wallet" width="14" height="14"></i> Entradas do período</div>
                     </div>
                     <div class="card stat-card c-primary">
-                        <div class="stat-label">Recorrentes <i data-lucide="repeat" width="18" height="18"
-                                style="color:var(--primary)"></i></div>
+                        <div class="stat-label">Recorrentes <i data-lucide="repeat" width="18" height="18" style="color:var(--primary)"></i></div>
                         <div class="stat-value font-title" id="v-receita-recor">R$ 0,00</div>
-                        <div class="stat-sub"><i data-lucide="calendar-check" width="14" height="14"></i> Pagamentos
-                            mensais fixos</div>
+                        <div class="stat-sub"><i data-lucide="calendar-check" width="14" height="14"></i> Pagamentos mensais fixos</div>
                     </div>
                     <div class="card stat-card c-warning">
-                        <div class="stat-label">Avulsas <i data-lucide="sparkles" width="18" height="18"
-                                style="color:var(--warning)"></i></div>
+                        <div class="stat-label">Avulsas <i data-lucide="sparkles" width="18" height="18" style="color:var(--warning)"></i></div>
                         <div class="stat-value font-title" id="v-receita-avulsa">R$ 0,00</div>
                         <div class="stat-sub"><i data-lucide="zap" width="14" height="14"></i> Pagamentos pontuais</div>
                     </div>
                     <div class="card stat-card" id="card-saldo-ent" style="border-top:3px solid var(--success);">
-                        <div class="stat-label">Saldo do Período <i data-lucide="scale" width="18" height="18"
-                                style="color:var(--success)"></i></div>
-                        <div class="stat-value font-title" id="v-saldo-entradas" style="color:var(--success)">R$ 0,00
-                        </div>
-                        <div class="stat-sub" id="v-saldo-entradas-sub"><i data-lucide="info" width="14"
-                                height="14"></i>
-                            Entradas − Saídas</div>
+                        <div class="stat-label">Saldo do Período <i data-lucide="scale" width="18" height="18" style="color:var(--success)"></i></div>
+                        <div class="stat-value font-title" id="v-saldo-entradas" style="color:var(--success)">R$ 0,00</div>
+                        <div class="stat-sub" id="v-saldo-entradas-sub"><i data-lucide="info" width="14" height="14"></i> Entradas − Saídas</div>
                     </div>
                 </div>
                 <div class="card" style="overflow:hidden;">
                     <div class="search-wrap" style="position:relative;">
-                        <input type="text" id="search-entradas" class="search-input"
-                            placeholder="Buscar por nome, categoria..." oninput="A.render()">
+                        <input type="text" id="search-entradas" class="search-input" placeholder="Buscar por nome, categoria..." oninput="A.render()">
                         <i data-lucide="search" width="16" height="16" class="search-icon"></i>
                     </div>
                     <div class="table-wrap">
-                        <table class="data-table" role="table" aria-label="Lista de entradas">
+                        <table class="data-table" role="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Data</th>
@@ -2051,31 +1235,26 @@
                 </div>
             </div>
 
-            <!-- VIEW: RELATÓRIOS -->
             <div id="view-relatorios" class="view" role="tabpanel">
                 <div class="card" style="padding:32px;">
                     <div class="chart-header" style="margin-bottom:32px;">
                         <span class="chart-title font-title" style="font-size:22px;">
-                            <i data-lucide="file-bar-chart" width="22" height="22" style="color:var(--primary)"></i>
-                            Relatório Financeiro
+                            <i data-lucide="file-bar-chart" width="22" height="22" style="color:var(--primary)"></i> Relatório Financeiro
                         </span>
                     </div>
                     <div class="report-filters">
                         <div class="filter-group">
-                            <select id="report-tipo" class="filter-select" onchange="A.onReportTipoChange()"
-                                style="width:100%;">
+                            <select id="report-tipo" class="filter-select" onchange="A.onReportTipoChange()" style="width:100%;">
                                 <option value="mensal">📅 Mensal</option>
                                 <option value="trimestral">📊 Trimestral</option>
                                 <option value="semestral">📈 Semestral</option>
                             </select>
                         </div>
                         <div class="filter-group" id="report-period-wrap">
-                            <select id="report-period" class="filter-select" onchange="A.renderRelatorios()"
-                                style="width:100%;"></select>
+                            <select id="report-period" class="filter-select" onchange="A.renderRelatorios()" style="width:100%;"></select>
                         </div>
                         <div class="filter-group">
-                            <select id="report-year" class="filter-select" onchange="A.onReportTipoChange()"
-                                style="width:100%;">
+                            <select id="report-year" class="filter-select" onchange="A.onReportTipoChange()" style="width:100%;">
                                 <option value="2025">2025</option>
                                 <option value="2026" selected>2026</option>
                             </select>
@@ -2083,8 +1262,7 @@
                     </div>
                     <div class="report-kpi-grid" id="report-kpis"></div>
                     <div class="chart-title font-title" style="font-size:16px;margin-bottom:20px;">
-                        <i data-lucide="bar-chart-3" width="18" height="18" style="color:var(--primary)"></i> Resumo por
-                        Categoria
+                        <i data-lucide="bar-chart-3" width="18" height="18" style="color:var(--primary)"></i> Resumo por Categoria
                     </div>
                     <div class="card" style="padding:24px;margin-bottom:32px;background:rgba(0,0,0,0.3);">
                         <div id="report-cats"></div>
@@ -2099,26 +1277,82 @@
                     </div>
                 </div>
             </div>
+
+            <div id="view-projecoes" class="view" role="tabpanel">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                   <div class="report-filters" style="margin:0; flex: 1;">
+                      <div class="filter-group" style="width: auto;">
+                          <select id="p-horizonte" class="filter-select" onchange="A.renderProjecoes()">
+                             <option value="3">Próximos 3 Meses</option>
+                             <option value="6" selected>Próximos 6 Meses</option>
+                             <option value="12">Próximos 12 Meses</option>
+                          </select>
+                      </div>
+                      <div class="filter-group" style="width: auto;">
+                          <select id="p-mes-filter" class="filter-select" onchange="A.renderProjecoes()">
+                             <option value="all">Todos os meses do horizonte</option>
+                          </select>
+                      </div>
+                   </div>
+                   <div style="display:flex; gap:12px; flex-wrap: wrap;">
+                      <button class="btn-success" onclick="A.openProjDrawer('entrada')"><i data-lucide="trending-up" width="16" height="16"></i> Projetar Entrada</button>
+                      <button class="btn-primary" onclick="A.openProjDrawer('saida')" style="background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%); box-shadow: 0 4px 20px var(--danger-glow);"><i data-lucide="trending-down" width="16" height="16"></i> Projetar Saída</button>
+                   </div>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <div class="card stat-card c-success">
+                        <div class="stat-label">Total Entradas <i data-lucide="trending-up" width="18" height="18" style="color:var(--success)"></i></div>
+                        <div class="stat-value font-title" id="p-v-entradas" style="color:var(--success)">R$ 0,00</div>
+                        <div class="stat-sub"><i data-lucide="calendar" width="14" height="14"></i> Receitas projetadas</div>
+                    </div>
+                    <div class="card stat-card c-danger">
+                        <div class="stat-label">Total Saídas <i data-lucide="trending-down" width="18" height="18" style="color:var(--danger)"></i></div>
+                        <div class="stat-value font-title" id="p-v-saidas" style="color:var(--danger)">R$ 0,00</div>
+                        <div class="stat-sub"><i data-lucide="calendar" width="14" height="14"></i> Custos projetados</div>
+                    </div>
+                    <div class="card stat-card" id="p-card-saldo" style="border-top:3px solid var(--success);">
+                        <div class="stat-label">Saldo Projetado <i data-lucide="scale" width="18" height="18" style="color:var(--success)"></i></div>
+                        <div class="stat-value font-title" id="p-v-saldo" style="color:var(--success)">R$ 0,00</div>
+                        <div class="stat-sub"><i data-lucide="info" width="14" height="14"></i> Resultado do horizonte</div>
+                    </div>
+                </div>
+
+                <div class="card" style="overflow:hidden;">
+                    <div class="table-wrap">
+                        <table class="data-table" role="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Competência</th>
+                                    <th scope="col">Descrição</th>
+                                    <th scope="col">Categoria</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" style="text-align:right">Valor</th>
+                                    <th scope="col" style="text-align:center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="p-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="p-table-empty" class="empty-state" style="display:none;">
+                        <i data-lucide="bar-chart-2"></i>
+                        <h3>Nenhuma projeção cadastrada</h3>
+                        <p>Simule entradas e saídas futuras para antecipar seu caixa.</p>
+                    </div>
+                </div>
+            </div>
+
         </main>
 
-        <!-- MOBILE NAVIGATION -->
         <nav class="mobile-bar" role="navigation" aria-label="Navegação mobile">
-            <button class="m-btn active" data-tab="overview" onclick="A.tab('overview')"><i
-                    data-lucide="layout-dashboard" width="20" height="20"></i>Painel</button>
-            <button class="m-btn" data-tab="entradas" onclick="A.tab('entradas')"><i data-lucide="wallet" width="20"
-                    height="20"></i>Entradas</button>
-            <button class="m-btn" data-tab="fixos" onclick="A.tab('fixos')"><i data-lucide="anchor" width="20"
-                    height="20"></i>Fixos</button>
-            <button class="m-btn" data-tab="unicos" onclick="A.tab('unicos')"><i data-lucide="zap" width="20"
-                    height="20"></i>Variáveis</button>
-            <button class="m-btn" data-tab="relatorios" onclick="A.tab('relatorios')"><i data-lucide="file-bar-chart"
-                    width="20" height="20"></i>Relatório</button>
-            <button class="m-btn" id="m-btn-add" onclick="A.openDrawer()" style="color:var(--primary)"><i
-                    data-lucide="plus-circle" width="20" height="20"></i>Novo</button>
+            <button class="m-btn active" data-tab="overview" onclick="A.tab('overview')"><i data-lucide="layout-dashboard" width="20" height="20"></i>Painel</button>
+            <button class="m-btn" data-tab="entradas" onclick="A.tab('entradas')"><i data-lucide="wallet" width="20" height="20"></i>Entradas</button>
+            <button class="m-btn" data-tab="fixos" onclick="A.tab('fixos')"><i data-lucide="anchor" width="20" height="20"></i>Fixos</button>
+            <button class="m-btn" data-tab="unicos" onclick="A.tab('unicos')"><i data-lucide="zap" width="20" height="20"></i>Variáveis</button>
+            <button class="m-btn" data-tab="projecoes" onclick="A.tab('projecoes')"><i data-lucide="line-chart" width="20" height="20"></i>Projeções</button>
         </nav>
     </div>
 
-    <!-- DRAWER MODAL -->
     <div class="drawer-overlay" id="overlay" onclick="A.closeDrawer()" role="dialog" aria-hidden="true"></div>
     <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
         <div class="drawer-head">
@@ -2129,30 +1363,24 @@
         </div>
         <input type="hidden" id="f-id">
 
-        <!-- INCOME/EXPENSE MODE TABS -->
         <div class="type-tabs" id="modo-tabs" style="margin-bottom:16px;">
             <button class="type-tab active" id="tab-modo-despesa" onclick="A.setModo('despesa')">💸 Despesa</button>
             <button class="type-tab" id="tab-modo-entrada" onclick="A.setModo('entrada')">💰 Receita</button>
         </div>
 
-        <!-- EXPENSE SUB-TYPE TABS -->
         <div class="type-tabs" id="sub-type-tabs" role="tablist">
-            <button class="type-tab active" id="tab-fixos" onclick="A.setType('fixos')" role="tab"
-                aria-selected="true">📌 Custo Fixo</button>
-            <button class="type-tab" id="tab-unicos" onclick="A.setType('unicos')" role="tab" aria-selected="false">⚡
-                Variável</button>
+            <button class="type-tab active" id="tab-fixos" onclick="A.setType('fixos')" role="tab" aria-selected="true">📌 Custo Fixo</button>
+            <button class="type-tab" id="tab-unicos" onclick="A.setType('unicos')" role="tab" aria-selected="false">⚡ Variável</button>
         </div>
 
         <div class="form-group">
             <label class="form-label" for="f-nome" id="lbl-nome">O que está sendo pago? *</label>
-            <input type="text" id="f-nome" class="form-input" placeholder="Ex: Assinatura Notion, Servidor..."
-                autocomplete="off" required>
+            <input type="text" id="f-nome" class="form-input" placeholder="Ex: Assinatura Notion, Servidor..." autocomplete="off" required>
         </div>
         <div class="form-grid">
             <div class="form-group">
                 <label class="form-label" for="f-valor">Valor (R$) *</label>
-                <input type="text" id="f-valor" class="form-input" placeholder="0,00" oninput="A.maskMoney(event)"
-                    required>
+                <input type="text" id="f-valor" class="form-input" placeholder="0,00" oninput="A.maskMoney(event)" required>
             </div>
             <div class="form-group">
                 <label class="form-label" for="f-data">Data / Vencimento</label>
@@ -2166,8 +1394,7 @@
                 <option value="mensal">🔄 Mensal — replica todo mês</option>
                 <option value="proximo">📅 Próximos Meses — replica a partir da data</option>
             </select>
-            <div class="form-hint" id="recor-hint"><i data-lucide="info" width="14" height="14"></i> Lançamento pontual,
-                somente neste mês.</div>
+            <div class="form-hint" id="recor-hint"><i data-lucide="info" width="14" height="14"></i> Lançamento pontual, somente neste mês.</div>
         </div>
         <div class="form-group">
             <label class="form-label" for="f-cat">Categoria</label>
@@ -2189,6 +1416,55 @@
         </button>
     </div>
 
+    <div class="drawer-overlay" id="proj-overlay" onclick="A.closeProjDrawer()" role="dialog" aria-hidden="true"></div>
+    <div class="drawer" id="proj-drawer" role="dialog" aria-modal="true" aria-labelledby="proj-drawer-title">
+        <div class="drawer-head">
+            <h2 class="drawer-title font-title" id="proj-drawer-title">Nova Projeção</h2>
+            <button class="btn-ghost" onclick="A.closeProjDrawer()" aria-label="Fechar" style="padding:10px;">
+                <i data-lucide="x" width="20" height="20"></i>
+            </button>
+        </div>
+        <input type="hidden" id="pf-id">
+
+        <div class="type-tabs" id="proj-modo-tabs" style="margin-bottom:24px;">
+            <button class="type-tab active" id="ptab-saida" onclick="A.setProjType('saida')">💸 Projetar Saída</button>
+            <button class="type-tab" id="ptab-entrada" onclick="A.setProjType('entrada')">💰 Projetar Entrada</button>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="pf-nome">Descrição da Projeção *</label>
+            <input type="text" id="pf-nome" class="form-input" placeholder="Ex: Contrato X, Imposto Y..." autocomplete="off" required>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="form-label" for="pf-valor">Valor Estimado (R$) *</label>
+                <input type="text" id="pf-valor" class="form-input" placeholder="0,00" oninput="A.maskMoney(event)" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="pf-mes">Mês/Competência *</label>
+                <input type="month" id="pf-mes" class="form-input" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="pf-cat">Categoria</label>
+            <select id="pf-cat" class="form-input"></select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="pf-status">Grau de Certeza</label>
+            <select id="pf-status" class="form-input">
+                <option value="Previsto">⏳ Apenas Previsto (Simulação)</option>
+                <option value="Confirmado">✅ Confirmado (Certeza)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="pf-desc">Observação (opcional)</label>
+            <input type="text" id="pf-desc" class="form-input" placeholder="Detalhes ou justificativa..." autocomplete="off">
+        </div>
+        <button class="form-save" id="btn-proj-save" onclick="A.saveProj()">
+            <i data-lucide="save" width="20" height="20"></i> Salvar Projeção
+        </button>
+    </div>
+
     <div id="toast-wrap" role="region" aria-live="polite" aria-label="Notificações"></div>
 
     <script>
@@ -2202,7 +1478,7 @@
         const RECOR_HINTS = { unico: "Lançamento pontual, somente neste mês.", mensal: "Replica automaticamente para todos os 12 meses do ano selecionado.", proximo: "Replica a partir do mês da data informada até dezembro do mesmo ano." };
 
         const A = {
-            state: { tab: 'overview', type: 'fixos', modo: 'despesa', data: { fixos: [], unicos: [], entradas: [] }, supportsEntradas: true },
+            state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', data: { fixos: [], unicos: [], entradas: [], projecoes: { entradas: [], saidas: [] } }, supportsEntradas: true },
             ch: { area: null, donut: null },
 
             init() {
@@ -2224,6 +1500,7 @@
                     setTimeout(() => {
                         document.getElementById('login-screen').style.display = 'none';
                         document.getElementById('app').classList.add('visible');
+                        A.loadProjecoes();
                         A.initCharts(); A.fetchSync(); setInterval(() => A.fetchSync(true), 15000);
                         A.onReportTipoChange();
                         lucide.createIcons();
@@ -2238,31 +1515,50 @@
                 A.state.tab = t;
                 document.querySelectorAll('[data-tab]').forEach(b => { const a = b.dataset.tab === t; b.classList.toggle('active', a); b.setAttribute('aria-current', a ? 'page' : 'false'); });
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                
                 let viewId;
                 if (t === 'overview') viewId = 'view-overview';
                 else if (t === 'annual') viewId = 'view-annual';
                 else if (t === 'entradas') viewId = 'view-entradas';
                 else if (t === 'relatorios') viewId = 'view-relatorios';
+                else if (t === 'projecoes') viewId = 'view-projecoes';
                 else viewId = 'view-list';
+                
                 document.getElementById(viewId).classList.add('active');
+                
                 const titles = {
                     overview: ['Painel Geral', 'Monitoramento de despesas operacionais em tempo real'],
                     annual: ['Balanço Anual', 'Projeção e realizado por mês'],
                     fixos: ['Custos Fixos', 'Despesas recorrentes da operação'],
                     unicos: ['Gastos Variáveis', 'Despesas pontuais e extras'],
                     entradas: ['Entradas', 'Receitas e pagamentos recebidos'],
-                    relatorios: ['Relatórios', 'Exportar relatórios financeiros']
+                    relatorios: ['Relatórios', 'Exportar relatórios financeiros'],
+                    projecoes: ['Projeções Futuras', 'Visão e simulação de fluxo (não afeta dados reais)']
                 };
                 document.getElementById('page-title').textContent = titles[t][0];
                 document.getElementById('page-sub').innerHTML = `<i data-lucide="activity" width="16" height="16"></i> ${titles[t][1]}`;
-                // Update add button
+                
                 const addLabel = document.getElementById('btn-add-label');
                 const addBtn = document.getElementById('btn-add-main');
-                if (t === 'entradas') { addLabel.textContent = 'Nova Entrada'; addBtn.className = 'btn-success'; addBtn.onclick = () => A.openDrawer(null, 'entrada'); }
-                else if (t === 'relatorios') { addBtn.style.display = 'none'; }
-                else { addLabel.textContent = 'Novo Gasto'; addBtn.className = 'btn-primary'; addBtn.style.display = ''; addBtn.onclick = () => A.openDrawer(); }
+                const hGroup = document.getElementById('main-filters');
+
+                // Adjust top filters visibility
+                if(t === 'projecoes') {
+                    if(hGroup) hGroup.style.display = 'none';
+                    addLabel.textContent = 'Nova Projeção'; 
+                    addBtn.className = 'btn-primary'; 
+                    addBtn.style.display = ''; 
+                    addBtn.onclick = () => A.openProjDrawer('saida');
+                    A.renderProjecoes();
+                } else {
+                    if(hGroup) hGroup.style.display = 'flex';
+                    if (t === 'entradas') { addLabel.textContent = 'Nova Entrada'; addBtn.className = 'btn-success'; addBtn.style.display = ''; addBtn.onclick = () => A.openDrawer(null, 'entrada'); }
+                    else if (t === 'relatorios') { addBtn.style.display = 'none'; }
+                    else { addLabel.textContent = 'Novo Gasto'; addBtn.className = 'btn-primary'; addBtn.style.display = ''; addBtn.onclick = () => A.openDrawer(); }
+                    A.render();
+                }
+                
                 lucide.createIcons();
-                A.render();
                 if (t === 'relatorios') A.renderRelatorios();
             },
 
@@ -2292,7 +1588,6 @@
                         A.state.supportsEntradas = false;
                         delete payload.entradas;
                         await fetch(DB.url, { method: 'PATCH', headers: { apikey: DB.key, Authorization: `Bearer ${DB.key}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) });
-                        console.warn('Supabase: coluna "entradas" não encontrada. Dados salvos localmente.');
                     }
                     A.syncUI('ok');
                 } catch (e) { A.syncUI('err'); A.toast("Erro ao salvar na nuvem.", "err"); }
@@ -2309,6 +1604,8 @@
             filterByRange(arr, sm, em, y) { return arr.filter(x => { const p = A.parseDate(x.data); return p && p.y === y && p.m >= sm && p.m <= em; }); },
 
             render() {
+                if(A.state.tab === 'projecoes') return; // Handled by renderProjecoes
+                
                 const mVal = document.getElementById('fMonth').value, year = parseInt(document.getElementById('fYear').value), t = A.state.tab;
                 let fixos, unicos, entradas;
                 if (mVal === 'anual') { fixos = A.filterByYear(A.state.data.fixos, year); unicos = A.filterByYear(A.state.data.unicos, year); entradas = A.filterByYear(A.state.data.entradas, year); }
@@ -2324,48 +1621,49 @@
                 const saldo = sumE - sumSaidas;
                 const margem = sumE > 0 ? ((saldo / sumE) * 100).toFixed(1) : '0.0';
 
-                // Overview KPIs
-                A.animateValue('v-receita-ov', sumE, false, 'var(--success)');
-                A.animateValue('v-mrr-ov', sumMRR);
-                A.animateValue('v-total', sumSaidas, false, 'var(--danger)');
-                A.animateValue('v-fixos', sumF);
-                A.animateValue('v-unicos', sumU);
-                A.animateValue('v-saldo-ov', saldo);
+                if(t === 'overview') {
+                    A.animateValue('v-receita-ov', sumE, false, 'var(--success)');
+                    A.animateValue('v-mrr-ov', sumMRR);
+                    A.animateValue('v-total', sumSaidas, false, 'var(--danger)');
+                    A.animateValue('v-fixos', sumF);
+                    A.animateValue('v-unicos', sumU);
+                    A.animateValue('v-saldo-ov', saldo);
 
-                // Saldo Overview card dinâmico
-                const cardSaldoOv = document.getElementById('card-saldo-ov');
-                const elSaldoOv = document.getElementById('v-saldo-ov');
-                const elSaldoOvSub = document.getElementById('v-saldo-ov-sub');
-                if (cardSaldoOv && elSaldoOv) {
-                    if (saldo >= 0) {
-                        cardSaldoOv.style.borderTopColor = 'var(--success)';
-                        elSaldoOv.style.color = 'var(--success)';
-                        if (elSaldoOvSub) elSaldoOvSub.innerHTML = `<i data-lucide="trending-up" width="14" height="14"></i> Margem: +${margem}% de lucro`;
-                    } else {
-                        cardSaldoOv.style.borderTopColor = 'var(--danger)';
-                        elSaldoOv.style.color = 'var(--danger)';
-                        if (elSaldoOvSub) elSaldoOvSub.innerHTML = `<i data-lucide="trending-down" width="14" height="14"></i> Margem negativa: ${margem}%`;
+                    const cardSaldoOv = document.getElementById('card-saldo-ov');
+                    const elSaldoOv = document.getElementById('v-saldo-ov');
+                    const elSaldoOvSub = document.getElementById('v-saldo-ov-sub');
+                    if (cardSaldoOv && elSaldoOv) {
+                        if (saldo >= 0) {
+                            cardSaldoOv.style.borderTopColor = 'var(--success)';
+                            elSaldoOv.style.color = 'var(--success)';
+                            if (elSaldoOvSub) elSaldoOvSub.innerHTML = `<i data-lucide="trending-up" width="14" height="14"></i> Margem: +${margem}% de lucro`;
+                        } else {
+                            cardSaldoOv.style.borderTopColor = 'var(--danger)';
+                            elSaldoOv.style.color = 'var(--danger)';
+                            if (elSaldoOvSub) elSaldoOvSub.innerHTML = `<i data-lucide="trending-down" width="14" height="14"></i> Margem negativa: ${margem}%`;
+                        }
                     }
-                    lucide.createIcons();
                 }
 
-                // Entradas KPIs
-                A.animateValue('v-receita-total', sumE, false, 'var(--success)');
-                A.animateValue('v-receita-recor', sumER);
-                A.animateValue('v-receita-avulsa', sumEA);
-                A.animateValue('v-saldo-entradas', saldo);
+                if(t === 'entradas') {
+                    A.animateValue('v-receita-total', sumE, false, 'var(--success)');
+                    A.animateValue('v-receita-recor', sumER);
+                    A.animateValue('v-receita-avulsa', sumEA);
+                    A.animateValue('v-saldo-entradas', saldo);
 
-                const cardSaldoEnt = document.getElementById('card-saldo-ent');
-                const elSaldoEnt = document.getElementById('v-saldo-entradas');
-                if (cardSaldoEnt && elSaldoEnt) {
-                    if (saldo >= 0) { cardSaldoEnt.style.borderTopColor = 'var(--success)'; elSaldoEnt.style.color = 'var(--success)'; }
-                    else { cardSaldoEnt.style.borderTopColor = 'var(--danger)'; elSaldoEnt.style.color = 'var(--danger)'; }
+                    const cardSaldoEnt = document.getElementById('card-saldo-ent');
+                    const elSaldoEnt = document.getElementById('v-saldo-entradas');
+                    if (cardSaldoEnt && elSaldoEnt) {
+                        if (saldo >= 0) { cardSaldoEnt.style.borderTopColor = 'var(--success)'; elSaldoEnt.style.color = 'var(--success)'; }
+                        else { cardSaldoEnt.style.borderTopColor = 'var(--danger)'; elSaldoEnt.style.color = 'var(--danger)'; }
+                    }
                 }
 
                 if (t === 'fixos' || t === 'unicos') A.renderTable(t === 'fixos' ? fixos : unicos, 'table-body', 'table-empty', 'gasto');
                 if (t === 'entradas') A.renderTable(entradas, 'table-entradas', 'entradas-empty', 'entrada');
                 if (t === 'annual') A.renderAnnual(year);
                 A.updateCharts();
+                lucide.createIcons();
             },
 
             animateValue(id, value, isInt = false, forceColor = null) {
@@ -2385,7 +1683,11 @@
             },
 
             renderTable(list, tbodyId, emptyId, tipo) {
-                const sorted = [...list].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+                // Apply Search filter
+                const searchQ = (document.getElementById(tipo === 'entrada' ? 'search-entradas' : 'search-gastos')?.value || '').toLowerCase();
+                const filtered = list.filter(i => (i.nome||'').toLowerCase().includes(searchQ) || (i.categoria||'').toLowerCase().includes(searchQ));
+                
+                const sorted = [...filtered].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
                 const tbody = document.getElementById(tbodyId), empty = document.getElementById(emptyId);
                 if (sorted.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; }
                 else {
@@ -2449,7 +1751,7 @@
                 }).join('');
             },
 
-            goToMonth(m, y) { document.getElementById('fMonth').value = m; document.getElementById('fYear').value = y; A.tab('fixos'); },
+            goToMonth(m, y) { document.getElementById('fMonth').value = m; document.getElementById('fYear').value = y; A.tab('overview'); },
 
             initCharts() {
                 const base = { chart: { background: 'transparent', fontFamily: 'Inter', toolbar: { show: false }, animations: { enabled: true, speed: 800, easing: 'easeinout' } }, theme: { mode: 'dark' } };
@@ -2492,7 +1794,7 @@
                 else { A.ch.donut.updateSeries([1]); A.ch.donut.updateOptions({ labels: ['Sem dados'], colors: ['#1e293b'] }); }
             },
 
-            // ── DRAWER ──
+            // ── DRAWER REAL ──
             setModo(modo) {
                 A.state.modo = modo;
                 document.getElementById('tab-modo-despesa').classList.toggle('active', modo === 'despesa');
@@ -2511,7 +1813,7 @@
                     const sel = document.getElementById('f-cat'); sel.innerHTML = '';
                     CATS.entradas.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
                 } else {
-                    subTabs.style.display = '';
+                    subTabs.style.display = 'flex';
                     lblNome.textContent = 'O que está sendo pago? *';
                     lblStatus.textContent = 'Status do Pagamento';
                     saveBtn.className = 'form-save';
@@ -2545,8 +1847,7 @@
                     const defType = A.state.tab === 'unicos' ? 'unicos' : 'fixos';
                     if (A.state.modo === 'despesa') A.setType(defType);
                     document.getElementById('f-id').value = ''; document.getElementById('f-nome').value = '';
-                    document.getElementById('f-valor').value = '';
-                    document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+                    document.getElementById('f-valor').value = ''; document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
                     document.getElementById('f-status').value = 'Pago'; document.getElementById('f-desc').value = '';
                     document.getElementById('f-recor').value = 'unico'; A.onRecorChange();
                 }
@@ -2573,8 +1874,8 @@
                 const isIncome = A.state.modo === 'entrada';
                 const arrKey = isIncome ? 'entradas' : A.state.type;
                 const arr = A.state.data[arrKey];
+                
                 if (editId) {
-                    // Remove from all arrays if editing
                     ['fixos', 'unicos', 'entradas'].forEach(k => { A.state.data[k] = A.state.data[k].filter(i => i.id !== editId); });
                     arr.push({ id: editId, ...base });
                 } else {
@@ -2585,7 +1886,7 @@
                     } else if (recorrente === 'proximo') {
                         const [y, mo, d] = dataBase.split('-'); const startM = parseInt(mo) - 1; let count = 0;
                         for (let m = startM; m < 12; m++) { arr.push({ id: `bgt_${Date.now()}_${m}`, ...base, data: `${y}-${String(m + 1).padStart(2, '0')}-${d}` }); count++; }
-                        A.toast(`${count} ${isIncome ? 'entradas' : 'lançamentos'} criados (${MONTHS[startM]} → Dezembro)! ✨`);
+                        A.toast(`${count} ${isIncome ? 'entradas' : 'lançamentos'} criados! ✨`);
                     } else {
                         arr.push({ id: `bgt_${Date.now()}`, ...base });
                         A.toast(`${isIncome ? 'Entrada registrada' : 'Registro salvo'} com sucesso! ✅`);
@@ -2594,7 +1895,7 @@
                 A.closeDrawer(); A.render(); A.pushSync();
             },
 
-            edit(id) { const item = A.state.data.fixos.find(i => i.id === id) || A.state.data.unicos.find(i => i.id === id) || A.state.data.entradas.find(i => i.id === id); if (item) A.openDrawer(item); },
+            edit(id) { const item = (A.state.data.fixos||[]).find(i => i.id === id) || (A.state.data.unicos||[]).find(i => i.id === id) || (A.state.data.entradas||[]).find(i => i.id === id); if (item) A.openDrawer(item); },
 
             del(id) {
                 if (confirm("Confirmar exclusão permanente deste registro?")) {
@@ -2630,19 +1931,19 @@
 
             renderRelatorios() {
                 const { sm, em, year, label } = A.getReportRange();
-                const entradas = A.filterByRange(A.state.data.entradas, sm, em, year);
-                const fixos = A.filterByRange(A.state.data.fixos, sm, em, year);
-                const unicos = A.filterByRange(A.state.data.unicos, sm, em, year);
+                const entradas = A.filterByRange(A.state.data.entradas||[], sm, em, year);
+                const fixos = A.filterByRange(A.state.data.fixos||[], sm, em, year);
+                const unicos = A.filterByRange(A.state.data.unicos||[], sm, em, year);
                 const totalE = entradas.reduce((a, b) => a + Number(b.valor), 0);
                 const totalS = fixos.reduce((a, b) => a + Number(b.valor), 0) + unicos.reduce((a, b) => a + Number(b.valor), 0);
                 const saldo = totalE - totalS; const totalMov = totalE + totalS;
-                // KPIs
+                
                 document.getElementById('report-kpis').innerHTML = `
       <div class="report-kpi"><div class="report-kpi-label">Total Movimentado</div><div class="report-kpi-value" style="color:var(--text)">${A.fmtR(totalMov)}</div></div>
       <div class="report-kpi"><div class="report-kpi-label">Total Entradas</div><div class="report-kpi-value positive">${A.fmtR(totalE)}</div></div>
       <div class="report-kpi"><div class="report-kpi-label">Total Saídas</div><div class="report-kpi-value negative">${A.fmtR(totalS)}</div></div>
-      <div class="report-kpi"><div class="report-kpi-label">Saldo</div><div class="report-kpi-value ${saldo >= 0 ? 'positive' : 'negative'}">${A.fmtR(saldo)}</div></div>`;
-                // Category breakdown
+      <div class="report-kpi"><div class="report-kpi-label">Saldo do Período</div><div class="report-kpi-value ${saldo >= 0 ? 'positive' : 'negative'}">${A.fmtR(saldo)}</div></div>`;
+                
                 const catMap = {};
                 entradas.forEach(x => { const k = '📥 ' + x.categoria; catMap[k] = (catMap[k] || { sum: 0, type: 'income' }); catMap[k].sum += Number(x.valor); });
                 fixos.concat(unicos).forEach(x => { const k = '📤 ' + x.categoria; catMap[k] = (catMap[k] || { sum: 0, type: 'expense' }); catMap[k].sum += Number(x.valor); });
@@ -2663,66 +1964,193 @@
                 lucide.createIcons();
             },
 
-            exportCSV() {
-                const { sm, em, year, label } = A.getReportRange();
-                const allItems = [];
-                A.filterByRange(A.state.data.entradas, sm, em, year).forEach(x => allItems.push({ ...x, tipo: 'Entrada' }));
-                A.filterByRange(A.state.data.fixos, sm, em, year).forEach(x => allItems.push({ ...x, tipo: 'Custo Fixo' }));
-                A.filterByRange(A.state.data.unicos, sm, em, year).forEach(x => allItems.push({ ...x, tipo: 'Gasto Variável' }));
-                allItems.sort((a, b) => (a.data || '').localeCompare(b.data || ''));
-                const header = 'Data,Tipo,Descrição,Categoria,Recorrência,Status,Valor\n';
-                const rows = allItems.map(i => `"${A.fmtD(i.data)}","${i.tipo}","${i.nome}","${i.categoria || ''}","${i.recorrente || 'unico'}","${i.status || ''}","${Number(i.valor).toFixed(2)}"`).join('\n');
-                const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `BG_Tech_Relatorio_${label.replace(/\s/g, '_')}.csv`; a.click(); URL.revokeObjectURL(url);
-                A.toast("CSV exportado! 📊");
+            // ── PROJEÇÕES MÓDULO ISOLADO ──
+            loadProjecoes() {
+                try {
+                    const stored = localStorage.getItem('bg_projecoes');
+                    if (stored) A.state.data.projecoes = JSON.parse(stored);
+                    else A.state.data.projecoes = { entradas: [], saidas: [] };
+                } catch(e) { A.state.data.projecoes = { entradas: [], saidas: [] }; }
             },
 
-            exportPDF() {
-                const { sm, em, year, label } = A.getReportRange();
-                const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                // Header
-                doc.setFillColor(3, 7, 18); doc.rect(0, 0, 210, 40, 'F');
-                doc.setTextColor(14, 165, 233); doc.setFontSize(24); doc.setFont('helvetica', 'bold'); doc.text('BG TECH', 20, 22);
-                doc.setTextColor(148, 163, 184); doc.setFontSize(12); doc.setFont('helvetica', 'normal'); doc.text('Relatório Financeiro', 20, 32);
-                doc.setTextColor(245, 250, 252); doc.setFontSize(11); doc.text(label, 190, 27, { align: 'right' });
-                // KPIs
-                const entradas = A.filterByRange(A.state.data.entradas, sm, em, year);
-                const fixos = A.filterByRange(A.state.data.fixos, sm, em, year);
-                const unicos = A.filterByRange(A.state.data.unicos, sm, em, year);
-                const totalE = entradas.reduce((a, b) => a + Number(b.valor), 0);
-                const totalS = fixos.reduce((a, b) => a + Number(b.valor), 0) + unicos.reduce((a, b) => a + Number(b.valor), 0);
-                const saldo = totalE - totalS;
-                doc.setTextColor(60, 60, 60); doc.setFontSize(10);
-                let y = 52;
-                doc.setFont('helvetica', 'bold'); doc.text('RESUMO FINANCEIRO', 20, y); y += 10;
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Total Entradas: ${A.fmtR(totalE)}`, 20, y); y += 7;
-                doc.text(`Total Saídas: ${A.fmtR(totalS)}`, 20, y); y += 7;
-                doc.setFont('helvetica', 'bold'); doc.text(`Saldo: ${A.fmtR(saldo)}`, 20, y); y += 14;
-                // Table
-                const allItems = [];
-                entradas.forEach(x => allItems.push({ ...x, tipo: 'Entrada' }));
-                fixos.forEach(x => allItems.push({ ...x, tipo: 'Custo Fixo' }));
-                unicos.forEach(x => allItems.push({ ...x, tipo: 'Variável' }));
-                allItems.sort((a, b) => (a.data || '').localeCompare(b.data || ''));
-                if (allItems.length > 0) {
-                    doc.autoTable({
-                        startY: y,
-                        head: [['Data', 'Tipo', 'Descrição', 'Categoria', 'Valor']],
-                        body: allItems.map(i => [A.fmtD(i.data), i.tipo, i.nome, i.categoria || '—', A.fmtR(i.valor)]),
-                        theme: 'grid',
-                        headStyles: { fillColor: [14, 165, 233], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9 },
-                        bodyStyles: { fontSize: 9, textColor: [60, 60, 60] },
-                        alternateRowStyles: { fillColor: [245, 247, 250] },
-                        columnStyles: { 4: { halign: 'right', fontStyle: 'bold' } },
-                        margin: { left: 20, right: 20 }
-                    });
+            saveProjecoes() {
+                localStorage.setItem('bg_projecoes', JSON.stringify(A.state.data.projecoes));
+            },
+
+            setProjType(t) {
+                A.state.pTipo = t;
+                document.getElementById('ptab-entrada').classList.toggle('active', t === 'entrada');
+                document.getElementById('ptab-saida').classList.toggle('active', t === 'saida');
+                const sel = document.getElementById('pf-cat');
+                sel.innerHTML = '';
+                const cats = t === 'entrada' ? CATS.entradas : [...CATS.fixos, ...CATS.unicos];
+                cats.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+                
+                const btn = document.getElementById('btn-proj-save');
+                if(t === 'entrada') {
+                    btn.className = 'form-save save-income';
+                } else {
+                    btn.className = 'form-save';
+                    btn.style.background = 'linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%)';
+                    btn.style.boxShadow = '0 6px 30px var(--danger-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                 }
-                // Footer
-                const pageCount = doc.internal.getNumberOfPages();
-                for (let p = 1; p <= pageCount; p++) { doc.setPage(p); doc.setFontSize(8); doc.setTextColor(150); doc.text(`BG Tech CFO Dashboard — Gerado em ${new Date().toLocaleDateString('pt-BR')}`, 20, 287); doc.text(`Página ${p}/${pageCount}`, 190, 287, { align: 'right' }); }
-                doc.save(`BG_Tech_Relatorio_${label.replace(/\s/g, '_')}.pdf`);
-                A.toast("PDF exportado! 📄");
+            },
+
+            openProjDrawer(tipo, id = null) {
+                document.getElementById('proj-drawer').classList.add('open'); 
+                document.getElementById('proj-overlay').classList.add('open');
+                
+                if (id) {
+                    const item = A.state.data.projecoes[tipo+'s'].find(i => i.id === id);
+                    if(!item) return;
+                    A.setProjType(tipo);
+                    document.getElementById('proj-drawer-title').textContent = 'Editar Projeção';
+                    document.getElementById('pf-id').value = item.id;
+                    document.getElementById('pf-nome').value = item.nome;
+                    document.getElementById('pf-valor').value = A.fmtR(item.valor).replace('R$\u00a0', '').replace('R$', '').trim();
+                    document.getElementById('pf-mes').value = item.mes;
+                    document.getElementById('pf-cat').value = item.categoria || '';
+                    document.getElementById('pf-status').value = item.status || 'Previsto';
+                    document.getElementById('pf-desc').value = item.descricao || '';
+                } else {
+                    A.setProjType(tipo || 'saida');
+                    document.getElementById('proj-drawer-title').textContent = 'Nova Projeção';
+                    document.getElementById('pf-id').value = '';
+                    document.getElementById('pf-nome').value = '';
+                    document.getElementById('pf-valor').value = '';
+                    const now = new Date();
+                    document.getElementById('pf-mes').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                    document.getElementById('pf-status').value = 'Previsto';
+                    document.getElementById('pf-desc').value = '';
+                }
+                setTimeout(() => document.getElementById('pf-nome').focus(), 100); 
+                lucide.createIcons();
+            },
+
+            closeProjDrawer() {
+                document.getElementById('proj-drawer').classList.remove('open'); 
+                document.getElementById('proj-overlay').classList.remove('open');
+            },
+
+            saveProj() {
+                const nome = document.getElementById('pf-nome').value.trim();
+                const valor = A.cleanMoney(document.getElementById('pf-valor').value);
+                if (!nome || valor <= 0) { A.toast("Preencha nome e valor válido.", "err"); document.getElementById('pf-nome').focus(); return; }
+
+                const mes = document.getElementById('pf-mes').value; 
+                if(!mes) { A.toast("Mês/Competência é obrigatório.", "err"); return; }
+
+                const tipo = A.state.pTipo; 
+                const id = document.getElementById('pf-id').value || 'proj_' + Date.now();
+
+                const base = {
+                    id, nome, valor, mes,
+                    categoria: document.getElementById('pf-cat').value,
+                    status: document.getElementById('pf-status').value,
+                    descricao: document.getElementById('pf-desc').value.trim(),
+                    created_at: new Date().toISOString()
+                };
+
+                const arrKey = tipo + 's'; 
+                A.state.data.projecoes.entradas = A.state.data.projecoes.entradas.filter(x => x.id !== id);
+                A.state.data.projecoes.saidas = A.state.data.projecoes.saidas.filter(x => x.id !== id);
+                
+                A.state.data.projecoes[arrKey].push(base);
+
+                A.saveProjecoes();
+                A.closeProjDrawer();
+                A.renderProjecoes();
+                A.toast("Projeção salva com sucesso! 🔮");
+            },
+
+            delProj(tipo, id) {
+                if (confirm("Excluir permanentemente esta projeção?")) {
+                    A.state.data.projecoes.entradas = A.state.data.projecoes.entradas.filter(x => x.id !== id);
+                    A.state.data.projecoes.saidas = A.state.data.projecoes.saidas.filter(x => x.id !== id);
+                    A.saveProjecoes();
+                    A.renderProjecoes();
+                    A.toast("Projeção removida. 🗑️");
+                }
+            },
+
+            renderProjecoes() {
+                const horizon = parseInt(document.getElementById('p-horizonte').value);
+                const monthFilter = document.getElementById('p-mes-filter');
+                const prevSelected = monthFilter.value;
+                
+                const now = new Date();
+                const curY = now.getFullYear();
+                const curM = now.getMonth() + 1; 
+                const toAbs = (y, m) => y * 12 + m;
+                const absNow = toAbs(curY, curM);
+                const absEnd = absNow + horizon - 1;
+
+                monthFilter.innerHTML = '<option value="all">Todos os meses do horizonte</option>';
+                for(let i=0; i<horizon; i++) {
+                   let targetAbs = absNow + i;
+                   let ty = Math.floor((targetAbs - 1) / 12);
+                   let tm = ((targetAbs - 1) % 12) + 1;
+                   let str = `${ty}-${String(tm).padStart(2,'0')}`;
+                   let label = `${MONTHS[tm-1]} ${ty}`;
+                   monthFilter.innerHTML += `<option value="${str}">${label}</option>`;
+                }
+                if([...monthFilter.options].some(o => o.value === prevSelected)) monthFilter.value = prevSelected;
+
+                const allProj = [
+                   ...A.state.data.projecoes.entradas.map(x => ({...x, _tipo: 'entrada'})),
+                   ...A.state.data.projecoes.saidas.map(x => ({...x, _tipo: 'saida'}))
+                ];
+
+                const filtered = allProj.filter(p => {
+                   if(!p.mes) return false;
+                   const [py, pm] = p.mes.split('-');
+                   const pAbs = toAbs(parseInt(py), parseInt(pm));
+                   if (pAbs < absNow || pAbs > absEnd) return false; 
+                   if (monthFilter.value !== 'all' && p.mes !== monthFilter.value) return false;
+                   return true;
+                });
+
+                const totalE = filtered.filter(x => x._tipo === 'entrada').reduce((acc, curr) => acc + Number(curr.valor), 0);
+                const totalS = filtered.filter(x => x._tipo === 'saida').reduce((acc, curr) => acc + Number(curr.valor), 0);
+                const saldo = totalE - totalS;
+
+                A.animateValue('p-v-entradas', totalE, false, 'var(--success)');
+                A.animateValue('p-v-saidas', totalS, false, 'var(--danger)');
+                A.animateValue('p-v-saldo', saldo);
+
+                const cardSaldo = document.getElementById('p-card-saldo');
+                const valSaldo = document.getElementById('p-v-saldo');
+                if (cardSaldo && valSaldo) {
+                    if (saldo >= 0) { cardSaldo.className = 'card stat-card c-success'; valSaldo.style.color = 'var(--success)'; }
+                    else { cardSaldo.className = 'card stat-card c-danger'; valSaldo.style.color = 'var(--danger)'; }
+                }
+
+                filtered.sort((a,b) => a.mes.localeCompare(b.mes));
+                const tbody = document.getElementById('p-table-body');
+                const empty = document.getElementById('p-table-empty');
+
+                if(filtered.length === 0) {
+                   tbody.innerHTML = '';
+                   empty.style.display = 'block';
+                } else {
+                   empty.style.display = 'none';
+                   tbody.innerHTML = filtered.map((i, idx) => {
+                      const isE = i._tipo === 'entrada';
+                      const isConf = i.status === 'Confirmado';
+                      return `<tr style="animation:fadeInUp 0.5s ease ${idx*30}ms both;">
+                         <td style="color:var(--text-muted);font-weight:600;white-space:nowrap">${i.mes.split('-').reverse().join('/')}</td>
+                         <td><div class="item-name">${esc(i.nome)}</div>${i.descricao ? `<div class="item-desc">${esc(i.descricao)}</div>`:''}</td>
+                         <td><span class="cat-badge ${isE ? 'income' : ''}">${esc(i.categoria||'—')}</span></td>
+                         <td><span class="status-badge ${isConf ? 'pago' : 'pendente'}">${isConf ? '✅ Confirmado' : '⏳ Previsto'}</span></td>
+                         <td class="amount-cell font-title" style="color:${isE ? 'var(--success)' : 'var(--text)'}">${isE?'+ ':''}${A.fmtR(i.valor)}</td>
+                         <td style="text-align:center;white-space:nowrap">
+                            <button class="action-btn" onclick="A.openProjDrawer('${i._tipo}', '${i.id}')" title="Editar"><i data-lucide="edit-2" width="16" height="16"></i></button>
+                            <button class="action-btn del" onclick="A.delProj('${i._tipo}', '${i.id}')" title="Excluir"><i data-lucide="trash-2" width="16" height="16"></i></button>
+                         </td>
+                      </tr>`;
+                   }).join('');
+                }
+                lucide.createIcons();
             },
 
             toast(msg, type = 'ok') {
@@ -2738,8 +2166,7 @@
 
         function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
         window.onload = A.init;
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') A.closeDrawer(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { A.closeDrawer(); A.closeProjDrawer(); A.closeExportModal(); } });
     </script>
 </body>
-
 </html>
