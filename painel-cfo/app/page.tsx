@@ -50,11 +50,11 @@ export default function CFODashboard() {
     setLoading(true);
     setError(null);
     try {
-      const { error: loginError, user: supaUser } = await supabase.auth.signInWithPassword({
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
         email: user,
         password: pass
       });
-      if (loginError) {
+      if (loginError || !data?.user) {
         setError("Credenciais inválidas.");
       } else {
         // Sucesso: redireciona ou mostra cockpit
