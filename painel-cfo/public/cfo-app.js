@@ -114,6 +114,7 @@ const A = {
             A.supabaseChannel = null;
         }
     },
+    // Nenhum bloco solto aqui!
     // ...adicione o bloco de Supabase Realtime dentro da função de login ou init...
 
     tab(t) {
