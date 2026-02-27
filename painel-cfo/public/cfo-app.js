@@ -73,6 +73,9 @@ const A = {
     state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', lang: 'pt-BR', data: { fixos: [], unicos: [], entradas: [], projecoes: { entradas: [], saidas: [] }, caixa_disponivel: 0 }, supportsEntradas: true },
     ch: { area: null, donut: null, dreBar: null, dreLine: null },
 
+    genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9); },
+
+    supabaseChannel: null,
     init() {
         if (typeof lucide !== 'undefined') lucide.createIcons();
         const sel = document.getElementById('fMonth');
@@ -104,24 +107,6 @@ const A = {
                 fGroup.appendChild(projetoSel);
             }
         }
-    },
-
-    genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9); },
-
-    supabaseChannel: null,
-    init() {
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-        const sel = document.getElementById('fMonth');
-        if (sel && sel.options.length <= 1) {
-            MONTHS.forEach((m, i) => sel.innerHTML += `<option value="${i}">${m}</option>`);
-            sel.value = new Date().getMonth();
-        }
-        const lp = document.getElementById('lp');
-        if (lp) lp.addEventListener('keypress', e => { if (e.key === 'Enter') A.login() });
-        const lu = document.getElementById('lu');
-        if (lu) lu.addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('lp').focus() });
-        const fd = document.getElementById('f-data');
-        if (fd) fd.value = new Date().toISOString().split('T')[0];
     },
     cleanup() {
         if (A.supabaseChannel && typeof A.supabaseChannel.unsubscribe === 'function') {
