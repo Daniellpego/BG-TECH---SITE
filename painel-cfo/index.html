@@ -67,6 +67,7 @@
             transition: background-color 5000s ease-in-out 0s;
         }
         select option { background-color: #0a0f1a; color: #f8fafc; padding: 12px; font-size: 14px; }
+        select.form-input { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; padding-right: 48px; }
 
         #login-screen { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: #03050a; }
         .app { display: none; min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--transition), transform 0.6s var(--transition); z-index: 1; position: relative; }
@@ -100,6 +101,7 @@
         .filter-group { display: flex; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; backdrop-filter: blur(10px); }
         .filter-select { background: transparent; color: var(--text); border: none; padding: 12px 16px; font-size: 13px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.2s; }
         .filter-select:hover { background: rgba(255, 255, 255, 0.05); }
+        .filter-select option { background: #0d1117; padding: 8px; }
         .filter-sep { width: 1px; background: var(--color-border); }
 
         .btn-primary, .btn-success, .btn-ghost, .form-save { position: relative; overflow: hidden; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; border: none; }
@@ -198,11 +200,8 @@
 
         .form-group { margin-bottom: 24px; }
         .form-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        
-        /* IMPEDINDO O FUNDO BRANCO E DEFININDO SETA CUSTOMIZADA */
         .form-input { width: 100%; padding: 16px 18px; border-radius: var(--radius-sm); background: rgba(0, 0, 0, 0.5); border: 1px solid var(--color-border); color: var(--text); font-size: 14px; font-weight: 500; transition: all 0.3s ease; outline: none; }
         .form-input:focus { border-color: var(--primary); background: rgba(14, 165, 233, 0.05); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1); }
-        select.form-input { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; padding-right: 48px; }
 
         #toast-wrap { position: fixed; bottom: 32px; right: 32px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
         .toast { background: rgba(15, 23, 42, 0.95); border: 1px solid var(--color-border); border-left: 4px solid var(--primary); padding: 16px 24px; border-radius: var(--radius-sm); color: var(--text); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 12px; transform: translateX(120%) scale(0.9); opacity: 0; transition: all 0.5s var(--transition); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px); pointer-events: all; }
@@ -753,7 +752,7 @@
             url: "https://urpuiznydrlwmaqhdids.supabase.co", 
             key: "sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0" 
         };
-
+        
         const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         
         const CATS = {
@@ -766,7 +765,6 @@
             state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', data: { fixos: [], unicos: [], entradas: [], projecoes: {entradas:[], saidas:[]}, caixa_disponivel: 0 } },
             ch: { area: null, donut: null, dreBar: null, dreLine: null },
             
-            // Instancia o Supabase sem travar a tela
             get sb() {
                 if (!this._sbClient && window.supabase) {
                     this._sbClient = window.supabase.createClient(DB.url, DB.key);
@@ -780,7 +778,6 @@
                 sel.value = new Date().getMonth();
                 document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
                 
-                // Eventos de clique no "Enter" para login
                 document.getElementById('lp').addEventListener('keypress', e => { if (e.key === 'Enter') A.login() });
                 document.getElementById('lu').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('lp').focus() });
 
@@ -790,13 +787,12 @@
             genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9); },
 
             login() {
-                const u = document.getElementById('lu').value.trim().toLowerCase(), p = document.getElementById('lp').value, lc = document.getElementById('login-card');
-                
                 if (!window.supabase) {
-                    A.toast("Aguarde a conexão inicial ou desative o AdBlocker.", "err");
+                    A.toast("Aguarde a conexão com o banco ou desative o AdBlocker.", "err");
                     return;
                 }
-
+                const u = document.getElementById('lu').value.trim().toLowerCase(), p = document.getElementById('lp').value, lc = document.getElementById('login-card');
+                
                 if ((u === 'bgtech' || u === 'gustavo' || u === 'gui' || u === 'lucas' || u === 'daniel') && p === 'admin2024') {
                     document.getElementById('btn-login').classList.add('loading');
                     lc.style.transform = 'scale(0.9)'; lc.style.opacity = '0'; lc.style.transition = 'all 0.5s ease';
@@ -896,7 +892,7 @@
                 } catch (e) {
                     console.error("Falha na sincronização:", e);
                     A.syncUI('err');
-                    if(!silent) A.toast("Modo Offline.", "err");
+                    if(!silent) A.toast("Modo Offline (Banco inativo ou sem permissão).", "err");
                 }
             },
 
@@ -991,7 +987,7 @@
                 const sumMRR = eMC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0);
                 
                 let sumImp = uMC.filter(x => (x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0);
-                if (sumImp === 0 && sumE > 0) { sumImp = sumE * 0.06; } // Fallback 6% Simples Nacional
+                if (sumImp === 0 && sumE > 0) { sumImp = sumE * 0.06; }
 
                 const resLiq = sumE - sumBurn; 
                 const margem = sumE > 0 ? ((resLiq / sumE) * 100).toFixed(1) : '0.0';
@@ -1408,7 +1404,6 @@
                 }
             },
 
-            // --- PROJEÇÕES E EXPORTAÇÃO ---
             renderProjecoes() {
                 const horizon = parseInt(document.getElementById('p-horizonte').value);
                 const now = new Date(), curY = now.getFullYear(), curM = now.getMonth() + 1;
