@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { CircleDot, KanbanSquare, Plus, X } from 'lucide-react';
+import { ArrowRight, CircleDot, KanbanSquare, Plus, Trash2, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 type Opportunity = {
@@ -117,6 +117,52 @@ export default function PipelinePage() {
     }
   }
 
+  async function handleMoveStage(oppId: string, currentStage: string) {
+    try {
+      const currentIndex = INITIAL_COLUMNS.indexOf(currentStage);
+      
+      // Se for a última etapa, não permite avançar
+      if (currentIndex >= INITIAL_COLUMNS.length - 1) {
+        alert('Esta oportunidade já está na última etapa');
+        return;
+      }
+
+      const nextStage = INITIAL_COLUMNS[currentIndex + 1];
+
+      const { error } = await supabase
+        .from('crm_opportunities')
+        .update({ stage: nextStage })
+        .eq('id', oppId);
+
+      if (error) throw error;
+
+      await fetchOpportunities();
+    } catch (err: any) {
+      console.error('Erro ao mover oportunidade:', err);
+      alert('Erro ao mover oportunidade: ' + (err.message || 'Erro desconhecido'));
+    }
+  }
+
+  async function handleDeleteOpportunity(oppId: string) {
+    try {
+      if (!confirm('Tem certeza que deseja excluir esta oportunidade?')) {
+        return;
+      }
+
+      const { error } = await supabase
+        .from('crm_opportunities')
+        .delete()
+        .eq('id', oppId);
+
+      if (error) throw error;
+
+      await fetchOpportunities();
+    } catch (err: any) {
+      console.error('Erro ao deletar oportunidade:', err);
+      alert('Erro ao deletar oportunidade: ' + (err.message || 'Erro desconhecido'));
+    }
+  }
+
   const groupedByStage = useMemo(() => {
     return columns.reduce<Record<string, Opportunity[]>>((accumulator, stage) => {
       accumulator[stage] = opportunities.filter((item) => item.stage === stage);
@@ -159,19 +205,48 @@ export default function PipelinePage() {
             </div>
 
             <div className="space-y-3">
-              {(groupedByStage[stage] ?? []).map((opportunity) => (
-                <div
-                  key={opportunity.id}
-                  className="rounded-xl border border-white/10 bg-[#03050a]/40 p-3 backdrop-blur-md"
-                >
-                  <p className="text-sm font-medium text-slate-100">{opportunity.title || 'Oportunidade sem título'}</p>
-                  <p className="mt-2 text-xs text-slate-400">
-                    {typeof opportunity.value === 'number'
-                      ? opportunity.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                      : 'Valor não informado'}
-                  </p>
-                </div>
-              ))}
+              {(groupedByStage[stage] ?? []).map((opportunity) => {
+                const isLastStage = stage === INITIAL_COLUMNS[INITIAL_COLUMNS.length - 1];
+                return (
+                  <div
+                    key={opportunity.id}
+                    className="rounded-xl border border-white/10 bg-[#03050a]/40 backdrop-blur-md overflow-hidden"
+                  >
+                    <div className="p-3">
+                      <p className="text-sm font-medium text-slate-100">{opportunity.title || 'Oportunidade sem título'}</p>
+                      <p className="mt-2 text-xs text-slate-400">
+                        {typeof opportunity.value === 'number'
+                          ? opportunity.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                          : 'Valor não informado'}
+                      </p>
+                    </div>
+
+                    {/* Ação Rápida (Rodapé do Card) */}
+                    <div className="border-t border-white/10 px-3 py-2 flex items-center justify-between bg-white/5">
+                      <button
+                        onClick={() => handleMoveStage(opportunity.id, stage)}
+                        disabled={isLastStage}
+                        title={isLastStage ? 'Oportunidade já está na última etapa' : 'Avançar para próxima etapa'}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-all ${
+                          isLastStage
+                            ? 'bg-white/5 text-white/40 cursor-not-allowed'
+                            : 'bg-sky-500/20 text-sky-300 hover:bg-sky-500/30'
+                        }`}
+                      >
+                        <ArrowRight className="w-3.5 h-3.5" />
+                        Avançar
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOpportunity(opportunity.id)}
+                        title="Deletar oportunidade"
+                        className="p-1.5 rounded text-white/60 hover:bg-rose-500/20 hover:text-rose-300 transition-all"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
 
               {!loading && (groupedByStage[stage]?.length ?? 0) === 0 && (
                 <div className="flex items-center gap-2 rounded-xl border border-dashed border-white/10 p-3 text-xs text-slate-400">

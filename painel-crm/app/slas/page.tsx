@@ -1,8 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Activity, Building2, CheckCircle2, Clock, Plus, ShieldAlert } from 'lucide-react';
+import { Activity, Building2, CheckCircle2, Clock, Plus, ShieldAlert, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+
+type Account = {
+  id: string;
+  company_name: string;
+};
+
+type Opportunity = {
+  id: string;
+  title: string;
+  account_id: string;
+};
 
 type SLA = {
   id: string;
@@ -15,14 +26,110 @@ type SLA = {
   } | null;
 };
 
+type FormData = {
+  account_id: string;
+  opportunity_id: string;
+  monthly_value: string;
+  start_date: string;
+  end_date: string;
+};
+
 export default function SLAsPage() {
   const [slas, setSlas] = useState<SLA[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [availableAccounts, setAvailableAccounts] = useState<Account[]>([]);
+  const [availableOpportunities, setAvailableOpportunities] = useState<Opportunity[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    account_id: '',
+    opportunity_id: '',
+    monthly_value: '',
+    start_date: '',
+    end_date: '',
+  });
 
   useEffect(() => {
     fetchSLAs();
+    fetchAccounts();
+    fetchOpportunities();
   }, []);
+
+  async function fetchAccounts() {
+    try {
+      const { data, error } = await supabase
+        .from('crm_accounts')
+        .select('id, company_name');
+
+      if (error) throw error;
+
+      setAvailableAccounts((data as Account[]) || []);
+    } catch (err) {
+      console.error('Erro ao buscar contas:', err);
+    }
+  }
+
+  async function fetchOpportunities() {
+    try {
+      const { data, error } = await supabase
+        .from('crm_opportunities')
+        .select('id, title, account_id');
+
+      if (error) throw error;
+
+      setAvailableOpportunities((data as Opportunity[]) || []);
+    } catch (err) {
+      console.error('Erro ao buscar oportunidades:', err);
+    }
+  }
+
+  async function handleCreateSLA(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!formData.account_id || !formData.monthly_value || !formData.start_date || !formData.end_date) {
+      alert('Preencha todos os campos obrigatórios');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const insertData: any = {
+        account_id: formData.account_id,
+        monthly_value: parseFloat(formData.monthly_value),
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        status: 'Ativo',
+      };
+
+      if (formData.opportunity_id) {
+        insertData.opportunity_id = formData.opportunity_id;
+      }
+
+      const { error } = await supabase.from('crm_slas').insert([insertData]);
+
+      if (error) throw error;
+
+      // Fecha modal e reseta form
+      setShowModal(false);
+      setFormData({
+        account_id: '',
+        opportunity_id: '',
+        monthly_value: '',
+        start_date: '',
+        end_date: '',
+      });
+
+      // Recarrega SLAs
+      await fetchSLAs();
+    } catch (err: any) {
+      console.error('Erro ao criar SLA:', err);
+      alert('Erro ao criar SLA: ' + (err.message || 'Erro desconhecido'));
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function fetchSLAs() {
     try {
@@ -104,7 +211,9 @@ export default function SLAsPage() {
               Radar de renovação e análise de saúde contratual
             </p>
           </div>
-          <button className="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 font-semibold text-white transition hover:bg-sky-600">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 font-semibold text-white transition hover:bg-sky-600">
             <Plus className="h-5 w-5" />
             Novo Contrato
           </button>
@@ -233,6 +342,139 @@ export default function SLAsPage() {
               </article>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal de Novo Contrato SLA */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#03050a] p-8 shadow-2xl">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Novo Contrato SLA</h2>
+                <p className="mt-1 text-sm text-white/60">Preencha os dados para criar um novo contrato</p>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSLA} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                {/* Conta */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Conta *
+                  </label>
+                  <select
+                    required
+                    value={formData.account_id}
+                    onChange={(e) => setFormData({ ...formData, account_id: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  >
+                    <option value="" className="bg-slate-900">
+                      Selecione uma conta...
+                    </option>
+                    {availableAccounts.map((account) => (
+                      <option key={account.id} value={account.id} className="bg-slate-900">
+                        {account.company_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Oportunidade Origem */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Oportunidade Origem (opcional)
+                  </label>
+                  <select
+                    value={formData.opportunity_id}
+                    onChange={(e) => setFormData({ ...formData, opportunity_id: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  >
+                    <option value="" className="bg-slate-900">
+                      Nenhuma oportunidade
+                    </option>
+                    {availableOpportunities.map((opp) => (
+                      <option key={opp.id} value={opp.id} className="bg-slate-900">
+                        {opp.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Valor Mensal */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Valor Mensal (R$) *
+                </label>
+                <input
+                  required
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="Ex: 5000.00"
+                  value={formData.monthly_value}
+                  onChange={(e) => setFormData({ ...formData, monthly_value: e.target.value })}
+                  className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Data de Início */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Data de Início *
+                  </label>
+                  <input
+                    required
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  />
+                </div>
+
+                {/* Data de Vencimento */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Data de Vencimento *
+                  </label>
+                  <input
+                    required
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Botões */}
+              <div className="flex gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  disabled={submitting}
+                  className="flex-1 rounded-lg border border-white/20 px-4 py-2 text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-4 py-2 text-white hover:from-sky-600 hover:to-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? 'Salvando...' : 'Criar Contrato'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </section>
