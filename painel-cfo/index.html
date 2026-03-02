@@ -922,18 +922,17 @@
             fmtR(v) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0); },
             fmtD(d) { if (!d) return '--'; const p = d.split('-'); return p.length === 3 ? `${p[2]}/${p[1]}` : d; },
 
-            // 👇 FUNÇÃO ADICIONADA PARA EVITAR CRASH NO RENDER 👇
             animateValue(id, end, invertColors = false, colorOverride = null) {
                 const el = document.getElementById(id);
                 if (!el) return;
-                
-                // Formata o valor final e insere na tela
                 el.textContent = A.fmtR(end);
-                
-                // Aplica cores personalizadas se forem passadas (usado nas projeções)
-                if (colorOverride) {
-                    el.style.color = colorOverride;
-                }
+                if (colorOverride) { el.style.color = colorOverride; }
+            },
+
+            // 👇 NOVO MOTOR DE IMPOSTOS 👇
+            calcTax(revenue) {
+                const TAX_RATE = 0.06; // 6% - Simples Nacional (Ajuste aqui se mudar de faixa)
+                return revenue > 0 ? revenue * TAX_RATE : 0;
             },
             
             filterData(arr, mStr, yStr, isYTD = false, client = 'all', project = 'all') {
@@ -992,21 +991,18 @@
                 const sumE = eMC.reduce((a,b)=>a+Number(b.valor),0);
                 const sumF = fMC.reduce((a,b)=>a+Number(b.valor),0);
                 const sumU = uMC.reduce((a,b)=>a+Number(b.valor),0);
-                const sumBurn = sumF + sumU; 
+                
+                // 👇 IMPOSTO AUTOMÁTICO NO OVERVIEW 👇
+                const sumImp = A.calcTax(sumE);
+                const sumBurn = sumF + sumU + sumImp; 
                 
                 const sumMRR = eMC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0);
                 
-                let sumImp = uMC.filter(x => (x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0);
-                if (sumImp === 0 && sumE > 0) { sumImp = sumE * 0.06; }
-
                 const resLiq = sumE - sumBurn; 
                 const margem = sumE > 0 ? ((resLiq / sumE) * 100).toFixed(1) : '0.0';
 
                 const prevSumE = ePrevC.reduce((a,b)=>a+Number(b.valor),0);
-                const prevSumBurn = fPrevC.reduce((a,b)=>a+Number(b.valor),0) + uPrevC.reduce((a,b)=>a+Number(b.valor),0);
-                const prevSumMRR = ePrevC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0);
-                const prevSumF = fPrevC.reduce((a,b)=>a+Number(b.valor),0);
-                const prevSumU = uPrevC.reduce((a,b)=>a+Number(b.valor),0);
+                const prevSumBurn = fPrevC.reduce((a,b)=>a+Number(b.valor),0) + uPrevC.reduce((a,b)=>a+Number(b.valor),0) + A.calcTax(prevSumE);
 
                 const caixaVal = A.state.data.caixa_disponivel || 0;
                 const runway = sumBurn > 0 ? (caixaVal / sumBurn).toFixed(1) : '99+';
@@ -1018,8 +1014,8 @@
                     A.animateValue('v-receita-ov', sumE); document.getElementById('t-receita-ov').innerHTML = A.trendHTML(sumE, prevSumE, false) + ' vs mês anterior';
                     A.animateValue('v-mrr-ov', sumMRR); document.getElementById('t-mrr-ov').innerHTML = A.trendHTML(sumMRR, prevSumMRR, false) + ' de Base Fixa';
                     A.animateValue('v-burn-ov', sumBurn); document.getElementById('t-burn-ov').innerHTML = A.trendHTML(sumBurn, prevSumBurn, true) + ' vs mês anterior';
-                    A.animateValue('v-fixos-ov', sumF); document.getElementById('t-fixos-ov').innerHTML = A.trendHTML(sumF, prevSumF, true) + ' fixos';
-                    A.animateValue('v-var-ov', sumU); document.getElementById('t-var-ov').innerHTML = A.trendHTML(sumU, prevSumU, true) + ' variáveis';
+                    A.animateValue('v-fixos-ov', sumF); document.getElementById('t-fixos-ov').innerHTML = A.trendHTML(sumF, fPrevC.reduce((a,b)=>a+Number(b.valor),0), true) + ' fixos';
+                    A.animateValue('v-var-ov', sumU + sumImp); document.getElementById('t-var-ov').innerHTML = A.trendHTML(sumU + sumImp, uPrevC.reduce((a,b)=>a+Number(b.valor),0) + A.calcTax(prevSumE), true) + ' variáveis+imp';
                     
                     A.animateValue('v-res-liq', Math.abs(resLiq));
                     const elRes = document.getElementById('v-res-liq'), cardRes = document.getElementById('card-res-liq'), iconRes = document.getElementById('icon-res-liq'), subRes = document.getElementById('v-res-liq-sub');
@@ -1063,10 +1059,11 @@
                     const cfM = sumF; const cfYTD = fYTDC.reduce((a,b)=>a+Number(b.valor),0);
                     const roM = mbM - cfM; const roYTD = mbYTD - cfYTD;
                     
-                    let calcImpYTD = uYTDC.filter(x => (x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0);
-                    if (calcImpYTD === 0 && rbYTD.total > 0) calcImpYTD = rbYTD.total * 0.06;
+                    // 👇 MOTOR DE IMPOSTO NO DRE 👇
+                    const finalImpM = A.calcTax(rbM.total);
+                    const finalImpYTD = A.calcTax(rbYTD.total);
 
-                    const rlM = roM - sumImp; const rlYTD = roYTD - calcImpYTD;
+                    const rlM = roM - finalImpM; const rlYTD = roYTD - finalImpYTD;
 
                     const pct = (val, base) => base > 0 ? ((val/base)*100).toFixed(1) + '%' : '0.0%';
                     const rowMain = (title, valM, valYTD, pM, pYTD, isNeg=false, dk=null) => `
@@ -1099,7 +1096,7 @@
                     html += rowMain("3. (=) MARGEM BRUTA", mbM, mbYTD, pct(mbM, rbM.total), pct(mbYTD, rbYTD.total));
                     html += rowMain("4. (-) CUSTOS FIXOS", cfM, cfYTD, pct(cfM, rbM.total), pct(cfYTD, rbYTD.total), true, "cf_all");
                     html += rowMain("5. (=) RESULTADO OPERACIONAL", roM, roYTD, pct(roM, rbM.total), pct(roYTD, rbYTD.total));
-                    html += rowMain("6. (-) IMPOSTOS", sumImp, calcImpYTD, pct(sumImp, rbM.total), pct(calcImpYTD, rbYTD.total), true, "imp_all");
+                    html += rowMain("6. (-) IMPOSTOS (6%)", finalImpM, finalImpYTD, pct(finalImpM, rbM.total), pct(finalImpYTD, rbYTD.total), true, "imp_all");
 
                     html += `<tr class="dre-row-main" style="background: linear-gradient(90deg, rgba(14,165,233,0.2), transparent); border-top: 2px solid var(--primary);">
                                 <td style="color: white; font-size: 16px;">7. (=) RESULTADO LÍQUIDO FINAL</td>
@@ -1136,18 +1133,16 @@
                     cv_api:    { title: "Custos Variáveis — APIs/Consumo", list: uM.filter(x => (x.categoria||'').includes("APIs")) },
                     cv_outros: { title: "Custos Variáveis — Não Previstos", list: uM.filter(x => (x.categoria||'').includes("Gasto Não Previsto")) },
                     cf_all:    { title: "Custos Fixos da Operação", list: fM },
-                    imp_all:   { title: "Impostos Retidos", list: uM.filter(x => (x.categoria||'').includes("Imposto")) },
+                    imp_all:   { title: "Impostos (Cálculo Automático)", list: [] },
                 };
 
                 const def = defs[key] || { title: "Lançamentos Rastreáveis", list: [] };
                 let total = def.list.reduce((a,b)=>a+Number(b.valor),0);
                 
-                if(key === 'imp_all' && def.list.length === 0) {
+                if(key === 'imp_all') {
                     const rB = eM.reduce((a,b)=>a+Number(b.valor),0);
-                    if(rB > 0) {
-                        def.list.push({ data: new Date().toISOString().split('T')[0], nome: "Simples Nacional (Cálculo Automático 6%)", cliente: "Receita Federal", projeto: "Sistema", valor: rB * 0.06 });
-                        total = rB * 0.06;
-                    }
+                    def.list.push({ data: new Date().toISOString().split('T')[0], nome: "Simples Nacional (Auto-Calculado 6%)", cliente: "Receita Federal", projeto: "Sistema", valor: A.calcTax(rB) });
+                    total = A.calcTax(rB);
                 }
 
                 document.getElementById('dre-modal-title').textContent = def.title;
@@ -1216,7 +1211,8 @@
                     const eM = A.filterData(A.state.data.entradas, m.toString(), year, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
                     const fM = A.filterData(A.state.data.fixos, m.toString(), year, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
                     const uM = A.filterData(A.state.data.unicos, m.toString(), year, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
-                    allIn.push(eM); allOut.push(fM + uM);
+                    const taxM = A.calcTax(eM);
+                    allIn.push(eM); allOut.push(fM + uM + taxM);
                 }
                 const yearIn = allIn.reduce((a,b) => a+b, 0), yearOut = allOut.reduce((a,b) => a+b, 0), yearSaldo = yearIn - yearOut;
                 
@@ -1248,11 +1244,12 @@
                 const totalE = A.filterData(A.state.data.entradas, mStr, y, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
                 const totalF = A.filterData(A.state.data.fixos, mStr, y, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
                 const totalV = A.filterData(A.state.data.unicos, mStr, y, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
-                const saldo = totalE - totalF - totalV;
+                const taxM = A.calcTax(totalE);
+                const saldo = totalE - totalF - totalV - taxM;
 
                 document.getElementById('mm-rec').textContent = '+ ' + A.fmtR(totalE);
                 document.getElementById('mm-fix').textContent = '- ' + A.fmtR(totalF);
-                document.getElementById('mm-var').textContent = '- ' + A.fmtR(totalV);
+                document.getElementById('mm-var').textContent = '- ' + A.fmtR(totalV + taxM) + ' (c/ Imposto)';
                 const elSaldo = document.getElementById('mm-saldo'); elSaldo.textContent = (saldo >= 0 ? '+ ' : '- ') + A.fmtR(Math.abs(saldo)); elSaldo.style.color = saldo >= 0 ? 'var(--success)' : 'var(--danger)';
 
                 document.getElementById('month-modal').classList.add('open'); document.getElementById('month-overlay').classList.add('open');
@@ -1281,16 +1278,16 @@
                     const f = A.filterData(A.state.data.fixos, mStr, yStr, false, client, project).filter(isConf).reduce((a,b)=>a+Number(b.valor),0);
                     const uArr = A.filterData(A.state.data.unicos, mStr, yStr, false, client, project).filter(isConf);
                     
-                    const varTot = uArr.filter(x => !(x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0);
-                    const impTot = uArr.filter(x => (x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0);
-                    const totalSaidas = f + varTot + impTot;
+                    const tax = A.calcTax(e);
+                    const varTot = uArr.filter(x => !(x.categoria||'').includes("Imposto")).reduce((a,b)=>a+Number(b.valor),0) + tax;
+                    const totalSaidas = f + varTot;
                     
                     aRec.push(e); aDesp.push(totalSaidas); aCats.push(MONTHS[d.getMonth()].substring(0, 3));
                     dreRB.push(e); dreCV.push(varTot); dreCF.push(f); dreRL.push(e - totalSaidas);
                 }
 
                 if (A.ch.area) { A.ch.area.updateSeries([{ name: 'Receita Bruta', data: aRec }, { name: 'Burn Rate (Despesas)', data: aDesp }]); A.ch.area.updateOptions({ xaxis: { categories: aCats } }); }
-                if (A.ch.dreBar) { A.ch.dreBar.updateSeries([{ name: 'Receita Bruta', data: dreRB }, { name: 'Custos Variáveis', data: dreCV }, { name: 'Custo Fixo', data: dreCF }]); A.ch.dreBar.updateOptions({ xaxis: { categories: aCats } }); }
+                if (A.ch.dreBar) { A.ch.dreBar.updateSeries([{ name: 'Receita Bruta', data: dreRB }, { name: 'Custos Variáveis+Imp', data: dreCV }, { name: 'Custo Fixo', data: dreCF }]); A.ch.dreBar.updateOptions({ xaxis: { categories: aCats } }); }
                 if (A.ch.dreLine) { A.ch.dreLine.updateSeries([{ name: 'Resultado Líquido', data: dreRL }]); A.ch.dreLine.updateOptions({ xaxis: { categories: aCats } }); }
 
                 const { m, y } = A.getFilters();
@@ -1406,7 +1403,6 @@
 
             edit(id) { const item = (A.state.data.fixos||[]).find(i=>i.id===id) || (A.state.data.unicos||[]).find(i=>i.id===id) || (A.state.data.entradas||[]).find(i=>i.id===id); if(item) A.openDrawer(item); },
             
-            // 👇 FUNÇÃO ATUALIZADA PARA ASYNC/AWAIT 👇
             async del(id) {
                 if (confirm("Excluir permanentemente este registro da base?")) {
                     A.state.data.fixos = A.state.data.fixos.filter(i => i.id !== id);
@@ -1414,7 +1410,7 @@
                     A.state.data.entradas = A.state.data.entradas.filter(i => i.id !== id);
                     A.refreshFilterOptions(); 
                     A.render(); 
-                    await A.pushSync(); // <--- Adicionado o await aqui
+                    await A.pushSync();
                     A.toast("Registro excluído. 🗑️");
                 }
             },
@@ -1435,7 +1431,12 @@
                 });
 
                 const totalE = filtered.filter(x => x._tipo === 'entrada').reduce((acc, curr) => acc + Number(curr.valor), 0);
-                const totalS = filtered.filter(x => x._tipo === 'saida').reduce((acc, curr) => acc + Number(curr.valor), 0);
+                
+                // 👇 IMPOSTO PROJETADO AUTOMATICAMENTE 👇
+                const taxProjected = A.calcTax(totalE);
+                const totalS_Base = filtered.filter(x => x._tipo === 'saida').reduce((acc, curr) => acc + Number(curr.valor), 0);
+                const totalS = totalS_Base + taxProjected;
+                
                 const saldo = totalE - totalS;
 
                 A.animateValue('p-v-entradas', totalE, false, 'var(--success)');
@@ -1449,10 +1450,10 @@
                 filtered.sort((a,b) => a.mes.localeCompare(b.mes));
                 const tbody = document.getElementById('p-table-body'), empty = document.getElementById('p-table-empty');
 
-                if(filtered.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; } 
+                if(filtered.length === 0 && taxProjected === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; } 
                 else {
                     empty.style.display = 'none';
-                    tbody.innerHTML = filtered.map((i, idx) => {
+                    let html = filtered.map((i, idx) => {
                         const isE = i._tipo === 'entrada', isConf = i.status === 'Confirmado';
                         return `<tr style="animation:fadeInUp 0.5s ease ${idx*30}ms both;">
                             <td style="color:var(--text-muted);font-weight:600;white-space:nowrap">${i.mes.split('-').reverse().join('/')}</td>
@@ -1466,6 +1467,20 @@
                             </td>
                         </tr>`;
                     }).join('');
+
+                    // Inserir linha de imposto automático se houver receita
+                    if (taxProjected > 0) {
+                        html += `
+                        <tr style="background: rgba(239, 68, 68, 0.05); font-style: italic;">
+                            <td style="color:var(--text-muted);">Horizonte</td>
+                            <td><div style="color:var(--danger); font-weight:700;">[AUTO] Projeção Imposto (6%)</div></td>
+                            <td><span class="cat-badge">Impostos</span></td>
+                            <td><span class="status-badge previsto">⏳ Automático</span></td>
+                            <td class="amount-cell" style="color:var(--danger)">- ${A.fmtR(taxProjected)}</td>
+                            <td style="text-align:center;">—</td>
+                        </tr>`;
+                    }
+                    tbody.innerHTML = html;
                 }
                 lucide.createIcons();
             },
