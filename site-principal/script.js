@@ -576,17 +576,26 @@ function showResult() {
     custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
   };
 
-  // 🔥 MUDANÇA CRÍTICA: ENVIA PARA O MAKE.COM PARA AUTOMAÇÃO E IA
-  // O Make vai acionar o ChatGPT e depois salvar nas tabelas corretas do CRM.
-  const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/88y3c45jrsbdcitl5o6i932hco6rq0i6';
-  
-  fetch(MAKE_WEBHOOK_URL, {
+  // 🔥 NOVO FLUXO FASE 3: ENVIO PARA O MAKE.COM
+  const makeWebhookUrl = 'https://hook.us2.make.com/88y3c45jrsbdcitl5o6i932hco6rq0i6';
+
+  fetch(makeWebhookUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(supabasePayload)
-  }).catch(err => console.error("Erro ao enviar para Automação:", err));
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+    console.log("Sucesso! Lead enviado para a automação do Make.");
+  })
+  .catch(err => {
+    console.error("Erro ao enviar para o Make:", err);
+  });
+
 
 
   // O botão agora apenas redireciona, porque o dado já está seguro.
