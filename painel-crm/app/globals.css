@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #03050a;
+  --color-surface: #0a0f1a;
+  --color-border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: #f8fafc;
+}
+
+/* Utilitário para os cartões de vidro do painel */
+.glass-card {
+  background-color: rgb(15 23 42 / 0.4);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.35), 0 8px 10px -6px rgb(0 0 0 / 0.35);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgb(14 165 233 / 0.3);
+  box-shadow: 0 10px 40px -10px rgb(14 165 233 / 0.15);
+  transform: translateY(-0.25rem);
+}
+
+/* Barras de rolagem bonitas */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
