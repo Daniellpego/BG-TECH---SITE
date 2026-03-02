@@ -242,14 +242,14 @@ export default function AccountsPage() {
             const colors = getStatusColor(account.status);
             return (
               <article
-                key={account.id}
+                key={account.id || `temp-${Math.random()}`}
                 className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition hover:border-sky-400/30 hover:bg-white/[0.08]"
               >
                 {/* Cabeçalho do Card */}
                 <div className="mb-4 flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-slate-100">
-                      {account.company_name}
+                      {account.company_name || 'Sem Nome'}
                     </h3>
                     {account.industry && (
                       <p className="text-xs text-slate-400">
@@ -280,19 +280,19 @@ export default function AccountsPage() {
                     <ul className="space-y-2">
                       {account.crm_contacts.map((contact) => (
                         <li
-                          key={contact.id}
+                          key={contact.id || `temp-${Math.random()}`}
                           className="rounded-lg bg-white/5 p-3 text-xs"
                         >
                           <p className="font-semibold text-slate-100">
-                            {contact.first_name} {contact.last_name}
+                            {contact.first_name || ''} {contact.last_name || 'Sem Nome'}
                           </p>
                           <div className="mt-1 flex items-center gap-1 text-slate-400">
                             <Mail className="h-3 w-3" />
                             <a
-                              href={`mailto:${contact.email}`}
+                              href={`mailto:${contact.email || '#'}`}
                               className="hover:text-sky-400"
                             >
-                              {contact.email}
+                              {contact.email || 'Sem email'}
                             </a>
                           </div>
                           {contact.role && (

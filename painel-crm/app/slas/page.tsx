@@ -258,7 +258,7 @@ export default function SLAsPage() {
 
             return (
               <article
-                key={sla.id}
+                key={sla.id || `temp-${Math.random()}`}
                 className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition hover:border-sky-400/30 hover:bg-white/[0.08]"
               >
                 <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -267,7 +267,7 @@ export default function SLAsPage() {
                     <div className="flex items-center gap-3">
                       <Building2 className="h-5 w-5 text-sky-400" />
                       <h3 className="text-lg font-bold text-slate-100">
-                        {sla.crm_accounts?.company_name || 'Cliente Desconhecido'}
+                        {sla.crm_accounts?.company_name || 'Sem Conta Vinculada'}
                       </h3>
                     </div>
 

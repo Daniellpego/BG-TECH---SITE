@@ -318,7 +318,7 @@ export default function ProposalsPage() {
                   const StatusIcon = statusStyle.icon;
                   const clientName =
                     proposal.crm_opportunities?.[0]?.crm_accounts?.[0]?.company_name ||
-                    'Cliente não informado';
+                    'Sem Conta Vinculada';
 
                   return (
                     <tr
@@ -515,7 +515,7 @@ export default function ProposalsPage() {
                         className="bg-[#03050a]"
                       >
                         {opp.title} -{' '}
-                        {opp.crm_accounts[0]?.company_name || 'Sem cliente'}
+                        {opp.crm_accounts?.[0]?.company_name || 'Sem Conta Vinculada'}
                       </option>
                     ))}
                   </select>

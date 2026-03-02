@@ -209,11 +209,11 @@ export default function PipelinePage() {
                 const isLastStage = stage === INITIAL_COLUMNS[INITIAL_COLUMNS.length - 1];
                 return (
                   <div
-                    key={opportunity.id}
+                    key={opportunity.id || `temp-${Math.random()}`}
                     className="rounded-xl border border-white/10 bg-[#03050a]/40 backdrop-blur-md overflow-hidden"
                   >
                     <div className="p-3">
-                      <p className="text-sm font-medium text-slate-100">{opportunity.title || 'Oportunidade sem título'}</p>
+                      <p className="text-sm font-medium text-slate-100">{opportunity.title || 'Sem Título'}</p>
                       <p className="mt-2 text-xs text-slate-400">
                         {typeof opportunity.value === 'number'
                           ? opportunity.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
