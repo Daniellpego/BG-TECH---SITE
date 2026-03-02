@@ -51,7 +51,6 @@
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 99px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        /* AESTHETIC UPGRADES: Noise & Orbs */
         .noise-overlay { position: fixed; inset: 0; z-index: 0; opacity: 0.3; pointer-events: none; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
         .bg-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03; background-image: linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); }
         .orb { position: fixed; border-radius: 50%; filter: blur(140px); z-index: 0; opacity: 0.5; animation: float 20s ease-in-out infinite; pointer-events: none; }
@@ -59,7 +58,6 @@
         .orb-2 { width: 800px; height: 800px; background: rgba(16, 185, 129, 0.08); bottom: -200px; left: -200px; animation-delay: -10s; }
         @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.05); } }
 
-        /* CORREÇÃO DO AUTOFILL DO CHROME E FUNDO BRANCO DOS SELECTS */
         input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, 
         select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus {
             -webkit-text-fill-color: white !important;
@@ -115,7 +113,6 @@
         .loading::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-        /* GLASS CARDS */
         .card { background: var(--color-card); border: 1px solid var(--color-border); border-top: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); backdrop-filter: blur(30px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); transition: all 0.4s var(--transition); overflow: hidden; position: relative; }
         .card:hover { border-color: var(--color-border-hover); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7), 0 0 0 1px rgba(14,165,233,0.1); transform: translateY(-4px); }
 
@@ -924,6 +921,20 @@
             cleanMoney(s) { return parseFloat((s || '0').replace(/\./g, '').replace(',', '.')) || 0; },
             fmtR(v) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0); },
             fmtD(d) { if (!d) return '--'; const p = d.split('-'); return p.length === 3 ? `${p[2]}/${p[1]}` : d; },
+
+            // 👇 FUNÇÃO ADICIONADA PARA EVITAR CRASH NO RENDER 👇
+            animateValue(id, end, invertColors = false, colorOverride = null) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                
+                // Formata o valor final e insere na tela
+                el.textContent = A.fmtR(end);
+                
+                // Aplica cores personalizadas se forem passadas (usado nas projeções)
+                if (colorOverride) {
+                    el.style.color = colorOverride;
+                }
+            },
             
             filterData(arr, mStr, yStr, isYTD = false, client = 'all', project = 'all') {
                 return (arr || []).filter(x => {
@@ -1394,12 +1405,17 @@
             },
 
             edit(id) { const item = (A.state.data.fixos||[]).find(i=>i.id===id) || (A.state.data.unicos||[]).find(i=>i.id===id) || (A.state.data.entradas||[]).find(i=>i.id===id); if(item) A.openDrawer(item); },
-            del(id) {
+            
+            // 👇 FUNÇÃO ATUALIZADA PARA ASYNC/AWAIT 👇
+            async del(id) {
                 if (confirm("Excluir permanentemente este registro da base?")) {
                     A.state.data.fixos = A.state.data.fixos.filter(i => i.id !== id);
                     A.state.data.unicos = A.state.data.unicos.filter(i => i.id !== id);
                     A.state.data.entradas = A.state.data.entradas.filter(i => i.id !== id);
-                    A.refreshFilterOptions(); A.render(); A.pushSync(); A.toast("Registro excluído. 🗑️");
+                    A.refreshFilterOptions(); 
+                    A.render(); 
+                    await A.pushSync(); // <--- Adicionado o await aqui
+                    A.toast("Registro excluído. 🗑️");
                 }
             },
 
