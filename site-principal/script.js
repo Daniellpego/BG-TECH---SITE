@@ -576,20 +576,18 @@ function showResult() {
     custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
   };
 
-  // 🔥 MUDANÇA CRÍTICA: SALVA NO BANCO IMEDIATAMENTE (Sem esperar o clique)
-  // Isso garante que mesmo se o lead fechar a tela, você tem o telefone dele.
-  if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
-    fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': CONFIG.supabaseKey,
-        'Authorization': `Bearer ${CONFIG.supabaseKey}`,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(supabasePayload)
-    }).catch(err => console.error("Erro no DB:", err));
-  }
+  // 🔥 MUDANÇA CRÍTICA: ENVIA PARA O MAKE.COM PARA AUTOMAÇÃO E IA
+  // O Make vai acionar o ChatGPT e depois salvar nas tabelas corretas do CRM.
+  const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/88y3c45jrsbdcitl5o6i932hco6rq0i6';
+  
+  fetch(MAKE_WEBHOOK_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(supabasePayload)
+  }).catch(err => console.error("Erro ao enviar para Automação:", err));
+
 
   // O botão agora apenas redireciona, porque o dado já está seguro.
   const openWpp = () => {
