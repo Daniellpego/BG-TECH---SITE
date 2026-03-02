@@ -564,19 +564,26 @@ function showResult() {
     });
   }, 100);
 
- // PREPARA O ENVIO PARA O SUPABASE (FLUXO NATIVO ORIGINAL)
+  // Buscando Título + Descrição para dar mais contexto à IA do CRM
+  const segOpt = QUESTIONS[0].options[answers.segmento];
+  const horasOpt = QUESTIONS[1].options[answers.horas_perdidas];
+  const dorOpt = QUESTIONS[2].options[answers.dor];
+  const fatOpt = QUESTIONS[3].options[answers.faturamento];
+  const matOpt = QUESTIONS[4].options[answers.maturidade];
+
   const supabasePayload = {
     nome: textData.nome,
     empresa: textData.empresa,
     whatsapp: textData.whatsapp.replace(/\D/g, ''),
-    segmento: QUESTIONS[0].options[answers.segmento]?.title || '',
-    horas_perdidas: QUESTIONS[1].options[answers.horas_perdidas]?.title || '',
-    dor_principal: QUESTIONS[2].options[answers.dor]?.title || '',
-    faturamento: QUESTIONS[3].options[answers.faturamento]?.title || '',
-    maturidade: QUESTIONS[4].options[answers.maturidade]?.title || '',
+    segmento: segOpt ? `${segOpt.title} (${segOpt.sub})` : '',
+    horas_perdidas: horasOpt ? horasOpt.title : '',
+    dor_principal: dorOpt ? `${dorOpt.title}: ${dorOpt.sub}` : '',
+    faturamento: fatOpt ? fatOpt.title : '',
+    maturidade: matOpt ? matOpt.title : '',
     score: score,
     custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
   };
+
 
   // 🔥 FLUXO PADRÃO BG TECH: SALVA DIRETAMENTE E COM SEGURANÇA NO SUPABASE NA TABELA "LEADS"
   if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
