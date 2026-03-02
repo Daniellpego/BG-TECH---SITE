@@ -40,6 +40,22 @@ export default function VisaoExecutiva() {
 
   return (
     <section className="animate-in fade-in duration-500">
+      {/* Banner de Boas-vindas */}
+      <div className="mb-8 flex items-center gap-5 rounded-r-xl border-b border-l-4 border-l-sky-500 border-b-white/10 bg-gradient-to-r from-sky-500/15 to-black/50 p-5 animate-in slide-in-from-top-4 duration-500">
+        <div className="flex-shrink-0 rounded-full bg-sky-500/20 p-3">
+          <TrendingUp className="h-8 w-8 text-sky-400" />
+        </div>
+        <div>
+          <h2 className="mb-1 text-2xl font-black text-white">
+            Bem vindo, Brayan, o CSO mais baladeiro de Londrina! 🚀
+          </h2>
+          <p className="text-sm font-semibold text-sky-400">
+            Seu cockpit de vendas da BG Tech está 100% sincronizado e pronto para bater a meta.
+          </p>
+        </div>
+      </div>
+
+      {/* Cabeçalho */}
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-100">
           Visão Executiva

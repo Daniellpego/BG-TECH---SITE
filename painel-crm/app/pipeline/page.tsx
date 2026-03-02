@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { CircleDot, KanbanSquare } from 'lucide-react';
+import { CircleDot, KanbanSquare, Plus, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 type Opportunity = {
@@ -10,6 +10,18 @@ type Opportunity = {
   value?: number;
   stage?: string;
   [key: string]: unknown;
+};
+
+type Account = {
+  id: string;
+  company_name: string;
+};
+
+type FormData = {
+  title: string;
+  account_id: string;
+  value: string;
+  stage: string;
 };
 
 const INITIAL_COLUMNS = [
@@ -25,20 +37,85 @@ export default function PipelinePage() {
   const [columns] = useState<string[]>(INITIAL_COLUMNS);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [availableAccounts, setAvailableAccounts] = useState<Account[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    title: '',
+    account_id: '',
+    value: '',
+    stage: INITIAL_COLUMNS[0],
+  });
 
   useEffect(() => {
-    async function fetchOpportunities() {
-      const { data, error } = await supabase.from('crm_opportunities').select('*');
+    fetchOpportunities();
+    fetchAccounts();
+  }, []);
 
-      if (!error && data) {
-        setOpportunities(data as Opportunity[]);
-      }
+  async function fetchOpportunities() {
+    const { data, error } = await supabase.from('crm_opportunities').select('*');
 
-      setLoading(false);
+    if (!error && data) {
+      setOpportunities(data as Opportunity[]);
     }
 
-    fetchOpportunities();
-  }, []);
+    setLoading(false);
+  }
+
+  async function fetchAccounts() {
+    try {
+      const { data, error } = await supabase
+        .from('crm_accounts')
+        .select('id, company_name');
+
+      if (error) throw error;
+
+      setAvailableAccounts((data as Account[]) || []);
+    } catch (err) {
+      console.error('Erro ao buscar contas:', err);
+    }
+  }
+
+  async function handleCreateOpportunity(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!formData.title.trim() || !formData.account_id || !formData.value) {
+      alert('Preencha todos os campos obrigatórios');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const { error } = await supabase.from('crm_opportunities').insert([
+        {
+          title: formData.title.trim(),
+          account_id: formData.account_id,
+          value: parseFloat(formData.value),
+          stage: formData.stage,
+        },
+      ]);
+
+      if (error) throw error;
+
+      // Fecha modal e reseta form
+      setShowModal(false);
+      setFormData({
+        title: '',
+        account_id: '',
+        value: '',
+        stage: INITIAL_COLUMNS[0],
+      });
+
+      // Recarrega oportunidades
+      await fetchOpportunities();
+    } catch (err: any) {
+      console.error('Erro ao criar oportunidade:', err);
+      alert('Erro ao criar oportunidade: ' + (err.message || 'Erro desconhecido'));
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   const groupedByStage = useMemo(() => {
     return columns.reduce<Record<string, Opportunity[]>>((accumulator, stage) => {
@@ -50,11 +127,22 @@ export default function PipelinePage() {
   return (
     <section className="space-y-6">
       <header className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-        <h1 className="flex items-center gap-3 text-2xl font-semibold text-slate-100">
-          <KanbanSquare className="h-6 w-6 text-sky-300" />
-          Pipeline de Vendas
-        </h1>
-        <p className="mt-2 text-sm text-slate-300">Visão Kanban com estilo glassmorphism para acompanhamento das oportunidades.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="flex items-center gap-3 text-2xl font-semibold text-slate-100">
+              <KanbanSquare className="h-6 w-6 text-sky-300" />
+              Pipeline de Vendas
+            </h1>
+            <p className="mt-2 text-sm text-slate-300">Visão Kanban com estilo glassmorphism para acompanhamento das oportunidades.</p>
+          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 rounded-lg text-white hover:from-sky-600 hover:to-sky-700 transition-all whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            Nova Oportunidade
+          </button>
+        </div>
       </header>
 
       <div className="flex gap-4 overflow-x-auto pb-4">
@@ -95,6 +183,121 @@ export default function PipelinePage() {
           </article>
         ))}
       </div>
+
+      {/* Modal de Nova Oportunidade */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#03050a] p-8 shadow-2xl">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Nova Oportunidade</h2>
+                <p className="mt-1 text-sm text-white/60">Preencha os dados para criar uma nova oportunidade</p>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateOpportunity} className="space-y-6">
+              {/* Título */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Título da Oportunidade *
+                </label>
+                <input
+                  required
+                  type="text"
+                  placeholder="Ex: Implementação ERP - Empresa XYZ"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Conta */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Conta *
+                  </label>
+                  <select
+                    required
+                    value={formData.account_id}
+                    onChange={(e) => setFormData({ ...formData, account_id: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  >
+                    <option value="" className="bg-slate-900">
+                      Selecione uma conta...
+                    </option>
+                    {availableAccounts.map((account) => (
+                      <option key={account.id} value={account.id} className="bg-slate-900">
+                        {account.company_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Valor */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Valor (R$) *
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="Ex: 50000.00"
+                    value={formData.value}
+                    onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Etapa */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Etapa *
+                </label>
+                <select
+                  value={formData.stage}
+                  onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
+                  className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-sky-400 focus:bg-white/10 focus:outline-none transition-all"
+                >
+                  {INITIAL_COLUMNS.map((stage) => (
+                    <option key={stage} value={stage} className="bg-slate-900">
+                      {stage}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Botões */}
+              <div className="flex gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  disabled={submitting}
+                  className="flex-1 rounded-lg border border-white/20 px-4 py-2 text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-4 py-2 text-white hover:from-sky-600 hover:to-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? 'Salvando...' : 'Criar Oportunidade'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

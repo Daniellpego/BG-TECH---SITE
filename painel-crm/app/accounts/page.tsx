@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Activity, Building2, Mail, Plus, Search, Users } from 'lucide-react';
+import { Activity, Building2, Mail, Plus, Search, Users, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 type Contact = {
@@ -21,11 +21,32 @@ type Account = {
   crm_contacts: Contact[];
 };
 
+type FormData = {
+  company_name: string;
+  industry: string;
+  status: string;
+  contact_first_name: string;
+  contact_last_name: string;
+  contact_email: string;
+  contact_role: string;
+};
+
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    company_name: '',
+    industry: '',
+    status: 'Prospect',
+    contact_first_name: '',
+    contact_last_name: '',
+    contact_email: '',
+    contact_role: '',
+  });
 
   useEffect(() => {
     fetchAccounts();
@@ -50,6 +71,72 @@ export default function AccountsPage() {
       setError(err.message || 'Erro ao carregar contas');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleCreateAccount(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!formData.company_name.trim()) {
+      alert('Nome da empresa é obrigatório');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      // 1. Insert na tabela crm_accounts
+      const { data: accountData, error: accountError } = await supabase
+        .from('crm_accounts')
+        .insert([
+          {
+            company_name: formData.company_name.trim(),
+            industry: formData.industry.trim() || null,
+            status: formData.status,
+          },
+        ])
+        .select();
+
+      if (accountError) throw accountError;
+
+      const newAccountId = accountData[0]?.id;
+
+      // 2. Se houver contato principal, inseri-lo na tabela crm_contacts
+      if (formData.contact_first_name.trim() && formData.contact_email.trim()) {
+        const { error: contactError } = await supabase
+          .from('crm_contacts')
+          .insert([
+            {
+              account_id: newAccountId,
+              first_name: formData.contact_first_name.trim(),
+              last_name: formData.contact_last_name.trim() || '',
+              email: formData.contact_email.trim(),
+              role: formData.contact_role.trim() || null,
+            },
+          ]);
+
+        if (contactError) throw contactError;
+      }
+
+      // 3. Fechar modal e resetar form
+      setShowModal(false);
+      setFormData({
+        company_name: '',
+        industry: '',
+        status: 'Prospect',
+        contact_first_name: '',
+        contact_last_name: '',
+        contact_email: '',
+        contact_role: '',
+      });
+
+      // 4. Recarregar contas
+      await fetchAccounts();
+    } catch (err: any) {
+      console.error('Erro ao criar conta:', err);
+      alert('Erro ao criar conta: ' + (err.message || 'Erro desconhecido'));
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -98,7 +185,10 @@ export default function AccountsPage() {
               Gerencie suas empresas clientes e contatos
             </p>
           </div>
-          <button className="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 font-semibold text-white transition hover:bg-sky-600">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 font-semibold text-white transition hover:bg-sky-600"
+          >
             <Plus className="h-5 w-5" />
             Nova Conta
           </button>
@@ -230,6 +320,187 @@ export default function AccountsPage() {
               </article>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal de Nova Conta */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0a0f1a] p-8 shadow-2xl">
+            {/* Cabeçalho do Modal */}
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-slate-100">Nova Conta</h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-slate-100"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Formulário */}
+            <form onSubmit={handleCreateAccount} className="space-y-6">
+              {/* Seção da Empresa */}
+              <div>
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-400">
+                  Informações da Empresa
+                </h3>
+                <div className="space-y-4">
+                  {/* Nome da Empresa */}
+                  <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-300">
+                      <Building2 className="h-4 w-4 text-sky-400" />
+                      Nome da Empresa *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Tech Solutions Inc."
+                      value={formData.company_name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, company_name: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                      required
+                    />
+                  </div>
+
+                  {/* Setor */}
+                  <div>
+                    <label className="mb-2 text-sm font-semibold text-slate-300">
+                      Setor (Industry)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Tecnologia, Marketing, Consultoria..."
+                      value={formData.industry}
+                      onChange={(e) =>
+                        setFormData({ ...formData, industry: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                    />
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <label className="mb-2 text-sm font-semibold text-slate-300">
+                      Status
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                    >
+                      <option value="Prospect">Prospect</option>
+                      <option value="Active Client">Active Client</option>
+                      <option value="Churned">Churned</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Separador */}
+              <div className="border-t border-white/10" />
+
+              {/* Seção do Contato Principal */}
+              <div>
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-400">
+                  Contato Principal (Opcional)
+                </h3>
+                <div className="space-y-4">
+                  {/* Nome do Contato */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="mb-2 text-sm font-semibold text-slate-300">
+                        Primeiro Nome
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="João"
+                        value={formData.contact_first_name}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            contact_first_name: e.target.value,
+                          })
+                        }
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 text-sm font-semibold text-slate-300">
+                        Último Nome
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Silva"
+                        value={formData.contact_last_name}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            contact_last_name: e.target.value,
+                          })
+                        }
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-300">
+                      <Mail className="h-4 w-4 text-sky-400" />
+                      E-mail
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="joao@example.com"
+                      value={formData.contact_email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, contact_email: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                    />
+                  </div>
+
+                  {/* Cargo */}
+                  <div>
+                    <label className="mb-2 text-sm font-semibold text-slate-300">
+                      Cargo
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: CEO, Gerente de TI, Consultor..."
+                      value={formData.contact_role}
+                      onChange={(e) =>
+                        setFormData({ ...formData, contact_role: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-slate-100 placeholder-slate-500 outline-none transition focus:border-sky-400 focus:bg-white/10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Botões de Ação */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 rounded-lg border border-white/10 px-4 py-2.5 font-semibold text-slate-300 transition hover:bg-white/5"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 rounded-lg bg-sky-500 px-4 py-2.5 font-semibold text-white transition hover:bg-sky-600 disabled:opacity-50"
+                >
+                  {submitting ? 'Salvando...' : 'Salvar Conta'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </section>
