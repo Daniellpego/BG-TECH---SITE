@@ -1,9 +1,52 @@
-// ==== CONFIGURAÇÕES BG TECH ====
 const CONFIG = {
-  whatsappNumber: '5511999998888', // LEMBRE DE COLOCAR O SEU NÚMERO AQUI
-  webhookUrl: '', 
-  supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co', 
+  whatsappNumber: '5543999998888',
+  webhookUrl: '',
+  webhookToken: '',
+  supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co',
   supabaseKey: 'sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0'
+};
+
+const getRuntimeWebhookConfig = () => {
+  const params = new URLSearchParams(window.location.search);
+  const queryWebhook = params.get('webhook');
+  const queryToken = params.get('token');
+
+  if (queryWebhook) localStorage.setItem('bgtech_webhook_url', queryWebhook);
+  if (queryToken) localStorage.setItem('bgtech_webhook_token', queryToken);
+
+  const webhookUrl = queryWebhook || localStorage.getItem('bgtech_webhook_url') || CONFIG.webhookUrl;
+  const webhookToken = queryToken || localStorage.getItem('bgtech_webhook_token') || CONFIG.webhookToken;
+
+  return { webhookUrl, webhookToken };
+};
+
+const postWebhook = async (url, payload, token = '') => {
+  if (!url) return { ok: false, skipped: true };
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+      keepalive: true
+    });
+
+    clearTimeout(timeoutId);
+    return { ok: response.ok, status: response.status };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    return { ok: false, error: error?.message || 'unknown_error' };
+  }
 };
 
 let leadLocation = "sua região";
@@ -22,7 +65,7 @@ const capitalize = (str) => {
 
 const QUESTIONS = [
   {
-    id: 'segmento', label: 'PASSO 1 DE 5',
+    id: 'segmento', label: 'PASSO 1 DE 6',
     title: 'Qual o segmento da sua empresa?',
     desc: 'Isso calibra os benchmarks e o vocabulário do seu diagnóstico.',
     type: 'options',
@@ -36,7 +79,7 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'horas_perdidas', label: 'PASSO 2 DE 5',
+    id: 'horas_perdidas', label: 'PASSO 2 DE 6',
     title: 'Quanto tempo sua equipe perde por semana em tarefas manuais?',
     desc: 'Seja honesto. Some mentalmente as horas de retrabalho antes de responder.',
     type: 'options',
@@ -48,7 +91,7 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'dor', label: 'PASSO 3 DE 5',
+    id: 'dor', label: 'PASSO 3 DE 6',
     title: 'O que mais trava o crescimento da empresa hoje?',
     desc: 'Escolha a opção que mais corrói o seu lucro.',
     type: 'options',
@@ -61,7 +104,7 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'faturamento', label: 'PASSO 4 DE 5',
+    id: 'faturamento', label: 'PASSO 4 DE 6',
     title: 'Qual faixa melhor representa o faturamento mensal atual?',
     desc: 'Isso determina o impacto financeiro exato que vai aparecer no seu diagnóstico.',
     type: 'options',
@@ -73,7 +116,7 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'maturidade', label: 'PASSO 5 DE 5',
+    id: 'maturidade', label: 'PASSO 5 DE 6',
     title: 'Sendo completamente honesto, como você descreveria a tecnologia hoje?',
     desc: 'O nível de maturidade digital atual da empresa.',
     type: 'options',
@@ -83,6 +126,18 @@ const QUESTIONS = [
       { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados e muito retrabalho' },
       { icon: 'server', iconColor: 'icon-blue-light', title: 'Sistemas razoáveis', sub: 'Funciona mas tem espaço pra evoluir' },
       { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa', sub: 'Base sólida, preciso de um parceiro estratégico' }
+    ]
+  },
+  {
+    id: 'janela_decisao', label: 'PASSO 6 DE 6',
+    title: 'Se o diagnóstico fizer sentido, em quanto tempo você quer começar?',
+    desc: 'Isso define a prioridade de atendimento e o tipo de plano recomendado.',
+    type: 'options',
+    options: [
+      { icon: 'flame', title: 'Em até 7 dias', sub: 'Quero ação imediata e ganho rápido' },
+      { icon: 'calendar-clock', title: 'Em 15 a 30 dias', sub: 'Quero organizar internamente e iniciar com segurança' },
+      { icon: 'calendar', title: 'Em 1 a 3 meses', sub: 'Estou validando cenário e prioridade' },
+      { icon: 'book-open', title: 'Só estudando por enquanto', sub: 'Quero entender melhor antes de decidir' }
     ]
   },
   {
@@ -117,82 +172,152 @@ const echos = {
     "Ótimo. Nessa faixa cada R$1.000 economizado em operação vira lucro direto no fim do mês.",
     "Uma operação desse porte precisa de tecnologia robusta para não implodir sob o próprio peso.",
     "Com esse volume qualquer ineficiência de 2% já representa dezenas de milhares de reais perdidos."
+  ],
+  janela_decisao: [
+    "Perfeito. Vamos priorizar ações de impacto imediato para acelerar seu resultado.",
+    "Ótimo timing. Dá para estruturar implementação com controle e previsibilidade.",
+    "Faz sentido. Vamos deixar um plano de maturação para você avançar no momento certo.",
+    "Sem problema. Você recebe clareza agora e decide quando avançar."
   ]
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  // A/B testing de copy (hero + CTAs)
+  const getCopyVariant = () => {
+    const params = new URLSearchParams(window.location.search);
+    const forced = params.get('ab');
+    const valid = ['a', 'b', 'c'];
+
+    if (forced && valid.includes(forced)) {
+      localStorage.setItem('bgtech_ab_variant', forced);
+      return forced;
+    }
+
+    const stored = localStorage.getItem('bgtech_ab_variant');
+    if (stored && valid.includes(stored)) return stored;
+
+    const random = valid[Math.floor(Math.random() * valid.length)];
+    localStorage.setItem('bgtech_ab_variant', random);
+    return random;
+  };
+
+  const copyVariants = {
+    a: {
+      headline: 'Perde vendas porque demora pra responder?<br><span class="hero-highlight">Equipe afogada em planilhas manuais?</span>',
+      subtitle: 'Este diagnóstico gratuito é para empresas B2B de 5 a 50 colaboradores que querem escalar sem contratar mais time: mostramos onde você perde margem hoje e o que automatizar primeiro sem trocar os sistemas atuais.',
+      cta: 'Descobrir Quanto Estou Perdendo Agora'
+    },
+    b: {
+      headline: 'Sua operação cresce, mas o lucro não acompanha?<br><span class="hero-highlight">Descubra onde a margem está vazando.</span>',
+      subtitle: 'Em poucos minutos você visualiza o custo oculto de processos manuais e recebe um plano de automação com foco em caixa e produtividade.',
+      cta: 'Quero meu plano de automação'
+    },
+    c: {
+      headline: 'Quanto custa manter tudo no manual por mais 30 dias?<br><span class="hero-highlight">Veja o impacto real no seu caixa.</span>',
+      subtitle: 'Se sua equipe perde tempo com retrabalho e sistemas desconectados, este diagnóstico mostra as 3 ações com maior retorno imediato.',
+      cta: 'Ver meu diagnóstico em 3 minutos'
+    }
+  };
+
+  const activeVariant = getCopyVariant();
+  const activeCopy = copyVariants[activeVariant];
+
+  const heroHeadline = document.getElementById('hero-headline');
+  const heroSubtitle = document.getElementById('hero-subtitle');
+  const ctaLabels = document.querySelectorAll('[data-cta-dynamic] .cta-label');
+
+  if (heroHeadline && heroSubtitle && activeCopy) {
+    heroHeadline.innerHTML = activeCopy.headline;
+    heroSubtitle.textContent = activeCopy.subtitle;
+    ctaLabels.forEach((label) => { label.textContent = activeCopy.cta; });
+  }
   
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeQuiz(); });
   document.getElementById('quiz-overlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('quiz-overlay')) closeQuiz();
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        if (entry.target.classList.contains('process-steps')) {
-           setTimeout(() => { 
-             const line = document.getElementById('process-line');
-             if(line) line.style.width = '100%'; 
-           }, 500);
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealTargets = [...document.querySelectorAll('.reveal')].filter(el => !el.closest('#hero'));
+
+  if (prefersReducedMotion) {
+    revealTargets.forEach(el => el.classList.add('revealed'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
         }
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      });
+    }, { threshold: 0.15 });
 
-  // FIX CRÍTICO QA: Counter Animado de Alta Performance (Apple Smooth Easing)
-  const counters = document.querySelectorAll('.counter');
-  const animateCounters = (counter) => {
-    const targetAttr = counter.getAttribute('data-target');
-    const target = parseFloat(targetAttr) || 0;
-    const isFloat = targetAttr.includes('.'); 
-    const duration = 2000; 
-    let startTime = null;
-    
-    const update = (currentTime) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const currentVal = easeOut * target;
-      
-      counter.innerText = isFloat ? currentVal.toFixed(1) : Math.ceil(currentVal);
-      
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        counter.innerText = target;
-      }
+    revealTargets.forEach((el, i) => {
+      // Stagger per section: reset delay counter per parent section
+      const section = el.closest('section') || el.closest('.trust-fade') || el.parentElement;
+      if (!section._revealIdx) section._revealIdx = 0;
+      el.style.setProperty('--delay', `${section._revealIdx * 80}ms`);
+      section._revealIdx++;
+      revealObserver.observe(el);
+    });
+  }
+
+  const processSteps = document.querySelector('.process-steps');
+  if (processSteps && !prefersReducedMotion) {
+    const processObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const line = document.getElementById('process-line');
+          if (line) line.style.width = '100%';
+          processObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    processObserver.observe(processSteps);
+  }
+
+  // CONTADORES ROBUSTOS — usa data-target, data-prefix, data-suffix do HTML
+  const counters = document.querySelectorAll('.counter[data-target]');
+  if (counters.length && !prefersReducedMotion) {
+    const animateCounterEl = (el) => {
+      const target = parseFloat(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const duration = 1500;
+      const isDecimal = target % 1 !== 0;
+      const start = performance.now();
+
+      const update = (now) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = eased * target;
+
+        el.textContent = prefix +
+          (isDecimal ? current.toFixed(1) : Math.floor(current)) +
+          suffix;
+
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = prefix +
+          (isDecimal ? target.toFixed(1) : target) + suffix;
+      };
+      requestAnimationFrame(update);
     };
-    requestAnimationFrame(update);
-  };
 
-  const counterObserver = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounters(entry.target);
-        obs.unobserve(entry.target); 
-      }
-    });
-  }, { threshold: 0.3 });
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounterEl(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-  counters.forEach(c => counterObserver.observe(c));
-  
-  // FALLBACK: Se nenhum counter animou após 5 segundos, força a animação
-  setTimeout(() => {
-    counters.forEach(c => {
-      if (c.innerText === '0' || c.innerText.startsWith('0')) {
-        animateCounters(c);
-      }
-    });
-  }, 5000);
+    counters.forEach(el => counterObserver.observe(el));
+  }
 
-  // Menu Mobile
   const menuBtn = document.querySelector('.js-toggle-menu');
   const mobileMenu = document.getElementById('mobile-menu');
   if (menuBtn) {
@@ -207,18 +332,63 @@ document.addEventListener('DOMContentLoaded', () => {
       if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
   }));
   
-  // Header Scroll
+
   window.addEventListener('scroll', () => {
     const header = document.getElementById('site-header');
     const progress = document.getElementById('reading-progress');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
     
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     if (progress) progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
+    
+    // Fade out scroll indicator ao rolar
+    if (scrollIndicator) {
+      const fadeStart = 100;
+      const fadeUntil = 400;
+      let opacity = 1;
+      
+      if (window.scrollY <= fadeStart) {
+        opacity = 0.7;
+      } else if (window.scrollY <= fadeUntil) {
+        opacity = 0.7 - ((window.scrollY - fadeStart) / (fadeUntil - fadeStart)) * 0.7;
+      } else {
+        opacity = 0;
+      }
+      
+      scrollIndicator.style.opacity = opacity;
+      if (opacity === 0) scrollIndicator.style.pointerEvents = 'none';
+      else scrollIndicator.style.pointerEvents = 'auto';
+    }
   });
 
-  // Accordion FAQ (Correção SVG integrada)
+  // Parallax suave no hero (máx 20px deslocamento)
+  const heroContent = document.querySelector('.hero-content');
+  if (heroContent && window.matchMedia('(min-width: 769px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const heroHeight = document.getElementById('hero')?.offsetHeight || 0;
+      if (scrolled < heroHeight) {
+        const parallaxOffset = Math.min(scrolled * 0.3, 20);
+        heroContent.style.transform = `translateY(${parallaxOffset}px)`;
+        heroContent.style.opacity = 1 - (scrolled / heroHeight) * 0.3;
+      }
+    }, { passive: true });
+  }
+
+  // Scroll suave ao clicar no indicador
+  const scrollIndicator = document.querySelector('.scroll-indicator');
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener('click', () => {
+      const trustBar = document.getElementById('trust-bar');
+      if (trustBar) {
+        trustBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
   document.querySelectorAll('.faq-question').forEach(button => {
     button.addEventListener('click', () => {
       const item = button.parentElement;
@@ -262,9 +432,9 @@ function openQuiz() {
   
   if(quizOverlay) {
       quizOverlay.classList.add('open');
+      quizOverlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
       
-      // FIX CRÍTICO QA: Fallback de Segurança
       if (quizBody.innerHTML.trim() === '') {
           quizBody.innerHTML = `
              <div style="text-align:center; padding: 60px 20px;">
@@ -276,7 +446,7 @@ function openQuiz() {
                   quizBody.innerHTML = `
                      <div style="text-align:center; padding: 60px 20px;">
                        <p style="color: #ef4444; font-weight: 800; margin-bottom: 16px;">O diagnóstico encontrou um gargalo na rede.</p>
-                       <a href="https://wa.me/55439XXXXXXXX" target="_blank" class="btn-primary" style="display:inline-flex;">Continuar via WhatsApp</a>
+                       <a href="https://wa.me/5543999998888" target="_blank" class="btn-primary" style="display:inline-flex;">Continuar via WhatsApp</a>
                      </div>`;
               }
           }, 4000);
@@ -290,6 +460,7 @@ function closeQuiz() {
   const quizOverlay = document.getElementById('quiz-overlay');
   if(quizOverlay) {
       quizOverlay.classList.remove('open');
+      quizOverlay.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('modal-open');
   }
   if (currentStep >= QUESTIONS.length) sessionStorage.removeItem('bgtech_quiz');
@@ -392,7 +563,7 @@ function renderStep() {
     });
     
     html += `
-      <p style="font-size:12px; color:var(--text-3); margin-bottom: 20px; text-align:center;">Usamos esse contato apenas para enviar e debater o diagnóstico.</p>
+      <p style="font-size:12px; color:var(--text-3); margin-bottom: 20px; text-align:center;">Usamos esse contato apenas para enviar e debater o diagnóstico. Sem spam.</p>
       <div class="q-nav">
         <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
         <button class="btn-primary js-next">Liberar meu diagnóstico <i data-lucide="unlock" width="16"></i></button>
@@ -479,6 +650,7 @@ function runLoading() {
   
   const segName = QUESTIONS[0].options[answers.segmento].title;
   const fatIndex = answers.faturamento;
+  const decIndex = answers.janela_decisao;
   
   let basePerda = 6500;
   if (fatIndex === 1) basePerda = 14000;
@@ -489,6 +661,7 @@ function runLoading() {
     { icon: 'briefcase', text: `Mapeando gargalos na área de ${segName}...` },
     { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
     { icon: 'dollar-sign', text: `Calculando horas perdidas e sangria financeira...`, special: true },
+    { icon: 'activity', text: decIndex <= 1 ? 'Priorizando plano de execução acelerada...' : 'Priorizando plano de evolução por etapas...' },
     { icon: 'target', text: 'Priorizando automações com maior retorno...' },
     { icon: 'file-check-2', text: 'Montando plano executivo...' }
   ];
@@ -543,7 +716,6 @@ function runLoading() {
     }
   };
   
-  // TIMEOUT DE SEGURANÇA: Se não terminar em 10s, força showResult
   setTimeout(() => {
     if (i < steps.length) {
       console.warn('Quiz loading timeout - forcing result');
@@ -561,6 +733,9 @@ function showResult() {
   
   const fatIndex = answers.faturamento;
   const matIndex = answers.maturidade;
+  const horasIndex = answers.horas_perdidas;
+  const dorIndex = answers.dor;
+  const decIndex = answers.janela_decisao;
   let minLoss = 4200, maxLoss = 8500;
   if (fatIndex === 1) { minLoss = 14500; maxLoss = 22000; }
   if (fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
@@ -568,11 +743,15 @@ function showResult() {
   
   const lostValueStr = `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`;
   const workersEquiv = (maxLoss / 3500).toFixed(1);
-  let score = 38; 
+  let score = 38;
   if (matIndex === 1) score = 52;
   if (matIndex === 2) score = 61;
   if (matIndex === 3) score = 78;
   if (matIndex === 4) score = 92;
+
+  if (horasIndex >= 2) score = Math.max(35, score - 8);
+  if (decIndex === 0) score = Math.max(30, score - 6);
+  if (decIndex === 3) score = Math.min(95, score + 5);
 
   const scoreLabels = [
     { max: 40, label: 'Operação em Risco', color: '#ef4444' },
@@ -583,9 +762,36 @@ function showResult() {
   ];
   const scoreCat = scoreLabels.find(s => score <= s.max);
   const circleOffset = 251 - (251 * (score / 100));
+
+  const leadTemperature = (() => {
+    if (decIndex === 0 && (fatIndex >= 1 || horasIndex >= 2)) return 'Quente';
+    if (decIndex <= 1) return 'Morno';
+    return 'Frio';
+  })();
+
+  const slaCopy = leadTemperature === 'Quente'
+    ? 'Atendimento prioritário: nossa equipe entra em contato em até 20 minutos.'
+    : leadTemperature === 'Morno'
+      ? 'Atendimento recomendado: retorno da equipe em até 2 horas úteis.'
+      : 'Você pode receber o plano e avançar no seu timing com suporte consultivo.';
+
+  const segOptResult = QUESTIONS[0].options[answers.segmento];
+  const benchmarkMap = {
+    'Construção Civil': 'No seu segmento, os maiores ganhos costumam vir de automação de aprovações e integração de obra/financeiro.',
+    'Jurídico e Contabilidade': 'No seu segmento, o gargalo mais comum é retrabalho operacional e atraso de retorno ao cliente.',
+    'Comércio e Varejo': 'No seu segmento, a maior perda costuma estar em tempo comercial e dados distribuídos entre sistemas.',
+    'Indústria e Manufatura': 'No seu segmento, o principal impacto está em integração entre operação, qualidade e gestão.',
+    'Saúde': 'No seu segmento, ganhos rápidos aparecem com roteamento de atendimento e integração de agenda.',
+    'Serviços e Consultoria': 'No seu segmento, o maior salto vem de padronização de funil e automação de follow-up.'
+  };
+  const benchmarkText = benchmarkMap[segOptResult?.title] || 'Sua operação tem potencial de ganho relevante com integração de processos e redução de retrabalho.';
+
+  const now = new Date();
+  const diagnosticId = `BG-${now.getFullYear().toString().slice(-2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   
   const recupAuto = (maxLoss * 0.6 / 1000).toFixed(1);
   const recupInteg = (maxLoss * 0.35 / 1000).toFixed(1);
+  const recupDash = (maxLoss * 0.2 / 1000).toFixed(1);
 
   body.innerHTML = `
     <div class="reveal visible" style="animation: fadeIn 0.5s ease-out;">
@@ -607,6 +813,11 @@ function showResult() {
           <span style="font-size: 13px; color: var(--text-3);">Maturidade Operacional</span>
           <span class="score-category" style="color: ${scoreCat.color};">${scoreCat.label}</span>
         </div>
+      </div>
+
+      <div class="benchmark-box">
+        <div class="benchmark-title"><i data-lucide="scan-search" style="width: 16px;"></i> Leitura de benchmark do seu segmento</div>
+        <p>${benchmarkText}</p>
       </div>
 
       <div class="result-box">
@@ -637,16 +848,23 @@ function showResult() {
         </div>
       </div>
 
-      <div class="urgency-bar">
-        <i data-lucide="clock" style="width: 16px;"></i> Restam apenas 4 agendas para novos clientes esta semana.
+      <div class="exclusive-plan">
+        <h3>Plano exclusivo de 90 dias para ${empresa}</h3>
+        <div class="plan-grid">
+          <div class="plan-step"><strong>0-30 dias</strong><span>Automação de tarefas críticas</span><em>Potencial: R$ ${recupAuto}k/mês</em></div>
+          <div class="plan-step"><strong>31-60 dias</strong><span>Integração entre sistemas-chave</span><em>Potencial: R$ ${recupInteg}k/mês</em></div>
+          <div class="plan-step"><strong>61-90 dias</strong><span>Painel de gestão e previsibilidade</span><em>Potencial adicional: R$ ${recupDash}k/mês</em></div>
+        </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 32px;">
-        <button class="btn-ghost-whatsapp js-wpp-direct" style="width: 100%;">
-          Agendar minha conversa de 20 min gratuita
-        </button>
-        <button class="btn-primary js-wpp" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px;">
-          Quero meu plano estrutural para a ${empresa}
+      <div class="urgency-bar">
+        <i data-lucide="clock" style="width: 16px;"></i> Nossa equipe entra em contato com você em até 20 minutos úteis
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 32px;">
+        <button class="btn-priority-contact js-priority-contact" style="width: 100%;">
+          <i data-lucide="phone-call" style="width: 18px;"></i>
+          Quero conversar com a equipe em 20 minutos
         </button>
       </div>
     </div>
@@ -678,6 +896,7 @@ function showResult() {
   const dorOpt = QUESTIONS[2].options[answers.dor];
   const fatOpt = QUESTIONS[3].options[answers.faturamento];
   const matOpt = QUESTIONS[4].options[answers.maturidade];
+  const decOpt = QUESTIONS[5].options[answers.janela_decisao];
 
   const supabasePayload = {
     nome: textData.nome,
@@ -688,8 +907,42 @@ function showResult() {
     dor_principal: dorOpt ? `${dorOpt.title}: ${dorOpt.sub}` : '',
     faturamento: fatOpt ? fatOpt.title : '',
     maturidade: matOpt ? matOpt.title : '',
+    janela_decisao: decOpt ? decOpt.title : '',
+    lead_temperature: leadTemperature,
     score: score,
-    custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`
+    custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`,
+    diagnostico_id: diagnosticId
+  };
+
+  const runtimeWebhook = getRuntimeWebhookConfig();
+
+  const notifyHotLead = async (origin = 'auto') => {
+    if (leadTemperature !== 'Quente') return;
+    if (!runtimeWebhook.webhookUrl) return;
+
+    const hotLeadPayload = {
+      event: 'hot_lead_alert',
+      source: 'site-principal-quiz',
+      origin,
+      prioridade: 'alta',
+      diagnostico_id: diagnosticId,
+      empresa: textData.empresa,
+      nome: textData.nome,
+      whatsapp: textData.whatsapp,
+      lead_temperature: leadTemperature,
+      score,
+      custo_mensal_estimado: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`,
+      janela_decisao: decOpt ? decOpt.title : '',
+      dor_principal: dorOpt ? dorOpt.title : '',
+      segmento: segOpt ? segOpt.title : '',
+      created_at: new Date().toISOString()
+    };
+
+    try {
+      await postWebhook(runtimeWebhook.webhookUrl, hotLeadPayload, runtimeWebhook.webhookToken);
+    } catch (err) {
+      console.error('❌ Erro ao notificar lead quente:', err);
+    }
   };
 
   if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
@@ -703,23 +956,41 @@ function showResult() {
       },
       body: JSON.stringify(supabasePayload)
     })
-    .then(() => console.log("✅ Sucesso! Lead salvo."))
     .catch(err => console.error("❌ Erro ao salvar:", err));
   }
 
+  if (leadTemperature === 'Quente') {
+    notifyHotLead('resultado_quiz');
+  }
+
   const openWpp = () => {
-    const msg = `Olá! Fiz o diagnóstico da BG Tech agora. Score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero agendar a conversa de 20 min para a ${empresa}.`;
+    const msg = `Olá! Fiz o diagnóstico da BG Tech agora (ID ${diagnosticId}). Perfil ${leadTemperature}, score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero agendar a conversa de 20 min para a ${empresa}.`;
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  const wppBtn = document.querySelector('.js-wpp');
-  const wppDirectBtn = document.querySelector('.js-wpp-direct');
-  if (wppBtn && wppDirectBtn) {
-    const newWppBtn = wppBtn.cloneNode(true);
-    const newWppDirectBtn = wppDirectBtn.cloneNode(true);
-    wppBtn.parentNode.replaceChild(newWppBtn, wppBtn);
-    wppDirectBtn.parentNode.replaceChild(newWppDirectBtn, wppDirectBtn);
-    newWppBtn.addEventListener('click', openWpp);
-    newWppDirectBtn.addEventListener('click', openWpp);
+  const openPriorityWpp = () => {
+    const msg = `Olá! Quero contato prioritário em até 20 minutos. Já finalizei o diagnóstico da ${empresa} (ID ${diagnosticId}), perfil ${leadTemperature}.`;
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    notifyHotLead('botao_prioritario');
+    if (runtimeWebhook.webhookUrl) {
+      postWebhook(runtimeWebhook.webhookUrl, {
+        event: 'priority_cta_clicked',
+        source: 'site-principal-quiz',
+        diagnostico_id: diagnosticId,
+        empresa: textData.empresa,
+        nome: textData.nome,
+        whatsapp: textData.whatsapp,
+        lead_temperature: leadTemperature,
+        score,
+        created_at: new Date().toISOString()
+      }, runtimeWebhook.webhookToken);
+    }
+  };
+
+  const priorityBtn = document.querySelector('.js-priority-contact');
+  if (priorityBtn) {
+    const newPriorityBtn = priorityBtn.cloneNode(true);
+    priorityBtn.parentNode.replaceChild(newPriorityBtn, priorityBtn);
+    newPriorityBtn.addEventListener('click', openPriorityWpp);
   }
 }
