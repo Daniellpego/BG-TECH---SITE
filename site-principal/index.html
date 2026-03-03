@@ -15,6 +15,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ========================================================
+       CSS DA SEÇÃO: QUEM ATENDEMOS (SEGMENTOS)
+       ======================================================== */
+    .segments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+    .segment-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 20px; padding: 32px 24px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; }
+    .segment-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.1), transparent 70%); opacity: 0; transition: opacity 0.4s ease; pointer-events: none; }
+    .segment-card:hover { background: rgba(14, 165, 233, 0.03); border-color: rgba(14, 165, 233, 0.4); transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5); }
+    .segment-card:hover::before { opacity: 1; }
+    .segment-icon-wrap { width: 56px; height: 56px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 8px; transition: all 0.3s ease; backdrop-filter: blur(10px); }
+    .segment-card:hover .segment-icon-wrap { background: rgba(14, 165, 233, 0.15); border-color: rgba(14, 165, 233, 0.4); transform: scale(1.05) rotate(-5deg); }
+    .segment-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 18px; color: #f8fafc; letter-spacing: -0.01em; }
+    .segment-desc { font-size: 14px; color: #94a3b8; line-height: 1.6; font-weight: 500; }
+    
+    .segment-footer-box { margin-top: 64px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(3, 7, 18, 0.9) 100%); border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 24px; padding: 56px 40px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden; backdrop-filter: blur(20px); }
+    .segment-footer-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #0ea5e9, transparent); }
+    .segment-footer-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(22px, 3vw, 32px); font-weight: 800; color: #ffffff; margin-bottom: 32px; line-height: 1.3; letter-spacing: -0.02em; max-width: 800px; margin-inline: auto; }
+    .segment-footer-text span { color: #0ea5e9; }
+
+    /* ========================================================
+       CSS DA SEÇÃO: FAQ (ACCORDION)
+       ======================================================== */
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; margin-top: 48px; }
+    .faq-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; }
+    .faq-item.active { background: rgba(14, 165, 233, 0.05); border-color: rgba(14, 165, 233, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .faq-question { padding: 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px; color: #f8fafc; user-select: none; }
+    .faq-question:hover { color: #0ea5e9; }
+    .faq-question i { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: #0ea5e9; flex-shrink: 0; margin-left: 16px; }
+    .faq-item.active .faq-question i { transform: rotate(180deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; padding: 0 24px; color: #94a3b8; font-size: 16px; line-height: 1.6; opacity: 0; }
+    .faq-item.active .faq-answer { padding-bottom: 24px; opacity: 1; }
+    .faq-answer p { margin: 0; }
+  </style>
 </head>
 <body>
   <div class="reading-progress" id="reading-progress"></div>
@@ -28,9 +62,10 @@
       </div>
     </a>
     <nav class="nav-links" aria-label="Navegação Principal">
+      <a href="#segments" class="nav-link">Para Quem</a>
       <a href="#services" class="nav-link">Arquitetura</a>
       <a href="#process" class="nav-link">Automação</a>
-      <a href="#cases" class="nav-link">Performance</a>
+      <a href="#faq" class="nav-link">Dúvidas</a>
     </nav>
     <button class="header-cta js-open-quiz">Diagnóstico Inteligente</button>
     <button class="hamburger js-toggle-menu" aria-label="Abrir menu mobile" aria-expanded="false">
@@ -39,9 +74,10 @@
   </header>
 
   <nav class="mobile-menu" id="mobile-menu" aria-label="Menu Mobile">
+    <a href="#segments" class="mobile-link js-close-menu">Para Quem</a>
     <a href="#services" class="mobile-link js-close-menu">Arquitetura</a>
     <a href="#process" class="mobile-link js-close-menu">Automação</a>
-    <a href="#cases" class="mobile-link js-close-menu">Performance</a>
+    <a href="#faq" class="mobile-link js-close-menu">Dúvidas</a>
     <button class="btn-primary js-open-quiz js-close-menu" style="margin-top: 32px;">Diagnóstico Inteligente</button>
   </nav>
 
@@ -50,7 +86,6 @@
       <div class="grid-overlay"></div>
       <div class="hero-glow-left"></div>
       <div class="hero-glow-right"></div>
-      
       <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
       
       <div class="hero-content">
@@ -73,7 +108,7 @@
             <button class="btn-primary btn-shimmer js-open-quiz">
               Iniciar Diagnóstico Inteligente <i data-lucide="arrow-right" style="width: 18px;"></i>
             </button>
-            <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white" rel="noopener noreferrer">
+            <a href="https://wa.me/55439XXXXXXXX" target="_blank" class="btn-outline-white" rel="noopener noreferrer">
               <i data-lucide="message-circle" style="width: 18px;"></i> Falar pelo WhatsApp
             </a>
           </div>
@@ -118,6 +153,63 @@
         <span class="partner-chip"><i data-lucide="server"></i> Microsoft Azure</span>
         <span class="partner-chip"><i data-lucide="zap"></i> Zapier</span>
         <span class="partner-chip"><i data-lucide="bar-chart-2"></i> Power BI</span>
+      </div>
+    </section>
+
+    <section id="segments" class="dark-section section-spacing" style="background: #03050a; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div class="grid-overlay" style="opacity: 0.05;"></div>
+      <div class="section-inner" style="position: relative; z-index: 10;">
+        <span class="eyebrow reveal" style="color: #0ea5e9; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); margin-inline: auto; display: table;">QUEM ATENDEMOS</span>
+        <h2 class="section-title reveal" style="color: white; text-align: center; margin-bottom: 16px;">Se você tem uma operação para escalar, a BG Tech foi feita para você.</h2>
+        
+        <div class="segments-grid reveal delay-1">
+          <div class="segment-card">
+            <div class="segment-icon-wrap">🏭</div>
+            <div>
+              <h3 class="segment-title">Distribuição e Varejo</h3>
+              <p class="segment-desc">Fechamento de comissão, controle de estoque e integração com ERP automatizados.</p>
+            </div>
+          </div>
+          
+          <div class="segment-card">
+            <div class="segment-icon-wrap">🏥</div>
+            <div>
+              <h3 class="segment-title">Saúde e Clínicas</h3>
+              <p class="segment-desc">Roteamento de leads, agendamento inteligente e fluxo de atendimento sem gargalo.</p>
+            </div>
+          </div>
+          
+          <div class="segment-card">
+            <div class="segment-icon-wrap">🏗️</div>
+            <div>
+              <h3 class="segment-title">Construção Civil</h3>
+              <p class="segment-desc">Controle de obra, gestão de fornecedor e relatório automático para a diretoria.</p>
+            </div>
+          </div>
+          
+          <div class="segment-card">
+            <div class="segment-icon-wrap">⚙️</div>
+            <div>
+              <h3 class="segment-title">Indústria e Manufatura</h3>
+              <p class="segment-desc">Integração de sistemas de produção, qualidade e logística em um único fluxo.</p>
+            </div>
+          </div>
+          
+          <div class="segment-card">
+            <div class="segment-icon-wrap">💼</div>
+            <div>
+              <h3 class="segment-title">Serviços B2B</h3>
+              <p class="segment-desc">Automação de proposta, onboarding de cliente e suporte técnico sem retrabalho.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="segment-footer-box reveal delay-2">
+          <h3 class="segment-footer-text">Não atendemos todo mundo. Atendemos quem está pronto para <span>parar de crescer no limite.</span></h3>
+          <button class="btn-primary btn-large btn-shimmer js-open-quiz" style="margin: 0 auto;">
+            Verificar se minha empresa tem perfil <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -260,29 +352,6 @@
       </div>
     </section>
 
-    <section id="guarantee" class="dark-section section-spacing">
-      <div class="section-inner">
-        <h2 class="section-title reveal" style="margin-bottom: 40px; font-size: clamp(36px, 5vw, 56px);">O controle é seu. O risco é nosso.</h2>
-        <div class="guarantee-grid reveal delay-1">
-          <div class="guarantee-card">
-            <i data-lucide="file-check-2"></i>
-            <h3>Diagnóstico 100% Gratuito</h3>
-            <p>Sem nenhum compromisso financeiro. Você só decide avançar após validar a arquitetura que desenhamos.</p>
-          </div>
-          <div class="guarantee-card">
-            <i data-lucide="shield"></i>
-            <h3>90 Dias de Suporte Inclusos</h3>
-            <p>A proteção da sua operação. Todo projeto entregue conta com 3 meses de garantia total de estabilidade e funcionamento.</p>
-          </div>
-          <div class="guarantee-card">
-            <i data-lucide="calendar-check"></i>
-            <h3>Entrega Garantida</h3>
-            <p>Precisão de prazo é o nosso lema. Se não entregarmos no escopo acordado, você não paga a fatura final do projeto.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="cases" class="light-section bg-light-alt section-spacing">
       <div class="section-inner">
         <span class="eyebrow reveal">PERFORMANCE COMPROVADA</span>
@@ -374,6 +443,76 @@
       </div>
     </section>
 
+    <section id="faq" class="dark-section section-spacing" style="position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div class="grid-overlay" style="opacity: 0.05;"></div>
+      <div class="section-inner" style="position: relative; z-index: 10;">
+        <span class="eyebrow reveal" style="color: #0ea5e9; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); margin-inline: auto; display: table;">DÚVIDAS FREQUENTES</span>
+        <h2 class="section-title reveal" style="color: white; text-align: center; margin-bottom: 24px;">Respostas diretas para quem não gosta de perder tempo.</h2>
+        
+        <div class="faq-list reveal delay-1">
+          <div class="faq-item">
+            <div class="faq-question">
+              Minha empresa é pequena demais para isso?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Não existe empresa pequena demais para automatizar. Existe empresa com processo manual custando mais do que deveria. A maioria das empresas que atendemos tem entre 5 e 50 funcionários. O diagnóstico foi feito exatamente para mostrar se faz sentido para o seu tamanho, sem achismo, com número real.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              Preciso trocar meus sistemas atuais?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Na maioria dos casos, não. A arquitetura da BG Tech é feita para integrar o que você já usa: ERP, planilha, CRM, WhatsApp, sistema bancário. Conectamos os pontos que não se falam sem precisar jogar fora o que já funciona.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              Quanto tempo leva para ver resultado?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Depende do projeto. Automações simples entram em produção em 7 dias. Projetos de engenharia de software levam entre 3 e 6 semanas. Em ambos os casos, o ROI aparece no primeiro mês, porque o custo que você elimina começa no dia em que o sistema vai ao ar.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              O que acontece depois que faço o diagnóstico?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Você preenche 5 pontos da sua operação em 3 minutos. O resultado aparece na tela na hora, com o custo invisível calculado para o seu negócio. Um consultor entra em contato em até 2 horas para apresentar a arquitetura exata. Você decide se avança. Sem pressão, sem compromisso.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              Como funciona o contrato?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Simples e transparente. Escopo fechado antes de começar, você sabe exatamente o que vai ser entregue, em quanto tempo e por quanto. 50% na assinatura, 50% na entrega. Se não cumprirmos o escopo acordado, você não paga a fatura final. O risco é nosso.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              Vocês atendem fora de Londrina?
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Sim. Atendemos empresas em todo o Brasil de forma 100% remota. Toda a jornada, como diagnóstico, apresentação da arquitetura, implementação e suporte, acontece online sem perda de qualidade. Temos clientes ativos em mais de 8 estados.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="cta-final" class="dark-section" style="padding-top: 100px; padding-bottom: 100px;">
       <div class="cta-glow"></div>
       <div class="section-inner">
@@ -386,7 +525,7 @@
             <button class="btn-primary btn-large btn-shimmer js-open-quiz">
               Iniciar Diagnóstico Inteligente <i data-lucide="arrow-right"></i>
             </button>
-            <a href="https://wa.me/5543999999999" target="_blank" class="btn-outline-white btn-large" rel="noopener noreferrer">
+            <a href="https://wa.me/55439XXXXXXXX" target="_blank" class="btn-outline-white btn-large" rel="noopener noreferrer">
               <i data-lucide="message-circle"></i> Falar pelo WhatsApp
             </a>
           </div>
@@ -411,16 +550,17 @@
       
       <div class="footer-links">
         <h3 style="color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 20px;">Empresa</h3>
+        <a href="/#segments" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">Para Quem</a>
         <a href="/#services" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">Arquitetura</a>
         <a href="/#process" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">A Jornada</a>
         <a href="/#cases" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">Casos de Sucesso</a>
-        <a href="/#founders" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">A Liderança</a>
+        <a href="/#faq" style="display: block; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;">Dúvidas (FAQ)</a>
       </div>
 
       <div class="footer-links">
         <h3 style="color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 20px;">Contato</h3>
         
-        <a href="https://wa.me/5543999999999" target="_blank" style="display: flex; align-items: center; gap: 8px; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;" rel="noopener noreferrer">
+        <a href="https://wa.me/55439XXXXXXXX" target="_blank" style="display: flex; align-items: center; gap: 8px; color: rgba(230, 242, 255, 0.55); margin-bottom: 12px; font-size: 14px; transition: color 0.2s;" rel="noopener noreferrer">
           <i data-lucide="phone" style="width: 16px;"></i> WhatsApp Comercial
         </a>
         
@@ -458,5 +598,30 @@
 
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <script src="script.js" defer></script>
+  
+  <script>
+    // Script da Seção de FAQ (Accordion)
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+          const item = button.parentElement;
+          const isActive = item.classList.contains('active');
+          const answer = item.querySelector('.faq-answer');
+          
+          // Fecha todas as opções que estiverem abertas
+          document.querySelectorAll('.faq-item').forEach(faq => {
+            faq.classList.remove('active');
+            faq.querySelector('.faq-answer').style.maxHeight = null;
+          });
+          
+          // Se a que o usuário clicou não estava ativa, abre ela suavemente
+          if (!isActive) {
+            item.classList.add('active');
+            answer.style.maxHeight = answer.scrollHeight + 40 + "px"; // Altura do conteúdo + margem interna
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
