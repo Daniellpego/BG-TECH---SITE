@@ -90,10 +90,65 @@ jobs:
         working-directory: painel-crm/apps/frontend
         run: npm run build
 
+  rls-test:
+    name: RLS Smoke Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: crm
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: crm_bgtech_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U crm"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: painel-crm/packages/backend/package-lock.json
+
+      - name: Install Backend Dependencies
+        working-directory: painel-crm/packages/backend
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: painel-crm/packages/backend
+        run: npx prisma generate
+
+      - name: Run Migrations
+        working-directory: painel-crm/packages/backend
+        env:
+          DATABASE_URL: postgresql://crm:test_password@localhost:5432/crm_bgtech_test
+        run: npx prisma migrate deploy
+
+      - name: Apply RLS Policies
+        env:
+          PGPASSWORD: test_password
+        run: psql -h localhost -U crm -d crm_bgtech_test -f painel-crm/sql/rls-policies.sql || true
+
+      - name: Run RLS Smoke Tests
+        working-directory: painel-crm/packages/backend
+        env:
+          DATABASE_URL: postgresql://crm:test_password@localhost:5432/crm_bgtech_test
+          JWT_SECRET: test-secret
+        run: npx jest test/rls/rls.spec.ts --runInBand --forceExit
+
   build-docker:
     name: Build Docker Images
     runs-on: ubuntu-latest
-    needs: lint-and-test
+    needs: [lint-and-test, rls-test]
     if: github.ref == 'refs/heads/main'
 
     steps:
