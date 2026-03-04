@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm_secret_2026
+      POSTGRES_DB: crm_bgtech
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/rls-policies.sql:/docker-entrypoint-initdb.d/02-rls.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm -d crm_bgtech"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ./packages/backend
+      dockerfile: ../../infra/docker/Dockerfile.backend
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://crm:crm_secret_2026@postgres:5432/crm_bgtech
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-jwt-secret-change-in-production
+      LLM_PROVIDER: mock
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: ../../infra/docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

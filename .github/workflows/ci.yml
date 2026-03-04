@@ -1,0 +1,128 @@
+name: CI — CRM BG Tech
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: crm
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: crm_bgtech_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U crm"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            painel-crm/packages/backend/package-lock.json
+            painel-crm/apps/frontend/package-lock.json
+
+      - name: Install Backend Dependencies
+        working-directory: painel-crm/packages/backend
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: painel-crm/packages/backend
+        run: npx prisma generate
+
+      - name: Run Migrations
+        working-directory: painel-crm/packages/backend
+        env:
+          DATABASE_URL: postgresql://crm:test_password@localhost:5432/crm_bgtech_test
+        run: npx prisma migrate deploy
+
+      - name: Lint Backend
+        working-directory: painel-crm/packages/backend
+        run: npm run lint || true
+
+      - name: Test Backend
+        working-directory: painel-crm/packages/backend
+        env:
+          DATABASE_URL: postgresql://crm:test_password@localhost:5432/crm_bgtech_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret
+          LLM_PROVIDER: mock
+        run: npm test
+
+      - name: Install Frontend Dependencies
+        working-directory: painel-crm/apps/frontend
+        run: npm ci
+
+      - name: Lint Frontend
+        working-directory: painel-crm/apps/frontend
+        run: npm run lint || true
+
+      - name: Build Frontend
+        working-directory: painel-crm/apps/frontend
+        run: npm run build
+
+  build-docker:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Backend Image
+        run: |
+          docker build -f infra/docker/Dockerfile.backend \
+            -t crm-bgtech-backend:${{ github.sha }} \
+            painel-crm/packages/backend
+
+      - name: Build Frontend Image
+        run: |
+          docker build -f infra/docker/Dockerfile.frontend \
+            -t crm-bgtech-frontend:${{ github.sha }} \
+            painel-crm/apps/frontend
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-docker
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          echo "🚀 Deploy to staging — implement with Fly.io / Vercel / K8s"
+          echo "Backend: crm-bgtech-backend:${{ github.sha }}"
+          echo "Frontend: crm-bgtech-frontend:${{ github.sha }}"
