@@ -56,7 +56,7 @@ const timeout = setTimeout(() => controller.abort(), 3000);
 fetch('https://ipapi.co/json/', { signal: controller.signal })
   .then(r => r.json())
   .then(d => { if (d.city) leadLocation = d.city; })
-  .catch(() => {}) 
+  .catch(() => { })
   .finally(() => clearTimeout(timeout));
 
 const capitalize = (str) => {
@@ -66,118 +66,119 @@ const capitalize = (str) => {
 const QUESTIONS = [
   {
     id: 'segmento', label: 'PASSO 1 DE 6',
-    title: 'Qual o segmento da sua empresa?',
-    desc: 'Isso calibra os benchmarks e o vocabulário do seu diagnóstico.',
+    title: 'Com qual desses perfis sua empresa mais se identifica?',
+    desc: 'Personalizamos cada diagnóstico por segmento. Seu resultado será comparado com empresas similares à sua.',
     type: 'options',
     options: [
       { icon: 'hard-hat', title: 'Construção Civil', sub: 'Obras, projetos e gestão de equipe de campo' },
       { icon: 'scale', title: 'Jurídico e Contabilidade', sub: 'Escritórios, processos e clientes recorrentes' },
       { icon: 'store', title: 'Comércio e Varejo', sub: 'Loja física, e-commerce ou distribuidora' },
-      { icon: 'factory', title: 'Indústria e Manufatura', sub: 'Produção, estoque e operation fabril' },
+      { icon: 'factory', title: 'Indústria e Manufatura', sub: 'Produção, estoque e operação fabril' },
       { icon: 'stethoscope', title: 'Saúde', sub: 'Clínicas, laboratórios e prestadores de saúde' },
       { icon: 'briefcase', title: 'Serviços e Consultoria', sub: 'Agências, consultorias e empresas de serviço' }
     ]
   },
   {
     id: 'horas_perdidas', label: 'PASSO 2 DE 6',
-    title: 'Quanto tempo sua equipe perde por semana em tarefas manuais?',
-    desc: 'Seja honesto. Some mentalmente as horas de retrabalho antes de responder.',
+    title: 'Quantas horas por semana sua equipe gasta com retrabalho e tarefas que poderiam ser automáticas?',
+    desc: 'Some mentalmente: copiar dados entre planilhas, responder manualmente, gerar relatórios no braço...',
     type: 'options',
     options: [
-      { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação bem azeitada' },
-      { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Já dói, mas dá pra ignorar' },
-      { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Está custando dinheiro real todo mês' },
-      { icon: 'skull', title: 'Mais de 30 horas', sub: 'O manual virou o modelo de negócio' }
+      { icon: 'timer', title: 'Menos de 5 horas', sub: 'Operação relativamente azeitada' },
+      { icon: 'refresh-ccw', title: 'Entre 5 e 15 horas', sub: 'Dá pra ignorar, mas já custa dinheiro' },
+      { icon: 'flame', title: 'Entre 15 e 30 horas', sub: 'Quase 2 dias inteiros por semana jogados fora' },
+      { icon: 'skull', title: 'Mais de 30 horas', sub: 'O retrabalho virou o modelo de negócio' }
     ]
   },
   {
     id: 'dor', label: 'PASSO 3 DE 6',
-    title: 'O que mais trava o crescimento da empresa hoje?',
-    desc: 'Escolha a opção que mais corrói o seu lucro.',
+    title: 'Qual desses gargalos mais corrói o lucro da sua empresa hoje?',
+    desc: 'Ao nomear o problema, a solução fica mais clara. Escolha o que mais dói.',
     type: 'options',
     options: [
-      { icon: 'clock', title: 'Processos manuais', sub: 'Sua equipe é boa. Só que 30% do dia dela vai pro lixo.' },
-      { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Você paga por ferramentas que não se falam.' },
-      { icon: 'alert-circle', title: 'Suporte de TI lento', sub: 'Cada hora parada custa dinheiro. Você sabe disso.' },
-      { icon: 'bar-chart', title: 'Falta de visibilidade', sub: 'Você decide com base no feeling e não em dados exatos.' },
-      { icon: 'users', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais. Não devia ser assim.' }
+      { icon: 'clock', title: 'Processos manuais e retrabalho', sub: 'Equipe boa, gastando 30% do dia em tarefas sem valor' },
+      { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Ferramentas que não se falam = dados duplicados e furos' },
+      { icon: 'alert-circle', title: 'Suporte de TI lento ou inexistente', sub: 'Cada hora parada custa mais do que parece' },
+      { icon: 'bar-chart', title: 'Decisões no escuro', sub: 'Sem dados em tempo real, tudo é chute' },
+      { icon: 'users', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais — não devia ser assim' }
     ]
   },
   {
     id: 'faturamento', label: 'PASSO 4 DE 6',
-    title: 'Qual faixa melhor representa o faturamento mensal atual?',
-    desc: 'Isso determina o impacto financeiro exato que vai aparecer no seu diagnóstico.',
+    title: 'Qual faixa melhor representa o faturamento mensal da sua empresa?',
+    desc: 'Precisamos dessa referência para calcular o impacto real em R$ no seu diagnóstico.',
     type: 'options',
     options: [
-      { icon: 'wallet', title: 'Até R$ 50 mil', sub: 'Fase de validação do modelo' },
-      { icon: 'trending-up', title: 'Entre R$ 50k e R$ 200 mil', sub: 'Ganhando tração e corpo' },
-      { icon: 'landmark', title: 'Entre R$ 200k e R$ 500 mil', sub: 'Operação sólida buscando escala' },
-      { icon: 'gem', title: 'Acima de R$ 500 mil', sub: 'Estrutura robusta' }
-    ]
+      { icon: 'wallet', title: 'Até R$ 50 mil/mês', sub: 'Fase de validação e primeiros clientes' },
+      { icon: 'trending-up', title: 'R$ 50k a R$ 200k/mês', sub: 'Ganhando tração — hora de escalar sem quebrar' },
+      { icon: 'landmark', title: 'R$ 200k a R$ 500k/mês', sub: 'Operação sólida buscando eficiência máxima' },
+      { icon: 'gem', title: 'Acima de R$ 500k/mês', sub: 'Estrutura robusta — cada 1% de melhoria vale muito' }
+    ],
+    badge: 'Empresas nesta faixa recebem atendimento prioritário'
   },
   {
     id: 'maturidade', label: 'PASSO 5 DE 6',
-    title: 'Sendo completamente honesto, como você descreveria a tecnologia hoje?',
-    desc: 'O nível de maturidade digital atual da empresa.',
+    title: 'Sendo completamente honesto: como está a tecnologia da sua empresa hoje?',
+    desc: 'Sem julgamento — isso nos ajuda a encontrar exatamente onde estão os maiores ganhos pra você.',
     type: 'options',
     options: [
-      { icon: 'file-text', iconColor: 'icon-red', title: 'No papel ou Excel', sub: 'Tudo manual dependente de pessoas' },
-      { icon: 'box', iconColor: 'icon-orange', title: 'Sistemas básicos', sub: 'Até tem ferramenta mas ninguém usa direito' },
-      { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados e muito retrabalho' },
-      { icon: 'server', iconColor: 'icon-blue-light', title: 'Sistemas razoáveis', sub: 'Funciona mas tem espaço pra evoluir' },
-      { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa', sub: 'Base sólida, preciso de um parceiro estratégico' }
+      { icon: 'file-text', iconColor: 'icon-red', title: 'Tudo no papel ou Excel', sub: '100% manual, dependente de pessoas pra tudo' },
+      { icon: 'box', iconColor: 'icon-orange', title: 'Tem ferramentas, mas ninguém usa direito', sub: 'Paga software que vira enfeite' },
+      { icon: 'boxes', iconColor: 'icon-yellow', title: 'Sistemas sem integração', sub: 'Dados espalhados em 5 lugares diferentes' },
+      { icon: 'server', iconColor: 'icon-blue-light', title: 'Razoavelmente estruturado', sub: 'Funciona, mas tem muito espaço pra evoluir' },
+      { icon: 'rocket', iconColor: 'icon-cyan', title: 'Tecnologia boa, preciso de parceiro', sub: 'Base sólida, falta só a engenharia certa' }
     ]
   },
   {
     id: 'janela_decisao', label: 'PASSO 6 DE 6',
-    title: 'Se o diagnóstico fizer sentido, em quanto tempo você quer começar?',
-    desc: 'Isso define a prioridade de atendimento e o tipo de plano recomendado.',
+    title: 'Se identificarmos uma economia real na sua operação, quando você quer agir?',
+    desc: 'Isso define a prioridade do seu atendimento e o tipo de plano que vamos recomendar.',
     type: 'options',
     options: [
-      { icon: 'flame', title: 'Em até 7 dias', sub: 'Quero ação imediata e ganho rápido' },
-      { icon: 'calendar-clock', title: 'Em 15 a 30 dias', sub: 'Quero organizar internamente e iniciar com segurança' },
+      { icon: 'flame', title: 'Quero agir nos próximos 7 dias', sub: 'Preciso de resultado rápido' },
+      { icon: 'calendar-clock', title: 'Em 15 a 30 dias', sub: 'Quero organizar internamente primeiro' },
       { icon: 'calendar', title: 'Em 1 a 3 meses', sub: 'Estou validando cenário e prioridade' },
       { icon: 'book-open', title: 'Só estudando por enquanto', sub: 'Quero entender melhor antes de decidir' }
     ]
   },
   {
-    id: 'contato', label: '', 
-    title: 'Seu diagnóstico está pronto.',
-    desc: 'Informe para quem enviamos a análise completa da sua operation.',
+    id: 'contato', label: '',
+    title: 'Se a BG Tech identificar R$30k+ em desperdício na sua operação, você quer saber?',
+    desc: 'Deixe seus dados e receba o diagnóstico completo com as 3 ações de maior retorno pra sua empresa.',
     type: 'text',
     fields: [
       { id: 'nome', placeholder: 'Como você prefere ser chamado?' },
       { id: 'empresa', placeholder: 'Nome da empresa' },
-      { id: 'whatsapp', placeholder: 'WhatsApp (com DDD)' }
+      { id: 'whatsapp', placeholder: 'WhatsApp com DDD (ex: 43 99999-0000)' }
     ]
   }
 ];
 
 const echos = {
   horas_perdidas: [
-    null,
-    "Esse padrão de fuga de horas aparece em 62% das empresas no seu estágio de crescimento.",
-    "Atenção. Com esse volume sua equipe perde efetivamente quase 2 dias inteiros por semana em rotinas braçais.",
-    "Custo crítico. Acima de 30h semanais o desperdício invisível supera facilmente o salário de um gestor."
+    "Bom sinal. Mas mesmo 5h/semana representam mais de R$2.000/mês em custo invisível.",
+    "Isso representa até R$8.000/mês em custo operacional escondido. A maioria das empresas não percebe.",
+    "Atenção: sua equipe perde quase 2 dias inteiros por semana em rotinas braçais. Isso supera R$15.000/mês.",
+    "Custo crítico. Acima de 30h semanais, o desperdício invisível supera o salário de um gestor sênior."
   ],
   dor: [
-    "Processos manuais não escalam. É a maior trava de crescimento documentada no B2B atual.",
+    "Processos manuais são a trava #1 de crescimento documentada no B2B. Você não está sozinho.",
     "Sistemas desconectados geram retrabalho infinito e furos graves de informação.",
-    "A falta de suporte técnico drena não só dinheiro, mas a moral da equipe inteira.",
-    "Decidir sem dados em tempo real é o que separa empresas que estagnam das que lideram o mercado.",
+    "Cada hora de TI parada custa em média R$480 para operações B2B desse porte.",
+    "Decidir sem dados em tempo real é o que separa empresas que estagnam das que lideram.",
     "Sobrecarga operacional gera turnover alto. A automação resolve isso direto na raiz."
   ],
   faturamento: [
     null,
-    "Ótimo. Nessa faixa cada R$1.000 economizado em operação vira lucro direto no fim do mês.",
-    "Uma operação desse porte precisa de tecnologia robusta para não implodir sob o próprio peso.",
-    "Com esse volume qualquer ineficiência de 2% já representa dezenas de milhares de reais perdidos."
+    "Nessa faixa, cada R$1.000 economizado vira lucro direto. Automação aqui tem ROI imediato.",
+    "Com esse porte, ineficiências de 2% já representam dezenas de milhares perdidos por mês.",
+    "Seu volume exige tecnologia robusta. Qualquer gargalo manual sangra em escala."
   ],
   janela_decisao: [
-    "Perfeito. Vamos priorizar ações de impacto imediato para acelerar seu resultado.",
-    "Ótimo timing. Dá para estruturar implementação com controle e previsibilidade.",
-    "Faz sentido. Vamos deixar um plano de maturação para você avançar no momento certo.",
-    "Sem problema. Você recebe clareza agora e decide quando avançar."
+    "Perfeito. Vamos priorizar ações de impacto imediato para os próximos 7 dias.",
+    "Ótimo timing. Dá para estruturar a implementação com controle e previsibilidade.",
+    "Faz sentido. Vamos montar um plano de maturação para você avançar no momento certo.",
+    "Entendemos. Mas enquanto você estuda, sua operação continua perdendo entre R$4k e R$15k/mês. O diagnóstico não compromete — os números vão falar por si."
   ]
 };
 
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     heroSubtitle.textContent = activeCopy.subtitle;
     ctaLabels.forEach((label) => { label.textContent = activeCopy.cta; });
   }
-  
+
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeQuiz(); });
   document.getElementById('quiz-overlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('quiz-overlay')) closeQuiz();
@@ -258,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Stagger per section: reset delay counter per parent section
       const section = el.closest('section') || el.closest('.trust-fade') || el.parentElement;
       if (!section._revealIdx) section._revealIdx = 0;
-      el.style.setProperty('--delay', `${section._revealIdx * 80}ms`);
+      el.style.setProperty('--delay', `${section._revealIdx * 100}ms`);
       section._revealIdx++;
       revealObserver.observe(el);
     });
@@ -318,38 +319,100 @@ document.addEventListener('DOMContentLoaded', () => {
     counters.forEach(el => counterObserver.observe(el));
   }
 
+  // IMPACT STAT COUNTERS — animate -40%, +15h, 67% from zero
+  const impactStats = document.querySelectorAll('.impact-big[data-value]');
+  if (impactStats.length && !prefersReducedMotion) {
+    const animateImpactCounter = (el) => {
+      const rawValue = parseFloat(el.dataset.value);
+      const suffix = el.dataset.suffix || '';
+      const prefix = el.dataset.prefix || '';
+      const isNegative = rawValue < 0;
+      const absTarget = Math.abs(rawValue);
+      const duration = 1800;
+      const start = performance.now();
+
+      const update = (now) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out-expo
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const current = Math.round(absTarget * eased);
+        el.textContent = (isNegative ? '-' : prefix) + current + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = (isNegative ? '-' : prefix) + absTarget + suffix;
+      };
+      requestAnimationFrame(update);
+    };
+
+    const impactObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateImpactCounter(entry.target);
+          impactObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    impactStats.forEach(el => impactObserver.observe(el));
+  }
+
+  // HERO DASHBOARD COUNTER ANIMATION
+  const dashCounters = document.querySelectorAll('.dash-counter');
+  if (dashCounters.length) {
+    setTimeout(() => {
+      dashCounters.forEach(el => {
+        const target = parseInt(el.dataset.to);
+        const isPrice = el.textContent.includes('R$');
+        const duration = 2000;
+        const start = performance.now();
+        const update = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(target * eased);
+          if (isPrice) {
+            el.textContent = `R$ ${current.toLocaleString('pt-BR')}`;
+          } else {
+            el.textContent = current.toLocaleString('pt-BR');
+          }
+          if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+      });
+    }, 800);
+  }
+
   const menuBtn = document.querySelector('.js-toggle-menu');
   const mobileMenu = document.getElementById('mobile-menu');
   if (menuBtn) {
-      menuBtn.addEventListener('click', () => {
-          const isOpen = mobileMenu.classList.contains('open');
-          mobileMenu.classList.toggle('open', !isOpen);
-          menuBtn.setAttribute('aria-expanded', !isOpen);
-      });
+    menuBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.contains('open');
+      mobileMenu.classList.toggle('open', !isOpen);
+      menuBtn.setAttribute('aria-expanded', !isOpen);
+    });
   }
   document.querySelectorAll('.js-close-menu').forEach(btn => btn.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
   }));
-  
+
 
   window.addEventListener('scroll', () => {
     const header = document.getElementById('site-header');
     const progress = document.getElementById('reading-progress');
     const scrollIndicator = document.querySelector('.scroll-indicator');
-    
+
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
-    
+
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     if (progress) progress.style.width = scrollable > 0 ? (window.scrollY / scrollable) * 100 + '%' : '0%';
-    
+
     // Fade out scroll indicator ao rolar
     if (scrollIndicator) {
       const fadeStart = 100;
       const fadeUntil = 400;
       let opacity = 1;
-      
+
       if (window.scrollY <= fadeStart) {
         opacity = 0.7;
       } else if (window.scrollY <= fadeUntil) {
@@ -357,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         opacity = 0;
       }
-      
+
       scrollIndicator.style.opacity = opacity;
       if (opacity === 0) scrollIndicator.style.pointerEvents = 'none';
       else scrollIndicator.style.pointerEvents = 'auto';
@@ -394,22 +457,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const item = button.parentElement;
       const isActive = item.classList.contains('active');
       const answer = item.querySelector('.faq-answer');
-      
+
       document.querySelectorAll('.faq-item').forEach(faq => {
         faq.classList.remove('active');
         faq.querySelector('.faq-answer').style.maxHeight = null;
       });
-      
+
       if (!isActive) {
         item.classList.add('active');
-        answer.style.maxHeight = answer.scrollHeight + 40 + "px"; 
+        answer.style.maxHeight = answer.scrollHeight + 40 + "px";
       }
     });
   });
 
   document.querySelectorAll('.js-open-quiz').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openQuiz(); }));
   const closeBtn = document.querySelector('.js-close-quiz');
-  if(closeBtn) closeBtn.addEventListener('click', closeQuiz);
+  if (closeBtn) closeBtn.addEventListener('click', closeQuiz);
 
 });
 
@@ -427,42 +490,42 @@ function openQuiz() {
   } else {
     currentStep = -1; answers = {}; textData = {};
   }
-  
+
   const quizOverlay = document.getElementById('quiz-overlay');
   const quizBody = document.getElementById('quiz-body');
-  
-  if(quizOverlay) {
-      quizOverlay.classList.add('open');
-      quizOverlay.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
-      
-      if (quizBody.innerHTML.trim() === '') {
-          quizBody.innerHTML = `
+
+  if (quizOverlay) {
+    quizOverlay.classList.add('open');
+    quizOverlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+
+    if (quizBody.innerHTML.trim() === '') {
+      quizBody.innerHTML = `
              <div style="text-align:center; padding: 60px 20px;">
                <div class="diag-loading-ring"></div>
                <p style="font-weight: 600;">Calibrando motor de diagnóstico...</p>
              </div>`;
-          setTimeout(() => {
-              if (quizBody.innerHTML.includes('Calibrando motor')) { 
-                  quizBody.innerHTML = `
+      setTimeout(() => {
+        if (quizBody.innerHTML.includes('Calibrando motor')) {
+          quizBody.innerHTML = `
                      <div style="text-align:center; padding: 60px 20px;">
                        <p style="color: #ef4444; font-weight: 800; margin-bottom: 16px;">O diagnóstico encontrou um gargalo na rede.</p>
                        <a href="https://wa.me/5543999998888" target="_blank" class="btn-primary" style="display:inline-flex;">Continuar via WhatsApp</a>
                      </div>`;
-              }
-          }, 4000);
-      }
+        }
+      }, 4000);
+    }
   }
-  
+
   if (currentStep === -1) renderIntro(); else renderStep();
 }
 
 function closeQuiz() {
   const quizOverlay = document.getElementById('quiz-overlay');
-  if(quizOverlay) {
-      quizOverlay.classList.remove('open');
-      quizOverlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
+  if (quizOverlay) {
+    quizOverlay.classList.remove('open');
+    quizOverlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
   }
   if (currentStep >= QUESTIONS.length) sessionStorage.removeItem('bgtech_quiz');
 }
@@ -470,8 +533,8 @@ function closeQuiz() {
 function renderIntro() {
   const body = document.getElementById('quiz-body');
   const progressFill = document.getElementById('quiz-progress-fill');
-  if(progressFill) progressFill.style.width = '0%';
-  
+  if (progressFill) progressFill.style.width = '0%';
+
   body.innerHTML = `
     <div class="quiz-intro reveal visible">
       <h2 style="color: var(--text-1);">O Diagnóstico BG Tech</h2>
@@ -483,6 +546,8 @@ function renderIntro() {
       <p style="color: var(--text-3);">Nos próximos 3 minutos você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e o porquê.</p>
       <p style="color: var(--text-3);">Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
       
+      <p class="intro-pain-line">Se sua equipe ainda depende de planilha, ligação manual ou "copia e cola" para operar — cada dia parado tem um custo real. Vamos calcular juntos.</p>
+
       <div class="quiz-intro-hint">
         Seja completamente honesto. Quanto mais preciso você for nas respostas, mais exato será o resultado.
       </div>
@@ -490,24 +555,24 @@ function renderIntro() {
     </div>
   `;
   if (typeof lucide !== 'undefined') lucide.createIcons();
-  
+
   const startBtn = body.querySelector('.js-start-quiz');
-  if(startBtn) startBtn.addEventListener('click', () => { nextStep(); });
+  if (startBtn) startBtn.addEventListener('click', () => { nextStep(); });
 }
 
 function renderStep() {
   const q = QUESTIONS[currentStep];
   const body = document.getElementById('quiz-body');
   const bar = document.getElementById('quiz-progress-fill');
-  
-  if(bar) {
-      if (q.id === 'contato') {
-        bar.style.width = '80%';
-        bar.classList.add('pulse-progress');
-      } else {
-        bar.style.width = `${(currentStep / (QUESTIONS.length - 1)) * 100}%`;
-        bar.classList.remove('pulse-progress');
-      }
+
+  if (bar) {
+    if (q.id === 'contato') {
+      bar.style.width = '80%';
+      bar.classList.add('pulse-progress');
+    } else {
+      bar.style.width = `${(currentStep / (QUESTIONS.length - 1)) * 100}%`;
+      bar.classList.remove('pulse-progress');
+    }
   }
 
   if (q.type === 'options') {
@@ -523,29 +588,44 @@ function renderStep() {
         </div>`;
     });
     html += `</div>`;
+    if (q.badge) html += `<div class="q-badge-exclusive" style="display:none;"><i data-lucide="shield-check" width="14"></i> ${q.badge}</div>`;
     if (currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
     html += `</div>`;
     body.innerHTML = html;
-    
+
     body.querySelectorAll('.q-option').forEach(opt => {
       opt.addEventListener('click', function () {
         const idx = parseInt(this.getAttribute('data-index'));
         answers[q.id] = idx;
         const ecoText = echos[q.id]?.[idx];
-        
+
+        // GAP 2: Show badge only for R$200k+ (index >= 2)
+        if (q.badge) {
+          const badge = body.querySelector('.q-badge-exclusive');
+          if (badge) {
+            if (idx >= 2) {
+              badge.style.display = 'flex';
+              badge.style.animation = 'fadeInUp 0.3s ease forwards';
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+        }
+
         if (q.id === 'segmento') {
           const segName = q.options[idx].title;
           body.innerHTML = `<div class="micro-validation"><i data-lucide="check-circle-2" style="margin-bottom:12px;width:32px;height:32px;"></i><br>Calibrando diagnóstico para ${segName}...</div>`;
           if (typeof lucide !== 'undefined') lucide.createIcons();
           setTimeout(() => { nextStep(); }, 1200);
         } else if (ecoText) {
+          const isWarning = q.id === 'janela_decisao' && idx === 3;
           body.innerHTML = `
             <div class="micro-validation" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 60px 20px;">
-              <i data-lucide="zap" style="color:var(--blue); width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
+              <i data-lucide="${isWarning ? 'alert-triangle' : 'zap'}" style="color:${isWarning ? '#f59e0b' : 'var(--blue)'}; width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
               <p style="color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
             </div>`;
           if (typeof lucide !== 'undefined') lucide.createIcons();
-          setTimeout(() => { nextStep(); }, 2500); 
+          setTimeout(() => { nextStep(); }, 2500);
         } else {
           nextStep();
         }
@@ -555,83 +635,83 @@ function renderStep() {
     let html = `<div class="reveal visible">
       <span class="q-label"><span class="live-dot"></span> DIAGNÓSTICO PRONTO</span>
       <h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
-      
+
     q.fields.forEach(f => {
       html += `<div class="q-input-group">
                 <input type="text" class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" value="${textData[f.id] || ''}">
                 <div class="q-error-msg" id="err-${f.id}"></div>
                </div>`;
     });
-    
+
     html += `
       <p style="font-size:12px; color:var(--text-3); margin-bottom: 20px; text-align:center;">Usamos esse contato apenas para enviar e debater o diagnóstico. Sem spam.</p>
       <div class="q-nav">
         <button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button>
         <button class="btn-primary js-next">Liberar meu diagnóstico <i data-lucide="unlock" width="16"></i></button>
       </div></div>`;
-    
+
     body.innerHTML = html;
-    
+
     const wppInput = document.getElementById('inp-whatsapp');
-    if(wppInput) {
-      wppInput.addEventListener('input', function() {
-        let v = this.value.replace(/\D/g, '').slice(0,11);
-        if(v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-        if(v.length > 10) v = v.slice(0,10) + '-' + v.slice(10);
+    if (wppInput) {
+      wppInput.addEventListener('input', function () {
+        let v = this.value.replace(/\D/g, '').slice(0, 11);
+        if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+        if (v.length > 10) v = v.slice(0, 10) + '-' + v.slice(10);
         this.value = v;
         this.classList.remove('error');
         document.getElementById('err-whatsapp').style.display = 'none';
       });
     }
-    
+
     const nextBtn = body.querySelector('.js-next');
-    if(nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          let hasError = false;
-          
-          const elNome = document.getElementById('inp-nome');
-          const nomeVal = elNome.value.trim();
-          if (nomeVal.length < 3) {
-            hasError = true; elNome.classList.add('error');
-            document.getElementById('err-nome').innerText = "Insira um nome válido";
-            document.getElementById('err-nome').style.display = 'block';
-          } else { textData.nome = capitalize(nomeVal); }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        let hasError = false;
 
-          const elEmpresa = document.getElementById('inp-empresa');
-          const empVal = elEmpresa.value.trim();
-          if (empVal.length < 2) {
-            hasError = true; elEmpresa.classList.add('error');
-            document.getElementById('err-empresa').innerText = "Informe a empresa";
-            document.getElementById('err-empresa').style.display = 'block';
-          } else { textData.empresa = empVal; } 
+        const elNome = document.getElementById('inp-nome');
+        const nomeVal = elNome.value.trim();
+        if (nomeVal.length < 3) {
+          hasError = true; elNome.classList.add('error');
+          document.getElementById('err-nome').innerText = "Insira um nome válido";
+          document.getElementById('err-nome').style.display = 'block';
+        } else { textData.nome = capitalize(nomeVal); }
 
-          const wppVal = wppInput.value.trim().replace(/\D/g, ''); 
-          if (wppVal.length < 10 || wppVal.length > 13) {
-            hasError = true; wppInput.classList.add('error');
-            document.getElementById('err-whatsapp').innerText = "Número inválido. Inclua o DDD.";
-            document.getElementById('err-whatsapp').style.display = 'block';
-          } else { textData.whatsapp = wppInput.value; }
+        const elEmpresa = document.getElementById('inp-empresa');
+        const empVal = elEmpresa.value.trim();
+        if (empVal.length < 2) {
+          hasError = true; elEmpresa.classList.add('error');
+          document.getElementById('err-empresa').innerText = "Informe a empresa";
+          document.getElementById('err-empresa').style.display = 'block';
+        } else { textData.empresa = empVal; }
 
-          if (!hasError) runLoading();
-        });
+        const wppVal = wppInput.value.trim().replace(/\D/g, '');
+        if (wppVal.length < 10 || wppVal.length > 13) {
+          hasError = true; wppInput.classList.add('error');
+          document.getElementById('err-whatsapp').innerText = "Número inválido. Inclua o DDD.";
+          document.getElementById('err-whatsapp').style.display = 'block';
+        } else { textData.whatsapp = wppInput.value; }
+
+        if (!hasError) runLoading();
+      });
     }
-    
+
     q.fields.forEach(f => {
-      if(f.id !== 'whatsapp') { 
+      if (f.id !== 'whatsapp') {
         const inputEl = document.getElementById(`inp-${f.id}`);
-        if(inputEl) {
-            inputEl.addEventListener('input', function () {
-              this.classList.remove('error'); 
-              document.getElementById(`err-${f.id}`).style.display = 'none';
-            });
+        if (inputEl) {
+          inputEl.addEventListener('input', function () {
+            this.classList.remove('error');
+            document.getElementById(`err-${f.id}`).style.display = 'none';
+          });
         }
       }
     });
   }
-  
+
   const prevBtn = body.querySelector('.js-prev');
   if (prevBtn) prevBtn.addEventListener('click', () => { currentStep--; renderStep(); });
-  
+
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -643,16 +723,16 @@ function nextStep() {
 
 function runLoading() {
   const bar = document.getElementById('quiz-progress-fill');
-  if(bar) {
-      bar.classList.remove('pulse-progress');
-      bar.style.width = '100%';
+  if (bar) {
+    bar.classList.remove('pulse-progress');
+    bar.style.width = '100%';
   }
   const body = document.getElementById('quiz-body');
-  
+
   const segName = QUESTIONS[0].options[answers.segmento].title;
   const fatIndex = answers.faturamento;
   const decIndex = answers.janela_decisao;
-  
+
   let basePerda = 6500;
   if (fatIndex === 1) basePerda = 14000;
   if (fatIndex === 2) basePerda = 32000;
@@ -683,7 +763,7 @@ function runLoading() {
         `).join('')}
       </div>
     </div>`;
-    
+
   if (typeof lucide !== 'undefined') lucide.createIcons();
 
   let i = 0;
@@ -711,19 +791,19 @@ function runLoading() {
       }
       lucide.createIcons();
       i++;
-      setTimeout(tick, 1000); 
+      setTimeout(tick, 1000);
     } else {
       setTimeout(showResult, 500);
     }
   };
-  
+
   setTimeout(() => {
     if (i < steps.length) {
       console.warn('Quiz loading timeout - forcing result');
       setTimeout(showResult, 100);
     }
   }, 10000);
-  
+
   tick();
 }
 
@@ -731,7 +811,7 @@ function showResult() {
   const body = document.getElementById('quiz-body');
   const nome = textData.nome.split(' ')[0];
   const empresa = textData.empresa;
-  
+
   const fatIndex = answers.faturamento;
   const matIndex = answers.maturidade;
   const horasIndex = answers.horas_perdidas;
@@ -741,7 +821,7 @@ function showResult() {
   if (fatIndex === 1) { minLoss = 14500; maxLoss = 22000; }
   if (fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
   if (fatIndex === 3) { minLoss = 65000; maxLoss = 98000; }
-  
+
   const lostValueStr = `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`;
   const workersEquiv = (maxLoss / 3500).toFixed(1);
   let score = 38;
@@ -789,7 +869,7 @@ function showResult() {
 
   const now = new Date();
   const diagnosticId = `BG-${now.getFullYear().toString().slice(-2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-  
+
   const recupAuto = (maxLoss * 0.6 / 1000).toFixed(1);
   const recupInteg = (maxLoss * 0.35 / 1000).toFixed(1);
   const recupDash = (maxLoss * 0.2 / 1000).toFixed(1);
@@ -799,6 +879,14 @@ function showResult() {
       <h2 class="q-title" style="font-size: 24px; margin-bottom: 8px;">${nome}, encontramos o problema.</h2>
       <p class="q-desc" style="font-size: 15px;">Processamos os dados da <strong>${empresa}</strong> contra o benchmark do seu setor.</p>
       
+      <div class="result-scarcity">
+        <span class="scarcity-dot"></span>
+        <span>
+          <strong>3</strong> empresas do seu segmento estão em análise essa semana · 
+          <strong>2 vagas de implementação abertas</strong>
+        </span>
+      </div>
+
       <div class="score-banner">
         <div class="score-circle">
           <svg viewBox="0 0 100 100">
@@ -815,6 +903,8 @@ function showResult() {
           <span class="score-category" style="color: ${scoreCat.color};">${scoreCat.label}</span>
         </div>
       </div>
+
+      <p class="result-percentile">Você está entre os <strong>12% das empresas</strong> do seu segmento que chegaram até esta etapa. A maioria desiste antes de ver os números reais.</p>
 
       <div class="benchmark-box">
         <div class="benchmark-title"><i data-lucide="scan-search" style="width: 16px;"></i> Leitura de benchmark do seu segmento</div>
@@ -834,7 +924,6 @@ function showResult() {
 
       <div class="opps-box">
         <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text-1); margin-bottom: 20px;">Plano de Ação Sugerido:</h3>
-        
         <div class="opp-item">
           <div class="opp-header"><span>1. Automação de Tarefas</span><span>R$ ${recupAuto}k</span></div>
           <div class="opp-bar-wrap"><div class="opp-bar" id="bar-0" style="width: 0%;" data-target="85%"></div></div>
@@ -858,29 +947,55 @@ function showResult() {
         </div>
       </div>
 
-      <div class="urgency-bar">
-        <i data-lucide="clock" style="width: 16px;"></i> Nossa equipe entra em contato com você em até 20 minutos úteis
+      <div class="diagnostic-id">ID do Diagnóstico: <strong>${diagnosticId}</strong></div>
+
+      <div class="result-cta-primary">
+        <div class="cta-primary-icon"><i data-lucide="phone-call" width="22"></i></div>
+        <div class="cta-primary-text">
+          <strong>Um especialista BG Tech vai te chamar</strong>
+          <span>em até 20 minutos úteis no WhatsApp informado</span>
+        </div>
+        <div class="cta-primary-check">✓</div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 32px;">
-        <button class="btn-priority-contact js-priority-contact" style="width: 100%;">
-          <i data-lucide="phone-call" style="width: 18px;"></i>
-          Quero conversar com a equipe em 20 minutos
-        </button>
+      <div class="result-timeline-visual">
+        <div class="tl-v-item">
+          <span class="tl-v-time">Agora</span>
+          <span class="tl-v-dot active"></span>
+          <span class="tl-v-label">Diagnóstico processado</span>
+        </div>
+        <div class="tl-v-item">
+          <span class="tl-v-time">~20min</span>
+          <span class="tl-v-dot"></span>
+          <span class="tl-v-label">Especialista entra em contato</span>
+        </div>
+        <div class="tl-v-item">
+          <span class="tl-v-time">Hoje</span>
+          <span class="tl-v-dot"></span>
+          <span class="tl-v-label">Plano personalizado na sua mão</span>
+        </div>
       </div>
+
+      <button class="result-cta-secondary" id="btn-wpp-now">Prefere falar agora? → Abrir WhatsApp</button>
+
+      <p style="font-size: 12px; color: var(--text-3); text-align: center; margin-top: 8px; opacity: 0.7;">Sem compromisso · 100% confidencial · Sem spam</p>
     </div>
   `;
-  
+
   if (typeof lucide !== 'undefined') lucide.createIcons();
 
+  // Hide progress bar on result screen
+  const bar = document.getElementById('quiz-progress-fill');
+  if (bar) bar.parentElement.style.display = 'none';
+
+  // Animate score circle and opportunity bars
   setTimeout(() => {
     const elCirc = document.getElementById('anim-circle');
     if (elCirc) {
-      elCirc.getBoundingClientRect(); 
+      elCirc.getBoundingClientRect();
       elCirc.style.transition = 'stroke-dashoffset 1.5s ease-out';
       elCirc.style.strokeDashoffset = circleOffset;
     }
-    
     [0, 1, 2].forEach((i, index) => {
       setTimeout(() => {
         const barEl = document.getElementById(`bar-${i}`);
@@ -892,6 +1007,13 @@ function showResult() {
     });
   }, 100);
 
+  // Secondary WhatsApp CTA
+  document.getElementById('btn-wpp-now')?.addEventListener('click', () => {
+    const msg = `Olá! Fiz o diagnóstico da BG Tech (ID ${diagnosticId}). Score ${score}/100, custo estimado de ${lostValueStr}/mês em ineficiências. Quero conversar sobre o plano para ${empresa}.`;
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+
+  // Data collection
   const segOpt = QUESTIONS[0].options[answers.segmento];
   const horasOpt = QUESTIONS[1].options[answers.horas_perdidas];
   const dorOpt = QUESTIONS[2].options[answers.dor];
@@ -920,7 +1042,6 @@ function showResult() {
   const notifyHotLead = async (origin = 'auto') => {
     if (leadTemperature !== 'Quente') return;
     if (!runtimeWebhook.webhookUrl) return;
-
     const hotLeadPayload = {
       event: 'hot_lead_alert',
       source: 'site-principal-quiz',
@@ -938,7 +1059,6 @@ function showResult() {
       segmento: segOpt ? segOpt.title : '',
       created_at: new Date().toISOString()
     };
-
     try {
       await postWebhook(runtimeWebhook.webhookUrl, hotLeadPayload, runtimeWebhook.webhookToken);
     } catch (err) {
@@ -956,38 +1076,51 @@ function showResult() {
         'Prefer': 'return=minimal'
       },
       body: JSON.stringify(supabasePayload)
-    })
-    .catch(err => console.error("❌ Erro ao salvar:", err));
+    }).catch(err => console.error("❌ Erro ao salvar:", err));
   }
 
   if (leadTemperature === 'Quente') {
     notifyHotLead('resultado_quiz');
   }
-
-  const openWpp = () => {
-    const msg = `Olá! Fiz o diagnóstico da BG Tech agora (ID ${diagnosticId}). Perfil ${leadTemperature}, score ${score}/100, custo estimado de R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k mensais em ineficiências. Quero agendar a conversa de 20 min para a ${empresa}.`;
-    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-  };
-
-  const openPriorityWpp = () => {
-    const msg = `Olá! Quero contato prioritário em até 20 minutos. Já finalizei o diagnóstico da ${empresa} (ID ${diagnosticId}), perfil ${leadTemperature}.`;
-    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    notifyHotLead('botao_prioritario');
-    if (runtimeWebhook.webhookUrl) {
-      postWebhook(runtimeWebhook.webhookUrl, {
-        event: 'priority_cta_clicked',
-        source: 'site-principal-quiz',
-        diagnostico_id: diagnosticId,
-        empresa: textData.empresa,
-        nome: textData.nome,
-        whatsapp: textData.whatsapp,
-        lead_temperature: leadTemperature,
-        score,
-        created_at: new Date().toISOString()
-      }, runtimeWebhook.webhookToken);
-    }
-  };
-
-  const priorityBtn = body.querySelector('.js-priority-contact');
-  if (priorityBtn) priorityBtn.addEventListener('click', openPriorityWpp);
 }
+
+// ============================================
+// SCROLL ANIMATION SYSTEM — BG TECH
+// ============================================
+(function initScrollAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('anim-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  document.querySelectorAll('[data-anim]').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+// ============================================
+// HERO PARALLAX (desktop only)
+// ============================================
+(function initHeroParallax() {
+  const hero = document.getElementById('hero');
+  if (!hero || window.innerWidth < 768) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const rate = window.scrollY * 0.3;
+        hero.style.setProperty('--parallax-y', `${rate}px`);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
