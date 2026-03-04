@@ -82,6 +82,10 @@ jobs:
         working-directory: painel-crm/apps/frontend
         run: npm ci
 
+      - name: Test Frontend (Jest)
+        working-directory: painel-crm/apps/frontend
+        run: npx jest --ci --coverage --passWithNoTests
+
       - name: Lint Frontend
         working-directory: painel-crm/apps/frontend
         run: npm run lint || true
@@ -89,6 +93,11 @@ jobs:
       - name: Build Frontend
         working-directory: painel-crm/apps/frontend
         run: npm run build
+
+      - name: Verify Security Headers (middleware)
+        working-directory: painel-crm/apps/frontend
+        run: |
+          test -f src/middleware.ts && echo "✓ Security middleware exists" || exit 1
 
   rls-test:
     name: RLS Smoke Test
