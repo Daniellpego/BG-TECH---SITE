@@ -17,6 +17,8 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
+  HelpCircle,
+  Rocket,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -93,6 +95,24 @@ export default function Sidebar() {
         {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         {!collapsed && 'Recolher'}
       </button>
+
+      {/* Help & Onboarding */}
+      <div className="mx-3 mb-2 space-y-0.5">
+        <Link
+          href="/onboarding"
+          className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)] transition-colors"
+        >
+          <Rocket className="h-4 w-4 shrink-0" />
+          {!collapsed && 'Tour Interativo'}
+        </Link>
+        <Link
+          href="/help"
+          className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)] transition-colors"
+        >
+          <HelpCircle className="h-4 w-4 shrink-0" />
+          {!collapsed && 'Central de Ajuda'}
+        </Link>
+      </div>
 
       {/* Org Selector */}
       <Link

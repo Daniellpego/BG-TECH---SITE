@@ -9,7 +9,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import Sidebar from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
 
-const PUBLIC_ROUTES = ['/login'];
+const PUBLIC_ROUTES = ['/login', '/onboarding'];
 
 function makeQueryClient() {
   return new QueryClient({
