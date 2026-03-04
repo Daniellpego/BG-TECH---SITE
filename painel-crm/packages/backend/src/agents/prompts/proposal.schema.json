@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProposalAgentOutput",
+  "description": "Structured metadata returned alongside the Markdown proposal",
+  "type": "object",
+  "required": [
+    "executive_summary",
+    "architecture_overview",
+    "effort_breakdown",
+    "risks",
+    "milestones",
+    "total_investment",
+    "payment_terms",
+    "validity_days",
+    "recommended_team"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "executive_summary": {
+      "type": "string",
+      "description": "Brief executive summary of the proposal"
+    },
+    "architecture_overview": {
+      "type": "string",
+      "description": "Textual description of the proposed architecture"
+    },
+    "effort_breakdown": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["feature", "hours"],
+        "additionalProperties": false,
+        "properties": {
+          "feature": { "type": "string" },
+          "hours": { "type": "number", "minimum": 0 },
+          "complexity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        }
+      },
+      "description": "Breakdown of effort per feature"
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["risk", "mitigation"],
+        "additionalProperties": false,
+        "properties": {
+          "risk": { "type": "string" },
+          "mitigation": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          }
+        }
+      },
+      "description": "Identified risks and their mitigations"
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "duration_weeks"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "duration_weeks": { "type": "number", "minimum": 1 },
+          "deliverables": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "description": "Project milestones with durations"
+    },
+    "total_investment": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total estimated investment in BRL"
+    },
+    "payment_terms": {
+      "type": "string",
+      "description": "Suggested payment conditions"
+    },
+    "validity_days": {
+      "type": "number",
+      "minimum": 1,
+      "description": "Number of days the proposal is valid"
+    },
+    "recommended_team": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "allocation_percent"],
+        "additionalProperties": false,
+        "properties": {
+          "role": { "type": "string" },
+          "allocation_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "description": "Recommended team composition"
+    },
+    "markdown_document": {
+      "type": "string",
+      "description": "Full proposal document in Markdown format"
+    }
+  }
+}

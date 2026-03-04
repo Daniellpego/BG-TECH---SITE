@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RiskAgentOutput",
+  "description": "Structured output expected from the Risk Assessment Agent",
+  "type": "object",
+  "required": [
+    "risk_score",
+    "risk_level",
+    "attention_points",
+    "financial_impact",
+    "escalate_to",
+    "recommendations",
+    "go_no_go"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall risk score (0 = no risk, 100 = maximum risk)"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "attention_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Key attention points identified"
+    },
+    "financial_impact": {
+      "type": "object",
+      "required": ["best_case_margin", "expected_margin", "worst_case_margin"],
+      "additionalProperties": false,
+      "properties": {
+        "best_case_margin": { "type": "number", "minimum": 0, "maximum": 1 },
+        "expected_margin": { "type": "number", "minimum": 0, "maximum": 1 },
+        "worst_case_margin": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "escalate_to": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Teams or roles to escalate to"
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "go_no_go": {
+      "type": "string",
+      "enum": ["go", "conditional", "no_go"]
+    }
+  }
+}

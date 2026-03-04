@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QualificationAgentOutput",
+  "description": "Structured output expected from the Qualification Agent",
+  "type": "object",
+  "required": [
+    "budget_estimate",
+    "decision_makers",
+    "must_have_reqs",
+    "nice_to_have",
+    "risk_flags",
+    "recommended_next_steps",
+    "initial_effort_hours",
+    "bant",
+    "qualification_score",
+    "recommended_stage"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "budget_estimate": {
+      "type": "number",
+      "description": "Estimated budget in BRL"
+    },
+    "decision_makers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of identified decision makers"
+    },
+    "must_have_reqs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Mandatory functional/non-functional requirements"
+    },
+    "nice_to_have": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional nice-to-have features"
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Identified risk signals"
+    },
+    "recommended_next_steps": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Suggested next steps for the opportunity"
+    },
+    "initial_effort_hours": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Initial effort estimate in hours"
+    },
+    "bant": {
+      "type": "object",
+      "required": ["budget", "authority", "need", "timing"],
+      "additionalProperties": false,
+      "properties": {
+        "budget": { "type": "string" },
+        "authority": { "type": "string" },
+        "need": { "type": "string" },
+        "timing": { "type": "string" }
+      }
+    },
+    "qualification_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Score 0-100 indicating lead quality"
+    },
+    "recommended_stage": {
+      "type": "string",
+      "enum": ["lead", "qualified", "disqualified"],
+      "description": "Recommended pipeline stage"
+    }
+  }
+}

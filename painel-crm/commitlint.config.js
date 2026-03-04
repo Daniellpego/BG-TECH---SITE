@@ -1,0 +1,33 @@
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'scope-enum': [
+      2,
+      'always',
+      [
+        'agents',
+        'analytics',
+        'auth',
+        'billing',
+        'ci',
+        'common',
+        'contracts',
+        'dev',
+        'docs',
+        'frontend',
+        'infra',
+        'obs',
+        'ops',
+        'prisma',
+        'projects',
+        'proposals',
+        'release',
+        'rls',
+        'sla',
+      ],
+    ],
+    'scope-empty': [1, 'never'],
+    'subject-case': [2, 'always', ['lower-case', 'sentence-case']],
+    'body-max-line-length': [0, 'always', Infinity],
+  },
+};

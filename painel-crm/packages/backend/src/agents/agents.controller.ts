@@ -1,8 +1,11 @@
-import { Controller, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, UseGuards, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AgentsService } from './agents.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentTenant } from '../common/decorators/tenant.decorator';
+import { enqueueAgentJob, getAgentQueue } from './queue';
+
+const VALID_AGENTS = ['qualification', 'proposal', 'risk', 'churn', 'negotiation', 'lead-to-proposal'];
 
 @ApiTags('agents')
 @ApiBearerAuth()
@@ -11,8 +14,11 @@ import { CurrentTenant } from '../common/decorators/tenant.decorator';
 export class AgentsController {
   constructor(private agentsService: AgentsService) {}
 
+  /* ---------- fire-and-forget endpoints (202 Accepted) ---------- */
+
   @Post('qualification')
-  @ApiOperation({ summary: 'Run Qualification Agent on an opportunity' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue Qualification Agent job' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -22,16 +28,22 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Qualification result with BANT analysis' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async qualification(
     @CurrentTenant() tenantId: string,
     @Body() body: { opportunityId: string; context: string },
   ) {
-    return this.agentsService.runQualification(tenantId, body.opportunityId, body.context);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'qualification',
+      action: 'qualify_lead',
+      payload: { opportunityId: body.opportunityId, context: body.context },
+    });
   }
 
   @Post('proposal')
-  @ApiOperation({ summary: 'Run Proposal Agent — generates technical proposal document' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue Proposal Agent job' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -40,16 +52,22 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Generated proposal in Markdown + proposalId' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async proposal(
     @CurrentTenant() tenantId: string,
     @Body() body: { opportunityId: string },
   ) {
-    return this.agentsService.runProposal(tenantId, body.opportunityId);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'proposal',
+      action: 'generate_proposal',
+      payload: { opportunityId: body.opportunityId },
+    });
   }
 
   @Post('risk')
-  @ApiOperation({ summary: 'Run Risk Agent — evaluates deal risk and margin' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue Risk Agent job' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -58,16 +76,22 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Risk assessment with score and recommendations' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async risk(
     @CurrentTenant() tenantId: string,
     @Body() body: { opportunityId: string },
   ) {
-    return this.agentsService.runRisk(tenantId, body.opportunityId);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'risk',
+      action: 'assess_risk',
+      payload: { opportunityId: body.opportunityId },
+    });
   }
 
   @Post('churn')
-  @ApiOperation({ summary: 'Run Churn Prevention Agent for an account' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue Churn Prevention Agent job' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -76,16 +100,22 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Churn probability and retention actions' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async churn(
     @CurrentTenant() tenantId: string,
     @Body() body: { accountId: string },
   ) {
-    return this.agentsService.runChurn(tenantId, body.accountId);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'churn',
+      action: 'assess_churn',
+      payload: { accountId: body.accountId },
+    });
   }
 
   @Post('negotiation')
-  @ApiOperation({ summary: 'Run Negotiation Agent — AI-to-AI negotiation strategy' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue Negotiation Agent job' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -95,16 +125,25 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Counter-proposal and negotiation strategy' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async negotiation(
     @CurrentTenant() tenantId: string,
     @Body() body: { opportunityId: string; counterpartyPosition: string },
   ) {
-    return this.agentsService.runNegotiation(tenantId, body.opportunityId, body.counterpartyPosition);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'negotiation',
+      action: 'negotiate',
+      payload: {
+        opportunityId: body.opportunityId,
+        counterpartyPosition: body.counterpartyPosition,
+      },
+    });
   }
 
   @Post('lead-to-proposal')
-  @ApiOperation({ summary: 'Full pipeline: Lead → Qualification → Proposal → Risk' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Enqueue full pipeline: Lead → Qualification → Proposal → Risk' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -118,7 +157,7 @@ export class AgentsController {
       },
     },
   })
-  @ApiResponse({ status: 201, description: 'Full pipeline result: opportunity + qualification + proposal + risk' })
+  @ApiResponse({ status: 202, description: 'Pipeline job enqueued — poll via GET /agents/jobs/:jobId' })
   async leadToProposal(
     @CurrentTenant() tenantId: string,
     @Body() body: {
@@ -130,30 +169,64 @@ export class AgentsController {
       context: string;
     },
   ) {
-    return this.agentsService.runLeadToProposal(tenantId, body);
+    return enqueueAgentJob({
+      tenantId,
+      agentName: 'lead-to-proposal',
+      action: 'full_pipeline',
+      payload: body,
+    });
   }
 
+  /* ---------- job polling ---------- */
+
+  @Get('jobs/:jobId')
+  @ApiOperation({ summary: 'Poll job status by jobId' })
+  @ApiResponse({ status: 200, description: 'Job status and result (if completed)' })
+  async getJobStatus(@Param('jobId') jobId: string) {
+    const queue = getAgentQueue();
+    const job = await queue.getJob(jobId);
+
+    if (!job) {
+      return { status: 'not_found', jobId };
+    }
+
+    const state = await job.getState();
+    const result = job.returnvalue;
+
+    return {
+      jobId: job.id,
+      status: state,
+      agentName: job.data.agentName,
+      result: state === 'completed' ? result : undefined,
+      failedReason: state === 'failed' ? job.failedReason : undefined,
+      progress: job.progress,
+      timestamp: job.timestamp,
+    };
+  }
+
+  /* ---------- generic endpoint ---------- */
+
   @Post(':agentName/run')
-  @ApiOperation({ summary: 'Generic agent execution endpoint' })
-  @ApiResponse({ status: 200, description: 'Agent execution result' })
+  @HttpCode(202)
+  @ApiOperation({ summary: 'Generic agent execution — enqueues job' })
+  @ApiResponse({ status: 202, description: 'Job enqueued — poll via GET /agents/jobs/:jobId' })
   async runGeneric(
     @CurrentTenant() tenantId: string,
     @Param('agentName') agentName: string,
     @Body() body: any,
   ) {
-    switch (agentName) {
-      case 'qualification':
-        return this.agentsService.runQualification(tenantId, body.opportunityId, body.context);
-      case 'proposal':
-        return this.agentsService.runProposal(tenantId, body.opportunityId);
-      case 'risk':
-        return this.agentsService.runRisk(tenantId, body.opportunityId);
-      case 'churn':
-        return this.agentsService.runChurn(tenantId, body.accountId);
-      case 'negotiation':
-        return this.agentsService.runNegotiation(tenantId, body.opportunityId, body.counterpartyPosition);
-      default:
-        return { error: `Unknown agent: ${agentName}`, availableAgents: ['qualification', 'proposal', 'risk', 'churn', 'negotiation'] };
+    if (!VALID_AGENTS.includes(agentName)) {
+      return {
+        error: `Unknown agent: ${agentName}`,
+        availableAgents: VALID_AGENTS,
+      };
     }
+
+    return enqueueAgentJob({
+      tenantId,
+      agentName,
+      action: `run_${agentName}`,
+      payload: body,
+    });
   }
 }

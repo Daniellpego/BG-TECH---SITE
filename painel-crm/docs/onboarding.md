@@ -162,6 +162,51 @@ npm run lint
 npx prisma studio
 ```
 
+#### Worker de Agentes (BullMQ)
+
+```bash
+# Iniciar o worker de agentes (processa jobs da fila)
+npm run start:worker
+
+# Em produção (após build)
+npm run start:worker:prod
+```
+
+O worker roda como processo separado do servidor NestJS. Ele consome jobs
+da fila `agent-jobs` no Redis e executa os agentes LLM. Cada job:
+- Define a session `my.tenant` para isolamento RLS
+- Executa o agente correspondente (qualification, proposal, risk, churn, negotiation, lead-to-proposal)
+- Persiste um `AgentLog` com tokens consumidos, latência e status
+- Registra erros em `AgentLog` com `status = 'error'`
+
+#### RLS — Row Level Security
+
+Todas as tabelas com `tenant_id` possuem policies RLS. O `TenantInterceptor`
+(global) chama `PrismaSessionService.setTenant()` antes de cada request,
+injecting `SET LOCAL my.tenant = '<tenantId>'`.
+
+Para testar o isolamento:
+
+```bash
+npx jest test/rls/rls.spec.ts --runInBand
+```
+
+#### Budget / Custo LLM
+
+O `BudgetMiddleware` (aplicado em `POST /agents/*`) verifica o gasto
+acumulado por tenant. Quando ultrapassa `LLM_MONTHLY_BUDGET_USD` (default: $50),
+retorna HTTP 402 Payment Required.
+
+#### Métricas e Health
+
+```bash
+# Prometheus metrics
+curl http://localhost:3001/api/metrics
+
+# Health check
+curl http://localhost:3001/api/health
+```
+
 ### 4.2 Frontend (Next.js)
 
 ```bash

@@ -1,0 +1,8 @@
+{
+  "packages/backend/src/**/*.ts": [
+    "eslint --fix --no-error-on-unmatched-pattern"
+  ],
+  "apps/frontend/src/**/*.{ts,tsx}": [
+    "eslint --fix --no-error-on-unmatched-pattern"
+  ]
+}

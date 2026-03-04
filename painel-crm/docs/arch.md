@@ -118,6 +118,43 @@ O **CRM BG Tech** é um CRM proprietário construído para empresas de **softwar
 4. Aplicação NestJS também valida `tenantId` no decorator `@CurrentTenant()`
 5. Dupla proteção: RLS no banco + validação na aplicação
 
+### Sessão RLS no NestJS
+
+O `TenantInterceptor` (global) executa antes de cada request:
+
+```
+PrismaSessionService.setTenant(tenantId)
+  → SELECT set_config('my.tenant', tenantId, true)
+```
+
+Isso define `current_setting('my.tenant')` na sessão Postgres, que é lido
+pelas RLS policies (`WHERE tenant_id = current_setting('my.tenant')::uuid`).
+
+### Worker de Agentes (BullMQ)
+
+Os endpoints `POST /api/agents/*` agora enfileiram jobs no Redis (fila `agent-jobs`)
+e retornam `{ jobId }` com HTTP 202. Um worker separado (`npm run start:worker`)
+processa os jobs assincronamente:
+
+```
+Controller → enqueueAgentJob() → Redis (BullMQ)
+                                       ↓
+Worker: SET my.tenant → executa agente → persiste AgentLog → retorna resultado
+                                       ↓
+Frontend: GET /api/agents/jobs/:jobId → poll status/resultado
+```
+
+### Budget / Cost Control
+
+O `BudgetMiddleware` intercepta `POST /agents/*` e verifica o gasto acumulado
+por tenant contra `LLM_MONTHLY_BUDGET_USD`. Retorna HTTP 402 quando excedido.
+
+### Observabilidade
+
+- **Logging:** pino (JSON em prod, pino-pretty em dev)
+- **Metrics:** prom-client → `GET /api/metrics` (Prometheus format)
+- **Health:** `GET /api/health`
+
 ---
 
 ## 5. Modelo de Dados

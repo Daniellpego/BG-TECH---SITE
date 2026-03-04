@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NegotiationAgentOutput",
+  "description": "Structured output expected from the Negotiation Agent",
+  "type": "object",
+  "required": [
+    "counter_proposal",
+    "negotiation_strategy",
+    "walk_away_threshold",
+    "concession_sequence",
+    "key_arguments",
+    "anticipated_objections"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "counter_proposal": {
+      "type": "object",
+      "required": ["adjusted_value", "payment_terms", "scope_adjustments", "timeline_adjustment"],
+      "additionalProperties": false,
+      "properties": {
+        "adjusted_value": { "type": "number", "minimum": 0 },
+        "payment_terms": { "type": "string" },
+        "scope_adjustments": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "timeline_adjustment": { "type": "string" }
+      }
+    },
+    "negotiation_strategy": {
+      "type": "string",
+      "enum": ["value-based", "relationship", "competitive"]
+    },
+    "walk_away_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Minimum acceptable value in BRL"
+    },
+    "concession_sequence": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of concessions to offer"
+    },
+    "key_arguments": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "anticipated_objections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["objection", "response"],
+        "additionalProperties": false,
+        "properties": {
+          "objection": { "type": "string" },
+          "response": { "type": "string" }
+        }
+      }
+    }
+  }
+}
