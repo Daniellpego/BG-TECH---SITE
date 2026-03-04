@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Users, Search, Loader2, ArrowUpRight, Flame, Thermometer, Snowflake } from 'lucide-react';
+import { PageTransition } from '@/components/ui/PageTransition';
 import StatusBadge from '@/components/ui/StatusBadge';
 import * as api from '@/lib/api';
 import { useAuth } from '@/lib/auth';
@@ -70,7 +71,7 @@ export default function LeadsInboxPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -189,6 +190,6 @@ export default function LeadsInboxPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageTransition>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Brain,
@@ -16,9 +17,15 @@ import {
   DollarSign,
   Target,
   AlertTriangle,
+  Sparkles,
+  CheckCircle2,
 } from 'lucide-react';
 import * as api from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { useQualifyLead } from '@/hooks/useQueries';
+import { PageTransition } from '@/components/ui/PageTransition';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import type { Lead } from '@/types';
 
 const TEMP_CONFIG: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
@@ -54,6 +61,7 @@ export default function LeadDetailPage() {
   const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
+  const qualifyMutation = useQualifyLead();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -98,6 +106,7 @@ export default function LeadDetailPage() {
   const qualData = (lead.raw_quiz_response as any)?.qualification;
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Back + Title */}
       <div className="flex items-center gap-4">
@@ -235,15 +244,72 @@ export default function LeadDetailPage() {
 
       {/* Linked Opportunity */}
       {lead.opportunity_id && (
-        <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-5">
-          <p className="text-sm text-cyan-400">
-            ✓ Lead convertido em oportunidade{' '}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-5"
+        >
+          <p className="flex items-center gap-2 text-sm text-cyan-400">
+            <CheckCircle2 className="h-4 w-4" /> Lead convertido em oportunidade{' '}
             <a href={`/opportunities/${lead.opportunity_id}`} className="underline hover:text-cyan-300">
               {lead.opportunity_id}
             </a>
           </p>
+        </motion.div>
+      )}
+
+      {/* Qualify Action */}
+      {!lead.opportunity_id && lead.lead_status !== 'disqualified' && (
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold uppercase text-slate-500">Ações</h2>
+              <p className="mt-1 text-xs text-slate-400">
+                Execute a qualificação via IA para pontuar este lead automaticamente.
+              </p>
+            </div>
+            <Button
+              variant="primary"
+              size="md"
+              icon={<Sparkles className="h-4 w-4" />}
+              loading={qualifyMutation.isPending}
+              onClick={async () => {
+                await qualifyMutation.mutateAsync(id);
+                // Re-fetch lead data after qualification
+                try {
+                  const updated = await api.getLead(id);
+                  setLead(updated);
+                } catch {}
+              }}
+            >
+              {qualifyMutation.isPending ? 'Qualificando...' : 'Qualificar com IA'}
+            </Button>
+          </div>
+          <AnimatePresence>
+            {qualifyMutation.isSuccess && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 flex items-center gap-2 rounded-lg bg-green-500/10 px-3 py-2 text-sm text-green-400"
+              >
+                <CheckCircle2 className="h-4 w-4" /> Qualificação concluída com sucesso!
+              </motion.div>
+            )}
+            {qualifyMutation.isError && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 flex items-center gap-2 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400"
+              >
+                <AlertTriangle className="h-4 w-4" /> Erro ao qualificar. Tente novamente.
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

@@ -16,6 +16,17 @@ import type { AgentJobData, AgentJobResult } from './queue';
 
 const prisma = new PrismaClient();
 
+/** Safely parse JSON from LLM response, returning null on failure. */
+function safeJsonParse(content: unknown): Record<string, any> | null {
+  if (typeof content === 'object' && content !== null) return content as Record<string, any>;
+  if (typeof content !== 'string') return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
+}
+
 // Load the quiz qualification prompt once
 const promptPath = join(__dirname, 'prompts', 'qualification_leads_quiz.json');
 let promptConfig: { system: string; instructions: string; schema: any };
@@ -92,9 +103,10 @@ export async function processLeadQualification(
       temperature: 0.2,
     });
 
-    const output = typeof response.content === 'string'
-      ? JSON.parse(response.content)
-      : response.content;
+    const output = safeJsonParse(response.content);
+    if (!output) {
+      throw new Error('LLM returned invalid JSON: ' + String(response.content).slice(0, 200));
+    }
 
     const latencyMs = Date.now() - start;
 
@@ -114,8 +126,9 @@ export async function processLeadQualification(
         },
       });
 
-      // Route based on category
-      if (output.lead_category === 'hot' && output.lead_score >= 75) {
+      // Route based on category (idempotent — skip if already converted)
+      const freshLead = await prisma.lead.findUnique({ where: { id: leadId } });
+      if (output.lead_category === 'hot' && output.lead_score >= 75 && !freshLead?.opportunityId) {
         await createOpportunityFromLead(tenantId, leadId, leadData, output);
       }
     }

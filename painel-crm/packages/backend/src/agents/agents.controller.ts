@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, UseGuards, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, UseGuards, HttpCode, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AgentsService } from './agents.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -182,12 +182,20 @@ export class AgentsController {
   @Get('jobs/:jobId')
   @ApiOperation({ summary: 'Poll job status by jobId' })
   @ApiResponse({ status: 200, description: 'Job status and result (if completed)' })
-  async getJobStatus(@Param('jobId') jobId: string) {
+  async getJobStatus(
+    @CurrentTenant() tenantId: string,
+    @Param('jobId') jobId: string,
+  ) {
     const queue = getAgentQueue();
     const job = await queue.getJob(jobId);
 
     if (!job) {
       return { status: 'not_found', jobId };
+    }
+
+    // Prevent cross-tenant information disclosure
+    if (job.data.tenantId !== tenantId) {
+      throw new ForbiddenException('Access denied to this job');
     }
 
     const state = await job.getState();
@@ -216,10 +224,10 @@ export class AgentsController {
     @Body() body: any,
   ) {
     if (!VALID_AGENTS.includes(agentName)) {
-      return {
+      throw new BadRequestException({
         error: `Unknown agent: ${agentName}`,
         availableAgents: VALID_AGENTS,
-      };
+      });
     }
 
     return enqueueAgentJob({

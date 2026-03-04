@@ -18,8 +18,12 @@ function getConnectionOpts() {
  * Agent job queue — enqueues agent execution requests.
  * Jobs are processed asynchronously by the worker process.
  */
+let _queueInstance: Queue | null = null;
 export function getAgentQueue(): Queue {
-  return new Queue(QUEUE_NAME, { connection: getConnectionOpts() });
+  if (!_queueInstance) {
+    _queueInstance = new Queue(QUEUE_NAME, { connection: getConnectionOpts() });
+  }
+  return _queueInstance;
 }
 
 export interface AgentJobData {

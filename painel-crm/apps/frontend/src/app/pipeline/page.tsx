@@ -1,10 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  DndContext,
+  DragOverlay,
+  closestCorners,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  KeyboardSensor,
+  type DragStartEvent,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { DollarSign } from 'lucide-react';
-import StatusBadge from '@/components/ui/StatusBadge';
-import * as api from '@/lib/api';
+import { PageTransition } from '@/components/ui/PageTransition';
+import { SkeletonCard } from '@/components/ui/Skeleton';
+import { useOpportunities } from '@/hooks/useQueries';
 import { useAuth } from '@/lib/auth';
 import type { Opportunity } from '@/types';
 
@@ -17,129 +36,218 @@ const STAGES = [
   { key: 'closed_lost', label: 'Perdido', color: 'border-red-500' },
 ] as const;
 
+const fmt = (v: number) =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    maximumFractionDigits: 0,
+  }).format(v);
+
 export default function PipelinePage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const { data: opportunities = [], isLoading } = useOpportunities();
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [localStages, setLocalStages] = useState<Record<string, string>>({});
+  const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/login');
-      return;
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  // Merge server data with local (optimistic) stage changes
+  const effectiveOpps = useMemo(() => {
+    return opportunities.map((o) => ({
+      ...o,
+      stage: (localStages[o.id] || o.stage) as Opportunity['stage'],
+    }));
+  }, [opportunities, localStages]);
+
+  const byStage = useMemo(() => {
+    return STAGES.map((s) => ({
+      ...s,
+      items: effectiveOpps.filter((o) => o.stage === s.key),
+      total: effectiveOpps
+        .filter((o) => o.stage === s.key)
+        .reduce((sum, o) => sum + o.value, 0),
+    }));
+  }, [effectiveOpps]);
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+  }, []);
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (!over) return;
+
+    const overId = String(over.id);
+    // over.id could be a stage key (droppable column) or an item id
+    const targetStage = STAGES.find((s) => s.key === overId)?.key;
+
+    if (targetStage) {
+      setLocalStages((prev) => ({ ...prev, [String(active.id)]: targetStage }));
     }
-    if (!isAuthenticated) return;
+  }, []);
 
-    api
-      .getOpportunities()
-      .then((res) => setOpportunities(res.data || []))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [isAuthenticated, isLoading, router]);
+  const activeOpp = activeId ? effectiveOpps.find((o) => o.id === activeId) : null;
 
-  if (loading || isLoading) {
+  if (isLoading || authLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        {STAGES.map((s) => (
+          <div key={s.key} className="min-w-[280px] flex-1 space-y-3">
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        ))}
       </div>
     );
   }
 
-  const byStage = STAGES.map((s) => ({
-    ...s,
-    items: opportunities.filter((o) => o.stage === s.key),
-    total: opportunities
-      .filter((o) => o.stage === s.key)
-      .reduce((sum, o) => sum + o.value, 0),
-  }));
-
-  const fmt = (v: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
-
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Pipeline</h1>
-        <p className="text-sm text-slate-400">Visão Kanban das oportunidades</p>
+        <p className="text-sm text-slate-400">
+          Arraste cards entre colunas para mover oportunidades
+        </p>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {byStage.map((stage) => (
-          <div key={stage.key} className="min-w-[280px] flex-1">
-            {/* Column Header */}
-            <div className={`mb-3 rounded-lg border-t-2 ${stage.color} bg-slate-800/50 px-4 py-3`}>
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-200">{stage.label}</h3>
-                <span className="rounded-full bg-slate-700 px-2 py-0.5 text-xs font-medium text-slate-300">
-                  {stage.items.length}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-500">{fmt(stage.total)}</p>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          {byStage.map((stage) => (
+            <KanbanColumn key={stage.key} stage={stage} router={router} />
+          ))}
+        </div>
+
+        <DragOverlay dropAnimation={prefersReducedMotion ? null : undefined}>
+          {activeOpp && <KanbanCardOverlay opp={activeOpp} />}
+        </DragOverlay>
+      </DndContext>
+    </PageTransition>
+  );
+}
+
+// ── Kanban Column ───────────────────────────────────────
+
+function KanbanColumn({
+  stage,
+  router,
+}: {
+  stage: { key: string; label: string; color: string; items: Opportunity[]; total: number };
+  router: ReturnType<typeof useRouter>;
+}) {
+  return (
+    <div className="min-w-[280px] flex-1">
+      <div className={`mb-3 rounded-lg border-t-2 ${stage.color} bg-slate-800/50 px-4 py-3`}>
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-slate-200">{stage.label}</h3>
+          <span className="rounded-full bg-slate-700 px-2 py-0.5 text-xs font-medium text-slate-300">
+            {stage.items.length}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">{fmt(stage.total)}</p>
+      </div>
+
+      <SortableContext
+        items={stage.items.map((o) => o.id)}
+        strategy={verticalListSortingStrategy}
+        id={stage.key}
+      >
+        <div className="space-y-2 min-h-[60px]" data-stage={stage.key}>
+          <AnimatePresence mode="popLayout">
+            {stage.items.map((opp) => (
+              <SortableCard key={opp.id} opp={opp} router={router} />
+            ))}
+          </AnimatePresence>
+
+          {stage.items.length === 0 && (
+            <div className="rounded-lg border border-dashed border-slate-700/50 p-6 text-center text-xs text-slate-600">
+              Arraste aqui
             </div>
+          )}
+        </div>
+      </SortableContext>
+    </div>
+  );
+}
 
-            {/* Cards */}
-            <div className="space-y-2">
-              {stage.items.map((opp) => (
-                <div
-                  key={opp.id}
-                  className="cursor-pointer rounded-lg border border-slate-700/50 bg-slate-800/70 p-4 transition-colors hover:border-slate-600/50 hover:bg-slate-800"
-                  onClick={() => setExpanded(expanded === opp.id ? null : opp.id)}
-                >
-                  <p className="text-sm font-medium text-white">{opp.title}</p>
-                  <p className="mt-1 text-xs text-slate-400">{opp.account_name}</p>
+// ── Sortable Card ───────────────────────────────────────
 
-                  <div className="mt-3 flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-sm font-semibold text-cyan-400">
-                      <DollarSign className="h-3.5 w-3.5" />
-                      {fmt(opp.value)}
-                    </span>
-                    <span className="text-xs text-slate-500">{opp.probability}%</span>
-                  </div>
+function SortableCard({
+  opp,
+  router,
+}: {
+  opp: Opportunity;
+  router: ReturnType<typeof useRouter>;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: opp.id, data: { type: 'opportunity', stage: opp.stage } });
 
-                  {/* Expanded details */}
-                  {expanded === opp.id && (
-                    <div className="mt-3 border-t border-slate-700/50 pt-3 space-y-2">
-                      {opp.owner_name && (
-                        <p className="text-xs text-slate-400">
-                          Responsável: <span className="text-slate-300">{opp.owner_name}</span>
-                        </p>
-                      )}
-                      {opp.expected_close_date && (
-                        <p className="text-xs text-slate-400">
-                          Fechamento esperado:{' '}
-                          <span className="text-slate-300">
-                            {new Date(opp.expected_close_date).toLocaleDateString('pt-BR')}
-                          </span>
-                        </p>
-                      )}
-                      {opp.source && (
-                        <p className="text-xs text-slate-400">
-                          Origem: <span className="text-slate-300">{opp.source}</span>
-                        </p>
-                      )}
-                      <button
-                        className="mt-2 w-full rounded-lg bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/opportunities/${opp.id}`);
-                        }}
-                      >
-                        Ver Detalhes →
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
 
-              {stage.items.length === 0 && (
-                <div className="rounded-lg border border-dashed border-slate-700/50 p-6 text-center text-xs text-slate-600">
-                  Nenhuma oportunidade
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+  return (
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: isDragging ? 0.4 : 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      transition={{ duration: 0.2 }}
+      {...attributes}
+      {...listeners}
+      className="cursor-grab active:cursor-grabbing rounded-lg border border-slate-700/50 bg-slate-800/70 p-4 transition-shadow hover:shadow-lg hover:shadow-brand-500/5 hover:border-slate-600/50"
+    >
+      <p className="text-sm font-medium text-white">{opp.title}</p>
+      <p className="mt-1 text-xs text-slate-400">{opp.account_name}</p>
+
+      <div className="mt-3 flex items-center justify-between">
+        <span className="flex items-center gap-1 text-sm font-semibold text-cyan-400">
+          <DollarSign className="h-3.5 w-3.5" />
+          {fmt(opp.value)}
+        </span>
+        <span className="text-xs text-slate-500">{opp.probability}%</span>
+      </div>
+
+      <button
+        className="mt-3 w-full rounded-lg bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          router.push(`/opportunities/${opp.id}`);
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        Ver Detalhes →
+      </button>
+    </motion.div>
+  );
+}
+
+// ── Drag Overlay ────────────────────────────────────────
+
+function KanbanCardOverlay({ opp }: { opp: Opportunity }) {
+  return (
+    <div className="rounded-lg border-2 border-brand-500 bg-slate-800 p-4 shadow-2xl shadow-brand-500/20 rotate-2 scale-105">
+      <p className="text-sm font-medium text-white">{opp.title}</p>
+      <p className="mt-1 text-xs text-slate-400">{opp.account_name}</p>
+      <div className="mt-3 flex items-center gap-1 text-sm font-semibold text-cyan-400">
+        <DollarSign className="h-3.5 w-3.5" />
+        {fmt(opp.value)}
       </div>
     </div>
   );

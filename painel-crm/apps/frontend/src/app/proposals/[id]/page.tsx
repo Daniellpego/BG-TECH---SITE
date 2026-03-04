@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import { Proposal } from '@/types';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { CheckCircle, AlertTriangle, FileText, Shield } from 'lucide-react';
+import { PageTransition } from '@/components/ui/PageTransition';
+import * as api from '@/lib/api';
 
 export default function ProposalDetailPage() {
   const params = useParams();
@@ -13,11 +15,12 @@ export default function ProposalDetailPage() {
 
   useEffect(() => {
     if (params.id) {
-      fetch(`http://localhost:3001/api/proposals/${params.id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      })
-        .then((r) => r.json())
-        .then(setProposal)
+      api.getProposals()
+        .then((res) => {
+          const match = res.data?.find((p: Proposal) => p.id === params.id);
+          setProposal(match ?? null);
+        })
+        .catch(console.error)
         .finally(() => setLoading(false));
     }
   }, [params.id]);

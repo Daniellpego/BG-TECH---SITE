@@ -1,0 +1,171 @@
+# CRM BG Tech — Prometheus Alert Rules
+# Import into your Prometheus/Grafana Cloud alerting config.
+#
+# Metrics exposed by backend at GET /api/metrics:
+#   crm_http_request_duration_seconds (histogram: method, route, status_code)
+#   crm_agent_jobs_enqueued_total     (counter: agent_name)
+#   crm_agent_jobs_completed_total    (counter: agent_name, status)
+#   crm_llm_tokens_used_total         (counter: model, direction)
+#   crm_* default Node.js metrics     (event loop, heap, GC, etc.)
+
+groups:
+  # ── API Health ──────────────────────────────────────────
+  - name: crm.api
+    interval: 30s
+    rules:
+      - alert: HighApiLatency
+        expr: |
+          histogram_quantile(0.95, rate(crm_http_request_duration_seconds_bucket[5m])) > 2
+        for: 3m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "API p95 latency > 2s"
+          description: >
+            p95 latency for {{ $labels.route }} is {{ $value | humanizeDuration }}.
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(crm_http_request_duration_seconds_count{status_code=~"5.."}[5m]))
+          /
+          sum(rate(crm_http_request_duration_seconds_count[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "HTTP 5xx error rate > 5%"
+          description: "5xx rate is {{ $value | humanizePercentage }}."
+
+      - alert: ApiDown
+        expr: up{job="crm-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: infra
+        annotations:
+          summary: "CRM Backend is down"
+          description: "The backend scrape target has been unreachable for 1 minute."
+
+  # ── Agent Workers ───────────────────────────────────────
+  - name: crm.agents
+    interval: 30s
+    rules:
+      - alert: HighAgentJobLatency
+        expr: |
+          (
+            rate(crm_agent_jobs_completed_total[5m]) > 0
+            and
+            histogram_quantile(0.95, rate(crm_http_request_duration_seconds_bucket{route=~"/api/agents.*"}[5m])) > 10
+          )
+        for: 3m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Agent job p95 latency > 10s"
+          description: "Agent {{ $labels.agent_name }} processing time is high."
+
+      - alert: AgentJobBacklog
+        expr: |
+          (crm_agent_jobs_enqueued_total - crm_agent_jobs_completed_total) > 50
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Agent job backlog > 50"
+          description: >
+            Jobs pending: {{ $value }}. Workers may be struggling to keep up.
+
+      - alert: AgentJobFailureRate
+        expr: |
+          rate(crm_agent_jobs_completed_total{status="error"}[10m])
+          /
+          rate(crm_agent_jobs_completed_total[10m]) > 0.2
+        for: 5m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Agent job failure rate > 20%"
+          description: >
+            {{ $labels.agent_name }} failure rate is {{ $value | humanizePercentage }}.
+
+  # ── LLM Cost & Tokens ──────────────────────────────────
+  - name: crm.llm
+    interval: 60s
+    rules:
+      - alert: HighDailyTokenUsage
+        expr: |
+          increase(crm_llm_tokens_used_total[24h]) > 500000
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "LLM token usage > 500k in 24h"
+          description: >
+            Model {{ $labels.model }} has used {{ $value | humanize }} tokens today.
+            Review prompts and budget settings.
+
+      - alert: LlmBudgetApproaching
+        expr: |
+          increase(crm_llm_tokens_used_total{direction="output"}[720h]) * 0.00006 > 40
+        for: 10m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Estimated monthly LLM spend approaching $40 (of $50 budget)"
+          description: >
+            Estimated spend: ~${{ $value | humanize }}.
+            Budget middleware will block at $50.
+
+      - alert: TokenSpikeAnomaly
+        expr: |
+          rate(crm_llm_tokens_used_total[5m]) > 5 * avg_over_time(rate(crm_llm_tokens_used_total[5m])[1h:5m])
+        for: 3m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "LLM token usage spike (5x above avg)"
+          description: "Sudden token burn detected — potential runaway prompt loop."
+
+  # ── Infrastructure ──────────────────────────────────────
+  - name: crm.infra
+    interval: 30s
+    rules:
+      - alert: HighMemoryUsage
+        expr: |
+          crm_process_resident_memory_bytes / (1024^3) > 1.5
+        for: 5m
+        labels:
+          severity: warning
+          team: infra
+        annotations:
+          summary: "Backend memory > 1.5 GB"
+          description: "Resident memory: {{ $value | humanize1024 }}B"
+
+      - alert: HighEventLoopLag
+        expr: |
+          crm_nodejs_eventloop_lag_seconds > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Node.js event loop lag > 500ms"
+          description: "Event loop lag: {{ $value | humanizeDuration }}"
+
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: infra
+        annotations:
+          summary: "Redis is unreachable"
+          description: "BullMQ workers will stall without Redis."
