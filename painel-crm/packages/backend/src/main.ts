@@ -1,10 +1,43 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // ── Security: Helmet (HTTP headers) ──────────────────
+  app.use(
+    helmet({
+      contentSecurityPolicy: false, // handled by Next.js middleware
+      crossOriginEmbedderPolicy: false,
+    }),
+  );
+
+  // ── Security: Rate Limiting ──────────────────────────
+  app.use(
+    rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      max: 100, // max 100 requests per minute per IP
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { statusCode: 429, error: 'Too Many Requests', message: 'Rate limit exceeded. Try again later.' },
+    }),
+  );
+
+  // Stricter rate limit for auth endpoints
+  app.use(
+    '/api/auth',
+    rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 10, // max 10 auth attempts per 15 min
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { statusCode: 429, error: 'Too Many Requests', message: 'Too many login attempts. Try again in 15 minutes.' },
+    }),
+  );
 
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
