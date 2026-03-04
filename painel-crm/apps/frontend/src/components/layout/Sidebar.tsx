@@ -13,10 +13,12 @@ import {
   BarChart3,
   LogOut,
   Building2,
+  Users,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/leads', label: 'Leads', icon: Users },
   { href: '/pipeline', label: 'Pipeline', icon: GitBranch },
   { href: '/projects', label: 'Projetos', icon: FolderKanban },
   { href: '/sla', label: 'SLAs', icon: ShieldCheck },

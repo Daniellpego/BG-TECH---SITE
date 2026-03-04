@@ -188,6 +188,33 @@ export interface AgentLog {
   created_at: string;
 }
 
+// ── Lead (Quiz) ─────────────────────────────────────────
+export interface Lead {
+  id: string;
+  tenant_id: string;
+  nome: string;
+  empresa?: string;
+  email?: string;
+  whatsapp?: string;
+  segmento?: string;
+  horas_perdidas?: string;
+  dor_principal?: string;
+  faturamento?: string;
+  maturidade?: string;
+  janela_decisao?: string;
+  lead_temperature?: 'hot' | 'warm' | 'cold';
+  score?: number;
+  custo_mensal?: string;
+  diagnostico_id?: string;
+  raw_quiz_response?: Record<string, unknown>;
+  lead_status: 'new' | 'qualifying' | 'qualified' | 'converted' | 'disqualified';
+  lead_tags: string[];
+  consent: boolean;
+  opportunity_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // ── KPI / Charts ────────────────────────────────────────
 export interface KpiData {
   total_pipeline_value: number;

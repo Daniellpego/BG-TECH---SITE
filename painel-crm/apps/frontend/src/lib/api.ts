@@ -9,6 +9,7 @@ import type {
   RevenueData,
   Contract,
   AgentLog,
+  Lead,
 } from '@/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -135,6 +136,15 @@ export async function runAgent(agentType: string, params: Record<string, unknown
     method: 'POST',
     body: JSON.stringify({ agent_type: agentType, params }),
   });
+}
+
+// ── Leads ───────────────────────────────────────────────
+export async function getLeads() {
+  return request<{ data: Lead[] }>('/leads');
+}
+
+export async function getLead(id: string) {
+  return request<Lead>(`/leads/${id}`);
 }
 
 export async function runLeadToProposal(opportunityId: string) {
