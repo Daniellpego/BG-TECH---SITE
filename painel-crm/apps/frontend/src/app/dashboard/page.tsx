@@ -12,6 +12,8 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import KpiCard from '@/components/ui/KpiCard';
+import { AnimatedKpiCard } from '@/components/ui/AnimatedKpiCard';
+import { PageTransition, StaggerContainer, StaggerItem } from '@/components/ui/PageTransition';
 import DataTable from '@/components/ui/DataTable';
 import StatusBadge from '@/components/ui/StatusBadge';
 import PipelineChart from '@/components/charts/PipelineChart';
@@ -79,53 +81,73 @@ export default function DashboardPage() {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-sm text-slate-400">Visão executiva do CRM</p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <KpiCard
-          title="Pipeline Total"
-          value={kpis ? fmt(kpis.total_pipeline_value) : 'R$ 0'}
-          change={12.5}
-          changeLabel="vs mês ant."
-          icon={<DollarSign className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="Oportunidades"
-          value={kpis?.opportunities_count ?? 0}
-          change={8.2}
-          changeLabel="vs mês ant."
-          icon={<Target className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="Win Rate"
-          value={kpis ? `${kpis.win_rate.toFixed(1)}%` : '0%'}
-          change={3.1}
-          icon={<TrendingUp className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="Ticket Médio"
-          value={kpis ? fmt(kpis.avg_deal_size) : 'R$ 0'}
-          change={-2.4}
-          icon={<BarChart3 className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="Projetos Ativos"
-          value={kpis?.active_projects ?? 0}
-          change={0}
-          icon={<FolderKanban className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="MRR"
-          value={kpis ? fmt(kpis.mrr) : 'R$ 0'}
-          change={5.7}
-          icon={<Repeat className="h-5 w-5" />}
-        />
-      </div>
+      {/* KPI Cards (animated) */}
+      <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="Pipeline Total"
+            value={kpis?.total_pipeline_value ?? 0}
+            prefix="R$ "
+            change={12.5}
+            icon={<DollarSign className="h-5 w-5" />}
+            delay={0}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="Oportunidades"
+            value={kpis?.opportunities_count ?? 0}
+            change={8.2}
+            icon={<Target className="h-5 w-5" />}
+            delay={100}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="Win Rate"
+            value={Math.round(kpis?.win_rate ?? 0)}
+            suffix="%"
+            change={3.1}
+            icon={<TrendingUp className="h-5 w-5" />}
+            delay={200}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="Ticket Médio"
+            value={kpis?.avg_deal_size ?? 0}
+            prefix="R$ "
+            change={-2.4}
+            icon={<BarChart3 className="h-5 w-5" />}
+            delay={300}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="Projetos Ativos"
+            value={kpis?.active_projects ?? 0}
+            change={0}
+            icon={<FolderKanban className="h-5 w-5" />}
+            delay={400}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <AnimatedKpiCard
+            title="MRR"
+            value={kpis?.mrr ?? 0}
+            prefix="R$ "
+            change={5.7}
+            icon={<Repeat className="h-5 w-5" />}
+            delay={500}
+          />
+        </StaggerItem>
+      </StaggerContainer>
 
       {/* Charts */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -194,6 +216,6 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
-    </div>
+    </PageTransition>
   );
 }
