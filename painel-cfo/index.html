@@ -771,11 +771,21 @@
             error: (...a) => console.error('%c[CFO]', 'color:#ef4444;font-weight:bold', ...a),
             table: (d)    => DEBUG && console.table(d),
         };
-        const APP_VERSION = '2.0.1-sync';
+        const APP_VERSION = '2.0.2-mixbug';
         log.info(`Painel CFO v${APP_VERSION} | debug=${DEBUG}`);
 
         const A = {
-            state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', data: { fixos: [], unicos: [], entradas: [], projecoes: {entradas:[], saidas:[]}, caixa_disponivel: 0 }, _lastUpdatedAt: null, _syncInFlight: false },
+            state: {
+                tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida',
+                data: { fixos: [], unicos: [], entradas: [], projecoes: {entradas:[], saidas:[]}, caixa_disponivel: 0 },
+                _lastUpdatedAt: null,
+                _lastServerUpdatedAt: null,
+                _syncInFlight: false,
+                _dirty: false,
+                _pendingPush: 0,
+                _mutationSeq: 0,
+                _uiCountFloor: { fixos: 0, unicos: 0, entradas: 0, pEntradas: 0, pSaidas: 0 },
+            },
             ch: { area: null, donut: null, dreBar: null, dreLine: null },
             _localDeletedIds: new Set(),
 
@@ -804,6 +814,94 @@
             },
 
             genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9); },
+
+            hashText(input = '') {
+                let h = 5381;
+                const str = String(input);
+                for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
+                return (h >>> 0).toString(36);
+            },
+
+            normalizeKey(v = '') {
+                return String(v || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            },
+
+            deterministicId(prefix, ...parts) {
+                return `${prefix}:${A.hashText(parts.map(A.normalizeKey).join('|'))}`;
+            },
+
+            deterministicRecurringId({ tipo = '', cliente = '', categoria = '', yyyyMm = '', descricao = '' }) {
+                return A.deterministicId('rec', tipo, cliente, categoria, yyyyMm, descricao);
+            },
+
+            deterministicTaxId(yyyyMm = '') {
+                return `tax:${A.normalizeKey(yyyyMm)}`;
+            },
+
+            deterministicAutoProjectionId(yyyyMm = '', tipo = 'saida') {
+                return A.deterministicId('proj:auto', yyyyMm, tipo);
+            },
+
+            getUICounts(data = A.state.data) {
+                return {
+                    fixos: (data.fixos || []).length,
+                    unicos: (data.unicos || []).length,
+                    entradas: (data.entradas || []).length,
+                    pEntradas: ((data.projecoes || {}).entradas || []).length,
+                    pSaidas: ((data.projecoes || {}).saidas || []).length,
+                };
+            },
+
+            logEvt(evt, extra = {}) {
+                log.info({
+                    evt,
+                    seq: A.state._mutationSeq,
+                    dirty: A.state._dirty,
+                    pendingPush: A.state._pendingPush,
+                    syncInFlight: A.state._syncInFlight,
+                    updatedAt: A.state._lastUpdatedAt,
+                    uiCount: A.getUICounts(),
+                    ...extra,
+                });
+            },
+
+            beginMutation(kind) {
+                A.state._mutationSeq += 1;
+                A.state._dirty = true;
+                A.state._pendingPush += 1;
+                const now = A.getUICounts();
+                A.state._uiCountFloor = {
+                    fixos: Math.max(A.state._uiCountFloor.fixos || 0, now.fixos),
+                    unicos: Math.max(A.state._uiCountFloor.unicos || 0, now.unicos),
+                    entradas: Math.max(A.state._uiCountFloor.entradas || 0, now.entradas),
+                    pEntradas: Math.max(A.state._uiCountFloor.pEntradas || 0, now.pEntradas),
+                    pSaidas: Math.max(A.state._uiCountFloor.pSaidas || 0, now.pSaidas),
+                };
+                A.logEvt('mutation:start', { kind });
+            },
+
+            endMutation(kind, ok = true) {
+                A.state._pendingPush = Math.max(0, (A.state._pendingPush || 0) - 1);
+                if (A.state._pendingPush === 0) {
+                    A.state._dirty = false;
+                    A.state._uiCountFloor = A.getUICounts();
+                }
+                A.logEvt('mutation:end', { kind, ok });
+            },
+
+            checkUICountFloor(label = '') {
+                if (!(A.state._dirty || A.state._pendingPush > 0)) return;
+                const c = A.getUICounts();
+                const floor = A.state._uiCountFloor || {};
+                const reduced = ['fixos', 'unicos', 'entradas', 'pEntradas', 'pSaidas'].filter(k => Number(c[k] || 0) < Number(floor[k] || 0));
+                if (reduced.length) {
+                    log.warn('uiCount decreased during dirty/pending', { label, reduced, floor, current: c });
+                }
+            },
+
+            itemFingerprint(item = {}, prefix = 'item') {
+                return A.deterministicId(prefix, item.nome || '', item.categoria || '', item.data || item.mes || '', item.cliente || '', item.projeto || '', item.descricao || '', Number(item.valor || 0));
+            },
 
             login() {
                 const u = document.getElementById('lu').value.trim().toLowerCase(), p = document.getElementById('lp').value, lc = document.getElementById('login-card');
@@ -886,8 +984,8 @@
                 const safeObj = (v, def) => { if (v && typeof v === 'object' && !Array.isArray(v)) return v; try { const p = typeof v === 'string' ? JSON.parse(v) : null; return (p && typeof p === 'object') ? p : def; } catch { return def; } };
                 const ensureIds = (arr, prefix) => arr.map(item => {
                     if (item && typeof item === 'object' && !item.id) {
-                        item.id = A.genId(prefix);
-                        log.warn('validateData: backfilled missing id on item', item.nome || item);
+                        item.id = A.itemFingerprint(item, prefix);
+                        log.warn('validateData: backfilled deterministic id on item', item.nome || item);
                     }
                     return item;
                 });
@@ -913,23 +1011,47 @@
                 const map = new Map();
                 // 1. Remote items first (base layer)
                 (remote || []).forEach(item => {
-                    if (item && item.id && !A._localDeletedIds.has(item.id)) map.set(item.id, item);
+                    if (!item || !item.id) { log.warn('mergeArrays: ignored remote item without id', item); return; }
+                    if (!A._localDeletedIds.has(item.id)) map.set(item.id, item);
                 });
                 // 2. Local items override (user's edits have priority)
                 (local || []).forEach(item => {
-                    if (item && item.id) map.set(item.id, item);
+                    if (!item || !item.id) { log.warn('mergeArrays: ignored local item without id', item); return; }
+                    map.set(item.id, item);
                 });
                 return Array.from(map.values());
             },
 
             async fetchSync(silent = false) {
                 if (A.state._syncInFlight) { log.warn('fetchSync skipped — already in flight'); return; }
+                const requestSeq = A.state._mutationSeq;
                 A.state._syncInFlight = true;
+                A.logEvt('sync:fetch:start', { silent, requestSeq });
                 if (!silent) A.syncUI('load');
                 try {
                     const res = await fetch(API_BASE);
                     if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
                     const data = await res.json();
+                    const remoteUpdatedAt = data?.updated_at || null;
+                    A.state._lastServerUpdatedAt = remoteUpdatedAt;
+
+                    if (silent && remoteUpdatedAt && A.state._lastUpdatedAt && remoteUpdatedAt === A.state._lastUpdatedAt) {
+                        A.syncUI('ok');
+                        A.logEvt('sync:fetch:skip', { reason: 'updated_at_unchanged', remoteUpdatedAt });
+                        return;
+                    }
+
+                    if (A.state._dirty || A.state._pendingPush > 0) {
+                        A.syncUI('ok');
+                        A.logEvt('sync:fetch:skip', { reason: 'dirty_or_pending_push', remoteUpdatedAt });
+                        return;
+                    }
+
+                    if (requestSeq !== A.state._mutationSeq) {
+                        A.syncUI('ok');
+                        A.logEvt('sync:fetch:skip', { reason: 'stale_request_seq', requestSeq, currentSeq: A.state._mutationSeq, remoteUpdatedAt });
+                        return;
+                    }
 
                     if (data) {
                         const validated = A.validateData(data);
@@ -938,12 +1060,13 @@
                         A.state.data.entradas = validated.entradas;
                         A.state.data.projecoes = validated.projecoes;
                         A.state.data.caixa_disponivel = validated.caixa_disponivel;
-                        A.state._lastUpdatedAt = data.updated_at || null;
-                        log.info('fetchSync OK', { rows: { f: validated.fixos.length, u: validated.unicos.length, e: validated.entradas.length }, updated_at: data.updated_at });
+                        A.state._lastUpdatedAt = remoteUpdatedAt;
+                        A.logEvt('sync:fetch:apply', { rows: { f: validated.fixos.length, u: validated.unicos.length, e: validated.entradas.length }, remoteUpdatedAt });
                     }
                     A.syncUI('ok');
                     A.normalizeLegacyStatus();
                     A.refreshFilterOptions();
+                    A.checkUICountFloor('fetchSync:before-render');
                     A.render();
                     if (A.state.tab === 'projecoes') A.renderProjecoes();
                 } catch (e) {
@@ -951,6 +1074,7 @@
                     A.syncUI('err');
                     if(!silent) A.toast("Modo Offline (Banco inativo ou sem permissão).", "err");
                 } finally {
+                    A.logEvt('sync:fetch:end', { silent });
                     A.state._syncInFlight = false;
                 }
             },
@@ -961,6 +1085,7 @@
                 A.syncUI('load');
                 const MAX_CAS_RETRIES = 3;
                 let merged = false;
+                A.logEvt('sync:push:start');
 
                 try { // outer try for finally guard
                 for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
@@ -991,6 +1116,7 @@
                                     expected: A.state._lastUpdatedAt,
                                     actual: conflict.actual,
                                 });
+                                A.logEvt('sync:push:409', { attempt: attempt + 1, expected: A.state._lastUpdatedAt, actual: conflict.actual });
 
                                 // 1. Snapshot local state BEFORE merging (preserves user's edit)
                                 const localSnap = JSON.parse(JSON.stringify(A.state.data));
@@ -1018,6 +1144,7 @@
 
                                 A.state._lastUpdatedAt = remote.updated_at;
                                 merged = true;
+                                A.logEvt('sync:push:merge', { attempt: attempt + 1, mergedCounts: A.getUICounts() });
 
                                 A.toast(`⚠️ Conflito detectado — mesclando dados (tentativa ${attempt + 1})...`, 'warning');
                                 continue; // retry with merged data + updated _lastUpdatedAt
@@ -1043,16 +1170,19 @@
                         A._localDeletedIds.clear();
                         A.syncUI('ok');
                         log.info('pushSync OK', { updated_at: A.state._lastUpdatedAt, attempt, merged });
+                        A.logEvt('sync:push:success', { updated_at: A.state._lastUpdatedAt, attempt, merged });
 
                         // ── FIX: Always re-render after push to guarantee UI ↔ state sync ──
                         A.normalizeLegacyStatus();
                         A.refreshFilterOptions();
+                        A.checkUICountFloor('pushSync:before-render');
                         A.render();
                         if (A.state.tab === 'projecoes') A.renderProjecoes();
                         return; // done
                     } catch (e) {
                         if (attempt === MAX_CAS_RETRIES - 1) {
                             log.error('pushSync FAIL (all retries exhausted)', e);
+                            A.logEvt('sync:push:fail', { error: e.message });
                             A.syncUI('err');
                             A.toast('Erro ao salvar na Nuvem. Tente novamente.', 'err');
                             return;
@@ -1060,7 +1190,7 @@
                         log.warn(`pushSync attempt ${attempt + 1} error, retrying...`, e.message);
                     }
                 }
-                } finally { A.state._syncInFlight = false; } // ── FIX H6: release guard ──
+                } finally { A.logEvt('sync:push:end'); A.state._syncInFlight = false; } // ── FIX H6: release guard ──
             },
 
             syncUI(s) { const d = document.getElementById('sync-dot'), t = document.getElementById('sync-txt'), m = { load: ['var(--warning)', 'Sincronizando...'], ok: ['var(--success)', 'Nuvem Conectada'], err: ['var(--danger)', 'Modo Offline'] }; d.style.background = m[s][0]; d.style.boxShadow = `0 0 12px ${m[s][0]}`; t.textContent = m[s][1]; },
@@ -1115,7 +1245,18 @@
 
             async editCaixa() {
                 const input = prompt("Atualize o Caixa Disponível da empresa (R$):", parseFloat(A.state.data.caixa_disponivel || 0).toFixed(2));
-                if(input !== null) { A.state.data.caixa_disponivel = A.cleanMoney(input); A.render(); await A.pushSync(); }
+                if(input !== null) {
+                    A.beginMutation('saveCaixa');
+                    let ok = false;
+                    try {
+                        A.state.data.caixa_disponivel = A.cleanMoney(input);
+                        A.render();
+                        await A.pushSync();
+                        ok = true;
+                    } finally {
+                        A.endMutation('saveCaixa', ok);
+                    }
+                }
             },
 
             trendHTML(curr, prev, invertColors = false) {
@@ -1130,7 +1271,11 @@
             },
 
             render() {
-                if(A.state.tab === 'projecoes' || A.state.tab === 'relatorios') return; 
+                A.logEvt('render:start', { tab: A.state.tab });
+                if(A.state.tab === 'projecoes' || A.state.tab === 'relatorios') {
+                    A.logEvt('render:end', { tab: A.state.tab, skipped: true });
+                    return;
+                }
                 
                 const { m, y, client, project } = A.getFilters();
                 const t = A.state.tab;
@@ -1280,6 +1425,8 @@
                 
                 A.updateCharts();
                 lucide.createIcons();
+                A.checkUICountFloor('render:end');
+                A.logEvt('render:end', { tab: A.state.tab });
             },
 
             openDREModal(key) {
@@ -1308,7 +1455,10 @@
                 
                 if(key === 'imp_all') {
                     const rB = eM.reduce((a,b)=>a+Number(b.valor),0);
-                    def.list.push({ data: new Date().toISOString().split('T')[0], nome: "Simples Nacional (Auto-Calculado 6%)", cliente: "Receita Federal", projeto: "Sistema", valor: A.calcTax(rB) });
+                    const yy = (m === 'anual') ? y : y;
+                    const mm = (m === 'anual') ? String(new Date().getMonth() + 1).padStart(2, '0') : String(Number(m) + 1).padStart(2, '0');
+                    const yyyyMm = `${yy}-${mm}`;
+                    def.list.push({ id: A.deterministicTaxId(yyyyMm), data: new Date().toISOString().split('T')[0], nome: "Simples Nacional (Auto-Calculado 6%)", cliente: "Receita Federal", projeto: "Sistema", valor: A.calcTax(rB) });
                     total = A.calcTax(rB);
                 }
 
@@ -1533,6 +1683,8 @@
                 if (!nome || valor <= 0) { A.toast("Preencha descrição e valor.", "err"); return; }
                 
                 btn.classList.add('loading');
+                A.beginMutation('save');
+                let ok = false;
                 try {
                     const dataBase = document.getElementById('f-data').value, recorrente = document.getElementById('f-recor').value, editId = document.getElementById('f-id').value;
                     const base = { 
@@ -1555,11 +1707,40 @@
                         const arr = A.state.data[arrKey] || [];
                         if (recorrente === 'mensal') {
                             const [y, , d] = dataBase.split('-');
-                            for (let m = 0; m < 12; m++) arr.push({ ...base, id: A.genId('bgt'), data: `${y}-${String(m + 1).padStart(2, '0')}-${d}` });
+                            for (let m = 0; m < 12; m++) {
+                                const mm = String(m + 1).padStart(2, '0');
+                                const yyyyMm = `${y}-${mm}`;
+                                arr.push({
+                                    ...base,
+                                    id: A.deterministicRecurringId({
+                                        tipo: arrKey,
+                                        cliente: base.cliente,
+                                        categoria: base.categoria,
+                                        yyyyMm,
+                                        descricao: base.descricao || base.nome,
+                                    }),
+                                    data: `${yyyyMm}-${d}`
+                                });
+                            }
                             A.toast(`12 lançamentos criados! ✨`);
                         } else if (recorrente === 'proximo') {
                             const [y, mo, d] = dataBase.split('-'); const startM = parseInt(mo) - 1; let count = 0;
-                            for (let m = startM; m < 12; m++) { arr.push({ ...base, id: A.genId('bgt'), data: `${y}-${String(m + 1).padStart(2, '0')}-${d}` }); count++; }
+                            for (let m = startM; m < 12; m++) {
+                                const mm = String(m + 1).padStart(2, '0');
+                                const yyyyMm = `${y}-${mm}`;
+                                arr.push({
+                                    ...base,
+                                    id: A.deterministicRecurringId({
+                                        tipo: arrKey,
+                                        cliente: base.cliente,
+                                        categoria: base.categoria,
+                                        yyyyMm,
+                                        descricao: base.descricao || base.nome,
+                                    }),
+                                    data: `${yyyyMm}-${d}`
+                                });
+                                count++;
+                            }
                             A.toast(`${count} lançamentos criados! ✨`);
                         } else {
                             arr.push(base); A.toast(`Salvo com sucesso! ✅`);
@@ -1567,13 +1748,17 @@
                         A.state.data[arrKey] = arr;
                     }
                     A.closeDrawer(); A.refreshFilterOptions(); A.render(); await A.pushSync();
-                } finally { btn.classList.remove('loading'); }
+                    ok = true;
+                } finally { btn.classList.remove('loading'); A.endMutation('save', ok); }
             },
 
             edit(id) { const item = (A.state.data.fixos||[]).find(i=>i.id===id) || (A.state.data.unicos||[]).find(i=>i.id===id) || (A.state.data.entradas||[]).find(i=>i.id===id); if(item) A.openDrawer(item); },
             
             async del(id) {
                 if (confirm("Excluir permanentemente este registro da base?")) {
+                    A.beginMutation('del');
+                    let ok = false;
+                    try {
                     A._localDeletedIds.add(id); // Track for merge — prevents resurrection from remote
                     A.state.data.fixos = A.state.data.fixos.filter(i => i.id !== id);
                     A.state.data.unicos = A.state.data.unicos.filter(i => i.id !== id);
@@ -1582,6 +1767,10 @@
                     A.render(); 
                     await A.pushSync();
                     A.toast("Registro excluído. 🗑️");
+                    ok = true;
+                    } finally {
+                        A.endMutation('del', ok);
+                    }
                 }
             },
 
@@ -1777,8 +1966,9 @@
 
                     // Inserir linha de imposto automático se houver receita
                     if (taxProjected > 0) {
+                        const taxAutoId = A.deterministicAutoProjectionId(`${curY}-${String(curM).padStart(2, '0')}`, 'saida');
                         html += `
-                        <tr style="background: rgba(239, 68, 68, 0.05); font-style: italic;">
+                        <tr data-auto-id="${taxAutoId}" style="background: rgba(239, 68, 68, 0.05); font-style: italic;">
                             <td style="color:var(--text-muted);">Horizonte</td>
                             <td><div style="color:var(--danger); font-weight:700;">[AUTO] Projeção Imposto (6%)</div></td>
                             <td><span class="cat-badge">Impostos</span></td>
@@ -1828,8 +2018,11 @@
                 const nome = document.getElementById('pf-nome').value.trim(), valor = A.cleanMoney(document.getElementById('pf-valor').value), mes = document.getElementById('pf-mes').value;
                 if (!nome || valor <= 0 || !mes) { A.toast("Preencha descrição, valor e mês.", "err"); return; }
                 btn.classList.add('loading');
+                A.beginMutation('saveProj');
+                let ok = false;
                 try {
-                    const tipo = A.state.pTipo, id = document.getElementById('pf-id').value || A.genId('proj');
+                    const tipo = A.state.pTipo;
+                    const id = document.getElementById('pf-id').value || A.deterministicId('proj', mes, tipo, nome, document.getElementById('pf-cat').value, valor);
                     const base = { id, nome, valor, mes, categoria: document.getElementById('pf-cat').value, status: document.getElementById('pf-status').value };
                     const arrKey = tipo + 's'; if(!A.state.data.projecoes) A.state.data.projecoes = {entradas:[], saidas:[]};
                     
@@ -1838,14 +2031,22 @@
                     A.state.data.projecoes[arrKey].push(base);
 
                     A.closeProjDrawer(); A.renderProjecoes(); await A.pushSync(); A.toast("Projeção salva! 🔮");
-                } finally { btn.classList.remove('loading'); }
+                    ok = true;
+                } finally { btn.classList.remove('loading'); A.endMutation('saveProj', ok); }
             },
             async delProj(tipo, id) {
                 if (confirm("Excluir projeção?")) {
+                    A.beginMutation('delProj');
+                    let ok = false;
+                    try {
                     A._localDeletedIds.add(id); // Track for merge — prevents resurrection from remote
                     A.state.data.projecoes.entradas = (A.state.data.projecoes.entradas||[]).filter(x => x.id !== id);
                     A.state.data.projecoes.saidas = (A.state.data.projecoes.saidas||[]).filter(x => x.id !== id);
                     A.renderProjecoes(); await A.pushSync(); A.toast("Projeção removida. 🗑️");
+                    ok = true;
+                    } finally {
+                        A.endMutation('delProj', ok);
+                    }
                 }
             },
 

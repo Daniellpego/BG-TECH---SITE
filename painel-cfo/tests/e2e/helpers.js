@@ -170,15 +170,20 @@ async function getKPIValue(page, id) {
  * Opens the drawer for a new entry (despesa or entrada).
  * @param {import('@playwright/test').Page} page
  */
-async function openNewEntryDrawer(page) {
+async function openNewEntryDrawer(page, modo = null) {
   await page.click('#btn-add-main');
   await page.waitForSelector('#drawer.open', { timeout: 5_000 });
+  if (modo === 'entrada') {
+    await page.click('#tab-modo-entrada');
+  } else if (modo === 'despesa') {
+    await page.click('#tab-modo-despesa');
+  }
 }
 
 /**
  * Fills the entry form and saves.
  * @param {import('@playwright/test').Page} page
- * @param {{ nome: string, valor: string, categoria?: string, status?: string }} entry
+ * @param {{ nome: string, valor: string, categoria?: string, status?: string, recorrente?: string }} entry
  */
 async function fillAndSaveEntry(page, entry) {
   await page.fill('#f-nome', entry.nome);
@@ -188,6 +193,9 @@ async function fillAndSaveEntry(page, entry) {
   }
   if (entry.status) {
     await page.selectOption('#f-status', entry.status);
+  }
+  if (entry.recorrente) {
+    await page.selectOption('#f-recor', entry.recorrente);
   }
   await page.click('#btn-save');
   // Wait for drawer to close
