@@ -68,14 +68,14 @@ export default function OpportunityDetailPage() {
   if (loading || authLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
       </div>
     );
   }
 
   if (!opp) {
     return (
-      <div className="flex h-full items-center justify-center text-slate-400">
+      <div className="flex h-full items-center justify-center text-[var(--text-secondary)]">
         Oportunidade não encontrada
       </div>
     );
@@ -88,12 +88,12 @@ export default function OpportunityDetailPage() {
         <div>
           <button
             onClick={() => router.back()}
-            className="mb-2 flex items-center gap-1 text-sm text-slate-400 hover:text-white transition-colors"
+            className="mb-2 flex items-center gap-1 text-sm text-[var(--text-secondary)] hover:text-[var(--text)] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Voltar
           </button>
-          <h1 className="text-2xl font-bold text-white">{opp.title}</h1>
-          <p className="text-sm text-slate-400">{opp.account_name}</p>
+          <h1 className="text-2xl font-bold text-[var(--text)]">{opp.title}</h1>
+          <p className="text-sm text-[var(--text-secondary)]">{opp.account_name}</p>
         </div>
         <StatusBadge status={opp.stage} className="text-sm px-3 py-1" />
       </div>
@@ -102,8 +102,8 @@ export default function OpportunityDetailPage() {
         {/* Main Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Details Card */}
-          <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-6">
-            <h2 className="mb-4 text-sm font-semibold text-slate-300">Detalhes</h2>
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">Detalhes</h2>
             <div className="grid grid-cols-2 gap-4">
               <InfoField label="Valor" value={fmt(opp.value)} />
               <InfoField label="Moeda" value={opp.currency} />
@@ -120,41 +120,41 @@ export default function OpportunityDetailPage() {
               />
             </div>
             {opp.description && (
-              <div className="mt-4 border-t border-slate-700/50 pt-4">
-                <p className="text-xs font-medium text-slate-400 mb-1">Descrição</p>
-                <p className="text-sm text-slate-300">{opp.description}</p>
+              <div className="mt-4 border-t border-[var(--border)] pt-4">
+                <p className="text-xs font-medium text-[var(--text-secondary)] mb-1">Descrição</p>
+                <p className="text-sm text-[var(--text-secondary)]">{opp.description}</p>
               </div>
             )}
           </div>
 
           {/* Qualification Data */}
           {opp.qualification_data && Object.keys(opp.qualification_data).length > 0 && (
-            <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-6">
-              <h2 className="mb-4 text-sm font-semibold text-slate-300">Dados de Qualificação</h2>
-              <pre className="overflow-x-auto rounded-lg bg-slate-900 p-4 text-xs text-slate-300">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6">
+              <h2 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">Dados de Qualificação</h2>
+              <pre className="overflow-x-auto rounded-xl bg-[var(--bg)] p-4 text-xs text-[var(--text-secondary)]">
                 {JSON.stringify(opp.qualification_data, null, 2)}
               </pre>
             </div>
           )}
 
           {/* Linked Proposals */}
-          <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-6">
-            <h2 className="mb-4 text-sm font-semibold text-slate-300">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">
               Propostas Vinculadas ({proposals.length})
             </h2>
             {proposals.length === 0 ? (
-              <p className="text-sm text-slate-500">Nenhuma proposta vinculada</p>
+              <p className="text-sm text-[var(--text-tertiary)]">Nenhuma proposta vinculada</p>
             ) : (
               <div className="space-y-3">
                 {proposals.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between rounded-lg border border-slate-700/30 bg-slate-900/50 p-3 cursor-pointer hover:border-slate-600/50 transition-colors"
+                    className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--bg)] p-3 cursor-pointer hover:border-[var(--border-subtle)] transition-colors"
                     onClick={() => router.push(`/proposals/${p.id}`)}
                   >
                     <div>
-                      <p className="text-sm font-medium text-white">{p.title}</p>
-                      <p className="text-xs text-slate-400">{fmt(p.value)}</p>
+                      <p className="text-sm font-medium text-[var(--text)]">{p.title}</p>
+                      <p className="text-xs text-[var(--text-secondary)]">{fmt(p.value)}</p>
                     </div>
                     <StatusBadge status={p.status} />
                   </div>
@@ -165,17 +165,17 @@ export default function OpportunityDetailPage() {
 
           {/* Agent Result */}
           {agentResult && (
-            <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-6">
-              <h2 className="mb-3 text-sm font-semibold text-cyan-400">Resultado do Agente</h2>
+            <div className="rounded-2xl border border-[var(--primary)]/30 bg-[var(--primary)]/5 p-6">
+              <h2 className="mb-3 text-sm font-semibold text-[var(--primary)]">Resultado do Agente</h2>
               <div className="flex items-center gap-2 mb-3">
                 <StatusBadge status={agentResult.status} />
                 {agentResult.duration_ms && (
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-[var(--text-tertiary)]">
                     {(agentResult.duration_ms / 1000).toFixed(1)}s
                   </span>
                 )}
               </div>
-              <pre className="overflow-x-auto rounded-lg bg-slate-900 p-4 text-xs text-slate-300">
+              <pre className="overflow-x-auto rounded-xl bg-[var(--bg)] p-4 text-xs text-[var(--text-secondary)]">
                 {JSON.stringify(agentResult.output_data, null, 2)}
               </pre>
             </div>
@@ -184,8 +184,8 @@ export default function OpportunityDetailPage() {
 
         {/* Sidebar Actions */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-5">
-            <h2 className="mb-4 text-sm font-semibold text-slate-300">Ações de IA</h2>
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">Ações de IA</h2>
             <div className="space-y-2">
               <AgentButton
                 label="Qualificar Lead"
@@ -209,16 +209,16 @@ export default function OpportunityDetailPage() {
           </div>
 
           {/* Meta */}
-          <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-5">
-            <h2 className="mb-4 text-sm font-semibold text-slate-300">Informações</h2>
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">Informações</h2>
             <div className="space-y-3 text-xs">
               <div>
-                <p className="text-slate-500">ID</p>
-                <p className="text-slate-300 font-mono">{opp.id}</p>
+                <p className="text-[var(--text-tertiary)]">ID</p>
+                <p className="text-[var(--text-secondary)] font-mono">{opp.id}</p>
               </div>
               <div>
-                <p className="text-slate-500">Criado em</p>
-                <p className="text-slate-300">
+                <p className="text-[var(--text-tertiary)]">Criado em</p>
+                <p className="text-[var(--text-secondary)]">
                   {new Date(opp.created_at).toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
@@ -227,8 +227,8 @@ export default function OpportunityDetailPage() {
                 </p>
               </div>
               <div>
-                <p className="text-slate-500">Atualizado em</p>
-                <p className="text-slate-300">
+                <p className="text-[var(--text-tertiary)]">Atualizado em</p>
+                <p className="text-[var(--text-secondary)]">
                   {new Date(opp.updated_at).toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
@@ -247,8 +247,8 @@ export default function OpportunityDetailPage() {
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs font-medium text-slate-500">{label}</p>
-      <p className="text-sm text-slate-200">{value}</p>
+      <p className="text-xs font-medium text-[var(--text-tertiary)]">{label}</p>
+      <p className="text-sm text-[var(--text)]">{value}</p>
     </div>
   );
 }
@@ -268,7 +268,7 @@ function AgentButton({
     <button
       onClick={onClick}
       disabled={loading}
-      className="flex w-full items-center gap-2 rounded-lg border border-slate-600/50 bg-slate-700/30 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-700/60 hover:text-white disabled:opacity-50 transition-colors"
+      className="flex w-full items-center gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-hover)] px-4 py-2.5 text-sm font-medium text-[var(--text)] hover:bg-[var(--bg-hover)] hover:text-[var(--text)] disabled:opacity-50 transition-colors"
     >
       {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : icon}
       {label}

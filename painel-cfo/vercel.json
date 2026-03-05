@@ -1,25 +1,25 @@
 {
-  "buildCommand": null,
-  "installCommand": null,
-  "outputDirectory": null,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/api/painel", "destination": "/api/painel.js" }
-  ],
-  "headers": [
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
-      ]
+      "destination": "https://crm-bgtech-api.vercel.app/api/$1"
     },
     {
       "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" },
-        { "key": "X-Build-Version", "value": "2026-03-04-v2.0.1-sync" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     }
   ]

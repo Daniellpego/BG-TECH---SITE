@@ -51,9 +51,9 @@ export function MarkdownEditor({
   }, [opportunityId, value, onChange, addToast]);
 
   return (
-    <div className={`flex flex-col rounded-xl border border-slate-700 bg-slate-800 overflow-hidden ${className}`}>
+    <div className={`flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] overflow-hidden ${className}`}>
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-slate-700 px-4 py-2 bg-slate-800/50">
+      <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-2 bg-[var(--bg-elevated)]">
         <div className="flex gap-1">
           {(['edit', 'split', 'preview'] as const).map((m) => (
             <button
@@ -61,8 +61,8 @@ export function MarkdownEditor({
               onClick={() => setMode(m)}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                 mode === m
-                  ? 'bg-brand-600 text-white'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--bg-hover)]'
               }`}
             >
               {m === 'edit' && <Edit3 className="h-3 w-3" />}
@@ -99,13 +99,13 @@ export function MarkdownEditor({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={mode === 'split' ? 'flex-1 border-r border-slate-700' : 'flex-1'}
+              className={mode === 'split' ? 'flex-1 border-r border-[var(--border)]' : 'flex-1'}
             >
               <textarea
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="h-full w-full resize-none bg-transparent p-4 text-sm text-slate-100 font-mono placeholder:text-slate-600 focus:outline-none"
+                className="h-full w-full resize-none bg-transparent p-4 text-sm text-[var(--text)] font-mono placeholder:text-[var(--text-tertiary)] focus:outline-none"
               />
             </motion.div>
           )}

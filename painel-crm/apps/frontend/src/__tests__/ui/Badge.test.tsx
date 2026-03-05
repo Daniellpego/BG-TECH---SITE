@@ -11,7 +11,7 @@ describe('Badge', () => {
   it('applies success variant styles', () => {
     render(<Badge variant="success">OK</Badge>);
     const badge = screen.getByText('OK');
-    expect(badge.className).toContain('text-green');
+    expect(badge.className).toContain('text-emerald');
   });
 
   it('applies danger variant styles', () => {
@@ -22,7 +22,7 @@ describe('Badge', () => {
 
   it('renders dot indicator', () => {
     const { container } = render(<Badge variant="success" dot>Active</Badge>);
-    const dot = container.querySelector('.rounded-full.bg-green-400');
+    const dot = container.querySelector('.rounded-full.bg-emerald-500');
     expect(dot).toBeInTheDocument();
   });
 

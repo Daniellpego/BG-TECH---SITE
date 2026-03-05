@@ -35,7 +35,7 @@ export function ConfirmDialog({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-xl"
             onClick={onCancel}
           />
           <motion.div
@@ -43,16 +43,16 @@ export function ConfirmDialog({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            className="relative bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-xl max-w-sm w-full mx-4"
+            className="relative bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)] p-6 shadow-xl max-w-sm w-full mx-4"
             role="alertdialog"
             aria-labelledby="confirm-title"
             aria-describedby={description ? 'confirm-desc' : undefined}
           >
-            <h3 id="confirm-title" className="text-lg font-semibold text-slate-100">
+            <h3 id="confirm-title" className="text-lg font-semibold text-[var(--text)]">
               {title}
             </h3>
             {description && (
-              <p id="confirm-desc" className="mt-2 text-sm text-slate-400">
+              <p id="confirm-desc" className="mt-2 text-sm text-[var(--text-secondary)]">
                 {description}
               </p>
             )}

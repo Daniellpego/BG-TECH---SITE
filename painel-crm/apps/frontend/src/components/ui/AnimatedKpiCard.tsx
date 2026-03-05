@@ -70,38 +70,38 @@ export function AnimatedKpiCard({
       transition={{ duration: 0.4, delay: delay / 1000, ease: [0.25, 0.46, 0.45, 0.94] }}
       whileHover={prefersReducedMotion ? {} : { scale: 1.03, y: -2 }}
       className={clsx(
-        'relative overflow-hidden rounded-xl bg-slate-800 border border-slate-700 p-6',
-        'transition-shadow duration-200',
-        'hover:shadow-lg hover:shadow-brand-500/10',
+        'relative overflow-hidden rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-6',
+        'transition-all duration-300',
+        'hover:shadow-lg',
         'group cursor-default',
         className,
       )}
     >
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-brand-500/5 to-transparent pointer-events-none" />
+      {/* Subtle gradient glow on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
       <div className="relative flex items-start justify-between">
         <div className="space-y-2">
-          <p className="text-sm text-slate-400 font-medium">{title}</p>
-          <p className="text-2xl font-bold text-slate-100 tabular-nums">
+          <p className="text-sm text-[var(--text-secondary)] font-medium">{title}</p>
+          <p className="text-2xl font-bold text-[var(--text)] tabular-nums tracking-tight">
             {prefix}{animatedValue.toLocaleString('pt-BR')}{suffix}
           </p>
           {change !== undefined && (
             <div className="flex items-center gap-1">
               <span className={clsx(
-                'text-xs font-medium',
-                change > 0 ? 'text-green-400' : change < 0 ? 'text-red-400' : 'text-slate-400',
+                'text-xs font-semibold px-1.5 py-0.5 rounded-full',
+                change > 0 ? 'text-emerald-500 bg-emerald-500/10' : change < 0 ? 'text-[var(--danger)] bg-red-500/10' : 'text-[var(--text-tertiary)] bg-[var(--bg-hover)]',
               )}>
                 {change > 0 ? '↑' : change < 0 ? '↓' : '→'} {Math.abs(change)}%
               </span>
-              <span className="text-xs text-slate-500">vs mês anterior</span>
+              <span className="text-xs text-[var(--text-tertiary)]">vs mês anterior</span>
             </div>
           )}
         </div>
         {icon && (
           <motion.div
-            whileHover={prefersReducedMotion ? {} : { rotate: 10, scale: 1.1 }}
-            className="p-3 rounded-lg bg-brand-600/20 text-brand-400"
+            whileHover={prefersReducedMotion ? {} : { rotate: 8, scale: 1.1 }}
+            className="p-3 rounded-xl bg-[var(--bg-hover)] text-[var(--primary)]"
           >
             {icon}
           </motion.div>

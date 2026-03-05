@@ -11,13 +11,13 @@ describe('Button', () => {
   it('applies primary variant styles by default', () => {
     render(<Button>Primary</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('bg-brand-600');
+    expect(btn.className).toContain('bg-[var(--primary)]');
   });
 
   it('applies danger variant styles', () => {
     render(<Button variant="danger">Delete</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('bg-red-600');
+    expect(btn.className).toContain('bg-[var(--danger)]');
   });
 
   it('is disabled when disabled prop is true', () => {

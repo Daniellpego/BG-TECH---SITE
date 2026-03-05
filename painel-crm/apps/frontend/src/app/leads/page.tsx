@@ -65,7 +65,7 @@ export default function LeadsInboxPage() {
   if (authLoading || loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--primary)]" />
       </div>
     );
   }
@@ -75,10 +75,10 @@ export default function LeadsInboxPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Users className="h-7 w-7 text-cyan-400" />
+          <Users className="h-7 w-7 text-[var(--primary)]" />
           <div>
             <h1 className="text-2xl font-bold">Leads do Quiz</h1>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[var(--text-secondary)]">
               {filtered.length} lead{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
             </p>
           </div>
@@ -88,19 +88,19 @@ export default function LeadsInboxPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]" />
           <input
             type="text"
             placeholder="Buscar por nome, empresa ou whatsapp..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-700 bg-slate-800 py-2.5 pl-10 pr-4 text-sm text-slate-200 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] py-2.5 pl-10 pr-4 text-sm text-[var(--text)] placeholder:text-[var(--text-tertiary)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 text-sm text-slate-200 focus:border-cyan-500 focus:outline-none"
+          className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 text-sm text-[var(--text)] focus:border-[var(--primary)] focus:outline-none"
         >
           <option value="all">Todos os status</option>
           <option value="new">Novo</option>
@@ -112,10 +112,10 @@ export default function LeadsInboxPage() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+      <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-[var(--bg)]">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-800 text-left text-xs font-semibold uppercase text-slate-500">
+            <tr className="border-b border-[var(--border)] text-left text-xs font-semibold uppercase text-[var(--text-tertiary)]">
               <th className="px-4 py-3">Nome</th>
               <th className="px-4 py-3">Empresa</th>
               <th className="px-4 py-3">WhatsApp</th>
@@ -126,10 +126,10 @@ export default function LeadsInboxPage() {
               <th className="px-4 py-3 text-center">Ações</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800">
+          <tbody className="divide-y divide-[var(--border)]">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-12 text-center text-[var(--text-tertiary)]">
                   Nenhum lead encontrado.
                 </td>
               </tr>
@@ -137,15 +137,15 @@ export default function LeadsInboxPage() {
               filtered.map((lead) => (
                 <tr
                   key={lead.id}
-                  className="transition-colors hover:bg-slate-800/50 cursor-pointer"
+                  className="transition-colors hover:bg-[var(--bg-hover)] cursor-pointer"
                   onClick={() => router.push(`/leads/${lead.id}`)}
                 >
-                  <td className="px-4 py-3 font-medium text-slate-100">{lead.nome}</td>
-                  <td className="px-4 py-3 text-slate-300">{lead.empresa || '—'}</td>
-                  <td className="px-4 py-3 text-slate-300 font-mono text-xs">
+                  <td className="px-4 py-3 font-medium text-[var(--text)]">{lead.nome}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)]">{lead.empresa || '—'}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)] font-mono text-xs">
                     {lead.whatsapp || '—'}
                   </td>
-                  <td className="px-4 py-3 text-slate-400">{lead.segmento || '—'}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)]">{lead.segmento || '—'}</td>
                   <td className="px-4 py-3 text-center">
                     {lead.lead_temperature ? TEMP_ICON[lead.lead_temperature] : '—'}
                   </td>
@@ -179,7 +179,7 @@ export default function LeadsInboxPage() {
                     <Link
                       href={`/leads/${lead.id}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300"
+                      className="inline-flex items-center gap-1 text-xs text-[var(--primary)] hover:text-[var(--primary)]"
                     >
                       Ver <ArrowUpRight className="h-3 w-3" />
                     </Link>

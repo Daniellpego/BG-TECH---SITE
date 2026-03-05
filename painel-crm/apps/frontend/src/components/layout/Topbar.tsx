@@ -34,8 +34,8 @@ export function Topbar() {
   const title = getPageTitle(pathname);
 
   return (
-    <header className="flex items-center justify-between h-14 px-6 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-30">
-      <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+    <header className="glass flex items-center justify-between h-14 px-6 border-b border-[var(--border)] sticky top-0 z-30">
+      <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
 
       <div className="flex items-center gap-2">
         <Tooltip content={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}>
@@ -54,7 +54,7 @@ export function Topbar() {
         </Tooltip>
 
         {user && (
-          <div className="ml-2 pl-2 border-l border-slate-700">
+          <div className="ml-2 pl-2 border-l border-[var(--border)]">
             <Avatar name={user.name} size="sm" />
           </div>
         )}

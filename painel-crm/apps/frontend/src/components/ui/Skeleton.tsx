@@ -15,7 +15,7 @@ export function Skeleton({ className, width, height, rounded = 'md' }: SkeletonP
     <div
       aria-hidden="true"
       className={clsx(
-        'animate-pulse bg-slate-700/50',
+        'animate-pulse bg-[var(--bg-hover)]',
         rounded === 'sm' && 'rounded',
         rounded === 'md' && 'rounded-lg',
         rounded === 'lg' && 'rounded-xl',
@@ -30,7 +30,7 @@ export function Skeleton({ className, width, height, rounded = 'md' }: SkeletonP
 /** Common skeleton patterns */
 export function SkeletonCard() {
   return (
-    <div className="bg-slate-800 rounded-xl p-6 space-y-4">
+    <div className="bg-[var(--bg-elevated)] rounded-2xl p-6 space-y-4">
       <Skeleton className="h-4 w-1/3" />
       <Skeleton className="h-8 w-2/3" />
       <Skeleton className="h-3 w-1/2" />

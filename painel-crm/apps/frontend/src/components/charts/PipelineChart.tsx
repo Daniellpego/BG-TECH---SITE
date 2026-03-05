@@ -42,26 +42,26 @@ export default function PipelineChart({ data }: PipelineChartProps) {
   }));
 
   return (
-    <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-5">
-      <h3 className="mb-4 text-sm font-semibold text-slate-300">Pipeline por Estágio</h3>
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
+      <h3 className="mb-4 text-sm font-semibold text-[var(--text-secondary)]">Pipeline por Estágio</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData} layout="vertical" margin={{ left: 20, right: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
           <XAxis
             type="number"
             tickFormatter={(v) =>
               new Intl.NumberFormat('pt-BR', { notation: 'compact', compactDisplay: 'short' }).format(v)
             }
-            stroke="#64748b"
+            stroke="#888"
             fontSize={12}
           />
-          <YAxis type="category" dataKey="label" width={100} stroke="#64748b" fontSize={12} />
+          <YAxis type="category" dataKey="label" width={100} stroke="#888" fontSize={12} />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
+              backgroundColor: '#1c1c1e',
+              border: '1px solid #333',
               borderRadius: '0.5rem',
-              color: '#f1f5f9',
+              color: '#f5f5f7',
             }}
             formatter={(value: number) => [
               `R$ ${new Intl.NumberFormat('pt-BR').format(value)}`,

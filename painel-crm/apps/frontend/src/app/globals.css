@@ -1,18 +1,50 @@
 @import "tailwindcss";
 
+/* ─── Apple-style CSS Variables ─── */
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --bg-card-hover: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --accent: #06b6d4;
-  --accent-hover: #22d3ee;
-  --border: #334155;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  
+  /* Motion */
+  --motion-quick: 160ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-medium: 280ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-slow: 440ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ─── Dark Theme (default) ─── */
+.dark {
+  --bg: #000000;
+  --bg-elevated: #1c1c1e;
+  --bg-card: #1c1c1e;
+  --bg-hover: #2c2c2e;
+  --border: #38383a;
+  --text: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #636366;
+  --primary: #3478f6;
+  --primary-hover: #6699ff;
+  --accent: #30c77d;
+  --danger: #ff3b30;
+  --warning: #f5a623;
+  --shadow-color: rgba(0,0,0,0.4);
+}
+
+/* ─── Light Theme ─── */
+.light {
+  --bg: #f5f5f7;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f0f0f2;
+  --border: #d2d2d7;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #8e8e93;
+  --primary: #3478f6;
+  --primary-hover: #2361d9;
+  --accent: #1aad65;
+  --danger: #ff3b30;
+  --warning: #f5a623;
+  --shadow-color: rgba(0,0,0,0.08);
 }
 
 * {
@@ -20,30 +52,76 @@
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
+/* ─── Typography Refinement ─── */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+/* ─── Focus States (Apple-style ring) ─── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ─── Scrollbar (minimal) ─── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--text-tertiary);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: var(--text-secondary);
 }
 
-/* Markdown rendered content */
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Apple-style Glass Effect ─── */
+.glass {
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.dark .glass {
+  background-color: rgba(28, 28, 30, 0.8);
+}
+.light .glass {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+/* ─── Markdown Prose ─── */
 .prose-dark h1, .prose-dark h2, .prose-dark h3 {
-  color: var(--text-primary);
+  color: var(--text);
   margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 .prose-dark p {
   color: var(--text-secondary);
@@ -56,10 +134,11 @@ body {
   margin-bottom: 1rem;
 }
 .prose-dark code {
-  background: #0f172a;
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
+  background: var(--bg);
+  padding: 0.125rem 0.5rem;
+  border-radius: 6px;
   font-size: 0.875rem;
+  font-family: var(--font-mono);
 }
 .prose-dark table {
   width: 100%;
@@ -68,10 +147,11 @@ body {
 }
 .prose-dark th, .prose-dark td {
   border: 1px solid var(--border);
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 0.875rem;
   text-align: left;
 }
 .prose-dark th {
-  background: #0f172a;
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 500;
 }

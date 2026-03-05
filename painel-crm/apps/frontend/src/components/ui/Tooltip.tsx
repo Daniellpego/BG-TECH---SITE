@@ -20,14 +20,14 @@ export function Tooltip({ content, children, side = 'top', delayDuration = 300 }
           side={side}
           sideOffset={5}
           className={clsx(
-            'z-50 rounded-md bg-slate-700 px-3 py-1.5 text-xs text-slate-100',
-            'shadow-lg border border-slate-600',
+            'z-50 rounded-xl bg-[var(--bg-elevated)] px-3 py-1.5 text-xs text-[var(--text)]',
+            'shadow-lg border border-[var(--border)]',
             'animate-in fade-in-0 zoom-in-95',
             'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
           )}
         >
           {content}
-          <TooltipPrimitive.Arrow className="fill-slate-700" />
+          <TooltipPrimitive.Arrow className="fill-[var(--bg-elevated)]" />
         </TooltipPrimitive.Content>
       </TooltipPrimitive.Root>
     </TooltipPrimitive.Provider>

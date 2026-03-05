@@ -55,22 +55,22 @@ export default function DataTable<T extends Record<string, unknown>>({
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-8 text-center text-sm text-slate-500">
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-8 text-center text-sm text-[var(--text-tertiary)]">
         {emptyMessage}
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-700/50 bg-slate-800/50">
+    <div className="overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-700/50">
+          <tr className="border-b border-[var(--border)]">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400 ${
-                  col.sortable !== false ? 'cursor-pointer select-none hover:text-slate-200' : ''
+                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--text-tertiary)] ${
+                  col.sortable !== false ? 'cursor-pointer select-none hover:text-[var(--text)]' : ''
                 }`}
                 onClick={() => col.sortable !== false && handleSort(col.key)}
               >
@@ -91,13 +91,13 @@ export default function DataTable<T extends Record<string, unknown>>({
           {sortedData.map((row, i) => (
             <tr
               key={keyExtractor ? keyExtractor(row) : i}
-              className={`border-b border-slate-700/30 transition-colors ${
-                onRowClick ? 'cursor-pointer hover:bg-slate-700/30' : ''
+              className={`border-b border-[var(--border)] transition-colors ${
+                onRowClick ? 'cursor-pointer hover:bg-[var(--bg-hover)]' : ''
               }`}
               onClick={() => onRowClick?.(row)}
             >
               {columns.map((col) => (
-                <td key={col.key} className="px-4 py-3 text-slate-300">
+                <td key={col.key} className="px-4 py-3 text-[var(--text-secondary)]">
                   {col.render ? col.render(row) : (row[col.key] as ReactNode)}
                 </td>
               ))}

@@ -33,19 +33,19 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-xl" onClick={onClose} />
 
       {/* Content */}
       <div
-        className={`relative z-10 w-full ${SIZE_MAP[size]} mx-4 rounded-xl border border-slate-700 bg-slate-800 shadow-2xl`}
+        className={`relative z-10 w-full ${SIZE_MAP[size]} mx-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] shadow-2xl`}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between border-b border-slate-700 px-6 py-4">
-            <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4">
+            <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+              className="rounded-xl p-1.5 text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text)] transition-colors"
             >
               <X className="h-5 w-5" />
             </button>

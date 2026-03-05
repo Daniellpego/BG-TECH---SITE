@@ -111,8 +111,8 @@ export default function PipelinePage() {
   return (
     <PageTransition className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Pipeline</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-bold text-[var(--text)]">Pipeline</h1>
+        <p className="text-sm text-[var(--text-secondary)]">
           Arraste cards entre colunas para mover oportunidades
         </p>
       </div>
@@ -148,14 +148,14 @@ function KanbanColumn({
 }) {
   return (
     <div className="min-w-[280px] flex-1">
-      <div className={`mb-3 rounded-lg border-t-2 ${stage.color} bg-slate-800/50 px-4 py-3`}>
+      <div className={`mb-3 rounded-2xl border-t-2 ${stage.color} bg-[var(--bg-elevated)] px-4 py-3`}>
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-200">{stage.label}</h3>
-          <span className="rounded-full bg-slate-700 px-2 py-0.5 text-xs font-medium text-slate-300">
+          <h3 className="text-sm font-semibold text-[var(--text)]">{stage.label}</h3>
+          <span className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-xs font-medium text-[var(--text-secondary)]">
             {stage.items.length}
           </span>
         </div>
-        <p className="mt-1 text-xs text-slate-500">{fmt(stage.total)}</p>
+        <p className="mt-1 text-xs text-[var(--text-tertiary)]">{fmt(stage.total)}</p>
       </div>
 
       <SortableContext
@@ -171,7 +171,7 @@ function KanbanColumn({
           </AnimatePresence>
 
           {stage.items.length === 0 && (
-            <div className="rounded-lg border border-dashed border-slate-700/50 p-6 text-center text-xs text-slate-600">
+            <div className="rounded-2xl border border-dashed border-[var(--border)] p-6 text-center text-xs text-[var(--text-tertiary)]">
               Arraste aqui
             </div>
           )}
@@ -211,21 +211,21 @@ function SortableCard({
       transition={{ duration: 0.2 }}
       {...attributes}
       {...listeners}
-      className="cursor-grab active:cursor-grabbing rounded-lg border border-slate-700/50 bg-slate-800/70 p-4 transition-shadow hover:shadow-lg hover:shadow-brand-500/5 hover:border-slate-600/50"
+      className="cursor-grab active:cursor-grabbing rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition-shadow hover:shadow-lg hover:shadow-[var(--primary)]/5 hover:border-[var(--border-subtle)]"
     >
-      <p className="text-sm font-medium text-white">{opp.title}</p>
-      <p className="mt-1 text-xs text-slate-400">{opp.account_name}</p>
+      <p className="text-sm font-medium text-[var(--text)]">{opp.title}</p>
+      <p className="mt-1 text-xs text-[var(--text-secondary)]">{opp.account_name}</p>
 
       <div className="mt-3 flex items-center justify-between">
-        <span className="flex items-center gap-1 text-sm font-semibold text-cyan-400">
+        <span className="flex items-center gap-1 text-sm font-semibold text-[var(--primary)]">
           <DollarSign className="h-3.5 w-3.5" />
           {fmt(opp.value)}
         </span>
-        <span className="text-xs text-slate-500">{opp.probability}%</span>
+        <span className="text-xs text-[var(--text-tertiary)]">{opp.probability}%</span>
       </div>
 
       <button
-        className="mt-3 w-full rounded-lg bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+        className="mt-3 w-full rounded-xl bg-[var(--primary)]/10 px-3 py-1.5 text-xs font-medium text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors"
         onClick={(e) => {
           e.stopPropagation();
           router.push(`/opportunities/${opp.id}`);
@@ -242,10 +242,10 @@ function SortableCard({
 
 function KanbanCardOverlay({ opp }: { opp: Opportunity }) {
   return (
-    <div className="rounded-lg border-2 border-brand-500 bg-slate-800 p-4 shadow-2xl shadow-brand-500/20 rotate-2 scale-105">
-      <p className="text-sm font-medium text-white">{opp.title}</p>
-      <p className="mt-1 text-xs text-slate-400">{opp.account_name}</p>
-      <div className="mt-3 flex items-center gap-1 text-sm font-semibold text-cyan-400">
+    <div className="rounded-2xl border-2 border-[var(--primary)] bg-[var(--bg-elevated)] p-4 shadow-2xl shadow-[var(--primary)]/20 rotate-2 scale-105">
+      <p className="text-sm font-medium text-[var(--text)]">{opp.title}</p>
+      <p className="mt-1 text-xs text-[var(--text-secondary)]">{opp.account_name}</p>
+      <div className="mt-3 flex items-center gap-1 text-sm font-semibold text-[var(--primary)]">
         <DollarSign className="h-3.5 w-3.5" />
         {fmt(opp.value)}
       </div>

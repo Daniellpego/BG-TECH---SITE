@@ -70,10 +70,10 @@ const iconMap = {
 };
 
 const colorMap = {
-  success: 'border-green-500 bg-green-900/50',
-  error: 'border-red-500 bg-red-900/50',
-  info: 'border-blue-500 bg-blue-900/50',
-  warning: 'border-yellow-500 bg-yellow-900/50',
+  success: 'border-green-500 bg-green-500/10',
+  error: 'border-red-500 bg-red-500/10',
+  info: 'border-blue-500 bg-blue-500/10',
+  warning: 'border-yellow-500 bg-yellow-500/10',
 };
 
 function ToastItem({ toast, onDismiss }: { toast: ToastData; onDismiss: (id: string) => void }) {
@@ -90,22 +90,22 @@ function ToastItem({ toast, onDismiss }: { toast: ToastData; onDismiss: (id: str
       exit={{ opacity: 0, x: 100, transition: { duration: 0.2 } }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={clsx(
-        'flex items-start gap-3 rounded-lg border-l-4 p-4 shadow-lg backdrop-blur-sm',
-        'bg-slate-800/90',
+        'flex items-start gap-3 rounded-2xl border-l-4 p-4 shadow-lg backdrop-blur-sm',
+        'bg-[var(--bg-elevated)]',
         colorMap[toast.type],
       )}
       role="alert"
     >
       <span className="text-lg leading-none mt-0.5">{iconMap[toast.type]}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-slate-100">{toast.title}</p>
+        <p className="text-sm font-medium text-[var(--text)]">{toast.title}</p>
         {toast.description && (
-          <p className="text-xs text-slate-400 mt-0.5">{toast.description}</p>
+          <p className="text-xs text-[var(--text-secondary)] mt-0.5">{toast.description}</p>
         )}
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="text-slate-400 hover:text-slate-200 text-sm"
+        className="text-[var(--text-secondary)] hover:text-[var(--text)] text-sm"
         aria-label="Fechar notificação"
       >
         ✕

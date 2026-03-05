@@ -72,7 +72,7 @@ export default function DashboardPage() {
   if (loading || isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
       </div>
     );
   }
@@ -83,8 +83,8 @@ export default function DashboardPage() {
   return (
     <PageTransition className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-sm text-slate-400">Visão executiva do CRM</p>
+        <h1 className="text-2xl font-bold text-[var(--text)]">Dashboard</h1>
+        <p className="text-sm text-[var(--text-secondary)]">Visão executiva do CRM</p>
       </div>
 
       {/* KPI Cards (animated) */}
@@ -159,7 +159,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Recent Opportunities */}
         <div className="lg:col-span-2">
-          <h2 className="mb-3 text-sm font-semibold text-slate-300">Oportunidades Recentes</h2>
+          <h2 className="mb-3 text-sm font-semibold text-[var(--text-secondary)]">Oportunidades Recentes</h2>
           <DataTable
             columns={[
               { key: 'title', header: 'Título' },
@@ -183,9 +183,9 @@ export default function DashboardPage() {
 
         {/* Expiring SLAs */}
         <div>
-          <h2 className="mb-3 text-sm font-semibold text-slate-300">SLAs Expirando</h2>
+          <h2 className="mb-3 text-sm font-semibold text-[var(--text-secondary)]">SLAs Expirando</h2>
           {expiringSlas.length === 0 ? (
-            <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-6 text-center text-sm text-slate-500">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6 text-center text-sm text-[var(--text-tertiary)]">
               Nenhum SLA próximo do vencimento
             </div>
           ) : (
@@ -202,8 +202,8 @@ export default function DashboardPage() {
                     <div className="flex items-start gap-3">
                       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                       <div>
-                        <p className="text-sm font-medium text-white">{sla.account_name}</p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-sm font-medium text-[var(--text)]">{sla.account_name}</p>
+                        <p className="text-xs text-[var(--text-secondary)]">
                           Renova em {daysLeft} dias •{' '}
                           <StatusBadge status={sla.tier} />
                         </p>

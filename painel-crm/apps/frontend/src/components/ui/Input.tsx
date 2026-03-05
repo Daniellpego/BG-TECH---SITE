@@ -11,46 +11,57 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, icon, className, id, ...props }, ref) => {
+  ({ label, error, hint, icon, className, id, placeholder, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-300">
-            {label}
-          </label>
-        )}
         <div className="relative">
           {icon && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]">
               {icon}
             </span>
           )}
           <input
             ref={ref}
             id={inputId}
+            placeholder={label ? ' ' : placeholder}
             className={clsx(
-              'w-full rounded-lg border bg-slate-800 px-3 py-2 text-sm text-slate-100',
-              'placeholder:text-slate-500',
-              'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent',
-              'transition-colors duration-150',
+              'peer w-full rounded-xl border bg-[var(--bg-elevated)] px-3 py-2.5 text-sm text-[var(--text)]',
+              'placeholder:text-[var(--text-tertiary)]',
+              'focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent',
+              'transition-all duration-200',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              error ? 'border-red-500' : 'border-slate-600',
+              error ? 'border-[var(--danger)]' : 'border-[var(--border)]',
               icon && 'pl-10',
+              label && 'pt-5 pb-2',
               className,
             )}
             aria-invalid={error ? 'true' : undefined}
             aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
             {...props}
           />
+          {label && (
+            <label
+              htmlFor={inputId}
+              className={clsx(
+                'absolute text-[var(--text-tertiary)] transition-all duration-200 pointer-events-none',
+                'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm',
+                'peer-focus:top-2 peer-focus:text-[11px] peer-focus:text-[var(--primary)] peer-focus:translate-y-0',
+                'peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:translate-y-0',
+                icon ? 'left-10' : 'left-3',
+              )}
+            >
+              {label}
+            </label>
+          )}
         </div>
         {error && (
-          <p id={`${inputId}-error`} className="text-xs text-red-400" role="alert">
+          <p id={`${inputId}-error`} className="text-xs text-[var(--danger)]" role="alert">
             {error}
           </p>
         )}
         {hint && !error && (
-          <p id={`${inputId}-hint`} className="text-xs text-slate-500">
+          <p id={`${inputId}-hint`} className="text-xs text-[var(--text-tertiary)]">
             {hint}
           </p>
         )}
@@ -72,7 +83,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-300">
+          <label htmlFor={inputId} className="text-sm font-medium text-[var(--text-secondary)]">
             {label}
           </label>
         )}
@@ -80,17 +91,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={clsx(
-            'w-full rounded-lg border bg-slate-800 px-3 py-2 text-sm text-slate-100',
-            'placeholder:text-slate-500',
-            'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent',
-            'transition-colors duration-150 resize-y min-h-[80px]',
-            error ? 'border-red-500' : 'border-slate-600',
+            'w-full rounded-xl border bg-[var(--bg-elevated)] px-3 py-2.5 text-sm text-[var(--text)]',
+            'placeholder:text-[var(--text-tertiary)]',
+            'focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent',
+            'transition-all duration-200 resize-y min-h-[80px]',
+            error ? 'border-[var(--danger)]' : 'border-[var(--border)]',
             className,
           )}
           aria-invalid={error ? 'true' : undefined}
           {...props}
         />
-        {error && <p className="text-xs text-red-400" role="alert">{error}</p>}
+        {error && <p className="text-xs text-[var(--danger)]" role="alert">{error}</p>}
       </div>
     );
   },

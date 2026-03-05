@@ -15,14 +15,14 @@ export default function ProposalsPage() {
     getProposals().then((r: any) => setProposals(r.data || r)).finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="p-8 text-slate-400">Carregando propostas...</div>;
+  if (loading) return <div className="p-8 text-[var(--text-secondary)]">Carregando propostas...</div>;
 
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Propostas</h1>
-          <p className="text-slate-400">{proposals.length} propostas no total</p>
+          <h1 className="text-2xl font-bold text-[var(--text)]">Propostas</h1>
+          <p className="text-[var(--text-secondary)]">{proposals.length} propostas no total</p>
         </div>
       </div>
 
@@ -31,20 +31,20 @@ export default function ProposalsPage() {
           <Link
             key={proposal.id}
             href={`/proposals/${proposal.id}`}
-            className="block bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-cyan-500/50 transition-colors"
+            className="block bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)] p-6 hover:border-[var(--primary)]/50 transition-colors"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="p-2 bg-slate-700 rounded-lg">
-                  <FileText className="w-5 h-5 text-cyan-400" />
+                <div className="p-2 bg-[var(--bg-hover)] rounded-xl">
+                  <FileText className="w-5 h-5 text-[var(--primary)]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{proposal.title}</h3>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <h3 className="text-lg font-semibold text-[var(--text)]">{proposal.title}</h3>
+                  <p className="text-sm text-[var(--text-secondary)] mt-1">
                     Valor: R$ {(proposal.value || 0).toLocaleString('pt-BR')}
                   </p>
                   {proposal.valid_until && (
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-[var(--text-tertiary)] mt-1">
                       Válida até: {new Date(proposal.valid_until).toLocaleDateString('pt-BR')}
                     </p>
                   )}
@@ -56,7 +56,7 @@ export default function ProposalsPage() {
         ))}
 
         {proposals.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-[var(--text-tertiary)]">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>Nenhuma proposta encontrada</p>
           </div>

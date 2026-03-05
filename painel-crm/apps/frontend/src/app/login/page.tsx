@@ -27,30 +27,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] px-4">
       <div className="w-full max-w-md">
         {/* Branding */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-500 font-bold text-slate-950 text-xl">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--primary)] font-bold text-white text-xl">
             BG
           </div>
-          <h1 className="text-2xl font-bold text-white">BG Tech CRM</h1>
-          <p className="mt-1 text-sm text-slate-400">Acesse sua conta para continuar</p>
+          <h1 className="text-2xl font-bold text-[var(--text)]">BG Tech CRM</h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">Acesse sua conta para continuar</p>
         </div>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-8 shadow-xl backdrop-blur-sm"
+          className="glass rounded-2xl border border-[var(--border)] p-8 shadow-xl"
         >
           {error && (
-            <div className="mb-4 rounded-lg bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-400">
+            <div className="mb-4 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-[var(--danger)]">
               {error}
             </div>
           )}
 
           <div className="mb-5">
-            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-[var(--text-secondary)]">
               E-mail
             </label>
             <input
@@ -60,12 +60,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-tertiary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all duration-200"
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-300">
+            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-[var(--text-secondary)]">
               Senha
             </label>
             <input
@@ -75,20 +75,20 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-tertiary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all duration-200"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full rounded-full bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-slate-600">
+        <p className="mt-6 text-center text-xs text-[var(--text-tertiary)]">
           © 2026 BG Tech. Todos os direitos reservados.
         </p>
       </div>

@@ -31,7 +31,7 @@ export default function SlaPage() {
   if (loading || isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
       </div>
     );
   }
@@ -51,8 +51,8 @@ export default function SlaPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">SLAs</h1>
-        <p className="text-sm text-slate-400">Gestão de acordos de nível de serviço</p>
+        <h1 className="text-2xl font-bold text-[var(--text)]">SLAs</h1>
+        <p className="text-sm text-[var(--text-secondary)]">Gestão de acordos de nível de serviço</p>
       </div>
 
       {/* Alert for expiring SLAs */}
@@ -67,7 +67,7 @@ export default function SlaPage() {
           <div className="space-y-2">
             {expiring.map((sla) => (
               <div key={sla.id} className="flex items-center justify-between text-sm">
-                <span className="text-slate-300">{sla.account_name}</span>
+                <span className="text-[var(--text-secondary)]">{sla.account_name}</span>
                 <span className="text-amber-400 text-xs">{daysUntil(sla.renewal_date)} dias restantes</span>
               </div>
             ))}
@@ -84,16 +84,16 @@ export default function SlaPage() {
           return (
             <div
               key={sla.id}
-              className={`rounded-xl border p-5 transition-colors ${
+              className={`rounded-2xl border p-5 transition-colors ${
                 isExpiring
                   ? 'border-amber-500/30 bg-amber-500/5'
-                  : 'border-slate-700/50 bg-slate-800/50'
+                  : 'border-[var(--border)] bg-[var(--bg-elevated)]'
               }`}
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-base font-semibold text-white">{sla.account_name}</p>
+                  <p className="text-base font-semibold text-[var(--text)]">{sla.account_name}</p>
                   <StatusBadge status={sla.tier} className="mt-1" />
                 </div>
                 <ShieldCheck className={`h-5 w-5 ${isExpiring ? 'text-amber-400' : 'text-emerald-400'}`} />
@@ -101,27 +101,27 @@ export default function SlaPage() {
 
               {/* Metrics */}
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="rounded-lg bg-slate-900/50 p-3">
-                  <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
+                <div className="rounded-xl bg-[var(--bg)] p-3">
+                  <div className="flex items-center gap-1 text-xs text-[var(--text-tertiary)] mb-1">
                     <Clock className="h-3 w-3" />
                     Resposta
                   </div>
-                  <p className="text-sm font-semibold text-white">{sla.response_time_hours}h</p>
+                  <p className="text-sm font-semibold text-[var(--text)]">{sla.response_time_hours}h</p>
                 </div>
-                <div className="rounded-lg bg-slate-900/50 p-3">
-                  <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
+                <div className="rounded-xl bg-[var(--bg)] p-3">
+                  <div className="flex items-center gap-1 text-xs text-[var(--text-tertiary)] mb-1">
                     <CheckCircle2 className="h-3 w-3" />
                     Resolução
                   </div>
-                  <p className="text-sm font-semibold text-white">{sla.resolution_time_hours}h</p>
+                  <p className="text-sm font-semibold text-[var(--text)]">{sla.resolution_time_hours}h</p>
                 </div>
-                <div className="rounded-lg bg-slate-900/50 p-3">
-                  <p className="text-xs text-slate-500 mb-1">Uptime</p>
-                  <p className="text-sm font-semibold text-white">{sla.uptime_target}%</p>
+                <div className="rounded-xl bg-[var(--bg)] p-3">
+                  <p className="text-xs text-[var(--text-tertiary)] mb-1">Uptime</p>
+                  <p className="text-sm font-semibold text-[var(--text)]">{sla.uptime_target}%</p>
                 </div>
-                <div className="rounded-lg bg-slate-900/50 p-3">
-                  <p className="text-xs text-slate-500 mb-1">Valor Mensal</p>
-                  <p className="text-sm font-semibold text-cyan-400">{fmtCurrency(sla.monthly_value)}</p>
+                <div className="rounded-xl bg-[var(--bg)] p-3">
+                  <p className="text-xs text-[var(--text-tertiary)] mb-1">Valor Mensal</p>
+                  <p className="text-sm font-semibold text-[var(--primary)]">{fmtCurrency(sla.monthly_value)}</p>
                 </div>
               </div>
 
@@ -134,7 +134,7 @@ export default function SlaPage() {
                     return (
                       <div key={i}>
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-slate-400">{m.metric}</span>
+                          <span className="text-[var(--text-secondary)]">{m.metric}</span>
                           <span className={met ? 'text-emerald-400' : 'text-red-400'}>
                             {m.actual} / {m.target}
                           </span>
@@ -152,10 +152,10 @@ export default function SlaPage() {
               )}
 
               {/* Renewal */}
-              <div className="border-t border-slate-700/50 pt-3">
+              <div className="border-t border-[var(--border)] pt-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Renovação</span>
-                  <span className={isExpiring ? 'text-amber-400 font-semibold' : 'text-slate-300'}>
+                  <span className="text-[var(--text-tertiary)]">Renovação</span>
+                  <span className={isExpiring ? 'text-amber-400 font-semibold' : 'text-[var(--text-secondary)]'}>
                     {new Date(sla.renewal_date).toLocaleDateString('pt-BR')}
                     {isExpiring && ` (${days}d)`}
                   </span>
@@ -167,7 +167,7 @@ export default function SlaPage() {
       </div>
 
       {active.length === 0 && (
-        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-12 text-center text-slate-500">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-12 text-center text-[var(--text-tertiary)]">
           Nenhum SLA ativo encontrado.
         </div>
       )}

@@ -15,12 +15,12 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-slate-700 text-slate-300',
-  success: 'bg-green-900/50 text-green-400 border border-green-800',
-  warning: 'bg-yellow-900/50 text-yellow-400 border border-yellow-800',
-  danger: 'bg-red-900/50 text-red-400 border border-red-800',
-  info: 'bg-blue-900/50 text-blue-400 border border-blue-800',
-  outline: 'border border-slate-600 text-slate-400',
+  default: 'bg-[var(--bg-hover)] text-[var(--text-secondary)]',
+  success: 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
+  warning: 'bg-amber-500/10 text-amber-500 border border-amber-500/20',
+  danger: 'bg-red-500/10 text-red-500 border border-red-500/20',
+  info: 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
+  outline: 'border border-[var(--border)] text-[var(--text-secondary)]',
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
@@ -42,12 +42,12 @@ export function Badge({ variant = 'default', size = 'md', children, className, d
         <span
           className={clsx(
             'h-1.5 w-1.5 rounded-full',
-            variant === 'success' && 'bg-green-400',
-            variant === 'warning' && 'bg-yellow-400',
-            variant === 'danger' && 'bg-red-400',
-            variant === 'info' && 'bg-blue-400',
-            variant === 'default' && 'bg-slate-400',
-            variant === 'outline' && 'bg-slate-400',
+            variant === 'success' && 'bg-emerald-500',
+            variant === 'warning' && 'bg-amber-500',
+            variant === 'danger' && 'bg-red-500',
+            variant === 'info' && 'bg-blue-500',
+            variant === 'default' && 'bg-[var(--text-tertiary)]',
+            variant === 'outline' && 'bg-[var(--text-tertiary)]',
           )}
         />
       )}

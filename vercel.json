@@ -1,23 +1,20 @@
 {
   "buildCommand": null,
   "installCommand": null,
-  "outputDirectory": null,
+  "outputDirectory": "painel-cfo",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/api/painel", "destination": "/api/painel.js" },
-    { "source": "/painel-cfo", "destination": "/painel-cfo/index.html" },
-    { "source": "/painel-cfo/(.*)", "destination": "/painel-cfo/$1" },
-    { "source": "/(.*)", "destination": "/site-principal/$1" }
-  ],
-  "headers": [
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
-      ]
+      "destination": "https://crm-bgtech-backend.vercel.app/api/$1"
     },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
     {
       "source": "/(.*)",
       "headers": [
@@ -27,7 +24,7 @@
         },
         {
           "key": "X-Build-Version",
-          "value": "2026-03-04-v2.0.1-sync"
+          "value": "2026-03-05-painel-cfo-api-proxy"
         }
       ]
     }

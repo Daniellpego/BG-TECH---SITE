@@ -1,30 +1,30 @@
 const STATUS_MAP: Record<string, { label: string; className: string }> = {
-  lead: { label: 'Lead', className: 'bg-slate-500/20 text-slate-300 border-slate-500/30' },
-  qualified: { label: 'Qualificado', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  proposal: { label: 'Proposta', className: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
-  negotiation: { label: 'Negociação', className: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-  closed_won: { label: 'Ganho', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  closed_lost: { label: 'Perdido', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  lead: { label: 'Lead', className: 'bg-[var(--bg-hover)] text-[var(--text-secondary)] border-[var(--border)]' },
+  qualified: { label: 'Qualificado', className: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+  proposal: { label: 'Proposta', className: 'bg-purple-500/10 text-purple-500 border-purple-500/20' },
+  negotiation: { label: 'Negociação', className: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
+  closed_won: { label: 'Ganho', className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+  closed_lost: { label: 'Perdido', className: 'bg-red-500/10 text-red-500 border-red-500/20' },
   // Proposal statuses
-  draft: { label: 'Rascunho', className: 'bg-slate-500/20 text-slate-300 border-slate-500/30' },
-  review: { label: 'Em Revisão', className: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-  approved: { label: 'Aprovada', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  sent: { label: 'Enviada', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  accepted: { label: 'Aceita', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  rejected: { label: 'Rejeitada', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  draft: { label: 'Rascunho', className: 'bg-[var(--bg-hover)] text-[var(--text-secondary)] border-[var(--border)]' },
+  review: { label: 'Em Revisão', className: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
+  approved: { label: 'Aprovada', className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+  sent: { label: 'Enviada', className: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+  accepted: { label: 'Aceita', className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+  rejected: { label: 'Rejeitada', className: 'bg-red-500/10 text-red-500 border-red-500/20' },
   // Project statuses
-  planning: { label: 'Planejamento', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  in_progress: { label: 'Em Andamento', className: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
-  on_hold: { label: 'Pausado', className: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-  completed: { label: 'Concluído', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  cancelled: { label: 'Cancelado', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  planning: { label: 'Planejamento', className: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+  in_progress: { label: 'Em Andamento', className: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20' },
+  on_hold: { label: 'Pausado', className: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
+  completed: { label: 'Concluído', className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+  cancelled: { label: 'Cancelado', className: 'bg-red-500/10 text-red-500 border-red-500/20' },
   // SLA tiers
-  gold: { label: 'Gold', className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
-  silver: { label: 'Silver', className: 'bg-slate-400/20 text-slate-300 border-slate-400/30' },
-  bronze: { label: 'Bronze', className: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
+  gold: { label: 'Gold', className: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
+  silver: { label: 'Silver', className: 'bg-[var(--bg-hover)] text-[var(--text-secondary)] border-[var(--border)]' },
+  bronze: { label: 'Bronze', className: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
   // Contract
-  active: { label: 'Ativo', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  expired: { label: 'Expirado', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  active: { label: 'Ativo', className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+  expired: { label: 'Expirado', className: 'bg-red-500/10 text-red-500 border-red-500/20' },
 };
 
 interface StatusBadgeProps {
@@ -35,7 +35,7 @@ interface StatusBadgeProps {
 export default function StatusBadge({ status, className = '' }: StatusBadgeProps) {
   const config = STATUS_MAP[status] || {
     label: status,
-    className: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
+    className: 'bg-[var(--bg-hover)] text-[var(--text-tertiary)] border-[var(--border)]',
   };
 
   return (

@@ -16,16 +16,16 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'size'> {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-500 focus-visible:ring-brand-400',
-  secondary: 'bg-slate-700 text-slate-100 hover:bg-slate-600 focus-visible:ring-slate-400',
-  danger: 'bg-red-600 text-white hover:bg-red-500 focus-visible:ring-red-400',
-  ghost: 'bg-transparent text-slate-300 hover:bg-slate-700/50 focus-visible:ring-slate-400',
-  outline: 'border border-slate-600 text-slate-300 hover:bg-slate-700/50 focus-visible:ring-slate-400',
+  primary: 'bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] focus-visible:ring-[var(--primary)] rounded-full shadow-sm hover:shadow-md',
+  secondary: 'bg-[var(--bg-elevated)] text-[var(--text)] hover:bg-[var(--bg-hover)] border border-[var(--border)] focus-visible:ring-[var(--primary)] rounded-xl',
+  danger: 'bg-[var(--danger)] text-white hover:opacity-90 focus-visible:ring-[var(--danger)] rounded-xl',
+  ghost: 'bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text)] focus-visible:ring-[var(--primary)] rounded-xl',
+  outline: 'border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text)] focus-visible:ring-[var(--primary)] rounded-xl',
 };
 
 const sizeStyles: Record<Size, string> = {
   sm: 'px-3 py-1.5 text-xs gap-1.5',
-  md: 'px-4 py-2 text-sm gap-2',
+  md: 'px-5 py-2 text-sm gap-2',
   lg: 'px-6 py-3 text-base gap-2.5',
 };
 
@@ -42,13 +42,13 @@ export function Button({
   return (
     <motion.button
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.15 }}
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex items-center justify-center font-medium rounded-lg',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-        'transition-colors duration-150',
+        'inline-flex items-center justify-center font-medium',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]',
+        'transition-all duration-200',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
         variantStyles[variant],
         sizeStyles[size],
@@ -88,9 +88,9 @@ export function IconButton({
       whileTap={{ scale: 0.9 }}
       transition={{ duration: 0.15 }}
       className={clsx(
-        'inline-flex items-center justify-center rounded-lg',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400',
-        'transition-colors duration-150',
+        'inline-flex items-center justify-center rounded-xl',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]',
+        'transition-all duration-200',
         variantStyles[variant],
         iconSizes[size],
         className,

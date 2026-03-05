@@ -31,7 +31,7 @@ export default function ProjectsPage() {
   if (loading || isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
       </div>
     );
   }
@@ -43,8 +43,8 @@ export default function ProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Projetos</h1>
-        <p className="text-sm text-slate-400">Gestão de projetos e entregas</p>
+        <h1 className="text-2xl font-bold text-[var(--text)]">Projetos</h1>
+        <p className="text-sm text-[var(--text-secondary)]">Gestão de projetos e entregas</p>
       </div>
 
       <DataTable
@@ -84,10 +84,10 @@ export default function ProjectsPage() {
               return (
                 <div className="min-w-[120px]">
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-400">
+                    <span className="text-[var(--text-secondary)]">
                       {actual}h / {budget}h
                     </span>
-                    <span className="text-slate-500">{pct.toFixed(0)}%</span>
+                    <span className="text-[var(--text-tertiary)]">{pct.toFixed(0)}%</span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-slate-700">
                     <div
@@ -107,7 +107,7 @@ export default function ProjectsPage() {
               const milestones = (row.milestones as Project['milestones']) || [];
               const completed = milestones.filter((m) => m.status === 'completed').length;
               return (
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-[var(--text-secondary)]">
                   {completed}/{milestones.length} concluídos
                 </span>
               );
