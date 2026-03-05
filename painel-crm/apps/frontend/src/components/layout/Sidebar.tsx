@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import {
@@ -53,9 +54,13 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-[var(--border)]">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)] font-bold text-white text-sm">
-          BG
-        </div>
+        <Image
+          src="/logo-bgtech.png"
+          alt="BG Tech"
+          width={36}
+          height={36}
+          className="shrink-0 rounded-xl"
+        />
         {!collapsed && (
           <div>
             <h1 className="text-base font-semibold text-[var(--text)] tracking-tight">BG Tech</h1>

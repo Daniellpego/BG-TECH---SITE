@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/lib/auth';
 
 export default function LoginPage() {
@@ -31,9 +32,14 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Branding */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--primary)] font-bold text-white text-xl">
-            BG
-          </div>
+          <Image
+            src="/logo-bgtech.png"
+            alt="BG Tech"
+            width={64}
+            height={64}
+            className="mx-auto mb-4 rounded-2xl"
+            priority
+          />
           <h1 className="text-2xl font-bold text-[var(--text)]">BG Tech CRM</h1>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">Acesse sua conta para continuar</p>
         </div>

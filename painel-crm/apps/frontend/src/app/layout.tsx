@@ -5,6 +5,9 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'CRM BG Tech',
   description: 'Sistema CRM inteligente da BG Tech com agentes de IA',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
