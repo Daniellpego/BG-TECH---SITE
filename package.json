@@ -1,0 +1,22 @@
+{
+  "name": "crm-bgtech-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CRM BG Tech - Monorepo root",
+  "workspaces": [
+    "painel-crm"
+  ],
+  "scripts": {
+    "install-all": "npm install && npm install --workspace painel-crm",
+    "build": "npm run build --workspace painel-crm",
+    "build:frontend": "npm run build:frontend --workspace painel-crm",
+    "ci:build": "npm run ci:build --workspace painel-crm"
+  },
+  "devDependencies": {
+    "husky": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "prepare": "node ops/scripts/husky-prepare-skip.js"
+}
