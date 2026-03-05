@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase JS CDN REMOVED — all DB access goes through /api/painel (Vercel serverless) -->
     
     <style>
         :root {
@@ -536,6 +536,9 @@
                         </div>
                         <div id="p-table-empty" style="display:none; text-align:center; padding:60px; color:var(--text-muted);">Nenhuma projeção cadastrada para o horizonte selecionado.</div>
                     </div>
+
+                    <!-- MONTHLY BREAKDOWN - CFO: Quarterly consolidated + monthly detail table -->
+                    <div id="p-quarterly-breakdown" class="card" style="margin-top:24px; overflow:hidden;"></div>
                 </div>
 
             </main>
@@ -744,10 +747,11 @@
     <div id="toast-wrap"></div>
 
     <script>
-        const DB = { 
-            url: "https://urpuiznydrlwmaqhdids.supabase.co", 
-            key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVycHVpem55ZHJsd21hcWhkaWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjQ0OTIsImV4cCI6MjA4NzIwMDQ5Mn0.qSoyYmBTvgdOAickkuLCYCveOj2ELIZt85LFZb6veQ8" 
-        };
+        // ═══════════════════════════════════════════════════════════
+        // API PROXY — all DB access goes through Vercel serverless
+        // No credentials are stored in the frontend.
+        // ═══════════════════════════════════════════════════════════
+        const API_BASE = '/api/painel';
 
         const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         
@@ -757,36 +761,51 @@
             unicos: ["Marketing (Tráfego, Campanhas)", "Taxas de Meios de Pagamento", "Freelancers por Projeto", "Serviços Terceirizados Pontuais", "APIs e Consumo Variável", "Impostos sobre Faturamento", "Gasto Não Previsto"]
         };
 
+        // ═══════════════════════════════════════════════════════════
+        // DEBUG LOGGER — ativa via ?debug=1 na URL
+        // ═══════════════════════════════════════════════════════════
+        const DEBUG = new URLSearchParams(window.location.search).has('debug');
+        const log = {
+            info:  (...a) => DEBUG && console.log('%c[CFO]', 'color:#0ea5e9;font-weight:bold', ...a),
+            warn:  (...a) => DEBUG && console.warn('%c[CFO]', 'color:#f59e0b;font-weight:bold', ...a),
+            error: (...a) => console.error('%c[CFO]', 'color:#ef4444;font-weight:bold', ...a),
+            table: (d)    => DEBUG && console.table(d),
+        };
+        const APP_VERSION = '2.0.1-sync';
+        log.info(`Painel CFO v${APP_VERSION} | debug=${DEBUG}`);
+
         const A = {
-            state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', data: { fixos: [], unicos: [], entradas: [], projecoes: {entradas:[], saidas:[]}, caixa_disponivel: 0 } },
+            state: { tab: 'overview', type: 'fixos', modo: 'despesa', pTipo: 'saida', data: { fixos: [], unicos: [], entradas: [], projecoes: {entradas:[], saidas:[]}, caixa_disponivel: 0 }, _lastUpdatedAt: null, _syncInFlight: false },
             ch: { area: null, donut: null, dreBar: null, dreLine: null },
-            
-            get sb() {
-                if (!this._sbClient && window.supabase) {
-                    this._sbClient = window.supabase.createClient(DB.url, DB.key);
-                }
-                return this._sbClient;
-            },
+            _localDeletedIds: new Set(),
 
             init() {
+                log.info('init() start');
                 const sel = document.getElementById('fMonth');
                 MONTHS.forEach((m, i) => sel.innerHTML += `<option value="${i}">${m}</option>`);
                 sel.value = new Date().getMonth();
+
+                // ── FIX H5: Sync fYear to current system year ──
+                const yearSel = document.getElementById('fYear');
+                const curYear = new Date().getFullYear();
+                yearSel.innerHTML = '';
+                for (let y = curYear - 1; y <= curYear + 1; y++) {
+                    yearSel.innerHTML += `<option value="${y}"${y === curYear ? ' selected' : ''}>${y}</option>`;
+                }
+                log.info('init() filters synced', { month: sel.value, year: yearSel.value });
+
                 document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
                 
                 document.getElementById('lp').addEventListener('keypress', e => { if (e.key === 'Enter') A.login() });
                 document.getElementById('lu').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('lp').focus() });
 
                 lucide.createIcons();
+                log.info('init() done — lucide icons created');
             },
 
             genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9); },
 
             login() {
-                if (!window.supabase) {
-                    A.toast("Aguarde a conexão com o banco ou desative o AdBlocker.", "err");
-                    return;
-                }
                 const u = document.getElementById('lu').value.trim().toLowerCase(), p = document.getElementById('lp').value, lc = document.getElementById('login-card');
                 
                 if ((u === 'bgtech' || u === 'gustavo' || u === 'gui' || u === 'lucas' || u === 'daniel') && p === 'admin2024') {
@@ -861,24 +880,66 @@
                 return A.fetchSync(false);
             },
 
+            /** Validates the shape of data coming from Supabase + backfills IDs on legacy items */
+            validateData(raw) {
+                const safeArr = (v) => { if (Array.isArray(v)) return v; try { const p = JSON.parse(v || '[]'); return Array.isArray(p) ? p : []; } catch { return []; } };
+                const safeObj = (v, def) => { if (v && typeof v === 'object' && !Array.isArray(v)) return v; try { const p = typeof v === 'string' ? JSON.parse(v) : null; return (p && typeof p === 'object') ? p : def; } catch { return def; } };
+                const ensureIds = (arr, prefix) => arr.map(item => {
+                    if (item && typeof item === 'object' && !item.id) {
+                        item.id = A.genId(prefix);
+                        log.warn('validateData: backfilled missing id on item', item.nome || item);
+                    }
+                    return item;
+                });
+                return {
+                    fixos: ensureIds(safeArr(raw.fixos), 'bgt'),
+                    unicos: ensureIds(safeArr(raw.unicos), 'bgt'),
+                    entradas: ensureIds(safeArr(raw.entradas), 'bgt'),
+                    projecoes: {
+                        entradas: ensureIds(safeArr(safeObj(raw.projecoes, {}).entradas), 'proj'),
+                        saidas: ensureIds(safeArr(safeObj(raw.projecoes, {}).saidas), 'proj'),
+                    },
+                    caixa_disponivel: Number(raw.caixa_disponivel) || 0,
+                };
+            },
+
+            /**
+             * Merges two arrays by .id — local wins on conflict, _localDeletedIds are excluded.
+             * Items in remote that don't exist in local AND aren't deleted → added (another user's work).
+             * Items in local that don't exist in remote → kept (current user just added them).
+             * Same id in both → local version wins (current user just edited it).
+             */
+            mergeArrays(local, remote) {
+                const map = new Map();
+                // 1. Remote items first (base layer)
+                (remote || []).forEach(item => {
+                    if (item && item.id && !A._localDeletedIds.has(item.id)) map.set(item.id, item);
+                });
+                // 2. Local items override (user's edits have priority)
+                (local || []).forEach(item => {
+                    if (item && item.id) map.set(item.id, item);
+                });
+                return Array.from(map.values());
+            },
+
             async fetchSync(silent = false) {
+                if (A.state._syncInFlight) { log.warn('fetchSync skipped — already in flight'); return; }
+                A.state._syncInFlight = true;
                 if (!silent) A.syncUI('load');
                 try {
-                    if (!A.sb) throw new Error("Supabase não carregado");
-                    const { data, error } = await A.sb
-                        .from('painel_gastos')
-                        .select('*')
-                        .eq('id', 1)
-                        .maybeSingle();
-
-                    if (error) throw error;
+                    const res = await fetch(API_BASE);
+                    if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
+                    const data = await res.json();
 
                     if (data) {
-                        A.state.data.fixos = Array.isArray(data.fixos) ? data.fixos : JSON.parse(data.fixos || '[]');
-                        A.state.data.unicos = Array.isArray(data.unicos) ? data.unicos : JSON.parse(data.unicos || '[]');
-                        A.state.data.entradas = Array.isArray(data.entradas) ? data.entradas : JSON.parse(data.entradas || '[]');
-                        A.state.data.projecoes = typeof data.projecoes === 'string' ? JSON.parse(data.projecoes) : (data.projecoes || { entradas: [], saidas: [] });
-                        A.state.data.caixa_disponivel = data.caixa_disponivel || 0;
+                        const validated = A.validateData(data);
+                        A.state.data.fixos = validated.fixos;
+                        A.state.data.unicos = validated.unicos;
+                        A.state.data.entradas = validated.entradas;
+                        A.state.data.projecoes = validated.projecoes;
+                        A.state.data.caixa_disponivel = validated.caixa_disponivel;
+                        A.state._lastUpdatedAt = data.updated_at || null;
+                        log.info('fetchSync OK', { rows: { f: validated.fixos.length, u: validated.unicos.length, e: validated.entradas.length }, updated_at: data.updated_at });
                     }
                     A.syncUI('ok');
                     A.normalizeLegacyStatus();
@@ -886,34 +947,120 @@
                     A.render();
                     if (A.state.tab === 'projecoes') A.renderProjecoes();
                 } catch (e) {
-                    console.error("Falha na sincronização:", e);
+                    log.error('fetchSync FAIL', e);
                     A.syncUI('err');
                     if(!silent) A.toast("Modo Offline (Banco inativo ou sem permissão).", "err");
+                } finally {
+                    A.state._syncInFlight = false;
                 }
             },
 
             async pushSync() {
+                // ── FIX H6: Guard against concurrent fetchSync ──
+                A.state._syncInFlight = true;
                 A.syncUI('load');
-                try {
-                    if (!A.sb) throw new Error("Supabase não carregado");
-                    const payload = {
-                        id: 1,
-                        fixos: A.state.data.fixos,
-                        unicos: A.state.data.unicos,
-                        entradas: A.state.data.entradas,
-                        projecoes: A.state.data.projecoes,
-                        caixa_disponivel: A.state.data.caixa_disponivel,
-                        updated_at: new Date().toISOString()
-                    };
-                    const { error } = await A.sb.from('painel_gastos').upsert(payload);
+                const MAX_CAS_RETRIES = 3;
+                let merged = false;
 
-                    if (error) throw error;
-                    A.syncUI('ok');
-                } catch (e) {
-                    console.error("Falha ao enviar:", e);
-                    A.syncUI('err');
-                    A.toast("Erro ao salvar na Nuvem.", "err");
+                try { // outer try for finally guard
+                for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
+                    try {
+                        const newTs = new Date().toISOString();
+                        const payload = {
+                            fixos: A.state.data.fixos,
+                            unicos: A.state.data.unicos,
+                            entradas: A.state.data.entradas,
+                            projecoes: A.state.data.projecoes,
+                            caixa_disponivel: A.state.data.caixa_disponivel,
+                            updated_at: newTs
+                        };
+
+                        if (A.state._lastUpdatedAt) {
+                            // ── CAS via API proxy ──
+                            payload.expected_updated_at = A.state._lastUpdatedAt;
+                            const res = await fetch(API_BASE, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload),
+                            });
+
+                            if (res.status === 409) {
+                                // ── CONFLICT: API returns current server state for merge ──
+                                const conflict = await res.json();
+                                log.warn(`CAS conflict (attempt ${attempt + 1}/${MAX_CAS_RETRIES})`, {
+                                    expected: A.state._lastUpdatedAt,
+                                    actual: conflict.actual,
+                                });
+
+                                // 1. Snapshot local state BEFORE merging (preserves user's edit)
+                                const localSnap = JSON.parse(JSON.stringify(A.state.data));
+
+                                // 2. Use server state returned by the 409 response
+                                const remote = conflict.current;
+                                if (!remote) throw new Error('Row id=1 not found on server');
+                                const remoteData = A.validateData(remote);
+
+                                // 3. Merge: local wins per id, remote additions preserved,
+                                //    local deletes respected via _localDeletedIds
+                                A.state.data.fixos    = A.mergeArrays(localSnap.fixos, remoteData.fixos);
+                                A.state.data.unicos   = A.mergeArrays(localSnap.unicos, remoteData.unicos);
+                                A.state.data.entradas = A.mergeArrays(localSnap.entradas, remoteData.entradas);
+                                A.state.data.projecoes = {
+                                    entradas: A.mergeArrays(
+                                        (localSnap.projecoes || {}).entradas,
+                                        remoteData.projecoes.entradas
+                                    ),
+                                    saidas: A.mergeArrays(
+                                        (localSnap.projecoes || {}).saidas,
+                                        remoteData.projecoes.saidas
+                                    ),
+                                };
+
+                                A.state._lastUpdatedAt = remote.updated_at;
+                                merged = true;
+
+                                A.toast(`⚠️ Conflito detectado — mesclando dados (tentativa ${attempt + 1})...`, 'warning');
+                                continue; // retry with merged data + updated _lastUpdatedAt
+                            }
+
+                            if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
+
+                            const result = await res.json();
+                            A.state._lastUpdatedAt = result.updated_at || newTs;
+                        } else {
+                            // First push or unknown state — use init endpoint
+                            const res = await fetch(API_BASE + '?init=1', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload),
+                            });
+                            if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
+                            const result = await res.json();
+                            A.state._lastUpdatedAt = result.updated_at || newTs;
+                        }
+
+                        // Success
+                        A._localDeletedIds.clear();
+                        A.syncUI('ok');
+                        log.info('pushSync OK', { updated_at: A.state._lastUpdatedAt, attempt, merged });
+
+                        // ── FIX: Always re-render after push to guarantee UI ↔ state sync ──
+                        A.normalizeLegacyStatus();
+                        A.refreshFilterOptions();
+                        A.render();
+                        if (A.state.tab === 'projecoes') A.renderProjecoes();
+                        return; // done
+                    } catch (e) {
+                        if (attempt === MAX_CAS_RETRIES - 1) {
+                            log.error('pushSync FAIL (all retries exhausted)', e);
+                            A.syncUI('err');
+                            A.toast('Erro ao salvar na Nuvem. Tente novamente.', 'err');
+                            return;
+                        }
+                        log.warn(`pushSync attempt ${attempt + 1} error, retrying...`, e.message);
+                    }
                 }
+                } finally { A.state._syncInFlight = false; } // ── FIX H6: release guard ──
             },
 
             syncUI(s) { const d = document.getElementById('sync-dot'), t = document.getElementById('sync-txt'), m = { load: ['var(--warning)', 'Sincronizando...'], ok: ['var(--success)', 'Nuvem Conectada'], err: ['var(--danger)', 'Modo Offline'] }; d.style.background = m[s][0]; d.style.boxShadow = `0 0 12px ${m[s][0]}`; t.textContent = m[s][1]; },
@@ -935,15 +1082,32 @@
                 return revenue > 0 ? revenue * TAX_RATE : 0;
             },
             
+            /** Normalizes date to YYYY-MM-DD regardless of input format */
+            _normDate(d) {
+                if (!d || typeof d !== 'string') return '';
+                // Already YYYY-MM-DD
+                if (/^\d{4}-\d{2}/.test(d)) return d;
+                // DD/MM/YYYY → YYYY-MM-DD
+                if (d.includes('/')) {
+                    const p = d.split('/');
+                    if (p.length === 3 && p[2].length === 4) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+                }
+                return d;
+            },
+
             filterData(arr, mStr, yStr, isYTD = false, client = 'all', project = 'all') {
                 return (arr || []).filter(x => {
                     if (!x?.data) return false;
-                    const [y, m] = x.data.split('-');
+                    const nd = A._normDate(x.data);
+                    const parts = nd.split('-');
+                    if (parts.length < 2) return false;
+                    const [y, m] = parts;
                     if (y !== yStr) return false;
                     if (client !== 'all' && (x.cliente || '') !== client) return false;
                     if (project !== 'all' && (x.projeto || '') !== project) return false;
                     if (mStr === 'anual') return true;
                     const mi = parseInt(mStr, 10) + 1, mm = parseInt(m, 10);
+                    if (isNaN(mi) || isNaN(mm)) return false;
                     if (isYTD) return mm <= mi;
                     return mm === mi;
                 });
@@ -988,21 +1152,24 @@
                 
                 const ePrevC = ePrev.filter(isConf), fPrevC = fPrev.filter(isConf), uPrevC = uPrev.filter(isConf);
 
-                const sumE = eMC.reduce((a,b)=>a+Number(b.valor),0);
-                const sumF = fMC.reduce((a,b)=>a+Number(b.valor),0);
-                const sumU = uMC.reduce((a,b)=>a+Number(b.valor),0);
+                // ── FIX: NaN/Infinity guard for KPI calculations ──
+                const _safe = (v) => (Number.isFinite(v) ? v : 0);
+                const sumE = _safe(eMC.reduce((a,b)=>a+Number(b.valor),0));
+                const sumF = _safe(fMC.reduce((a,b)=>a+Number(b.valor),0));
+                const sumU = _safe(uMC.reduce((a,b)=>a+Number(b.valor),0));
                 
                 // 👇 IMPOSTO AUTOMÁTICO NO OVERVIEW 👇
-                const sumImp = A.calcTax(sumE);
+                const sumImp = _safe(A.calcTax(sumE));
                 const sumBurn = sumF + sumU + sumImp; 
                 
-                const sumMRR = eMC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0);
+                const sumMRR = _safe(eMC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0));
+                const prevSumMRR = _safe(ePrevC.filter(x => (x.categoria||'').includes("Mensalidade") || x.recorrente === 'mensal').reduce((a,b)=>a+Number(b.valor),0));
                 
                 const resLiq = sumE - sumBurn; 
                 const margem = sumE > 0 ? ((resLiq / sumE) * 100).toFixed(1) : '0.0';
 
-                const prevSumE = ePrevC.reduce((a,b)=>a+Number(b.valor),0);
-                const prevSumBurn = fPrevC.reduce((a,b)=>a+Number(b.valor),0) + uPrevC.reduce((a,b)=>a+Number(b.valor),0) + A.calcTax(prevSumE);
+                const prevSumE = _safe(ePrevC.reduce((a,b)=>a+Number(b.valor),0));
+                const prevSumBurn = _safe(fPrevC.reduce((a,b)=>a+Number(b.valor),0)) + _safe(uPrevC.reduce((a,b)=>a+Number(b.valor),0)) + A.calcTax(prevSumE);
 
                 const caixaVal = A.state.data.caixa_disponivel || 0;
                 const runway = sumBurn > 0 ? (caixaVal / sumBurn).toFixed(1) : '99+';
@@ -1377,12 +1544,15 @@
                     };
                     const isIncome = A.state.modo === 'entrada';
                     const arrKey = isIncome ? 'entradas' : A.state.type;
-                    const arr = A.state.data[arrKey] || [];
                     
                     if (editId) {
+                        // ── FIX: Remove from ALL arrays first, then get fresh reference ──
                         ['fixos', 'unicos', 'entradas'].forEach(k => { A.state.data[k] = (A.state.data[k]||[]).filter(i => i.id !== editId); });
-                        arr.push(base);
+                        const freshArr = A.state.data[arrKey] || [];
+                        freshArr.push(base);
+                        A.state.data[arrKey] = freshArr;
                     } else {
+                        const arr = A.state.data[arrKey] || [];
                         if (recorrente === 'mensal') {
                             const [y, , d] = dataBase.split('-');
                             for (let m = 0; m < 12; m++) arr.push({ ...base, id: A.genId('bgt'), data: `${y}-${String(m + 1).padStart(2, '0')}-${d}` });
@@ -1394,9 +1564,8 @@
                         } else {
                             arr.push(base); A.toast(`Salvo com sucesso! ✅`);
                         }
+                        A.state.data[arrKey] = arr;
                     }
-                    
-                    A.state.data[arrKey] = arr;
                     A.closeDrawer(); A.refreshFilterOptions(); A.render(); await A.pushSync();
                 } finally { btn.classList.remove('loading'); }
             },
@@ -1405,6 +1574,7 @@
             
             async del(id) {
                 if (confirm("Excluir permanentemente este registro da base?")) {
+                    A._localDeletedIds.add(id); // Track for merge — prevents resurrection from remote
                     A.state.data.fixos = A.state.data.fixos.filter(i => i.id !== id);
                     A.state.data.unicos = A.state.data.unicos.filter(i => i.id !== id);
                     A.state.data.entradas = A.state.data.entradas.filter(i => i.id !== id);
@@ -1413,6 +1583,143 @@
                     await A.pushSync();
                     A.toast("Registro excluído. 🗑️");
                 }
+            },
+
+            // ═══════════════════════════════════════════════════════════════
+            // MONTHLY BREAKDOWN - CFO
+            // Detalhamento mês a mês dentro de cada trimestre na aba Projeções.
+            // Métricas: Receita, Fixos, Variáveis+Imp, Resultado, Caixa rolling.
+            // Caixa acumulado é série: caixa_final_mes1 → caixa_final_mes2 → ...
+            // Trimestre seguinte começa do caixa_final do trimestre anterior.
+            // ═══════════════════════════════════════════════════════════════
+
+            /** "YYYY-MM" key from year (int) and 1-based month (int) */
+            ymKey(y, m) { return `${y}-${String(m).padStart(2, '0')}`; },
+
+            /** Adds n months to a "YYYY-MM" string, returns new "YYYY-MM" */
+            addMonthsYM(ym, n) {
+                const [y, m] = ym.split('-').map(Number);
+                const t = (y * 12 + (m - 1)) + n;
+                return A.ymKey(Math.floor(t / 12), (t % 12) + 1);
+            },
+
+            /** Generates array of n "YYYY-MM" keys starting from current month */
+            genMonthRange(n) {
+                const d = new Date();
+                const s = A.ymKey(d.getFullYear(), d.getMonth() + 1);
+                return Array.from({ length: n }, (_, i) => A.addMonthsYM(s, i));
+            },
+
+            /** Groups projection items by "YYYY-MM" from their .mes field */
+            groupProjByMonth(items) {
+                const map = {};
+                (items || []).forEach(it => {
+                    const k = (it.mes || '').substring(0, 7);
+                    if (k.length >= 7) (map[k] = map[k] || []).push(it);
+                });
+                return map;
+            },
+
+            /**
+             * Monthly confirmed fixed cost baseline for projection.
+             * Soma dos fixos confirmados do mês atual. Se não houver, retorna 0.
+             * SEM fallback por mês anterior — fixo ausente = 0 (CFO-safe: não mascara
+             * erro de cadastro). Fixos são tratados como recorrentes; o save()
+             * replica 'mensal' em 12 meses, então o mês atual deve ter dados.
+             */
+            getMonthlyFixedCost() {
+                const conf = (A.state.data.fixos || []).filter(x => x.status === 'Confirmado' && x.data);
+                if (!conf.length) return 0;
+                const d = new Date(), curYM = A.ymKey(d.getFullYear(), d.getMonth() + 1);
+                return conf.filter(x => x.data.substring(0, 7) === curYM)
+                    .reduce((a, b) => a + Number(b.valor || 0), 0);
+            },
+
+            /** Renders quarterly breakdown with monthly detail rows in Projeções tab */
+            renderQuarterlyBreakdown() {
+                const el = document.getElementById('p-quarterly-breakdown');
+                if (!el) return;
+                const horizon = parseInt(document.getElementById('p-horizonte').value) || 6;
+                const months = A.genMonthRange(horizon);
+                const proj = A.state.data.projecoes || { entradas: [], saidas: [] };
+                const entMap = A.groupProjByMonth(proj.entradas);
+                const saiMap = A.groupProjByMonth(proj.saidas);
+                const mFixed = A.getMonthlyFixedCost();
+                let cash = Number(A.state.data.caixa_disponivel || 0);
+
+                // Build per-month metrics with rolling cash
+                const md = months.map(ym => {
+                    const [y, m] = ym.split('-').map(Number);
+                    const rev = (entMap[ym] || []).reduce((a, b) => a + Number(b.valor || 0), 0);
+                    const vari = (saiMap[ym] || []).reduce((a, b) => a + Number(b.valor || 0), 0);
+                    const tax = A.calcTax(rev); // 6% sobre receita — mesmo cálculo do consolidado
+                    const res = rev - mFixed - vari - tax;
+                    cash += res;
+                    return { ym, y, m, rev, fixed: mFixed, vari, tax, res, cash };
+                });
+
+                // Chunk into quarters (groups of 3)
+                const quarters = [];
+                for (let i = 0; i < md.length; i += 3) {
+                    const ch = md.slice(i, Math.min(i + 3, md.length));
+                    quarters.push({
+                        label: `${MONTHS[ch[0].m - 1].substring(0, 3)}–${MONTHS[ch[ch.length - 1].m - 1].substring(0, 3)} ${ch[ch.length - 1].y}`,
+                        months: ch,
+                        rev: ch.reduce((a, b) => a + b.rev, 0),
+                        fixed: ch.reduce((a, b) => a + b.fixed, 0),
+                        vari: ch.reduce((a, b) => a + b.vari, 0),
+                        tax: ch.reduce((a, b) => a + b.tax, 0),
+                        res: ch.reduce((a, b) => a + b.res, 0),
+                        cash: ch[ch.length - 1].cash
+                    });
+                }
+                if (!quarters.length) { el.innerHTML = ''; return; }
+
+                const rc = v => v >= 0 ? 'dre-positive' : 'dre-negative';
+                const cc = v => v >= 0 ? 'var(--success)' : 'var(--danger)';
+                const sign = v => v >= 0 ? '+ ' + A.fmtR(v) : '- ' + A.fmtR(Math.abs(v));
+
+                const cashFinal = md.length > 0 ? md[md.length - 1].cash : cash;
+                let h = `<div style="padding:20px 24px;border-bottom:1px solid var(--color-border);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+                        <span class="chart-title font-title" style="font-size:16px;"><i data-lucide="layers" width="18" height="18" style="color:var(--primary)"></i> Projeção Mensal — Fluxo de Caixa</span>
+                        <span style="font-size:11px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Inclui fixos recorrentes + imposto 6%</span>
+                    </div>
+                    <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--text-muted);">
+                        <span>Caixa hoje: <strong style="color:white;">${A.fmtR(A.state.data.caixa_disponivel || 0)}</strong></span>
+                        <span>Fixos/mês: <strong style="color:var(--warning);">${A.fmtR(mFixed)}</strong>${mFixed === 0 ? ' <span style="color:var(--danger);font-size:10px;">⚠ sem fixos no mês atual</span>' : ''}</span>
+                        <span>Caixa projetado final: <strong style="color:${cc(cashFinal)};">${A.fmtR(cashFinal)}</strong></span>
+                    </div>
+                </div>
+                <div class="table-wrap"><table class="dre-table" style="min-width:900px;">
+                <thead><tr><th style="text-align:left">Período</th><th>Receita</th><th>Custos Fixos</th><th>Custos Var.+Imp.</th><th>Resultado</th><th>Caixa Final</th></tr></thead><tbody>`;
+
+                quarters.forEach((q, qi) => {
+                    // Quarter consolidated row (dre-row-main)
+                    h += `<tr class="dre-row-main">
+                        <td style="color:var(--primary);">▼ T${qi + 1} — ${esc(q.label)}</td>
+                        <td class="dre-val" style="color:var(--success)">${A.fmtR(q.rev)}</td>
+                        <td class="dre-val" style="color:var(--warning)">${A.fmtR(q.fixed)}</td>
+                        <td class="dre-val" style="color:var(--danger)">${A.fmtR(q.vari + q.tax)}</td>
+                        <td class="dre-val ${rc(q.res)}">${sign(q.res)}</td>
+                        <td class="dre-val" style="color:${cc(q.cash)};font-weight:900">${A.fmtR(q.cash)}</td>
+                    </tr>`;
+                    // Monthly detail rows (dre-row-sub)
+                    q.months.forEach(mo => {
+                        h += `<tr class="dre-row-sub">
+                            <td><div style="width:4px;height:4px;border-radius:50%;background:var(--text-dim);"></div> ${MONTHS[mo.m - 1]} ${mo.y}</td>
+                            <td class="dre-val">${A.fmtR(mo.rev)}</td>
+                            <td class="dre-val">${A.fmtR(mo.fixed)}</td>
+                            <td class="dre-val">${A.fmtR(mo.vari + mo.tax)}</td>
+                            <td class="dre-val ${rc(mo.res)}">${sign(mo.res)}</td>
+                            <td class="dre-val" style="color:${cc(mo.cash)}">${A.fmtR(mo.cash)}</td>
+                        </tr>`;
+                    });
+                });
+
+                h += '</tbody></table></div>';
+                el.innerHTML = h;
+                lucide.createIcons();
             },
 
             renderProjecoes() {
@@ -1482,6 +1789,7 @@
                     }
                     tbody.innerHTML = html;
                 }
+                A.renderQuarterlyBreakdown();
                 lucide.createIcons();
             },
 
@@ -1534,6 +1842,7 @@
             },
             async delProj(tipo, id) {
                 if (confirm("Excluir projeção?")) {
+                    A._localDeletedIds.add(id); // Track for merge — prevents resurrection from remote
                     A.state.data.projecoes.entradas = (A.state.data.projecoes.entradas||[]).filter(x => x.id !== id);
                     A.state.data.projecoes.saidas = (A.state.data.projecoes.saidas||[]).filter(x => x.id !== id);
                     A.renderProjecoes(); await A.pushSync(); A.toast("Projeção removida. 🗑️");
@@ -1574,8 +1883,9 @@
                 if (format === 'csv') {
                     const rows = [["Data", "Fluxo", "Descrição", "Categoria", "Status", "Valor"]];
                     filtered.forEach(d => { rows.push([A.fmtD(d.data), d.fluxo, d.nome, d.categoria, d.status, d.valor]); });
+                    const csvBody = rows.map(e => e.map(escCSV).join(",")).join("\n");
                     const link = document.createElement("a");
-                    link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n")));
+                    link.setAttribute("href", "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(csvBody));
                     link.setAttribute("download", filename + ".csv"); document.body.appendChild(link); link.click();
                 } else {
                     const { jsPDF } = window.jspdf; const doc = new jsPDF();
@@ -1598,6 +1908,15 @@
         };
 
         function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+        /** RFC 4180 CSV field escaping + formula injection prevention */
+        function escCSV(field) {
+            const s = String(field ?? '');
+            // Formula injection: prefix with tab if starts with =, +, -, @
+            if (/^[=+\-@\t\r]/.test(s)) return '"\t' + s.replace(/"/g, '""') + '"';
+            // RFC 4180: wrap in quotes if contains comma, double-quote, or newline
+            if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) return '"' + s.replace(/"/g, '""') + '"';
+            return s;
+        }
         window.onload = A.init;
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { A.closeDrawer(); A.closeDREModal(); A.closeMonthModal(); A.closeProjDrawer(); A.closeExportModal(); } });
     </script>

@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+*.swp
+
+# Environment
+.env
+.env.*
+
+# Build artifacts
+estrutura.txt
