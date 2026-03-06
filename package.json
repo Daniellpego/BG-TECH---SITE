@@ -13,7 +13,9 @@
     "ci:build": "npm run ci:build --workspace painel-crm"
   },
   "devDependencies": {
-    "husky": "^9.0.0"
+    "@playwright/test": "^1.58.2",
+    "husky": "^9.0.0",
+    "playwright": "^1.58.2"
   },
   "engines": {
     "node": ">=20.0.0"
