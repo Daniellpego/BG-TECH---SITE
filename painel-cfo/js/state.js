@@ -53,17 +53,27 @@ export async function loadAll() {
             setTaxRate(state.aliquota_imposto);
 
             // Sync to local
-            await Offline.syncToLocal(lancamentos, projecoes);
+            await Offline.cacheLancamentos(lancamentos);
+            await Offline.cacheProjecoes(projecoes);
+            await Offline.cacheConfig({
+                caixa_disponivel: state.caixa,
+                aliquota_imposto: state.aliquota_imposto,
+                regime_tributario: state.regime_tributario
+            });
         } else {
-            const { lancamentos, projecoes } = await Offline.loadLocal();
-            state.lancamentos = lancamentos;
-            state.projecoes = projecoes;
+            state.lancamentos = await Offline.getCachedLancamentos();
+            state.projecoes = await Offline.getCachedProjecoes();
+            const config = await Offline.getCachedConfig();
+            if (config) {
+                state.caixa = config.caixa_disponivel;
+                state.aliquota_imposto = config.aliquota_imposto;
+                state.regime_tributario = config.regime_tributario;
+            }
         }
     } catch (err) {
         console.error('Load Error:', err);
-        const { lancamentos, projecoes } = await Offline.loadLocal();
-        state.lancamentos = lancamentos;
-        state.projecoes = projecoes;
+        state.lancamentos = await Offline.getCachedLancamentos();
+        state.projecoes = await Offline.getCachedProjecoes();
     } finally {
         state.syncing = false;
         notify();

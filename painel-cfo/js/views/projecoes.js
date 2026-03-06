@@ -2,7 +2,7 @@
 // CFO Dashboard v2 — Projeções View
 // ═══════════════════════════════════════════════
 
-import { fmtR, safe } from '../utils.js';
+import { fmtR } from '../utils.js';
 import * as State from '../state.js';
 
 export function renderProjecoes() {

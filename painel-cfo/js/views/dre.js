@@ -21,11 +21,9 @@ export function renderDRE() {
     const impM = calcTax(rbM);
     const rlM = roM - impM;
 
-    // YTD (Year To Date)
     const eYTD = filterData(State.getEntradas(), m, y, true, client, project).filter(isConf);
     const rbYTD = safe(eYTD.reduce((a, b) => a + Number(b.valor), 0));
     const impYTD = calcTax(rbYTD);
-    // ... complete YTD logic simplifies to similar reduces
 
     document.getElementById('dre-lbl-periodo').textContent = m === 'anual' ? `Ano ${y}` : `${MONTHS[parseInt(m)]}/ ${y}`;
 

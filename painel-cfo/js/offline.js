@@ -24,13 +24,13 @@ function getDB() {
 export async function cacheLancamentos(items) {
     const d = getDB();
     await d.lancamentos.clear();
-    if (items && items.length > 0) await d.lancamentos.bulkPut(items);
+    if (items.length > 0) await d.lancamentos.bulkPut(items);
 }
 
 export async function cacheProjecoes(items) {
     const d = getDB();
     await d.projecoes.clear();
-    if (items && items.length > 0) await d.projecoes.bulkPut(items);
+    if (items.length > 0) await d.projecoes.bulkPut(items);
 }
 
 export async function cacheConfig(config) {
@@ -164,40 +164,6 @@ export async function processSyncQueue(dbModule) {
 
 export async function clearSyncQueue() {
     return getDB().syncQueue.clear();
-}
-
-// ─── Convenience Wrappers for State (FIX PARA TELA PRETA) ─────
-
-export async function syncToLocal(lancamentos, projecoes) {
-    try {
-        console.log('📦 [Offline] Sincronizando dados para o cache local...');
-        await Promise.all([
-            cacheLancamentos(lancamentos),
-            cacheProjecoes(projecoes)
-        ]);
-        console.log('✅ [Offline] Sync local concluído com sucesso.');
-    } catch (err) {
-        console.error('❌ [Offline] Falha no syncToLocal:', err);
-    }
-}
-
-export async function loadLocal() {
-    try {
-        console.log('📦 [Offline] Carregando dados do cache local...');
-        const [lancamentos, projecoes, config] = await Promise.all([
-            getCachedLancamentos(),
-            getCachedProjecoes(),
-            getCachedConfig()
-        ]);
-        return {
-            lancamentos: lancamentos || [],
-            projecoes: projecoes || [],
-            config: config || null
-        };
-    } catch (err) {
-        console.error('❌ [Offline] Falha ao carregar cache local:', err);
-        return { lancamentos: [], projecoes: [], config: null };
-    }
 }
 
 // ─── Network Status ────────────────────────────

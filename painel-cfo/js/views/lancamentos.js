@@ -92,11 +92,3 @@ function renderTagChips() {
         </span>
     `).join('');
 }
-
-window.CFO = {
-    ...window.CFO,
-    openDrawer,
-    addTag,
-    removeTag,
-    getDrawerTags: () => currentTags
-};

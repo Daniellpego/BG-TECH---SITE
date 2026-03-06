@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════
-// CFO Dashboard v2 — Robust Main Entry
+// CFO Dashboard v2 — Main Application Entry
 // ═══════════════════════════════════════════════
 
 import * as Auth from './auth.js';
@@ -9,159 +9,110 @@ import { toast, maskMoney } from './utils.js';
 import { renderOverview } from './views/overview.js';
 import { renderDRE } from './views/dre.js';
 import { renderLancamentosTable, openDrawer, addTag, removeTag } from './views/lancamentos.js';
+import { renderAnual } from './views/annual.js';
+import { renderProjecoes } from './views/projecoes.js';
 
 const loginScreen = document.getElementById('login-screen');
 const appEl = document.getElementById('app');
-const welcomeOverlay = document.getElementById('welcome-overlay');
 
-let isInitialized = false;
-
-/**
- * BRAIN: Inicialização da Aplicação com Blindagem
- */
 async function initApp() {
-    if (isInitialized) return;
-    isInitialized = true;
+    await State.loadAll();
+    navigate('overview');
 
-    console.log("🚀 [CFO] Iniciando carregamento de dados...");
-
-    try {
-        // Carrega tudo do Supabase/Local
-        await State.loadAll();
-        console.log("✅ [CFO] Estado carregado com sucesso.");
-
-        // Navega para a visão inicial
-        navigate('overview');
-
-        // Subscrição em Tempo Real (Não bloqueante)
-        DB.subscribeRealtime(
-            (p) => { State.handleRealtimeEvent('cfo_lancamentos', p); renderActiveView(); },
-            (p) => { State.handleRealtimeEvent('cfo_projecoes', p); renderActiveView(); },
-            (p) => { State.handleRealtimeEvent('cfo_config_v2', p); renderActiveView(); }
-        );
-
-    } catch (error) {
-        console.error("❌ [CFO Fatal] Erro na inicialização:", error);
-        toast("Erro ao carregar dados. Verifique sua conexão.", "err");
-        // Força a navegação para que a tela não fique branca em caso de erro parcial
-        navigate('overview');
-    }
+    DB.subscribeRealtime(
+        (p) => { State.handleRealtimeEvent('cfo_lancamentos', p); renderActiveView(); },
+        (p) => { State.handleRealtimeEvent('cfo_projecoes', p); renderActiveView(); },
+        (p) => { State.handleRealtimeEvent('cfo_config_v2', p); renderActiveView(); }
+    );
 }
 
-/**
- * NAVEGAÇÃO ENTRE ABAS
- */
 function navigate(tab) {
-    try {
-        console.log(`📍 [CFO] Navegando para: ${tab}`);
-        State.setTab(tab);
+    State.setTab(tab);
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.toggle('active', v.id === `view-${tab}`);
+    });
 
-        // Atualiza UI da Sidebar
-        document.querySelectorAll('.nav-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.tab === tab);
-        });
-
-        // Mostra a View Correta
-        document.querySelectorAll('.view').forEach(v => {
-            v.classList.toggle('active', v.id === `view-${tab}`);
-        });
-
-        renderActiveView();
-    } catch (err) {
-        console.error(`❌ [CFO] Erro ao navegar para ${tab}:`, err);
-    }
+    if (tab === 'academia') refreshTaxDisplay();
+    renderActiveView();
 }
 
 function renderActiveView() {
     const tab = State.getTab();
-    try {
-        if (tab === 'overview') renderOverview();
-        else if (tab === 'dre') renderDRE();
-        else if (['entradas', 'fixos', 'unicos'].includes(tab)) renderLancamentosTable();
+    if (tab === 'overview') renderOverview();
+    else if (tab === 'dre') renderDRE();
+    else if (tab === 'anual') renderAnual();
+    else if (tab === 'projecoes') renderProjecoes();
+    else if (['entradas', 'fixos', 'unicos'].includes(tab)) renderLancamentosTable();
 
-        if (window.lucide) lucide.createIcons();
-    } catch (err) {
-        console.warn(`⚠️ [CFO] Falha ao renderizar view ${tab}:`, err);
-    }
+    if (window.lucide) lucide.createIcons();
 }
 
-/**
- * GERENCIAMENTO DE TRANSIÇÃO DE AUTH
- */
-function handleAuthStatus(user) {
-    console.log("🔐 [CFO] Status de Autenticação:", user ? "Logado" : "Deslogado");
-
-    if (user) {
-        // Exibe o overlay de boas-vindas
-        if (welcomeOverlay) welcomeOverlay.classList.add('active');
-
-        // Inicia o carregamento em background imediatamente
-        initApp();
-
-        // Transição visual suave
-        setTimeout(() => {
-            if (loginScreen) loginScreen.style.display = 'none';
-            if (appEl) appEl.classList.add('visible');
-
-            setTimeout(() => {
-                if (welcomeOverlay) welcomeOverlay.classList.remove('active');
-            }, 1800);
-        }, 1000);
-
-    } else {
-        isInitialized = false;
-        if (loginScreen) loginScreen.style.display = 'flex';
-        if (appEl) appEl.classList.remove('visible');
-    }
+function refreshTaxDisplay() {
+    const s = State.getState();
+    const el = document.getElementById('academia-tax-info');
+    if (el) el.textContent = `${s.regime_tributario} - Alíquota: ${(s.aliquota_imposto * 100).toFixed(1)}%`;
 }
 
-// Inicialização Global
-async function checkInitialAuth() {
-    try {
-        console.log("🔍 [CFO] Verificando sessão inicial...");
-        const session = await Auth.getSession();
-        handleAuthStatus(session?.user || null);
-    } catch (err) {
-        console.warn('⚠️ [CFO] Falha na checagem inicial:', err);
-        handleAuthStatus(null);
-    }
-}
-
-// Event Listeners de Login
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('btn-login');
-    const email = document.getElementById('login-email').value;
-    const pass = document.getElementById('login-pass').value;
-
-    try {
-        btn.disabled = true;
-        btn.innerHTML = 'Validando...';
-        await Auth.signIn(email, pass);
-    } catch (err) {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="log-in" width="20" height="20"></i> Entrar';
-        if (window.lucide) lucide.createIcons();
-        document.getElementById('login-error').textContent = err.message;
-        console.error("❌ [CFO Login] Erro:", err.message);
-    }
-});
-
-// API Global Exposta
 window.CFO = {
     ...window.CFO,
     navigate,
     openDrawer,
     addTag,
     removeTag,
-    signOut: async () => {
-        await Auth.signOut();
-        window.location.reload();
+    signOut: () => Auth.signOut(),
+    openTaxModal: () => {
+        const s = State.getState();
+        document.getElementById('tax-regime').value = s.regime_tributario;
+        document.getElementById('tax-rate').value = (s.aliquota_imposto * 100).toFixed(1);
+        document.getElementById('tax-modal').classList.add('open');
+        document.getElementById('tax-overlay').classList.add('open');
+    },
+    saveTaxConfig: async () => {
+        const rate = parseFloat(document.getElementById('tax-rate').value) / 100;
+        const regime = document.getElementById('tax-regime').value;
+        if (await State.updateTaxConfig(rate, regime)) {
+            document.getElementById('tax-modal').classList.remove('open');
+            document.getElementById('tax-overlay').classList.remove('open');
+            toast('Configuração fiscal atualizada!');
+        }
     }
 };
 
-Auth.onAuthChange(handleAuthStatus);
-checkInitialAuth();
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
 
-// Masks
+    try {
+        await Auth.signIn(email, pass);
+        const overlay = document.getElementById('welcome-overlay');
+        overlay.classList.remove('hidden');
+
+        setTimeout(() => {
+            loginScreen.style.display = 'none';
+            appEl.classList.add('visible');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                initApp();
+            }, 3000);
+        }, 1500);
+    } catch (err) {
+        document.getElementById('login-error').textContent = err.message;
+    }
+});
+
+Auth.onAuthChange(user => {
+    if (user) {
+        loginScreen.style.display = 'none';
+        appEl.classList.add('visible');
+        initApp();
+    } else {
+        loginScreen.style.display = 'flex';
+        appEl.classList.remove('visible');
+    }
+});
+
 document.querySelectorAll('.money-mask').forEach(i => i.addEventListener('input', maskMoney));

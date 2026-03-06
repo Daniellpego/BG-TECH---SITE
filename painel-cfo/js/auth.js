@@ -9,8 +9,9 @@ let supabaseClient = null;
 export function getSupabase() {
     if (!supabaseClient) {
         if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) {
-            console.error('❌ Supabase configuration missing! Check environment variables.');
+            console.error('❌ Supabase configuration missing!');
         }
+        // Initialize client using the window.supabase UMD library loaded in index.html
         supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
     }
     return supabaseClient;

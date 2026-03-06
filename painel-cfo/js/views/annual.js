@@ -5,7 +5,7 @@
 import { fmtR, filterData, safe, MONTHS } from '../utils.js';
 import * as State from '../state.js';
 
-export function renderAnnual() {
+export function renderAnual() {
   const { y, client, project } = State.getFilters();
   const entradas = State.getEntradas();
   const variaveis = State.getVariaveis();
@@ -17,7 +17,6 @@ export function renderAnnual() {
 
   let html = '';
   for (let i = 0; i < 12; i++) {
-    const mStr = String(i).padStart(2, '0');
     const eM = filterData(entradas, i, y, false, client, project).filter(isConf);
     const vM = filterData(variaveis, i, y, false, client, project).filter(isConf);
     const fM = filterData(fixos, i, y, false, client, project).filter(isConf);
