@@ -12,11 +12,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/views.css">
+
+    <!-- Link Consolidado (Modo Emergência) -->
+    <link rel="stylesheet" href="css/styles.css">
+
     <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Lucide Icons -->
@@ -86,9 +85,6 @@
         <div id="offline-bar" class="offline-bar"><i data-lucide="wifi-off" width="14" height="14"></i> Sem conexão —
             trabalhando offline</div>
 
-        <!-- Welcome banner -->
-        <div id="welcome-banner" class="welcome-banner"></div>
-
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
@@ -98,7 +94,7 @@
                 </svg>
                 <h1>BG <span>Tech</span></h1>
             </div>
-            <nav>
+            <nav id="sidebar-nav">
                 <div class="nav-section-label">Painel</div>
                 <button class="nav-btn active" data-tab="overview" onclick="window.CFO.navigate('overview')"><i
                         data-lucide="layout-dashboard" width="18" height="18"></i> Visão Geral</button>
@@ -117,9 +113,9 @@
 
                 <div class="nav-section-label">Financeiro</div>
                 <button class="nav-btn" data-tab="projecoes" onclick="window.CFO.navigate('projecoes')"><i
-                        data-lucide="crystal-ball" width="18" height="18"></i> Projeções</button>
+                        data-lucide="target" width="18" height="18"></i> Projeções</button>
 
-                <div class="nav-section-label">Ajuda</div>
+                <div class="nav-section-label">Ações</div>
                 <button class="nav-btn" data-tab="academia" onclick="window.CFO.navigate('academia')"><i
                         data-lucide="graduation-cap" width="18" height="18"></i> 🎓 Academia CFO</button>
             </nav>
@@ -137,8 +133,8 @@
                 <!-- Page header -->
                 <div class="page-header">
                     <div>
-                        <button id="btn-menu" class="btn-icon" style="display:none"><i data-lucide="menu" width="24"
-                                height="24"></i></button>
+                        <button id="btn-menu-mobile" class="btn-icon" style="display:none"><i data-lucide="menu"
+                                width="24" height="24"></i></button>
                         <h2 id="page-title" class="page-title font-title">Visão Geral</h2>
                         <p class="page-sub"><i data-lucide="radio" width="14" height="14"></i> <span
                                 id="page-sub-text">Indicadores-chave em tempo real.</span></p>
@@ -176,15 +172,6 @@
                                 <option value="all">📁 Todos Projetos</option>
                             </select>
                         </div>
-                        <button id="btn-add-gasto" class="btn-primary" style="display:none"
-                            onclick="window.CFO.openDrawer(null,'despesa')"><i data-lucide="plus" width="18"
-                                height="18"></i> Novo Lançamento</button>
-                        <button id="btn-add-receita" class="btn-success" style="display:none"
-                            onclick="window.CFO.openDrawer(null,'entrada')"><i data-lucide="plus" width="18"
-                                height="18"></i> Nova Receita</button>
-                        <button id="btn-add-proj" class="btn-primary" style="display:none"
-                            onclick="window.CFO.openProjDrawer()"><i data-lucide="plus" width="18" height="18"></i> Nova
-                            Projeção</button>
                         <button id="btn-export" class="btn-ghost" onclick="window.CFO.openExportModal()"><i
                                 data-lucide="download" width="16" height="16"></i> Exportar</button>
                     </div>
@@ -250,369 +237,14 @@
                     </div>
                 </div>
 
-                <!-- ═══ VIEW: DRE ═══ -->
-                <div id="view-dre" class="view">
-                    <div class="dre-quote"><i data-lucide="info" width="20" height="20"
-                            style="color:var(--primary);flex-shrink:0"></i>
-                        <div><strong id="dre-lbl-periodo">Período</strong> <span
-                                style="color:var(--text-dim);font-size:13px">— Todas as linhas são clicáveis para ver os
-                                lançamentos detalhados.</span></div>
-                    </div>
-                    <div class="charts-row" style="margin-bottom:32px">
-                        <div class="card chart-card">
-                            <div class="chart-header"><span class="chart-title font-title"><i data-lucide="bar-chart-3"
-                                        width="18" height="18" style="color:var(--primary)"></i> Receita vs
-                                    Custos</span></div>
-                            <div id="chart-dre-bar" class="chart-area"></div>
-                        </div>
-                        <div class="card chart-card">
-                            <div class="chart-header"><span class="chart-title font-title"><i data-lucide="trending-up"
-                                        width="18" height="18" style="color:var(--primary)"></i> Resultado
-                                    Líquido</span></div>
-                            <div id="chart-dre-line" class="chart-area"></div>
-                        </div>
-                    </div>
-                    <div class="card" style="overflow:hidden">
-                        <div class="table-wrap">
-                            <table class="dre-table">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align:left;min-width:280px">ITEM</th>
-                                        <th>MÊS / PERÍODO</th>
-                                        <th>YTD (Acumulado)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dre-tbody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══ VIEW: RECEITAS ═══ -->
-                <div id="view-entradas" class="view">
-                    <div style="position:relative;margin-bottom:20px"><i data-lucide="search" width="18" height="18"
-                            style="position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-dim)"></i><input
-                            id="search-entradas" class="form-input" style="padding-left:48px"
-                            placeholder="Buscar receitas..."></div>
-                    <div class="card" style="overflow:hidden">
-                        <div class="table-wrap">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Descrição</th>
-                                        <th>Categoria</th>
-                                        <th>Recorrência</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right">Valor</th>
-                                        <th style="text-align:center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-entradas"></tbody>
-                            </table>
-                        </div>
-                        <div id="entradas-empty"
-                            style="display:none;text-align:center;padding:60px 24px;color:var(--text-dim)"><i
-                                data-lucide="inbox" width="48" height="48" style="opacity:.3;margin-bottom:16px"></i>
-                            <p style="font-weight:700;font-size:15px">Nenhuma receita encontrada no período.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══ VIEW: FIXOS ═══ -->
-                <div id="view-fixos" class="view">
-                    <div style="position:relative;margin-bottom:20px"><i data-lucide="search" width="18" height="18"
-                            style="position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-dim)"></i><input
-                            id="search-gastos" class="form-input" style="padding-left:48px"
-                            placeholder="Buscar custos..."></div>
-                    <div class="card" style="overflow:hidden">
-                        <div class="table-wrap">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Descrição</th>
-                                        <th>Categoria</th>
-                                        <th>Recorrência</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right">Valor</th>
-                                        <th style="text-align:center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-body"></tbody>
-                            </table>
-                        </div>
-                        <div id="table-empty"
-                            style="display:none;text-align:center;padding:60px 24px;color:var(--text-dim)"><i
-                                data-lucide="inbox" width="48" height="48" style="opacity:.3;margin-bottom:16px"></i>
-                            <p style="font-weight:700;font-size:15px">Nenhum lançamento encontrado.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══ VIEW: UNICOS ═══ -->
-                <div id="view-unicos" class="view">
-                    <div style="position:relative;margin-bottom:20px"><i data-lucide="search" width="18" height="18"
-                            style="position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-dim)"></i><input
-                            id="search-unicos" class="form-input" style="padding-left:48px"
-                            placeholder="Buscar gastos variáveis..."></div>
-                    <div class="card" style="overflow:hidden">
-                        <div class="table-wrap">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Descrição</th>
-                                        <th>Categoria</th>
-                                        <th>Recorrência</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right">Valor</th>
-                                        <th style="text-align:center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-body-unicos"></tbody>
-                            </table>
-                        </div>
-                        <div id="table-empty-unicos"
-                            style="display:none;text-align:center;padding:60px 24px;color:var(--text-dim)"><i
-                                data-lucide="inbox" width="48" height="48" style="opacity:.3;margin-bottom:16px"></i>
-                            <p style="font-weight:700;font-size:15px">Nenhum gasto variável encontrado.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══ VIEW: ANNUAL ═══ -->
-                <div id="view-annual" class="view">
-                    <h3 id="annual-title" class="font-title" style="font-size:24px;font-weight:900;margin-bottom:24px">
-                        Balanço Anual</h3>
-                    <div class="annual-summary" style="margin-bottom:32px">
-                        <div class="annual-summary-card income card">
-                            <div
-                                style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--success);margin-bottom:8px">
-                                Total Receitas</div>
-                            <div id="annual-total-in" class="font-title"
-                                style="font-size:24px;font-weight:900;color:var(--success)">R$ 0</div>
-                        </div>
-                        <div class="annual-summary-card expense card">
-                            <div
-                                style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--danger);margin-bottom:8px">
-                                Total Despesas</div>
-                            <div id="annual-total-out" class="font-title"
-                                style="font-size:24px;font-weight:900;color:var(--danger)">R$ 0</div>
-                        </div>
-                        <div class="annual-summary-card balance card">
-                            <div
-                                style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:8px">
-                                Saldo Anual</div>
-                            <div id="annual-saldo" class="font-title" style="font-size:24px;font-weight:900">R$ 0</div>
-                        </div>
-                    </div>
-                    <div id="annual-grid" class="annual-grid"></div>
-                </div>
-
-                <!-- ═══ VIEW: PROJEÇÕES ═══ -->
-                <div id="view-projecoes" class="view">
-                    <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;flex-wrap:wrap">
-                        <label style="font-size:13px;font-weight:700;color:var(--text-muted)">Horizonte:</label>
-                        <select id="p-horizonte" class="form-input" style="width:140px;padding:10px 14px"
-                            onchange="window.CFO.navigate('projecoes')">
-                            <option value="3">3 meses</option>
-                            <option value="6" selected>6 meses</option>
-                            <option value="12">12 meses</option>
-                        </select>
-                    </div>
-                    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
-                        <div class="card stat-card c-success">
-                            <div class="stat-label">📈 Entradas Projetadas</div>
-                            <div id="p-v-entradas" class="stat-value font-title">R$ 0</div>
-                        </div>
-                        <div class="card stat-card c-danger">
-                            <div class="stat-label">📉 Saídas Projetadas</div>
-                            <div id="p-v-saidas" class="stat-value font-title">R$ 0</div>
-                        </div>
-                        <div id="p-card-saldo" class="card stat-card c-success">
-                            <div class="stat-label">📊 Saldo Projetado</div>
-                            <div id="p-v-saldo" class="stat-value font-title">R$ 0</div>
-                        </div>
-                    </div>
-                    <div class="card" style="overflow:hidden;margin-bottom:24px">
-                        <div class="table-wrap">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Mês</th>
-                                        <th>Descrição</th>
-                                        <th>Categoria</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right">Valor</th>
-                                        <th style="text-align:center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="p-table-body"></tbody>
-                            </table>
-                        </div>
-                        <div id="p-table-empty"
-                            style="display:none;text-align:center;padding:60px 24px;color:var(--text-dim)"><i
-                                data-lucide="telescope" width="48" height="48"
-                                style="opacity:.3;margin-bottom:16px"></i>
-                            <p style="font-weight:700;font-size:15px">Nenhuma projeção cadastrada.</p>
-                        </div>
-                    </div>
-                    <div id="p-quarterly-breakdown" class="card quarterly-breakdown"></div>
-                </div>
-
-                <!-- ═══ VIEW: ACADEMIA CFO ═══ -->
-                <div id="view-academia" class="view">
-                    <div class="academia-hero">
-                        <div class="academia-hero-icon">🎓</div>
-                        <h3 class="font-title" style="font-size:28px;font-weight:900;margin-bottom:8px">Academia CFO
-                        </h3>
-                        <p style="color:var(--text-muted);font-size:14px;max-width:600px">Entenda cada indicador do seu
-                            dashboard. Conhecimento é a base de decisões financeiras inteligentes.</p>
-                    </div>
-
-                    <!-- Config: Alíquota -->
-                    <div class="card academia-config-card" style="margin-bottom:32px">
-                        <div
-                            style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-                            <div>
-                                <div
-                                    style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px">
-                                    ⚙️ Configuração Fiscal</div>
-                                <div style="font-size:18px;font-weight:900;color:white" class="font-title">Regime: <span
-                                        id="cfg-regime" style="color:var(--primary)">Simples Nacional</span></div>
-                                <div style="font-size:14px;color:var(--text-muted);margin-top:4px">Alíquota atual:
-                                    <strong id="cfg-aliquota" style="color:var(--warning)">6.0%</strong>
-                                </div>
-                            </div>
-                            <button class="btn-primary" onclick="window.CFO.openTaxModal()" style="padding:12px 20px">
-                                <i data-lucide="settings" width="16" height="16"></i> Alterar Alíquota
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="academia-grid">
-                        <!-- Card: Caixa Disponível -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon"
-                                style="background:rgba(14,165,233,0.15);color:var(--primary)"><i data-lucide="wallet"
-                                    width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">💰 Caixa
-                                Disponível</h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7">O dinheiro que a empresa
-                                tem <strong style="color:white">disponível agora</strong> para pagar contas, investir ou
-                                operar. Não inclui valores a receber — é o saldo real na conta.</p>
-                            <div class="academia-formula">Caixa = Saldo bancário atual</div>
-                        </div>
-
-                        <!-- Card: Runway -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon"
-                                style="background:rgba(245,158,11,0.15);color:var(--warning)"><i data-lucide="hourglass"
-                                    width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">🔥 Runway
-                            </h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7">"Quanto tempo a empresa
-                                <strong style="color:white">sobrevive</strong> sem nenhuma receita nova?" Se o Runway é
-                                3 meses, você tem 3 meses de caixa para cobrir todas as despesas. Abaixo de 3 meses =
-                                <span style="color:var(--danger);font-weight:700">alerta vermelho</span>.
-                            </p>
-                            <div class="academia-formula">Runway = Caixa ÷ Burn Rate mensal</div>
-                        </div>
-
-                        <!-- Card: Receita Bruta vs Líquida -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon"
-                                style="background:rgba(16,185,129,0.15);color:var(--success)"><i
-                                    data-lucide="trending-up" width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">📈 Receita
-                                Bruta vs Líquida</h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7"><strong
-                                    style="color:white">Bruta</strong> é tudo que entrou. <strong
-                                    style="color:white">Líquida</strong> é o que sobra após impostos. A diferença é
-                                crucial: faturar R$100k com imposto de 6% significa que você realmente tem R$94k.</p>
-                            <div class="academia-formula">Líquida = Bruta − Impostos</div>
-                        </div>
-
-                        <!-- Card: MRR -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon"
-                                style="background:rgba(14,165,233,0.15);color:var(--primary)"><i data-lucide="repeat"
-                                    width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">🔄 MRR
-                                (Receita Mensal Recorrente)</h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7">Quanto dinheiro entra
-                                <strong style="color:white">todo mês de forma previsível</strong>. Mensalidades de
-                                clientes SaaS, contratos recorrentes. Quanto maior o MRR, mais previsível e saudável é o
-                                negócio. Setup e projetos avulsos <span style="color:var(--warning)">não contam</span>.
-                            </p>
-                            <div class="academia-formula">MRR = Soma das receitas com recorrência "mensal"</div>
-                        </div>
-
-                        <!-- Card: Burn Rate -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon" style="background:rgba(239,68,68,0.15);color:var(--danger)">
-                                <i data-lucide="flame" width="24" height="24"></i>
-                            </div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">🔻 Burn Rate
-                            </h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7">Quanto a empresa <strong
-                                    style="color:white">gasta por mês</strong> para existir. Inclui custos fixos
-                                (escritório, salários), variáveis (marketing, freelancers) e impostos. Se o Burn Rate é
-                                maior que a receita, a empresa está <span
-                                    style="color:var(--danger);font-weight:700">queimando caixa</span>.</p>
-                            <div class="academia-formula">Burn Rate = Fixos + Variáveis + Impostos</div>
-                        </div>
-
-                        <!-- Card: Fixos vs Variáveis -->
-                        <div class="card academia-card">
-                            <div class="academia-card-icon" style="background:rgba(168,85,247,0.15);color:#a855f7"><i
-                                    data-lucide="layers" width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">🏢 Custos
-                                Fixos vs ⚡ Variáveis</h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7"><strong
-                                    style="color:white">Fixos</strong>: gastos que existem todo mês independente do
-                                faturamento (contabilidade, hospedagem, pró-labore). <strong
-                                    style="color:white">Variáveis</strong>: gastos que flutuam (marketing, freelancers
-                                por projeto, taxas de pagamento).</p>
-                            <div class="academia-formula">Flexibilidade → Variáveis são mais fáceis de cortar em crise
-                            </div>
-                        </div>
-
-                        <!-- Card: DRE -->
-                        <div class="card academia-card" style="grid-column: 1 / -1">
-                            <div class="academia-card-icon"
-                                style="background:rgba(14,165,233,0.15);color:var(--primary)"><i
-                                    data-lucide="file-bar-chart" width="24" height="24"></i></div>
-                            <h4 class="font-title" style="font-size:18px;font-weight:800;margin-bottom:8px">📊 DRE
-                                Gerencial (Demonstrativo de Resultado)</h4>
-                            <p style="color:var(--text-muted);font-size:13px;line-height:1.7;margin-bottom:16px">O DRE é
-                                o "raio-x financeiro" da empresa. Ele mostra de onde o dinheiro veio e para onde foi,
-                                linha a linha. Se o Resultado Líquido é positivo, a operação é lucrativa. Se é negativo,
-                                ação urgente é necessária.</p>
-                            <div class="academia-dre-flow">
-                                <div class="dre-flow-step success"><span>1. Receita Bruta</span><small>Tudo que
-                                        entrou</small></div>
-                                <div class="dre-flow-arrow">→</div>
-                                <div class="dre-flow-step danger"><span>2. (−) Variáveis</span><small>Marketing,
-                                        taxas</small></div>
-                                <div class="dre-flow-arrow">→</div>
-                                <div class="dre-flow-step primary"><span>3. = Margem Bruta</span><small>Receita −
-                                        Variáveis</small></div>
-                                <div class="dre-flow-arrow">→</div>
-                                <div class="dre-flow-step warning"><span>4. (−) Fixos</span><small>Salários,
-                                        office</small></div>
-                                <div class="dre-flow-arrow">→</div>
-                                <div class="dre-flow-step danger"><span>5. (−) Impostos</span><small>Simples
-                                        Nacional</small></div>
-                                <div class="dre-flow-arrow">→</div>
-                                <div class="dre-flow-step highlight"><span>6. = Resultado</span><small>Lucro ou
-                                        prejuízo</small></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- OUTRAS VIEWS (Renderizadas via JS) -->
+                <div id="view-dre" class="view"></div>
+                <div id="view-entradas" class="view"></div>
+                <div id="view-fixos" class="view"></div>
+                <div id="view-unicos" class="view"></div>
+                <div id="view-annual" class="view"></div>
+                <div id="view-projecoes" class="view"></div>
+                <div id="view-academia" class="view"></div>
             </div>
         </div>
     </div>
@@ -623,285 +255,21 @@
                 data-lucide="layout-dashboard" width="20" height="20"></i>Geral</button>
         <button class="m-btn" data-tab="dre" onclick="window.CFO.navigate('dre')"><i data-lucide="scroll-text"
                 width="20" height="20"></i>DRE</button>
-        <button class="m-btn" data-tab="entradas" onclick="window.CFO.navigate('entradas')"><i data-lucide="trending-up"
+        <button class="m-btn" data-tab="receitas" onclick="window.CFO.navigate('entradas')"><i data-lucide="trending-up"
                 width="20" height="20"></i>Receitas</button>
         <button class="m-btn" data-tab="fixos" onclick="window.CFO.navigate('fixos')"><i data-lucide="building-2"
                 width="20" height="20"></i>Fixos</button>
-        <button class="m-btn" data-tab="projecoes" onclick="window.CFO.navigate('projecoes')"><i data-lucide="target"
-                width="20" height="20"></i>Projeções</button>
-        <button class="m-btn" id="btn-menu" onclick="document.querySelector('.sidebar').classList.toggle('open')"><i
-                data-lucide="menu" width="20" height="20"></i>Menu</button>
-    </div>
+        <button class="m-btn" id="btn-side-toggle"
+            onclick="document.querySelector('.sidebar').classList.toggle('open')"><i data-lucide="menu" width="20"
+                height="20"></i>Menu</button>
     </div>
 
-    <!-- ═══ DRAWER: Lançamentos ═══ -->
+    <!-- ═══ MODALS / DRAWERS ═══ -->
     <div id="overlay" class="drawer-overlay"></div>
-    <div id="drawer" class="drawer">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-            <h3 id="drawer-title" class="font-title" style="font-size:24px;font-weight:900">Novo Lançamento</h3>
-            <button class="btn-icon" onclick="window.CFO.closeDrawer()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div class="drawer-mode-tabs">
-            <button id="tab-modo-despesa" class="btn-ghost active" onclick="window.CFO.setDrawerMode('despesa')"><i
-                    data-lucide="minus-circle" width="16" height="16"></i> Despesa</button>
-            <button id="tab-modo-entrada" class="btn-ghost" onclick="window.CFO.setDrawerMode('entrada')"><i
-                    data-lucide="plus-circle" width="16" height="16"></i> Receita</button>
-        </div>
-        <div id="sub-type-tabs" class="drawer-mode-tabs">
-            <button id="tab-fixos" class="btn-ghost active" onclick="window.CFO.setDrawerSubType('fixos')">Custo
-                Fixo</button>
-            <button id="tab-unicos" class="btn-ghost" onclick="window.CFO.setDrawerSubType('unicos')">Gasto
-                Variável</button>
-        </div>
-        <input type="hidden" id="f-id">
-        <div class="form-group"><label id="lbl-nome" class="form-label"><i data-lucide="tag" width="14" height="14"></i>
-                O que está sendo pago? *</label><input id="f-nome" class="form-input" placeholder="Ex: Servidor Cloud">
-        </div>
-        <div class="form-grid">
-            <div class="form-group"><label class="form-label"><i data-lucide="dollar-sign" width="14" height="14"></i>
-                    Valor (R$) *</label><input id="f-valor" class="form-input" data-mask="money" placeholder="0,00">
-            </div>
-            <div class="form-group"><label class="form-label"><i data-lucide="calendar" width="14" height="14"></i> Data
-                    *</label><input id="f-data" type="date" class="form-input"></div>
-        </div>
-        <div class="form-grid">
-            <div class="form-group"><label class="form-label"><i data-lucide="folder" width="14" height="14"></i>
-                    Categoria</label><select id="f-cat" class="form-input"></select></div>
-            <div class="form-group"><label class="form-label"><i data-lucide="check-circle" width="14" height="14"></i>
-                    Status</label><select id="f-status" class="form-input">
-                    <option value="Confirmado">Confirmado</option>
-                    <option value="Previsto">Previsto</option>
-                    <option value="Cancelado">Cancelado</option>
-                </select></div>
-        </div>
-        <div class="form-group"><label class="form-label"><i data-lucide="repeat" width="14" height="14"></i>
-                Recorrência</label><select id="f-recor" class="form-input">
-                <option value="unico">Único</option>
-                <option value="mensal">Mensal (12x)</option>
-            </select></div>
-        <div class="form-grid">
-            <div class="form-group"><label class="form-label"><i data-lucide="user" width="14" height="14"></i>
-                    Cliente</label><input id="f-cliente" class="form-input" placeholder="Opcional"></div>
-            <div class="form-group"><label class="form-label"><i data-lucide="briefcase" width="14" height="14"></i>
-                    Projeto</label><input id="f-projeto" class="form-input" placeholder="Opcional"></div>
-        </div>
-        <!-- Tags / Centros de Custo -->
-        <div class="form-group">
-            <label class="form-label"><i data-lucide="hash" width="14" height="14"></i> Centros de Custo (Tags)</label>
-            <div id="f-tags-wrap" class="tags-input-wrap">
-                <div id="f-tags-chips" class="tags-chips"></div>
-                <input id="f-tags-input" class="tags-input"
-                    placeholder="Ex: Marketing, Infra... (Enter para adicionar)">
-            </div>
-            <div class="tags-suggestions">
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('Marketing')">Marketing</button>
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('Infra')">Infra</button>
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('RH')">RH</button>
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('Produto')">Produto</button>
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('Vendas')">Vendas</button>
-                <button type="button" class="tag-suggest" onclick="window.CFO.addTag('Financeiro')">Financeiro</button>
-            </div>
-        </div>
-        <div class="form-group"><label class="form-label"><i data-lucide="file-text" width="14" height="14"></i>
-                Observação</label><textarea id="f-desc" class="form-input" rows="3"
-                placeholder="Anotações internas..."></textarea></div>
-        <button id="btn-save" class="btn-primary" style="width:100%;justify-content:center;padding:16px"
-            onclick="window.CFO.save()"><i data-lucide="save"></i> Salvar Lançamento</button>
-    </div>
-
-    <!-- ═══ DRAWER: Projeções ═══ -->
-    <div id="proj-overlay" class="drawer-overlay"></div>
-    <div id="proj-drawer" class="drawer">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-            <h3 id="proj-drawer-title" class="font-title" style="font-size:24px;font-weight:900">Nova Projeção</h3>
-            <button class="btn-icon" onclick="window.CFO.closeProjDrawer()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div class="proj-type-tabs">
-            <button id="ptab-saida" class="btn-ghost active" onclick="window.CFO.setProjType('saida')"><i
-                    data-lucide="minus-circle" width="16" height="16"></i> Saída</button>
-            <button id="ptab-entrada" class="btn-ghost" onclick="window.CFO.setProjType('entrada')"><i
-                    data-lucide="plus-circle" width="16" height="16"></i> Entrada</button>
-        </div>
-        <input type="hidden" id="pf-id">
-        <div class="form-group"><label class="form-label"><i data-lucide="tag" width="14" height="14"></i> Descrição
-                *</label><input id="pf-nome" class="form-input" placeholder="Ex: Novo contrato SaaS"></div>
-        <div class="form-grid">
-            <div class="form-group"><label class="form-label"><i data-lucide="dollar-sign" width="14" height="14"></i>
-                    Valor (R$) *</label><input id="pf-valor" class="form-input" data-mask="money" placeholder="0,00">
-            </div>
-            <div class="form-group"><label class="form-label"><i data-lucide="calendar" width="14" height="14"></i> Mês
-                    Alvo *</label><input id="pf-mes" type="month" class="form-input"></div>
-        </div>
-        <div class="form-grid">
-            <div class="form-group"><label class="form-label"><i data-lucide="folder" width="14" height="14"></i>
-                    Categoria</label><select id="pf-cat" class="form-input"></select></div>
-            <div class="form-group"><label class="form-label"><i data-lucide="check-circle" width="14" height="14"></i>
-                    Status</label><select id="pf-status" class="form-input">
-                    <option value="Previsto">Previsto</option>
-                    <option value="Confirmado">Confirmado</option>
-                </select></div>
-        </div>
-        <button id="btn-proj-save" class="btn-primary" style="width:100%;justify-content:center;padding:16px"
-            onclick="window.CFO.saveProj()"><i data-lucide="save"></i> Salvar Projeção</button>
-    </div>
-
-    <!-- ═══ MODALS ═══ -->
-    <!-- DRE Drilldown -->
-    <div id="dre-overlay" class="drawer-overlay"></div>
-    <div id="dre-modal" class="modal-month dre-drill-modal">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-            <div>
-                <h3 id="dre-modal-title" class="font-title" style="font-size:22px;font-weight:900"></h3>
-                <p id="dre-modal-sub" style="color:var(--text-dim);font-size:13px;margin-top:4px"></p>
-            </div>
-            <button class="btn-icon" onclick="window.CFO.closeDREModal()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div class="dre-drill-summary">
-            <div style="flex:1">
-                <div
-                    style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px">
-                    Total</div>
-                <div id="dre-modal-total" class="font-title"
-                    style="font-size:22px;font-weight:900;color:var(--primary)">R$ 0</div>
-            </div>
-            <div style="flex:1">
-                <div
-                    style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px">
-                    Registros</div>
-                <div id="dre-modal-count" class="font-title" style="font-size:22px;font-weight:900">0</div>
-            </div>
-        </div>
-        <div class="table-wrap">
-            <table class="data-table" style="min-width:500px">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Cliente</th>
-                        <th>Projeto</th>
-                        <th style="text-align:right">Valor</th>
-                    </tr>
-                </thead>
-                <tbody id="dre-modal-tbody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Month Modal -->
-    <div id="month-overlay" class="drawer-overlay"></div>
-    <div id="month-modal" class="modal-month">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-            <h3 id="mm-title" class="font-title" style="font-size:22px;font-weight:900"></h3>
-            <button class="btn-icon" onclick="window.CFO.closeMonthModal()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div style="display:grid;gap:16px">
-            <div
-                style="display:flex;justify-content:space-between;padding:16px;background:var(--success-surface);border-radius:12px">
-                <span style="color:var(--success);font-weight:700">Receitas</span><span id="mm-rec"
-                    style="color:var(--success);font-weight:900"></span>
-            </div>
-            <div
-                style="display:flex;justify-content:space-between;padding:16px;background:var(--danger-surface);border-radius:12px">
-                <span style="color:var(--danger);font-weight:700">Custos Fixos</span><span id="mm-fix"
-                    style="color:var(--danger);font-weight:900"></span>
-            </div>
-            <div
-                style="display:flex;justify-content:space-between;padding:16px;background:var(--warning-surface);border-radius:12px">
-                <span style="color:var(--warning);font-weight:700">Variáveis + Impostos</span><span id="mm-var"
-                    style="color:var(--warning);font-weight:900"></span>
-            </div>
-            <div
-                style="display:flex;justify-content:space-between;padding:20px;border:2px solid var(--color-border);border-radius:12px">
-                <span style="font-weight:800;font-size:16px">Saldo do Mês</span><span id="mm-saldo" class="font-title"
-                    style="font-size:22px;font-weight:900"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Export Modal -->
-    <div id="export-overlay" class="drawer-overlay"></div>
-    <div id="export-modal" class="modal-month export-modal">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-            <h3 class="font-title" style="font-size:22px;font-weight:900"><i data-lucide="download" width="22"
-                    height="22" style="color:var(--primary)"></i> Exportar Relatório</h3>
-            <button class="btn-icon" onclick="window.CFO.closeExportModal()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div class="form-group"><label class="form-label">Formato</label><select id="exp-format" class="form-input">
-                <option value="csv">CSV (Planilha)</option>
-                <option value="pdf">PDF (Relatório)</option>
-            </select></div>
-        <div class="form-group"><label class="form-label">Período</label><select id="exp-period" class="form-input">
-                <option value="1">Último mês</option>
-                <option value="3">Últimos 3 meses</option>
-                <option value="6">Últimos 6 meses</option>
-                <option value="12">Ano completo</option>
-            </select></div>
-        <button class="btn-primary" style="width:100%;justify-content:center;padding:16px"
-            onclick="window.CFO.runExport()"><i data-lucide="download" width="18" height="18"></i> Gerar
-            Relatório</button>
-    </div>
-
-    <!-- Toasts -->
+    <div id="drawer" class="drawer"></div>
     <div id="toast-wrap"></div>
 
-    <!-- User email (hidden, for sidebar footer) -->
-    <span id="user-email" style="display:none"></span>
-
-    <!-- ═══ MODAL: Alíquota de Imposto ═══ -->
-    <div id="tax-overlay" class="drawer-overlay"></div>
-    <div id="tax-modal" class="modal-month" style="max-width:500px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-            <h3 class="font-title" style="font-size:22px;font-weight:900"><i data-lucide="calculator" width="20"
-                    height="20" style="color:var(--primary)"></i> Configuração Fiscal</h3>
-            <button class="btn-icon" onclick="window.CFO.closeTaxModal()"><i data-lucide="x" width="24"
-                    height="24"></i></button>
-        </div>
-        <div class="form-group">
-            <label class="form-label"><i data-lucide="building" width="14" height="14"></i> Regime Tributário</label>
-            <select id="tax-regime" class="form-input">
-                <option value="Simples Nacional">Simples Nacional</option>
-                <option value="Lucro Presumido">Lucro Presumido</option>
-                <option value="Lucro Real">Lucro Real</option>
-                <option value="MEI">MEI</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-label"><i data-lucide="percent" width="14" height="14"></i> Alíquota Efetiva (%)</label>
-            <input id="tax-rate" type="number" class="form-input" step="0.1" min="0" max="100" placeholder="6.0">
-        </div>
-        <div
-            style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-sm);padding:16px;margin-bottom:24px">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--warning);margin-bottom:8px">
-                📋 Referência — Simples Nacional (Anexo III)</div>
-            <div style="font-size:12px;color:var(--text-muted);line-height:1.6">
-                Até R$180k → <strong style="color:white">6.0%</strong><br>
-                R$180k–360k → <strong style="color:white">11.2%</strong><br>
-                R$360k–720k → <strong style="color:white">13.5%</strong><br>
-                R$720k–1.8M → <strong style="color:white">16.0%</strong><br>
-                R$1.8M–3.6M → <strong style="color:white">21.0%</strong>
-            </div>
-        </div>
-        <button class="btn-primary" style="width:100%;justify-content:center;padding:16px"
-            onclick="window.CFO.saveTaxConfig()">
-            <i data-lucide="save"></i> Salvar Configuração
-        </button>
-    </div>
-
-    <!-- Main JS -->
     <script type="module" src="js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) lucide.createIcons();
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW registration failed:', e));
-            }
-        });
-    </script>
 </body>
 
 </html>
