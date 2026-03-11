@@ -1,5 +1,5 @@
 const CONFIG = {
-  whatsappNumber: '5543999998888',
+  whatsappNumber: '5543999998888', // TODO: substituir pelo número real de WhatsApp comercial
   webhookUrl: '',
   webhookToken: '',
   supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co',
@@ -130,21 +130,14 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'janela_decisao', label: 'PASSO 6 DE 6',
-    title: 'Se identificarmos uma economia real na sua operação, quando você quer agir?',
-    desc: 'Isso define a prioridade do seu atendimento e o tipo de plano que vamos recomendar.',
-    type: 'options',
-    options: [
-      { icon: 'flame', title: 'Quero agir nos próximos 7 dias', sub: 'Preciso de resultado rápido' },
-      { icon: 'calendar-clock', title: 'Em 15 a 30 dias', sub: 'Quero organizar internamente primeiro' },
-      { icon: 'calendar', title: 'Em 1 a 3 meses', sub: 'Estou validando cenário e prioridade' },
-      { icon: 'book-open', title: 'Só estudando por enquanto', sub: 'Quero entender melhor antes de decidir' }
-    ]
+    id: 'teaser',
+    type: 'teaser',
+    label: ''
   },
   {
     id: 'contato', label: '',
-    title: 'Se a BG Tech identificar R$30k+ em desperdício na sua operação, você quer saber?',
-    desc: 'Deixe seus dados e receba o diagnóstico completo com as 3 ações de maior retorno pra sua empresa.',
+    title: 'Identificamos desperdício na sua operação. Para ver o custo exato e as 3 ações de maior retorno:',
+    desc: 'Deixe seus dados e desbloqueie o diagnóstico completo. Confidencial, sem spam.',
     type: 'text',
     fields: [
       { id: 'nome', placeholder: 'Como você prefere ser chamado?' },
@@ -178,8 +171,9 @@ const echos = {
     "Perfeito. Vamos priorizar ações de impacto imediato para os próximos 7 dias.",
     "Ótimo timing. Dá para estruturar a implementação com controle e previsibilidade.",
     "Faz sentido. Vamos montar um plano de maturação para você avançar no momento certo.",
-    "Entendemos. Mas enquanto você estuda, sua operação continua perdendo entre R$4k e R$15k/mês. O diagnóstico não compromete — os números vão falar por si."
+    "Entendemos. Mas enquanto você estuda, sua operação continua perdendo entre R$4k e R$15k/mês."
   ]
+  // Nota: janela_decisao agora é exibida na tela de resultado
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -538,10 +532,11 @@ function renderIntro() {
   body.innerHTML = `
     <div class="quiz-intro reveal visible">
       <h2 style="color: var(--text-1);">O Diagnóstico BG Tech</h2>
-      
+
       <div class="intro-social-proof">
-        <span><i data-lucide="check-circle" width="16"></i> 847 empresas já diagnosticadas</span>
+        <span><i data-lucide="check-circle" width="16"></i> Diagnóstico 100% gratuito</span>
         <span><i data-lucide="check-circle" width="16"></i> Resultado em menos de 3 minutos</span>
+        <span><i data-lucide="check-circle" width="16"></i> Sem compromisso</span>
       </div>
       <p style="color: var(--text-3);">Nos próximos 3 minutos você vai descobrir exatamente quanto dinheiro sua empresa está perdendo por mês e o porquê.</p>
       <p style="color: var(--text-3);">Não é estimativa genérica. É um cálculo baseado no perfil real da sua operação.</p>
@@ -573,6 +568,90 @@ function renderStep() {
       bar.style.width = `${(currentStep / (QUESTIONS.length - 1)) * 100}%`;
       bar.classList.remove('pulse-progress');
     }
+  }
+
+  if (q.type === 'teaser') {
+    const matI = answers.maturidade ?? 2;
+    const horasI = answers.horas_perdidas ?? 1;
+    const fatI = answers.faturamento ?? 1;
+
+    let partialScore = 38;
+    if (matI === 1) partialScore = 52;
+    if (matI === 2) partialScore = 61;
+    if (matI === 3) partialScore = 78;
+    if (matI === 4) partialScore = 92;
+    if (horasI >= 2) partialScore = Math.max(35, partialScore - 8);
+
+    const tScoreLabels = [
+      { max: 40, label: 'Operação em Risco', color: '#ef4444' },
+      { max: 60, label: 'Alerta Crítico', color: '#f97316' },
+      { max: 75, label: 'Em Transição', color: '#eab308' },
+      { max: 88, label: 'Estruturado', color: '#3b82f6' },
+      { max: 100, label: 'Alta Performance', color: '#10b981' },
+    ];
+    const tScoreCat = tScoreLabels.find(s => partialScore <= s.max);
+    const tCircleOffset = 251 - (251 * (partialScore / 100));
+
+    let minL = 4200, maxL = 8500;
+    if (fatI === 1) { minL = 14500; maxL = 22000; }
+    if (fatI === 2) { minL = 28500; maxL = 42000; }
+    if (fatI === 3) { minL = 65000; maxL = 98000; }
+    const blurRange = `R$ ${(minL / 1000).toFixed(0)}k a R$ ${(maxL / 1000).toFixed(0)}k`;
+
+    body.innerHTML = `
+      <div class="reveal visible" style="text-align: center;">
+        <span class="q-label">ANÁLISE CONCLUÍDA</span>
+        <h2 class="q-title" style="margin-bottom: 8px;">Analisamos 5 pontos da sua operação.</h2>
+        <p class="q-desc" style="margin-bottom: 24px;">Seu score de maturidade está calculado. O custo invisível está pronto.</p>
+
+        <div class="score-banner" style="margin-bottom: 24px;">
+          <div class="score-circle">
+            <svg viewBox="0 0 100 100">
+              <circle class="score-track" cx="50" cy="50" r="40"></circle>
+              <circle class="score-fill" id="teaser-circle" cx="50" cy="50" r="40"
+                style="stroke-dasharray: 251; stroke-dashoffset: 251; stroke: ${tScoreCat.color};"></circle>
+            </svg>
+            <div class="score-number">
+              <span class="score-val">${partialScore}</span>
+              <span class="score-max">/100</span>
+            </div>
+          </div>
+          <div class="score-text">
+            <span style="font-size: 13px; color: var(--text-3);">Maturidade Operacional</span>
+            <span class="score-category" style="color: ${tScoreCat.color};">${tScoreCat.label}</span>
+          </div>
+        </div>
+
+        <div class="teaser-locked-box">
+          <div class="teaser-lock-header">
+            <i data-lucide="lock" style="width: 22px; height: 22px; color: var(--blue);"></i>
+            <span>Custo Invisível Estimado</span>
+          </div>
+          <div class="teaser-blur-value">${blurRange} /mês</div>
+          <p class="teaser-unlock-hint">Desbloqueie para ver o número exato e as 3 ações prioritárias</p>
+        </div>
+
+        <button class="btn-primary btn-large btn-shimmer" id="teaser-unlock-btn" style="width: 100%; margin-bottom: 12px;">
+          Ver diagnóstico completo <i data-lucide="unlock" width="18"></i>
+        </button>
+        <p style="font-size: 12px; color: var(--text-3); margin-bottom: 20px;">Sem compromisso · 100% confidencial · Sem spam</p>
+
+        <div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      const tCirc = document.getElementById('teaser-circle');
+      if (tCirc) {
+        tCirc.style.transition = 'stroke-dashoffset 1.2s ease-out';
+        tCirc.style.strokeDashoffset = tCircleOffset;
+      }
+    }, 100);
+
+    document.getElementById('teaser-unlock-btn')?.addEventListener('click', () => nextStep());
+    body.querySelector('.js-prev')?.addEventListener('click', () => { currentStep--; renderStep(); });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    return;
   }
 
   if (q.type === 'options') {
@@ -637,8 +716,12 @@ function renderStep() {
       <h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
 
     q.fields.forEach(f => {
+      const inputType = f.id === 'whatsapp' ? 'tel' : 'text';
+      const inputMode = f.id === 'whatsapp' ? ' inputmode="numeric"' : '';
+      const autoCompleteMap = { nome: 'name', empresa: 'organization', whatsapp: 'tel' };
+      const autoComplete = autoCompleteMap[f.id] || 'off';
       html += `<div class="q-input-group">
-                <input type="text" class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" value="${textData[f.id] || ''}">
+                <input type="${inputType}"${inputMode} class="q-input" id="inp-${f.id}" placeholder="${f.placeholder}" autocomplete="${autoComplete}" value="${textData[f.id] || ''}">
                 <div class="q-error-msg" id="err-${f.id}"></div>
                </div>`;
     });
@@ -731,8 +814,6 @@ function runLoading() {
 
   const segName = QUESTIONS[0].options[answers.segmento].title;
   const fatIndex = answers.faturamento;
-  const decIndex = answers.janela_decisao;
-
   let basePerda = 6500;
   if (fatIndex === 1) basePerda = 14000;
   if (fatIndex === 2) basePerda = 32000;
@@ -742,7 +823,7 @@ function runLoading() {
     { icon: 'briefcase', text: `Mapeando gargalos na área de ${segName}...` },
     { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
     { icon: 'dollar-sign', text: `Calculando horas perdidas e sangria financeira...`, special: true },
-    { icon: 'activity', text: decIndex <= 1 ? 'Priorizando plano de execução acelerada...' : 'Priorizando plano de evolução por etapas...' },
+    { icon: 'activity', text: 'Priorizando automações com maior retorno imediato...' },
     { icon: 'target', text: 'Priorizando automações com maior retorno...' },
     { icon: 'file-check-2', text: 'Montando plano executivo...' }
   ];
@@ -809,14 +890,16 @@ function runLoading() {
 
 function showResult() {
   const body = document.getElementById('quiz-body');
-  const nome = textData.nome.split(' ')[0];
-  const empresa = textData.empresa;
+  const nome = (textData.nome || 'Você').split(' ')[0];
+  const empresa = textData.empresa || 'sua empresa';
 
   const fatIndex = answers.faturamento;
   const matIndex = answers.maturidade;
   const horasIndex = answers.horas_perdidas;
   const dorIndex = answers.dor;
-  const decIndex = answers.janela_decisao;
+  // janela_decisao será coletada na tela de resultado; default neutro
+  const decIndex = answers.janela_decisao ?? 1;
+
   let minLoss = 4200, maxLoss = 8500;
   if (fatIndex === 1) { minLoss = 14500; maxLoss = 22000; }
   if (fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
@@ -829,10 +912,7 @@ function showResult() {
   if (matIndex === 2) score = 61;
   if (matIndex === 3) score = 78;
   if (matIndex === 4) score = 92;
-
   if (horasIndex >= 2) score = Math.max(35, score - 8);
-  if (decIndex === 0) score = Math.max(30, score - 6);
-  if (decIndex === 3) score = Math.min(95, score + 5);
 
   const scoreLabels = [
     { max: 40, label: 'Operação em Risco', color: '#ef4444' },
@@ -844,9 +924,18 @@ function showResult() {
   const scoreCat = scoreLabels.find(s => score <= s.max);
   const circleOffset = 251 - (251 * (score / 100));
 
+  // Percentil comparativo baseado no score
+  const percentileText = score < 50
+    ? `Você está <strong>abaixo de 78% das empresas</strong> do seu segmento em maturidade operacional.`
+    : score < 70
+      ? `Você está <strong>abaixo de 55% das empresas</strong> do seu segmento em maturidade operacional.`
+      : score < 85
+        ? `Você está <strong>acima de 60% das empresas</strong> do seu segmento — ainda há espaço relevante para crescer.`
+        : `Você está <strong>no top 15% das empresas</strong> do seu segmento em maturidade operacional.`;
+
   const leadTemperature = (() => {
-    if (decIndex === 0 && (fatIndex >= 1 || horasIndex >= 2)) return 'Quente';
-    if (decIndex <= 1) return 'Morno';
+    if (fatIndex >= 2 && horasIndex >= 1) return 'Quente';
+    if (fatIndex >= 1 || horasIndex >= 2) return 'Morno';
     return 'Frio';
   })();
 
@@ -878,13 +967,10 @@ function showResult() {
     <div class="reveal visible" style="animation: fadeIn 0.5s ease-out;">
       <h2 class="q-title" style="font-size: 24px; margin-bottom: 8px;">${nome}, encontramos o problema.</h2>
       <p class="q-desc" style="font-size: 15px;">Processamos os dados da <strong>${empresa}</strong> contra o benchmark do seu setor.</p>
-      
+
       <div class="result-scarcity">
         <span class="scarcity-dot"></span>
-        <span>
-          <strong>3</strong> empresas do seu segmento estão em análise essa semana · 
-          <strong>2 vagas de implementação abertas</strong>
-        </span>
+        <span>Diagnóstico gerado às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} · ID: ${diagnosticId}</span>
       </div>
 
       <div class="score-banner">
@@ -904,7 +990,7 @@ function showResult() {
         </div>
       </div>
 
-      <p class="result-percentile">Você está entre os <strong>12% das empresas</strong> do seu segmento que chegaram até esta etapa. A maioria desiste antes de ver os números reais.</p>
+      <p class="result-percentile">${percentileText}</p>
 
       <div class="benchmark-box">
         <div class="benchmark-title"><i data-lucide="scan-search" style="width: 16px;"></i> Leitura de benchmark do seu segmento</div>
@@ -949,11 +1035,32 @@ function showResult() {
 
       <div class="diagnostic-id">ID do Diagnóstico: <strong>${diagnosticId}</strong></div>
 
+      <div class="result-janela-section">
+        <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text-1); margin-bottom: 16px;">
+          Agora que você viu os números: quando você quer agir?
+        </h3>
+        <div class="janela-opts-grid">
+          <button class="janela-opt-btn" data-dec="0" data-echo="Perfeito. Vamos priorizar ações de impacto imediato para os próximos 7 dias.">
+            <strong>Nos próximos 7 dias</strong><span>Preciso de resultado rápido</span>
+          </button>
+          <button class="janela-opt-btn" data-dec="1" data-echo="Ótimo timing. Dá para estruturar a implementação com controle e previsibilidade.">
+            <strong>Em 15 a 30 dias</strong><span>Quero organizar internamente primeiro</span>
+          </button>
+          <button class="janela-opt-btn" data-dec="2" data-echo="Faz sentido. Vamos montar um plano de maturação para você avançar no momento certo.">
+            <strong>Em 1 a 3 meses</strong><span>Estou validando cenário e prioridade</span>
+          </button>
+          <button class="janela-opt-btn" data-dec="3" data-echo="Entendemos. Mas enquanto você estuda, sua operação continua perdendo entre R$4k e R$15k/mês.">
+            <strong>Só estudando por enquanto</strong><span>Quero entender melhor antes de decidir</span>
+          </button>
+        </div>
+        <div class="janela-echo-msg" id="janela-echo-msg" style="display: none;"></div>
+      </div>
+
       <div class="result-cta-primary">
         <div class="cta-primary-icon"><i data-lucide="phone-call" width="22"></i></div>
         <div class="cta-primary-text">
           <strong>Um especialista BG Tech vai te chamar</strong>
-          <span>em até 20 minutos úteis no WhatsApp informado</span>
+          <span id="result-sla-copy">${slaCopy}</span>
         </div>
         <div class="cta-primary-check">✓</div>
       </div>
@@ -1007,6 +1114,44 @@ function showResult() {
     });
   }, 100);
 
+  // Janela de decisão pós-resultado
+  const janelaTitles = ['Quero agir nos próximos 7 dias', 'Em 15 a 30 dias', 'Em 1 a 3 meses', 'Só estudando por enquanto'];
+  document.querySelectorAll('.janela-opt-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const decIdx = parseInt(this.dataset.dec);
+      const echo = this.dataset.echo;
+      answers.janela_decisao = decIdx;
+
+      document.querySelectorAll('.janela-opt-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+
+      const echoEl = document.getElementById('janela-echo-msg');
+      if (echoEl) { echoEl.textContent = echo; echoEl.style.display = 'block'; }
+
+      const slaEl = document.getElementById('result-sla-copy');
+      if (slaEl) {
+        slaEl.textContent = decIdx === 0
+          ? 'Atendimento prioritário: nossa equipe entra em contato em até 20 minutos.'
+          : decIdx <= 1
+            ? 'Atendimento recomendado: retorno da equipe em até 2 horas úteis.'
+            : 'Você pode receber o plano e avançar no seu timing com suporte consultivo.';
+      }
+
+      if (CONFIG.supabaseUrl && CONFIG.supabaseKey) {
+        fetch(`${CONFIG.supabaseUrl}/rest/v1/leads?diagnostico_id=eq.${diagnosticId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': CONFIG.supabaseKey,
+            'Authorization': `Bearer ${CONFIG.supabaseKey}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ janela_decisao: janelaTitles[decIdx] })
+        }).catch(err => console.error('❌ Erro ao atualizar janela:', err));
+      }
+    });
+  });
+
   // Secondary WhatsApp CTA
   document.getElementById('btn-wpp-now')?.addEventListener('click', () => {
     const msg = `Olá! Fiz o diagnóstico da BG Tech (ID ${diagnosticId}). Score ${score}/100, custo estimado de ${lostValueStr}/mês em ineficiências. Quero conversar sobre o plano para ${empresa}.`;
@@ -1019,7 +1164,8 @@ function showResult() {
   const dorOpt = QUESTIONS[2].options[answers.dor];
   const fatOpt = QUESTIONS[3].options[answers.faturamento];
   const matOpt = QUESTIONS[4].options[answers.maturidade];
-  const decOpt = QUESTIONS[5].options[answers.janela_decisao];
+  // janela_decisao não é pergunta do quiz — é selecionada na tela de resultado via PATCH separado
+  const decOpt = null;
 
   const supabasePayload = {
     nome: textData.nome,

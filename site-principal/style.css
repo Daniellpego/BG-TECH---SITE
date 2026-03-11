@@ -2575,15 +2575,12 @@ header.scrolled {
 .intro-social-proof {
   display: flex;
   justify-content: center;
-  gap: 24px;
-  font-size: 13px;
-  color: var(--text-3);
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 24px;
-  font-weight: 700;
-  background: var(--bg-light-alt);
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border-lt);
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .intro-social-proof span {
@@ -4259,6 +4256,437 @@ header.scrolled {
   --parallax-y: 0px;
 }
 
+/* ============================================================
+   UIPRO-CLI VISUAL REFINEMENTS — Março 2026
+   Design Intelligence: Social Proof-Focused + Dark Premium
+   Funnel colors: problem=red → process=orange → solution=green
+   Touch targets: 44px min | Transitions: 200-300ms ease-out
+   ============================================================ */
+
+/* ── TEASER STEP — Glassmorphism + Shimmer ── */
+.teaser-locked-box {
+  border: 1.5px solid rgba(0, 168, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(0, 168, 255, 0.06) 0%, rgba(56, 216, 255, 0.04) 100%);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px -8px rgba(0, 168, 255, 0.15), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.teaser-locked-box::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+  animation: teaser-shimmer 2.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes teaser-shimmer {
+  0%   { left: -100%; }
+  60%  { left: 140%; }
+  100% { left: 140%; }
+}
+
+.teaser-lock-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--blue-dark);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.teaser-blur-value {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-1);
+  filter: blur(7px);
+  user-select: none;
+  pointer-events: none;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.teaser-unlock-hint {
+  font-size: 13px;
+  color: var(--text-3);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── JANELA DECISÃO — Funnel Color Coding (uipro landing.csv) ── */
+/* Step 1 (Red/Problem) → Step 2 (Orange/Process) → Step 3 (Orange-Yellow) → Step 4 (Blue/Neutral) */
+.result-janela-section {
+  background: #fafbfc;
+  border: 1px solid rgba(10, 31, 68, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.janela-opts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.janela-opt-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  min-height: 64px; /* touch target uipro: 44px+ */
+  border: 1.5px solid rgba(10, 31, 68, 0.12);
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.25s ease-out, background 0.25s ease-out, box-shadow 0.25s ease-out, transform 0.15s ease-out;
+  position: relative;
+}
+
+.janela-opt-btn:hover {
+  border-color: rgba(0, 168, 255, 0.4);
+  background: rgba(0, 168, 255, 0.03);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(0, 168, 255, 0.2);
+}
+
+.janela-opt-btn:active {
+  transform: scale(0.98);
+}
+
+/* Funnel urgency colors — data-dec="0" = mais urgente */
+.janela-opt-btn[data-dec="0"] { border-left: 3px solid #22c55e; }
+.janela-opt-btn[data-dec="1"] { border-left: 3px solid #3b82f6; }
+.janela-opt-btn[data-dec="2"] { border-left: 3px solid #f97316; }
+.janela-opt-btn[data-dec="3"] { border-left: 3px solid #ef4444; }
+
+.janela-opt-btn[data-dec="0"].selected { border-color: #22c55e; background: rgba(34, 197, 94, 0.06); }
+.janela-opt-btn[data-dec="1"].selected { border-color: #3b82f6; background: rgba(59, 130, 246, 0.06); }
+.janela-opt-btn[data-dec="2"].selected { border-color: #f97316; background: rgba(249, 115, 22, 0.06); }
+.janela-opt-btn[data-dec="3"].selected { border-color: #ef4444; background: rgba(239, 68, 68, 0.06); }
+
+.janela-opt-btn strong {
+  font-size: 13px;
+  color: var(--text-1);
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+.janela-opt-btn span {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.4;
+}
+
+.janela-opt-btn.selected {
+  box-shadow: 0 2px 12px -4px rgba(0, 168, 255, 0.25);
+}
+
+.janela-opt-btn.selected strong {
+  color: var(--text-1);
+}
+
+/* Checkmark em selecionado */
+.janela-opt-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 14px;
+  font-weight: 900;
+  color: currentColor;
+  opacity: 0.7;
+}
+.janela-opt-btn[data-dec="0"].selected::after { color: #22c55e; }
+.janela-opt-btn[data-dec="1"].selected::after { color: #3b82f6; }
+.janela-opt-btn[data-dec="2"].selected::after { color: #f97316; }
+.janela-opt-btn[data-dec="3"].selected::after { color: #ef4444; }
+
+.janela-echo-msg {
+  padding: 14px 18px;
+  background: rgba(0, 168, 255, 0.07);
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--text-1);
+  line-height: 1.6;
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* ── INTRO SOCIAL PROOF — Circle icon backgrounds (Social Proof style) ── */
+.intro-social-proof span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 6px 12px;
+  background: rgba(0, 168, 255, 0.06);
+  border: 1px solid rgba(0, 168, 255, 0.15);
+  border-radius: 20px;
+}
+
+.intro-social-proof i {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+/* ── Q-OPTION — Selected check indicator ── */
+.q-option {
+  position: relative;
+}
+
+.q-option.selected::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blue);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Cpath d='M12.7 4.3a1 1 0 0 0-1.4 0L6.5 9.1 4.7 7.3a1 1 0 1 0-1.4 1.4l2.5 2.5a1 1 0 0 0 1.4 0l5.5-5.5a1 1 0 0 0 0-1.4z'/%3E%3C/svg%3E");
+  background-size: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0 2px 8px rgba(0, 168, 255, 0.4);
+  flex-shrink: 0;
+}
+
+/* ── LOADING STEP ACTIVE — Left border accent ── */
+.diag-step.active {
+  background: rgba(0, 168, 255, 0.04);
+  border-radius: 8px;
+  padding: 6px 10px 6px 10px;
+  border-left: 2px solid var(--blue);
+  opacity: 1;
+  color: var(--text-1);
+}
+
+.diag-step {
+  padding: 4px 10px;
+  border-left: 2px solid transparent;
+  transition: all 0.3s ease-out;
+  opacity: 0.4;
+}
+
+/* ── OPP BARS — Gradient fills ── */
+#bar-0 {
+  background: linear-gradient(90deg, var(--blue) 0%, var(--cyan) 100%) !important;
+}
+
+#bar-1 {
+  background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%) !important;
+}
+
+#bar-2 {
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%) !important;
+}
+
+/* ── PLAN STEPS — Timeline color-coding ── */
+.plan-step:nth-child(1) {
+  border-top: 3px solid #22c55e;
+}
+
+.plan-step:nth-child(2) {
+  border-top: 3px solid #3b82f6;
+}
+
+.plan-step:nth-child(3) {
+  border-top: 3px solid #8b5cf6;
+}
+
+/* ── SCORE BANNER — Enhanced on result screen ── */
+.result-box ~ .benchmark-box + * .score-banner,
+.score-banner {
+  background: linear-gradient(135deg, #f8faff 0%, #f0f9ff 100%);
+  border-color: rgba(0, 168, 255, 0.15);
+  box-shadow: 0 2px 12px -4px rgba(0, 168, 255, 0.1);
+}
+
+/* ── SCARCITY — Neutral blue for diagnostic ID (real info) ── */
+.result-scarcity {
+  background: rgba(0, 168, 255, 0.06);
+  border: 1px solid rgba(0, 168, 255, 0.18);
+}
+
+.scarcity-dot {
+  background: var(--blue);
+}
+
+@keyframes scarcityPulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 168, 255, 0.4); }
+  50%       { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 0 4px rgba(0, 168, 255, 0); }
+}
+
+/* ── HERO: WA CTA secundário ── */
+.btn-ghost-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  min-height: 44px; /* touch target */
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(230, 242, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  transition: color 0.25s ease-out, border-color 0.25s ease-out, background 0.25s ease-out;
+  white-space: nowrap;
+}
+
+.btn-ghost-subtle:hover {
+  color: rgba(230, 242, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── RESULT CTA SECONDARY — WhatsApp link upgraded ── */
+.result-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border: 1.5px solid rgba(34, 197, 94, 0.35);
+  border-radius: 12px;
+  background: rgba(34, 197, 94, 0.04);
+  color: #15803d;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s ease-out;
+  font-family: var(--font-display);
+  text-decoration: none;
+}
+
+.result-cta-secondary:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #166534;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px -6px rgba(34, 197, 94, 0.3);
+}
+
+/* ── BENCHMARK BOX — More prominent ── */
+.benchmark-box {
+  background: linear-gradient(135deg, rgba(0, 168, 255, 0.06) 0%, rgba(56, 216, 255, 0.04) 100%);
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  border-left: 3px solid var(--blue);
+  box-shadow: 0 2px 12px -6px rgba(0, 168, 255, 0.15);
+}
+
+/* ── OPPORTUNITY HIGHLIGHT CARD — More premium ── */
+.opportunity-highlight-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);
+  box-shadow: 0 4px 24px -8px rgba(16, 185, 129, 0.2);
+}
+
+/* ── EXCLUSIVE PLAN — Upgrade visual ── */
+.exclusive-plan {
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  border: 1px solid rgba(0, 168, 255, 0.15);
+  box-shadow: 0 4px 24px -8px rgba(10, 31, 68, 0.08);
+}
+
+/* echo msg — reuses existing fadeInUp keyframe */
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .janela-opts-grid {
+    grid-template-columns: 1fr;
+  }
+  .btn-ghost-subtle {
+    font-size: 12px;
+    padding: 9px 14px;
+  }
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+  .plan-step:nth-child(1),
+  .plan-step:nth-child(2),
+  .plan-step:nth-child(3) {
+    border-top: none;
+    border-left: 3px solid;
+  }
+  .plan-step:nth-child(1) { border-left-color: #22c55e; }
+  .plan-step:nth-child(2) { border-left-color: #3b82f6; }
+  .plan-step:nth-child(3) { border-left-color: #8b5cf6; }
+}
+
 .grid-overlay {
   transform: translateY(var(--parallax-y, 0));
+}
+
+/* ============================================
+   MOBILE PRODUCTION FIXES — auditoria final
+   ============================================ */
+
+/* 1. iOS auto-zoom prevention: inputs < 16px disparam zoom automático */
+.q-input {
+  font-size: 16px;
+}
+
+/* 2. Momentum scroll nativo no iOS para o body do quiz */
+.quiz-body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 3. Safe area (notch/home bar) + teclado aberto no iOS */
+@supports (height: 100dvh) {
+  .quiz-container {
+    max-height: 90dvh;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Quiz ocupa tela inteira no mobile — safe area no bottom */
+  .quiz-overlay {
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .quiz-container {
+    max-height: 100dvh;
+    max-height: 100vh; /* fallback */
+    border-radius: 0;
+    min-height: unset;
+  }
+  .quiz-body {
+    /* Garante scroll quando teclado aberto empurra viewport */
+    max-height: calc(100dvh - 120px);
+    max-height: calc(100vh - 120px); /* fallback */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Touch target mínimo 44px em todos os botões do quiz */
+  .q-option,
+  .janela-opt-btn,
+  .js-next,
+  .js-prev {
+    min-height: 44px;
+  }
 }
