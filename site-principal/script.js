@@ -1296,3 +1296,107 @@ function showResult() {
     }
   }, { passive: true });
 })();
+
+// ============================================
+// HERO DASHBOARD — animated counters + cycling notifications
+// ============================================
+(function initHeroDashboard() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // --- Animated counters for stat cards ---
+  const statDefs = [
+    { selector: '.dash-stat-card:nth-child(1) .dash-stat-value', from: 0, to: 47800, prefix: 'R$ ', suffix: '', format: v => `R$ ${Math.round(v).toLocaleString('pt-BR')}` },
+    { selector: '.dash-stat-card:nth-child(2) .dash-stat-value', from: 0, to: 312,   prefix: '',    suffix: 'h', format: v => `${Math.round(v)}h` },
+    { selector: '.dash-stat-card:nth-child(3) .dash-stat-value', from: 12, to: 4,    prefix: '',    suffix: ' min', format: v => `${Math.round(v)} min` }
+  ];
+
+  function animateStatCounter(el, def, delay) {
+    setTimeout(() => {
+      const duration = 1800;
+      const start = performance.now();
+      const range = def.to - def.from;
+      const update = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = def.format(def.from + range * eased);
+        if (p < 1) requestAnimationFrame(update);
+        else {
+          el.textContent = def.format(def.to);
+          el.classList.add('updating');
+          setTimeout(() => el.classList.remove('updating'), 900);
+        }
+      };
+      requestAnimationFrame(update);
+    }, delay);
+  }
+
+  setTimeout(() => {
+    statDefs.forEach((def, i) => {
+      const el = document.querySelector(def.selector);
+      if (el) animateStatCounter(el, def, i * 200);
+    });
+  }, 800);
+
+  // --- Cycling notification events ---
+  const events = [
+    { icon: '⚡', title: 'Lead qualificado', sub: 'Distribuído em 12s' },
+    { icon: '📄', title: 'Proposta gerada', sub: 'Automação ativa' },
+    { icon: '✅', title: 'Follow-up enviado', sub: 'CRM atualizado' },
+    { icon: '🔔', title: 'Lead respondeu', sub: 'Agendamento confirmado' },
+    { icon: '💰', title: 'Fechamento registrado', sub: 'ROI calculado' },
+    { icon: '⚙️', title: 'Integração sincronizada', sub: 'ERP + CRM ok' },
+  ];
+
+  const notifs = document.querySelectorAll('.dash-notif');
+  if (!notifs.length) return;
+
+  let eventIdx = 0;
+  function cycleNotif(notifEl) {
+    eventIdx = (eventIdx + 1) % events.length;
+    const ev = events[eventIdx];
+    const iconEl = notifEl.querySelector('.dash-notif-icon');
+    const titleEl = notifEl.querySelector('.dash-notif-text strong');
+    const subEl = notifEl.querySelector('.dash-notif-text span');
+    if (iconEl) iconEl.textContent = ev.icon;
+    if (titleEl) titleEl.textContent = ev.title;
+    if (subEl) subEl.textContent = ev.sub;
+    notifEl.classList.remove('flash');
+    void notifEl.offsetWidth; // reflow to restart animation
+    notifEl.classList.add('flash');
+    setTimeout(() => notifEl.classList.remove('flash'), 700);
+  }
+
+  // Start cycling after initial animations complete
+  setTimeout(() => {
+    setInterval(() => cycleNotif(notifs[0]), 3500);
+    setTimeout(() => setInterval(() => cycleNotif(notifs[1]), 4200), 1800);
+  }, 4000);
+
+})();
+
+// ============================================
+// STAGGER automático em grids ao entrar na viewport
+// ============================================
+(function initGridStagger() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const gridSelectors = [
+    '.problems-grid', '.services-grid', '.segments-grid',
+    '.cases-grid', '.trust-bar-grid', '.founders-cards', '.process-steps'
+  ];
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const children = entry.target.querySelectorAll('[data-anim]');
+      children.forEach((child, i) => {
+        child.style.setProperty('--stagger-i', i);
+      });
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.1 });
+
+  gridSelectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => observer.observe(el));
+  });
+})();

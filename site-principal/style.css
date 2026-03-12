@@ -4690,3 +4690,106 @@ header.scrolled {
     min-height: 44px;
   }
 }
+/* ============================================
+   SCROLL ANIMATIONS v2 — more impact + spring
+   ============================================ */
+
+/* Upgrade transitions para spring easing */
+[data-anim="fade-up"] {
+  transform: translateY(60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="fade-in"] {
+  transform: translateY(20px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="fade-left"] {
+  transform: translateX(-60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="fade-right"] {
+  transform: translateX(60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="scale-up"] {
+  transform: scale(0.88) translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* rise — para cards de resultado e seções de destaque */
+[data-anim="rise"] {
+  transform: translateY(80px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="rise"].anim-visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* Stagger automático para filhos diretos de grids */
+.problems-grid   > *,
+.services-grid   > *,
+.segments-grid   > *,
+.cases-grid      > *,
+.trust-bar-grid  > *,
+.founders-cards  > *,
+.process-steps   > .process-step {
+  --stagger-i: 0;
+  transition-delay: calc(var(--stagger-i) * 90ms) !important;
+}
+
+/* Hover lift nos cards */
+.problem-card,
+.service-card,
+.segment-card,
+.case-card,
+.founder-card {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+}
+.problem-card:hover,
+.service-card:hover,
+.segment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 168, 255, 0.12);
+}
+.case-card:hover,
+.founder-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* Dashboard: notificações com pulse no ícone */
+.dash-notif-icon {
+  animation: iconPulse 3s ease-in-out infinite;
+}
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+/* Highlight de novo evento no dashboard */
+@keyframes notifFlash {
+  0%   { background: rgba(0,168,255,0.18); border-color: rgba(0,168,255,0.5); }
+  100% { background: rgba(255,255,255,0.03); border-color: rgba(0,170,255,0.15); }
+}
+.dash-notif.flash {
+  animation: notifFlash 0.6s ease forwards !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Stat card: flash verde ao atualizar valor */
+@keyframes statUpdate {
+  0%   { color: #34D399; }
+  100% { color: #fff; }
+}
+.dash-stat-value.updating {
+  animation: statUpdate 0.8s ease forwards;
+}
