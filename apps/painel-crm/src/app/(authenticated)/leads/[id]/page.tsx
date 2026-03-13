@@ -8,7 +8,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, MessageCircle, Phone, Mail, Users, FileText,
   RefreshCw, FileCheck, Settings, ExternalLink, Calendar,
-  Trash2, Edit2, Loader2,
+  Trash2, Edit2, Loader2, Bot, Sparkles,
 } from 'lucide-react'
 import { PageTransition, StaggerContainer, StaggerItem } from '@/components/motion'
 import { PageTitle } from '@/components/page-title'
@@ -49,8 +49,11 @@ import {
   type LeadTemperatura,
   type AtividadeTipo,
 } from '@/types/database'
+import { useGroqAnalysis } from '@/hooks/use-groq'
 import { useToast } from '@/components/toast-provider'
 import { formatCurrency, formatDate, formatTimeAgo, formatWhatsAppUrl, formatPhone } from '@/lib/format'
+
+const AI_PREFIX = '\u{1F916} Qualificação IA'
 
 const ACTIVITY_ICONS: Record<string, typeof FileText> = {
   nota: FileText,
@@ -76,11 +79,56 @@ export default function LeadDetailPage() {
   const deleteLead = useDeleteLead()
   const createActivity = useCreateActivity()
 
+  const { analyze, isLoading: aiLoading, error: aiError } = useGroqAnalysis()
   const { addToast } = useToast()
   const [editOpen, setEditOpen] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [activityType, setActivityType] = useState<AtividadeTipo>('nota')
   const [activityDesc, setActivityDesc] = useState('')
+  const [aiResult, setAiResult] = useState<string | null>(null)
+
+  const savedAiAnalysis = lead?.notas?.startsWith(AI_PREFIX) ? lead.notas : null
+
+  async function handleQualifyAI() {
+    if (!lead) return
+
+    const context: Record<string, unknown> = {
+      nome: lead.nome,
+      empresa: lead.empresa,
+      setor: lead.setor,
+      origem: lead.origem,
+      valor_estimado: lead.valor_estimado,
+      temperatura: lead.temperatura,
+      status: lead.status,
+    }
+
+    if (quiz) {
+      context.score_automacao = quiz.score_automacao
+      context.custo_invisivel_min = quiz.custo_invisivel_min
+      context.custo_invisivel_max = quiz.custo_invisivel_max
+      context.gargalos = quiz.gargalos
+      context.horas_retrabalho = quiz.horas_retrabalho
+      context.nivel_tecnologia = quiz.nivel_tecnologia
+      context.urgencia = quiz.urgencia
+      context.faturamento_faixa = quiz.faturamento_faixa
+      context.resultado_tipo = quiz.resultado_tipo
+    }
+
+    const result = await analyze({
+      prompt: 'Analise este lead e forneça a qualificação completa.',
+      context,
+      systemPrompt: 'Você é um consultor de vendas B2B especialista em automação para PMEs brasileiras. Analise este lead e responda em português de forma direta:\n1) Score de qualificação (1-10)\n2) Probabilidade de fechar (%)\n3) Melhor abordagem para o primeiro contato\n4) Objeções prováveis\n5) Valor sugerido para proposta',
+    })
+
+    if (result) {
+      setAiResult(result)
+      const notasContent = `${AI_PREFIX}\n${result}`
+      await updateLead.mutateAsync({ id: lead.id, notas: notasContent })
+      addToast('Qualificação IA salva com sucesso.', 'success')
+    } else {
+      addToast('Não foi possível qualificar. Verifique se a IA está configurada.', 'error')
+    }
+  }
 
   async function handleStatusChange(status: LeadStatus) {
     if (!lead) return
@@ -166,6 +214,15 @@ export default function LeadDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleQualifyAI}
+              disabled={aiLoading}
+            >
+              {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bot className="h-4 w-4 text-brand-cyan" />}
+              Qualificar com IA
+            </Button>
             {lead.whatsapp && (
               <a href={formatWhatsAppUrl(lead.whatsapp, lead.nome)} target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="sm">
@@ -260,7 +317,7 @@ export default function LeadDetailPage() {
                     </InfoRow>
                   )}
                 </div>
-                {lead.notas && (
+                {lead.notas && !lead.notas.startsWith(AI_PREFIX) && (
                   <>
                     <Separator className="my-4" />
                     <div>
@@ -308,6 +365,41 @@ export default function LeadDetailPage() {
                         </div>
                       </div>
                     </>
+                  )}
+                </div>
+              </StaggerItem>
+            )}
+
+            {/* AI Analysis */}
+            {(aiResult || savedAiAnalysis || aiError) && (
+              <StaggerItem>
+                <div
+                  className="rounded-xl border p-5"
+                  style={{ background: '#0F1D32', borderColor: 'rgba(0, 200, 240, 0.3)' }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-brand-cyan" />
+                      <h2 className="text-lg font-semibold text-text-primary">Análise IA</h2>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleQualifyAI}
+                      disabled={aiLoading}
+                      className="text-xs text-text-secondary hover:text-brand-cyan"
+                    >
+                      {aiLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                      Atualizar análise
+                    </Button>
+                  </div>
+                  {aiError && (
+                    <p className="text-sm text-status-negative">{aiError}</p>
+                  )}
+                  {(aiResult || savedAiAnalysis) && (
+                    <div className="text-sm text-text-primary whitespace-pre-wrap leading-relaxed">
+                      {(aiResult || savedAiAnalysis || '').replace(AI_PREFIX + '\n', '')}
+                    </div>
                   )}
                 </div>
               </StaggerItem>

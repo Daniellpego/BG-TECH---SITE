@@ -1,10 +1,26 @@
 const CONFIG = {
-  whatsappNumber: '5543999751504',
+  whatsappNumber: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.whatsapp) || '5543999751504',
   webhookUrl: '',
   webhookToken: '',
-  supabaseUrl: 'https://urpuiznydrlwmaqhdids.supabase.co',
-  supabaseKey: 'sb_publishable_9G6JUKnfZ1mekk7qUKdTQA_TXbARtR0'
+  supabaseUrl: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.supabaseUrl) || 'https://urpuiznydrlwmaqhdids.supabase.co',
+  supabaseKey: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.supabaseAnonKey) || ''
 };
+
+// ── UTM helpers ──────────────────────────────────────────
+function getUTM(param) {
+  try { return new URLSearchParams(window.location.search).get(param) || null; }
+  catch (_) { return null; }
+}
+
+function getOrigem() {
+  var source = getUTM('utm_source');
+  if (!source) return 'site_organico';
+  var s = source.toLowerCase();
+  if (s.includes('meta') || s.includes('facebook') || s.includes('instagram')) return 'meta_ads';
+  if (s.includes('google')) return 'google_ads';
+  if (s.includes('indicacao')) return 'indicacao';
+  return 'site_organico';
+}
 
 const getRuntimeWebhookConfig = () => {
   const params = new URLSearchParams(window.location.search);
@@ -504,7 +520,7 @@ function openQuiz() {
           quizBody.innerHTML = `
                      <div style="text-align:center; padding: 60px 20px;">
                        <p style="color: #ef4444; font-weight: 800; margin-bottom: 16px;">O diagnóstico encontrou um gargalo na rede.</p>
-                       <a href="https://wa.me/5543999751504" target="_blank" class="btn-primary" style="display:inline-flex;">Continuar via WhatsApp</a>
+                       <a href="https://wa.me/${CONFIG.whatsappNumber}" target="_blank" class="btn-primary" style="display:inline-flex;">Continuar via WhatsApp</a>
                      </div>`;
         }
       }, 4000);
@@ -831,7 +847,7 @@ function runLoading() {
   body.innerHTML = `
     <div class="diag-loading reveal visible">
       <div class="diag-loading-ring"></div>
-      <h2 class="q-title" style="margin-bottom: 32px;">Compilando o diagnóstico da ${textData.empresa}...</h2>
+      <h2 class="q-title" style="margin-bottom: 32px;">Compilando o diagnóstico da ${textData.empresa || 'sua empresa'}...</h2>
       <div class="diag-loading-steps">
         ${steps.map((s, i) => `
           <div class="diag-step" id="dls-${i}">
@@ -1158,29 +1174,47 @@ function showResult() {
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   });
 
-  // Data collection
+  // ── Data collection ──────────────────────────────────────
   const segOpt = QUESTIONS[0].options[answers.segmento];
   const horasOpt = QUESTIONS[1].options[answers.horas_perdidas];
   const dorOpt = QUESTIONS[2].options[answers.dor];
   const fatOpt = QUESTIONS[3].options[answers.faturamento];
   const matOpt = QUESTIONS[4].options[answers.maturidade];
-  // janela_decisao não é pergunta do quiz — é selecionada na tela de resultado via PATCH separado
-  const decOpt = null;
 
-  const supabasePayload = {
+  // Payload do LEAD — apenas colunas que existem na tabela leads
+  const leadPayload = {
     nome: textData.nome,
-    empresa: textData.empresa,
+    empresa: textData.empresa || 'sua empresa',
+    telefone: textData.whatsapp.replace(/\D/g, ''),
     whatsapp: textData.whatsapp.replace(/\D/g, ''),
-    segmento: segOpt ? `${segOpt.title} (${segOpt.sub})` : '',
-    horas_perdidas: horasOpt ? horasOpt.title : '',
-    dor_principal: dorOpt ? `${dorOpt.title}: ${dorOpt.sub}` : '',
-    faturamento: fatOpt ? fatOpt.title : '',
-    maturidade: matOpt ? matOpt.title : '',
-    janela_decisao: decOpt ? decOpt.title : '',
-    lead_temperature: leadTemperature,
-    score: score,
-    custo_mensal: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`,
-    diagnostico_id: diagnosticId
+    setor: segOpt ? segOpt.title : '',
+    origem: getOrigem(),
+    status: 'novo',
+    valor_estimado: maxLoss,
+    temperatura: leadTemperature.toLowerCase(),
+    responsavel: 'Bryan',
+    diagnostico_id: diagnosticId,
+    notas: `Score: ${score}/100 | Custo: R$ ${(minLoss/1000).toFixed(0)}k-${(maxLoss/1000).toFixed(0)}k/mês | Dor: ${dorOpt ? dorOpt.title : 'N/A'} | Horas perdidas: ${horasOpt ? horasOpt.title : 'N/A'} | Maturidade: ${matOpt ? matOpt.title : 'N/A'} | Faturamento: ${fatOpt ? fatOpt.title : 'N/A'}`
+  };
+
+  // Payload da QUIZ_SESSION — dados detalhados do quiz
+  const quizSessionPayload = {
+    setor: segOpt ? segOpt.title : '',
+    faturamento_faixa: fatOpt ? fatOpt.title : '',
+    horas_retrabalho: horasOpt ? horasOpt.title : '',
+    gargalos: dorOpt ? [dorOpt.title] : [],
+    nivel_tecnologia: matOpt ? matOpt.title : '',
+    respostas: JSON.stringify({ answers, textData }),
+    score_automacao: score,
+    custo_invisivel_min: minLoss,
+    custo_invisivel_max: maxLoss,
+    resultado_tipo: matOpt && matOpt.title === 'Tecnologia boa, preciso de parceiro' ? 'parceria' : 'diagnostico',
+    utm_source: getUTM('utm_source'),
+    utm_medium: getUTM('utm_medium'),
+    utm_campaign: getUTM('utm_campaign'),
+    utm_content: getUTM('utm_content'),
+    origem: getOrigem(),
+    completed_at: new Date().toISOString()
   };
 
   const runtimeWebhook = getRuntimeWebhookConfig();
@@ -1194,13 +1228,12 @@ function showResult() {
       origin,
       prioridade: 'alta',
       diagnostico_id: diagnosticId,
-      empresa: textData.empresa,
+      empresa: textData.empresa || 'sua empresa',
       nome: textData.nome,
       whatsapp: textData.whatsapp,
       lead_temperature: leadTemperature,
       score,
       custo_mensal_estimado: `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`,
-      janela_decisao: decOpt ? decOpt.title : '',
       dor_principal: dorOpt ? dorOpt.title : '',
       segmento: segOpt ? segOpt.title : '',
       created_at: new Date().toISOString()
@@ -1208,48 +1241,87 @@ function showResult() {
     try {
       await postWebhook(runtimeWebhook.webhookUrl, hotLeadPayload, runtimeWebhook.webhookToken);
     } catch (err) {
-      console.error('❌ Erro ao notificar lead quente:', err);
+      console.error('Erro ao notificar lead quente:', err);
     }
   };
 
-  // D+F: Retry automático (3 tentativas) + localStorage fallback
-  const saveLeadWithRetry = async (payload, attempt = 1) => {
-    if (!CONFIG.supabaseUrl || !CONFIG.supabaseKey) return;
+  // ── Supabase: salvar lead + quiz_session ───────────────
+  const supabaseHeaders = {
+    'Content-Type': 'application/json',
+    'apikey': CONFIG.supabaseKey,
+    'Authorization': `Bearer ${CONFIG.supabaseKey}`
+  };
+
+  const saveToSupabase = async (attempt = 1) => {
+    if (!CONFIG.supabaseUrl || !CONFIG.supabaseKey) {
+      // Sem config: salva fallback no sessionStorage
+      sessionStorage.setItem('bgtech_quiz_offline', JSON.stringify({ leadPayload, quizSessionPayload, savedAt: Date.now() }));
+      return;
+    }
+
     try {
-      const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
+      // 1. Criar lead (com Prefer: return=representation para pegar o ID)
+      const leadRes = await fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': CONFIG.supabaseKey,
-          'Authorization': `Bearer ${CONFIG.supabaseKey}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(payload)
+        headers: { ...supabaseHeaders, 'Prefer': 'return=representation' },
+        body: JSON.stringify(leadPayload)
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      // Sucesso: remove do localStorage se estava salvo offline
+
+      let leadId = null;
+      if (leadRes.ok) {
+        const leadData = await leadRes.json();
+        leadId = Array.isArray(leadData) ? leadData[0]?.id : leadData?.id;
+      } else {
+        throw new Error(`Lead HTTP ${leadRes.status}`);
+      }
+
+      // 2. Criar quiz_session vinculada ao lead
+      const sessionData = { ...quizSessionPayload };
+      if (leadId) sessionData.lead_id = leadId;
+
+      const sessRes = await fetch(`${CONFIG.supabaseUrl}/rest/v1/quiz_sessions`, {
+        method: 'POST',
+        headers: { ...supabaseHeaders, 'Prefer': 'return=minimal' },
+        body: JSON.stringify(sessionData)
+      });
+
+      if (!sessRes.ok) {
+        console.error('Quiz session HTTP', sessRes.status);
+      }
+
+      // Sucesso: limpa fallback se existia
       localStorage.removeItem('bgtech_lead_offline');
+      sessionStorage.removeItem('bgtech_quiz_offline');
+
     } catch (err) {
       if (attempt < 3) {
-        setTimeout(() => saveLeadWithRetry(payload, attempt + 1), attempt * 1500);
+        setTimeout(() => saveToSupabase(attempt + 1), attempt * 1500);
       } else {
-        // Fallback: salva no localStorage para tentar novamente depois
-        localStorage.setItem('bgtech_lead_offline', JSON.stringify({ payload, savedAt: Date.now() }));
-        console.error('❌ Lead salvo offline após 3 tentativas:', err);
+        // Fallback: salva no localStorage para retry posterior
+        localStorage.setItem('bgtech_lead_offline', JSON.stringify({ leadPayload, quizSessionPayload, savedAt: Date.now() }));
+        console.error('Lead salvo offline apos 3 tentativas:', err);
       }
     }
   };
 
   // Tenta sync de lead offline anterior (ex: usuário voltou com conexão)
   const offlineLead = localStorage.getItem('bgtech_lead_offline');
-  if (offlineLead) {
+  if (offlineLead && CONFIG.supabaseUrl && CONFIG.supabaseKey) {
     try {
-      const { payload: oldPayload } = JSON.parse(offlineLead);
-      saveLeadWithRetry(oldPayload);
+      const saved = JSON.parse(offlineLead);
+      // Suporta formato antigo (payload direto) e novo (leadPayload + quizSessionPayload)
+      if (saved.leadPayload) {
+        fetch(`${CONFIG.supabaseUrl}/rest/v1/leads`, {
+          method: 'POST',
+          headers: { ...supabaseHeaders, 'Prefer': 'return=minimal' },
+          body: JSON.stringify(saved.leadPayload)
+        }).then(r => { if (r.ok) localStorage.removeItem('bgtech_lead_offline'); })
+          .catch(() => {});
+      }
     } catch (_) { localStorage.removeItem('bgtech_lead_offline'); }
   }
 
-  saveLeadWithRetry(supabasePayload);
+  saveToSupabase();
 
   if (leadTemperature === 'Quente') {
     notifyHotLead('resultado_quiz');
