@@ -1,5 +1,5 @@
 const CONFIG = {
-  whatsappNumber: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.whatsapp) || '5543999751504',
+  whatsappNumber: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.whatsapp) || '5543997800051',
   webhookUrl: '',
   webhookToken: '',
   supabaseUrl: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.supabaseUrl) || 'https://urpuiznydrlwmaqhdids.supabase.co',

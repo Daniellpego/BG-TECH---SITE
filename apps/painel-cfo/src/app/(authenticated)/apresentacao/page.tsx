@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { X, TrendingUp, DollarSign, BarChart3, Timer, Flame, PiggyBank, ArrowRight } from 'lucide-react'
