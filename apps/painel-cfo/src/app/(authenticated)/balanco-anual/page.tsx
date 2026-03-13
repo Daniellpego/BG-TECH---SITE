@@ -155,7 +155,7 @@ export default function BalancoAnualPage() {
           <span className="text-5xl">📅</span>
           <h2 className="text-lg font-semibold text-text-primary">Nenhum dado no ano de {year}</h2>
           <p className="text-sm text-text-secondary text-center max-w-md">
-            Cadastre receitas e custos para visualizar o balanco anual
+            Cadastre receitas e custos para visualizar o balanço anual
           </p>
         </div>
       )}
