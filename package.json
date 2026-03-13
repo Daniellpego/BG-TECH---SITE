@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "yarn@1.22.19",
+  "workspaces": ["apps/*"],
   "scripts": {
-    "build": "cd painel-cfo && node build.js"
+    "build:cfo": "cd apps/painel-cfo && npm run build"
   }
 }

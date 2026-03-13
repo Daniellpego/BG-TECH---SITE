@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-brand-blue-deep/30;
+  }
+
+  body {
+    @apply bg-bg-navy text-text-primary font-poppins antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0F1D32;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-blue-deep rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-blue;
+  }
+}
+
+@layer components {
+  .card-glass {
+    @apply bg-bg-card border border-brand-blue-deep/20 p-5;
+    border-radius: 14px;
+  }
+
+  .card-glass-hover {
+    @apply card-glass transition-all hover:bg-bg-hover;
+    transform: translateY(0);
+  }
+  .card-glass-hover:hover {
+    transform: translateY(-1px);
+  }
+
+  .gradient-cyan {
+    background: linear-gradient(135deg, #153B5F, #00C8F0);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #153B5F, #00C8F0);
+  }
+
+  /* Badge styles — Brand Book V2 */
+  .badge-positive {
+    @apply text-status-positive text-xs font-semibold px-2.5 py-0.5;
+    background: rgba(16, 185, 129, 0.18);
+    border-radius: 6px;
+  }
+  .badge-negative {
+    @apply text-status-negative text-xs font-semibold px-2.5 py-0.5;
+    background: rgba(239, 68, 68, 0.18);
+    border-radius: 6px;
+  }
+  .badge-warning {
+    @apply text-status-warning text-xs font-semibold px-2.5 py-0.5;
+    background: rgba(245, 158, 11, 0.18);
+    border-radius: 6px;
+  }
+  .badge-cyan {
+    @apply text-brand-cyan text-xs font-semibold px-2.5 py-0.5;
+    background: rgba(0, 200, 240, 0.18);
+    border-radius: 6px;
+  }
+
+  /* Table styles — Brand Book V2 */
+  .table-header {
+    @apply bg-bg-input text-text-secondary text-xs font-semibold uppercase tracking-wider;
+  }
+  .table-row {
+    @apply border-b transition-colors;
+    border-color: rgba(21, 59, 95, 0.2);
+  }
+  .table-row:hover {
+    @apply bg-bg-hover;
+  }
+
+  /* Tooltip — Brand Book V2 */
+  .tooltip-brand {
+    @apply text-sm text-text-primary;
+    background: #0F1D32;
+    border: 1px solid #153B5F;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+}
