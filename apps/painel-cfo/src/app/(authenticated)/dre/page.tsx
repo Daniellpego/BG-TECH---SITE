@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useMemo } from 'react'
 import { FileText, TrendingUp, TrendingDown, Activity } from 'lucide-react'
 import { useDRE, type DRELine } from '@/hooks/use-dre'

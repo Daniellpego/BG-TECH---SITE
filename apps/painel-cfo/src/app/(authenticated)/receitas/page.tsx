@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useMemo } from 'react'
 import { TrendingUp, Plus, DollarSign, Users, RefreshCw, BarChart3 } from 'lucide-react'
 import { useReceitas, useReceitasAno, useReceitasMesAnterior } from '@/hooks/use-receitas'

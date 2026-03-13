@@ -17,7 +17,8 @@ desktop.ini
 
 # Environment
 .env
-.env.*
+.env.local
+.env.*.local
 
 # Build artifacts
 estrutura.txt

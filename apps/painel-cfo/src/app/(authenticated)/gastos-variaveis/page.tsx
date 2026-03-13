@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useMemo } from 'react'
 import { Receipt, Plus, DollarSign, TrendingDown, TrendingUp, Megaphone, Target } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
