@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { FileText, TrendingUp, TrendingDown, Activity } from 'lucide-react'
 import { useDRE, type DRELine } from '@/hooks/use-dre'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -176,6 +176,8 @@ function CurrencyTooltip({ active, payload, label }: { active?: boolean; payload
 }
 
 export default function DREPage() {
+  useEffect(() => { document.title = 'DRE | BG Tech CFO' }, [])
+
   const { lines, current, chartData, isLoading, isChartLoading } = useDRE()
 
   const last6 = useMemo(() => chartData.slice(-6), [chartData])
@@ -274,6 +276,14 @@ export default function DREPage() {
       {/* DRE Table */}
       {isLoading ? (
         <DRETableSkeleton />
+      ) : current.receitaBruta === 0 && current.resultadoLiquido === 0 && current.cfTotal === 0 ? (
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">📋</span>
+          <h2 className="text-lg font-semibold text-text-primary">DRE sem dados no período</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Cadastre receitas e custos para visualizar a Demonstração de Resultado
+          </p>
+        </div>
       ) : (
         <div className="card-glass overflow-x-auto">
           <table className="w-full min-w-[600px]">
@@ -309,7 +319,7 @@ export default function DREPage() {
           <ChartSkeleton />
         ) : last6.length === 0 ? (
           <div className="card-glass flex items-center justify-center h-72 text-text-dark text-sm">
-            Adicione dados para visualizar o grafico
+            Adicione dados para visualizar o gráfico
           </div>
         ) : (
           <div className="card-glass">
@@ -371,17 +381,17 @@ export default function DREPage() {
           </div>
         )}
 
-        {/* Resultado Liquido - last 12 months */}
+        {/* Resultado Líquido - last 12 months */}
         {isChartLoading ? (
           <ChartSkeleton />
         ) : chartData.length === 0 ? (
           <div className="card-glass flex items-center justify-center h-72 text-text-dark text-sm">
-            Adicione dados para visualizar o grafico
+            Adicione dados para visualizar o gráfico
           </div>
         ) : (
           <div className="card-glass">
             <h3 className="text-sm font-semibold text-text-primary mb-4">
-              Resultado Liquido (12 meses)
+              Resultado Líquido (12 meses)
             </h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">

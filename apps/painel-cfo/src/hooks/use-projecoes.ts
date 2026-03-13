@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { usePeriod } from '@/providers/period-provider'
@@ -203,4 +203,54 @@ export function useProjecoes(): UseProjecoesResult {
   }, [cenarios, receitasPrevMonth, custosFixos, caixaData, month, year])
 
   return { projecoes, isLoading }
+}
+
+export interface ProjecaoInsert {
+  nome: string
+  taxa_crescimento_mensal: number
+  novos_clientes_mes: number
+  ticket_medio: number
+  custos_fixos_projetados?: number | null
+  custo_variavel_percentual: number
+  meses_projecao: number
+}
+
+export function useCreateProjecao() {
+  const queryClient = useQueryClient()
+  const supabase = createClient()
+
+  return useMutation({
+    mutationFn: async (projecao: ProjecaoInsert) => {
+      const { data, error } = await supabase
+        .from('projecoes')
+        .insert(projecao as unknown as Record<string, unknown>)
+        .select()
+        .single()
+
+      if (error) throw error
+      return data as Projecao
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projecoes-cenarios'] })
+    },
+  })
+}
+
+export function useDeleteProjecao() {
+  const queryClient = useQueryClient()
+  const supabase = createClient()
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('projecoes')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projecoes-cenarios'] })
+    },
+  })
 }

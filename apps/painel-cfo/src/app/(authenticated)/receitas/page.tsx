@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { TrendingUp, Plus, DollarSign, Users, RefreshCw, BarChart3 } from 'lucide-react'
 import { useReceitas, useReceitasAno, useReceitasMesAnterior } from '@/hooks/use-receitas'
 import { ReceitaForm } from '@/components/receitas/receita-form'
@@ -15,6 +15,8 @@ import { PageTransition } from '@/components/motion'
 import type { Receita } from '@/types/database'
 
 export default function ReceitasPage() {
+  useEffect(() => { document.title = 'Receitas | BG Tech CFO' }, [])
+
   const { data: receitas, isLoading } = useReceitas()
   const { data: receitasAno } = useReceitasAno()
   const { data: receitasPrev } = useReceitasMesAnterior()
@@ -91,8 +93,24 @@ export default function ReceitasPage() {
         ))}
       </div>
 
+      {/* Empty State */}
+      {!isLoading && (!receitas || receitas.length === 0) && (
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">💰</span>
+          <h2 className="text-lg font-semibold text-text-primary">Nenhuma receita cadastrada</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Registre sua primeira entrada para começar a acompanhar o faturamento
+          </p>
+          <Button onClick={handleNew} className="mt-2">
+            <Plus className="h-4 w-4 mr-2" /> Cadastrar Primeira Receita
+          </Button>
+        </div>
+      )}
+
       {/* Table */}
-      <ReceitasTable receitas={receitas} isLoading={isLoading} onEdit={handleEdit} />
+      {(isLoading || (receitas && receitas.length > 0)) && (
+        <ReceitasTable receitas={receitas} isLoading={isLoading} onEdit={handleEdit} />
+      )}
 
       {/* Form Modal */}
       <ReceitaForm

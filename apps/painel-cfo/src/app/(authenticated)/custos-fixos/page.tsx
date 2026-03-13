@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Wallet, Plus, DollarSign, Calendar, Percent, Flame } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { useCustosFixos } from '@/hooks/use-custos-fixos'
@@ -57,6 +57,8 @@ function CustomTooltip({ active, payload }: PieTooltipProps) {
 }
 
 export default function CustosFixosPage() {
+  useEffect(() => { document.title = 'Custos Fixos | BG Tech CFO' }, [])
+
   const { data: custosFixos, isLoading } = useCustosFixos()
   const { data: receitas } = useReceitas()
   const [formOpen, setFormOpen] = useState(false)
@@ -147,7 +149,22 @@ export default function CustosFixosPage() {
         ))}
       </div>
 
+      {/* Empty State */}
+      {!isLoading && (!custosFixos || custosFixos.length === 0) && (
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">🔧</span>
+          <h2 className="text-lg font-semibold text-text-primary">Nenhum custo fixo cadastrado</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Adicione os custos mensais da empresa (contabilidade, ferramentas, etc.)
+          </p>
+          <Button onClick={handleNew} className="mt-2">
+            <Plus className="h-4 w-4 mr-2" /> Cadastrar Custo Fixo
+          </Button>
+        </div>
+      )}
+
       {/* Chart + Table grid */}
+      {(isLoading || (custosFixos && custosFixos.length > 0)) && (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pie Chart */}
         <div className="card-glass lg:col-span-1">
@@ -196,6 +213,7 @@ export default function CustosFixosPage() {
           <CustosFixosTable custosFixos={custosFixos} isLoading={isLoading} onEdit={handleEdit} />
         </div>
       </div>
+      )}
 
       {/* Form Modal */}
       <CustoFixoForm

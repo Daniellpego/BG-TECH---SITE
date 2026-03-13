@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   LineChart as LineChartIcon,
   TrendingUp,
@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   BarChart3,
+  Plus,
 } from 'lucide-react'
 import {
   LineChart,
@@ -26,8 +27,9 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts'
-import { useProjecoes, type ProjecaoCalculada } from '@/hooks/use-projecoes'
+import { useProjecoes, useCreateProjecao, type ProjecaoCalculada } from '@/hooks/use-projecoes'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -133,7 +135,7 @@ function QuarterlyBreakdown({ proj }: { proj: ProjecaoCalculada }) {
                     className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-3 rounded-lg bg-bg-navy/50 border border-brand-blue-deep/10"
                   >
                     <div>
-                      <span className="text-[10px] text-text-dark uppercase">Mes</span>
+                      <span className="text-[10px] text-text-dark uppercase">Mês</span>
                       <p className="text-sm font-semibold text-text-primary">{m.label}</p>
                     </div>
                     <div>
@@ -275,7 +277,7 @@ function ScenarioContent({ proj, isLoading }: { proj: ProjecaoCalculada; isLoadi
     { label: 'Lucro acumulado', value: formatCurrency(proj.lucroAcumulado), icon: BarChart3, color: proj.lucroAcumulado >= 0 ? 'text-status-positive' : 'text-status-negative' },
     { label: 'Break-even (clientes)', value: String(proj.breakEven), icon: Users, color: 'text-brand-cyan' },
     { label: 'Runway atual', value: proj.runwayAtual >= 99 ? 'Positivo' : `${proj.runwayAtual} meses`, icon: Clock, color: proj.runwayAtual >= 6 ? 'text-status-positive' : 'text-status-negative' },
-    { label: 'Mes break-even', value: proj.mesBreakEven, icon: Target, color: config.color },
+    { label: 'Mês break-even', value: proj.mesBreakEven, icon: Target, color: config.color },
   ]
 
   return (
@@ -306,8 +308,81 @@ function ScenarioContent({ proj, isLoading }: { proj: ProjecaoCalculada; isLoadi
   )
 }
 
+function ProjecaoForm({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const createProjecao = useCreateProjecao()
+  const [nome, setNome] = useState('Realista')
+  const [taxaCrescimento, setTaxaCrescimento] = useState('5')
+  const [novosClientes, setNovosClientes] = useState('2')
+  const [ticketMedio, setTicketMedio] = useState('3000')
+  const [custoVariavel, setCustoVariavel] = useState('20')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    await createProjecao.mutateAsync({
+      nome,
+      taxa_crescimento_mensal: Number(taxaCrescimento),
+      novos_clientes_mes: Number(novosClientes),
+      ticket_medio: Number(ticketMedio),
+      custo_variavel_percentual: Number(custoVariavel),
+      meses_projecao: 12,
+    })
+    onClose()
+  }
+
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative card-glass p-6 w-full max-w-md space-y-4 mx-4">
+        <h2 className="text-lg font-bold text-text-primary">Nova Projeção</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-xs text-text-secondary mb-1 block">Cenário</label>
+            <select
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="flex h-10 w-full rounded-[10px] bg-bg-input px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50"
+              style={{ border: '1.5px solid #153B5F' }}
+            >
+              <option value="Conservador">Conservador</option>
+              <option value="Realista">Realista</option>
+              <option value="Agressivo">Agressivo</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-xs text-text-secondary mb-1 block">Taxa de crescimento mensal (%)</label>
+            <input type="number" step="0.1" value={taxaCrescimento} onChange={(e) => setTaxaCrescimento(e.target.value)} className="flex h-10 w-full rounded-[10px] bg-bg-input px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50" style={{ border: '1.5px solid #153B5F' }} />
+          </div>
+          <div>
+            <label className="text-xs text-text-secondary mb-1 block">Novos clientes por mês</label>
+            <input type="number" value={novosClientes} onChange={(e) => setNovosClientes(e.target.value)} className="flex h-10 w-full rounded-[10px] bg-bg-input px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50" style={{ border: '1.5px solid #153B5F' }} />
+          </div>
+          <div>
+            <label className="text-xs text-text-secondary mb-1 block">Ticket médio (R$)</label>
+            <input type="number" step="0.01" value={ticketMedio} onChange={(e) => setTicketMedio(e.target.value)} className="flex h-10 w-full rounded-[10px] bg-bg-input px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50" style={{ border: '1.5px solid #153B5F' }} />
+          </div>
+          <div>
+            <label className="text-xs text-text-secondary mb-1 block">Custo variável (% da receita)</label>
+            <input type="number" step="0.1" value={custoVariavel} onChange={(e) => setCustoVariavel(e.target.value)} className="flex h-10 w-full rounded-[10px] bg-bg-input px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50" style={{ border: '1.5px solid #153B5F' }} />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">Cancelar</Button>
+            <Button type="submit" disabled={createProjecao.isPending} className="flex-1">
+              {createProjecao.isPending ? 'Criando...' : 'Criar Projeção'}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function ProjecoesPage() {
+  useEffect(() => { document.title = 'Projeções | BG Tech CFO' }, [])
+
   const { projecoes, isLoading } = useProjecoes()
+  const [formOpen, setFormOpen] = useState(false)
 
   // Default tab to Realista or first available
   const defaultTab = projecoes.find((p) =>
@@ -318,9 +393,16 @@ export default function ProjecoesPage() {
     <PageTransition>
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <LineChartIcon className="h-6 w-6 text-brand-cyan" />
-        <h1 className="text-2xl font-bold text-text-primary">Projecoes</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <LineChartIcon className="h-6 w-6 text-brand-cyan" />
+          <h1 className="text-2xl font-bold text-text-primary">Projeções</h1>
+        </div>
+        {projecoes.length > 0 && (
+          <Button onClick={() => setFormOpen(true)} size="sm">
+            <Plus className="h-4 w-4 mr-2" /> Nova Projeção
+          </Button>
+        )}
       </div>
 
       {isLoading ? (
@@ -344,14 +426,15 @@ export default function ProjecoesPage() {
           <Skeleton className="h-64 w-full" />
         </div>
       ) : projecoes.length === 0 ? (
-        <div className="card-glass flex flex-col items-center justify-center h-64 gap-3">
-          <LineChartIcon className="h-10 w-10 text-text-dark" />
-          <p className="text-text-secondary text-sm">
-            Nenhum cenario de projecao cadastrado.
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">📊</span>
+          <h2 className="text-lg font-semibold text-text-primary">Nenhuma projeção criada ainda</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Crie cenários financeiros para simular o futuro da BG Tech
           </p>
-          <p className="text-text-dark text-xs">
-            Crie cenarios na tabela &quot;projecoes&quot; do Supabase (Conservador, Realista, Agressivo).
-          </p>
+          <Button onClick={() => setFormOpen(true)} className="mt-2">
+            <Plus className="h-4 w-4 mr-2" /> Criar Projeção
+          </Button>
         </div>
       ) : (
         <Tabs defaultValue={defaultTab}>
@@ -375,6 +458,7 @@ export default function ProjecoesPage() {
         </Tabs>
       )}
     </div>
+    <ProjecaoForm open={formOpen} onClose={() => setFormOpen(false)} />
     </PageTransition>
   )
 }

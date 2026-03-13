@@ -60,7 +60,7 @@ export interface CostSlice {
   color: string
 }
 
-export type HealthStatus = 'saudavel' | 'atencao' | 'critico'
+export type HealthStatus = 'saudavel' | 'atencao' | 'critico' | 'sem_dados'
 
 export interface DashboardAlert {
   id: string
@@ -249,14 +249,16 @@ export function useDashboard(): DashboardData {
   })
 
   // ── Metas financeiras (current month) ──
-  const periodo = `${year}-${String(month).padStart(2, '0')}`
+  const periodoStr = `${year}-${String(month).padStart(2, '0')}`
+  const periodoDate = `${year}-${String(month).padStart(2, '0')}-01`
   const metasQuery = useQuery({
-    queryKey: ['dashboard-metas', periodo],
+    queryKey: ['dashboard-metas', periodoStr],
     queryFn: async () => {
+      // Try text format first, fall back to date format
       const { data, error } = await supabase
         .from('metas_financeiras')
         .select('*')
-        .eq('periodo', periodo)
+        .or(`periodo.eq.${periodoStr},periodo.eq.${periodoDate}`)
       if (error) throw error
       return data as MetaFinanceira[]
     },
@@ -371,6 +373,7 @@ export function useDashboard(): DashboardData {
     .sort((a, b) => b.value - a.value)
 
   // ── Health status ─────────────────────────────────────────────────
+  const hasData = receitaTotal > 0 || totalCustosFixos > 0 || totalGastosVar > 0 || caixaDisponivel > 0
   let healthStatus: HealthStatus = 'saudavel'
 
   const caixaDropping3m =
@@ -378,7 +381,9 @@ export function useDashboard(): DashboardData {
     caixaEntries[0]!.saldo < caixaEntries[1]!.saldo &&
     caixaEntries[1]!.saldo < caixaEntries[2]!.saldo
 
-  if (runway < 1 || burnRate > receitaTotal || caixaDropping3m) {
+  if (!hasData) {
+    healthStatus = 'sem_dados'
+  } else if (runway < 1 || burnRate > receitaTotal || caixaDropping3m) {
     healthStatus = 'critico'
   } else if (
     (runway >= 1 && runway < 3) ||
@@ -394,79 +399,82 @@ export function useDashboard(): DashboardData {
   // ── Alerts ────────────────────────────────────────────────────────
   const alerts: DashboardAlert[] = []
 
-  if (runway < 1) {
-    alerts.push({
-      id: 'runway-critical',
-      type: 'critical',
-      icon: '🚨',
-      title: 'Runway crítico',
-      description: `Caixa cobre menos de 1 mês de operação. Runway atual: ${runway.toFixed(1)} meses.`,
-      action: 'Revise custos ou aporte capital',
-    })
-  } else if (runway < 3) {
-    alerts.push({
-      id: 'runway-low',
-      type: 'warning',
-      icon: '⚠️',
-      title: 'Runway baixo',
-      description: `Runway de ${runway.toFixed(1)} meses. Recomendado mínimo de 3 meses.`,
-      action: 'Avalie redução de custos',
-    })
-  }
+  // No alerts when there's no data at all
+  if (hasData) {
+    if (runway < 1 && burnRate > 0) {
+      alerts.push({
+        id: 'runway-critical',
+        type: 'critical',
+        icon: '🚨',
+        title: 'Runway crítico',
+        description: `Caixa cobre menos de 1 mês de operação. Runway atual: ${runway.toFixed(1)} meses.`,
+        action: 'Revise custos ou aporte capital',
+      })
+    } else if (runway < 3 && runway >= 1) {
+      alerts.push({
+        id: 'runway-low',
+        type: 'warning',
+        icon: '⚠️',
+        title: 'Runway baixo',
+        description: `Runway de ${runway.toFixed(1)} meses. Recomendado mínimo de 3 meses.`,
+        action: 'Avalie redução de custos',
+      })
+    }
 
-  if (burnRate > receitaTotal && receitaTotal > 0) {
-    alerts.push({
-      id: 'burn-exceeds-revenue',
-      type: 'critical',
-      icon: '🔥',
-      title: 'Burn rate superior à receita',
-      description: `Custos totais (${burnRate.toFixed(0)}) excedem receita (${receitaTotal.toFixed(0)}).`,
-      action: 'Reduza custos ou aumente receita',
-    })
-  }
+    if (burnRate > receitaTotal && receitaTotal > 0) {
+      alerts.push({
+        id: 'burn-exceeds-revenue',
+        type: 'critical',
+        icon: '🔥',
+        title: 'Burn rate superior à receita',
+        description: `Custos totais (${burnRate.toFixed(0)}) excedem receita (${receitaTotal.toFixed(0)}).`,
+        action: 'Reduza custos ou aumente receita',
+      })
+    }
 
-  if (caixaDropping3m) {
-    alerts.push({
-      id: 'cash-declining',
-      type: 'critical',
-      icon: '📉',
-      title: 'Caixa em queda por 3 meses',
-      description: 'O saldo de caixa está caindo consecutivamente nos últimos 3 registros.',
-      action: 'Analise fluxo de caixa urgente',
-    })
-  }
+    if (caixaDropping3m) {
+      alerts.push({
+        id: 'cash-declining',
+        type: 'critical',
+        icon: '📉',
+        title: 'Caixa em queda por 3 meses',
+        description: 'O saldo de caixa está caindo consecutivamente nos últimos 3 registros.',
+        action: 'Analise fluxo de caixa urgente',
+      })
+    }
 
-  if (resultadoLiquido < 0) {
-    alerts.push({
-      id: 'negative-result',
-      type: 'warning',
-      icon: '📊',
-      title: 'Resultado líquido negativo',
-      description: `Prejuízo de R$ ${Math.abs(resultadoLiquido).toFixed(2)} no período.`,
-      action: 'Verifique DRE para detalhes',
-    })
-  }
+    if (resultadoLiquido < 0) {
+      alerts.push({
+        id: 'negative-result',
+        type: 'warning',
+        icon: '📊',
+        title: 'Resultado líquido negativo',
+        description: `Prejuízo de R$ ${Math.abs(resultadoLiquido).toFixed(2)} no período.`,
+        action: 'Verifique DRE para detalhes',
+      })
+    }
 
-  if (margem < 30 && margem >= 0 && receitaTotal > 0) {
-    alerts.push({
-      id: 'low-margin',
-      type: 'warning',
-      icon: '💹',
-      title: 'Margem abaixo do ideal',
-      description: `Margem líquida de ${margem.toFixed(1)}%. Meta: 30%.`,
-      action: 'Otimize custos operacionais',
-    })
-  }
+    if (margem < 30 && margem >= 0 && receitaTotal > 0) {
+      alerts.push({
+        id: 'low-margin',
+        type: 'warning',
+        icon: '💹',
+        title: 'Margem abaixo do ideal',
+        description: `Margem líquida de ${margem.toFixed(1)}%. Meta: 30%.`,
+        action: 'Otimize custos operacionais',
+      })
+    }
 
-  if (mrr === 0 && receitaTotal > 0) {
-    alerts.push({
-      id: 'no-mrr',
-      type: 'info',
-      icon: '🔄',
-      title: 'Sem receita recorrente',
-      description: 'Nenhuma receita recorrente identificada este mês.',
-      action: 'Considere criar planos mensais',
-    })
+    if (mrr === 0 && receitaTotal > 0) {
+      alerts.push({
+        id: 'no-mrr',
+        type: 'info',
+        icon: '🔄',
+        title: 'Sem receita recorrente',
+        description: 'Nenhuma receita recorrente identificada este mês.',
+        action: 'Considere criar planos mensais',
+      })
+    }
   }
 
   // ── Loading / error ───────────────────────────────────────────────

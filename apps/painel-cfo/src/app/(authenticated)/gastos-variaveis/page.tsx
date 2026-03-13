@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Receipt, Plus, DollarSign, TrendingDown, TrendingUp, Megaphone, Target } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
@@ -39,6 +39,8 @@ function useReceitasConfirmadas() {
 }
 
 export default function GastosVariaveisPage() {
+  useEffect(() => { document.title = 'Gastos Variáveis | BG Tech CFO' }, [])
+
   const { data: gastos, isLoading } = useGastosVariaveis()
   const { data: gastosPrev } = useGastosVariaveisMesAnterior()
   const { data: receitasConfirmadas } = useReceitasConfirmadas()
@@ -150,7 +152,22 @@ export default function GastosVariaveisPage() {
         ))}
       </div>
 
+      {/* Empty State */}
+      {!isLoading && (!gastos || gastos.length === 0) && (
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">📊</span>
+          <h2 className="text-lg font-semibold text-text-primary">Nenhum gasto variável registrado</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Registre gastos como marketing, freelancers ou impostos variáveis
+          </p>
+          <Button onClick={handleNew} className="mt-2">
+            <Plus className="h-4 w-4 mr-2" /> Registrar Gasto
+          </Button>
+        </div>
+      )}
+
       {/* Tabs by tipo */}
+      {(isLoading || (gastos && gastos.length > 0)) && (
       <Tabs defaultValue="todos">
         <TabsList>
           <TabsTrigger value="todos">Todos</TabsTrigger>
@@ -175,6 +192,7 @@ export default function GastosVariaveisPage() {
           <GastosVariaveisTable gastos={gastosImpostos} isLoading={isLoading} onEdit={handleEdit} />
         </TabsContent>
       </Tabs>
+      )}
 
       {/* Form Modal */}
       <GastoVariavelForm

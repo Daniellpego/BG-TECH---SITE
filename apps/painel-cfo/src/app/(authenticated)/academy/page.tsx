@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { GraduationCap, HelpCircle, TrendingUp, DollarSign, BarChart3, Target, AlertTriangle, Calculator, Shield, Lightbulb, Send, Loader2, Bot, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -89,6 +89,8 @@ const GUIDES = [
 interface ChatMessage { role: 'user' | 'assistant'; content: string }
 
 export default function AcademyPage() {
+  useEffect(() => { document.title = 'Academy | BG Tech CFO' }, [])
+
   const { analyze, isLoading } = useGroqAnalysis()
   const [question, setQuestion] = useState('')
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])

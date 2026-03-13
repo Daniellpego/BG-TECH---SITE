@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CalendarRange, TrendingUp, TrendingDown, DollarSign, ChevronDown, ChevronUp } from 'lucide-react'
 import { useBalanco } from '@/hooks/use-balanco'
 import { usePeriod } from '@/providers/period-provider'
@@ -40,6 +40,8 @@ const CATEGORIA_LABELS: Record<string, string> = {
 const YEAR_OPTIONS = [2025, 2026, 2027]
 
 export default function BalancoAnualPage() {
+  useEffect(() => { document.title = 'Balanço Anual | BG Tech CFO' }, [])
+
   const { year, setYear } = usePeriod()
   const { meses, faturamentoAno, gastosAno, saldoAno, isLoading } = useBalanco()
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null)
@@ -61,7 +63,7 @@ export default function BalancoAnualPage() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <CalendarRange className="h-6 w-6 text-brand-cyan" />
-          <h1 className="text-2xl font-bold text-text-primary">Balanco Anual</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Balanço Anual</h1>
         </div>
 
         {/* Year Selector */}
@@ -147,6 +149,17 @@ export default function BalancoAnualPage() {
         </div>
       </div>
 
+      {/* Empty State */}
+      {!isLoading && faturamentoAno === 0 && gastosAno === 0 && (
+        <div className="card-glass flex flex-col items-center justify-center py-16 gap-4">
+          <span className="text-5xl">📅</span>
+          <h2 className="text-lg font-semibold text-text-primary">Nenhum dado no ano de {year}</h2>
+          <p className="text-sm text-text-secondary text-center max-w-md">
+            Cadastre receitas e custos para visualizar o balanco anual
+          </p>
+        </div>
+      )}
+
       {/* Month Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {meses.map((m) => {
@@ -204,7 +217,7 @@ export default function BalancoAnualPage() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-text-secondary">Saidas</span>
+                      <span className="text-xs text-text-secondary">Saídas</span>
                       <span className="text-sm font-medium text-status-negative">
                         -{formatCurrency(m.saidas)}
                       </span>
@@ -252,7 +265,7 @@ export default function BalancoAnualPage() {
                       {Object.keys(m.gastosPorCategoria).length > 0 && (
                         <div>
                           <h4 className="text-xs font-semibold text-status-negative mb-2">
-                            Saidas por categoria
+                            Saídas por categoria
                           </h4>
                           <div className="space-y-1">
                             {Object.entries(m.gastosPorCategoria)

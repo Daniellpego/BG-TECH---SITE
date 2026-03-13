@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   LayoutDashboard,
   TrendingUp,
@@ -54,25 +54,32 @@ const HEALTH_CONFIG: Record<
   { label: string; emoji: string; bg: string; text: string; border: string }
 > = {
   saudavel: {
-    label: 'SAUDAVEL',
+    label: 'SAUDÁVEL',
     emoji: '\uD83D\uDFE2',
     bg: 'bg-status-positive/10',
     text: 'text-status-positive',
     border: 'border-status-positive/30',
   },
   atencao: {
-    label: 'ATENCAO',
+    label: 'ATENÇÃO',
     emoji: '\uD83D\uDFE1',
     bg: 'bg-status-warning/10',
     text: 'text-status-warning',
     border: 'border-status-warning/30',
   },
   critico: {
-    label: 'CRITICO',
+    label: 'CRÍTICO',
     emoji: '\uD83D\uDD34',
     bg: 'bg-status-negative/10',
     text: 'text-status-negative',
     border: 'border-status-negative/30',
+  },
+  sem_dados: {
+    label: 'SEM DADOS',
+    emoji: 'ℹ️',
+    bg: 'bg-brand-blue/10',
+    text: 'text-brand-cyan',
+    border: 'border-brand-cyan/30',
   },
 }
 
@@ -91,9 +98,10 @@ function HealthBanner({ status }: { status: HealthStatus }) {
         {config.label}
       </span>
       <span className="text-text-secondary text-sm">
-        {status === 'saudavel' && 'Financas dentro dos parametros saudaveis'}
-        {status === 'atencao' && 'Alguns indicadores requerem atencao'}
-        {status === 'critico' && 'Indicadores criticos detectados — acao necessaria'}
+        {status === 'saudavel' && 'Finanças dentro dos parâmetros saudáveis'}
+        {status === 'atencao' && 'Alguns indicadores requerem atenção'}
+        {status === 'critico' && 'Indicadores críticos detectados — ação necessária'}
+        {status === 'sem_dados' && 'Comece cadastrando receitas e custos para ver o status da operação'}
       </span>
     </div>
   )
@@ -151,7 +159,7 @@ function KPICard({ label, value, variation, icon, tooltip, invertVariation }: KP
               !isPositive && !isNegative && 'text-text-dark'
             )}
           >
-            {formatPercent(variation)} vs mes anterior
+            {formatPercent(variation)} vs mês anterior
           </span>
         </div>
       ) : (
@@ -241,6 +249,8 @@ function ChartTooltipContent({
 
 // ── Page ─────────────────────────────────────────────────────────────
 export default function DashboardPage() {
+  useEffect(() => { document.title = 'Painel Geral | BG Tech CFO' }, [])
+
   const {
     kpis,
     variations,
@@ -264,7 +274,7 @@ export default function DashboardPage() {
 
   async function handleGenerateAI() {
     const result = await analyze({
-      prompt: 'Analise os dados financeiros deste mes e gere um resumo executivo com insights e recomendacoes acionaveis. Responda em portugues.',
+      prompt: 'Analise os dados financeiros deste mês e gere um resumo executivo com insights e recomendações acionáveis. Responda em português.',
       context: {
         receitaTotal: kpis.receitaTotal,
         mrr: kpis.mrr,
@@ -283,7 +293,7 @@ export default function DashboardPage() {
         statusSaude: healthStatus,
       },
       systemPrompt:
-        'Voce e o CFO virtual da BG Tech. Analise os dados financeiros e gere um resumo executivo conciso com: 1) Visao geral da saude financeira, 2) Top 3 pontos de atencao, 3) Recomendacoes acionaveis. Use formatacao markdown. Seja direto e objetivo.',
+        'Você é o CFO virtual da BG Tech. Analise os dados financeiros e gere um resumo executivo conciso com: 1) Visão geral da saúde financeira, 2) Top 3 pontos de atenção, 3) Recomendações acionáveis. Use formatação markdown. Seja direto e objetivo.',
     })
     if (result) {
       setAiSummary(result)
@@ -297,21 +307,21 @@ export default function DashboardPage() {
       value: formatCurrency(kpis.receitaTotal),
       variation: variations.receitaTotal,
       icon: <TrendingUp className="h-4 w-4" />,
-      tooltip: 'Soma de todas as receitas confirmadas no periodo selecionado',
+      tooltip: 'Soma de todas as receitas confirmadas no período selecionado',
     },
     {
       label: 'MRR',
       value: formatCurrency(kpis.mrr),
       variation: variations.mrr,
       icon: <Repeat className="h-4 w-4" />,
-      tooltip: 'Monthly Recurring Revenue — receita recorrente mensal confirmada',
+      tooltip: 'Monthly Recurring Revenue — apenas receitas recorrentes confirmadas',
     },
     {
       label: 'Burn Rate',
       value: formatCurrency(kpis.burnRate),
       variation: variations.burnRate,
       icon: <Flame className="h-4 w-4" />,
-      tooltip: 'Total de custos fixos + variaveis no mes. Menor e melhor.',
+      tooltip: 'Gasto total mensal — custos fixos + variáveis + impostos. Menor é melhor.',
       invertVariation: true,
     },
     {
@@ -319,36 +329,36 @@ export default function DashboardPage() {
       value: formatCurrency(kpis.custosFixos),
       variation: variations.custosFixos,
       icon: <Lock className="h-4 w-4" />,
-      tooltip: 'Soma dos custos fixos ativos (mensal)',
+      tooltip: 'Despesas fixas mensais ativas — ferramentas, contabilidade, etc.',
     },
     {
-      label: 'Custos Variaveis',
+      label: 'Custos Variáveis',
       value: formatCurrency(kpis.custosVariaveis),
       variation: variations.custosVariaveis,
       icon: <ShoppingCart className="h-4 w-4" />,
-      tooltip: 'Gastos variaveis confirmados no periodo',
+      tooltip: 'Gastos que variam com vendas — marketing, freelancers, taxas',
       invertVariation: true,
     },
     {
-      label: 'Resultado Liquido',
+      label: 'Resultado Líquido',
       value: formatCurrency(kpis.resultadoLiquido),
       variation: variations.resultadoLiquido,
       icon: <Calculator className="h-4 w-4" />,
-      tooltip: 'Receita total menos todos os custos (fixos + variaveis)',
+      tooltip: 'Receita Bruta - Custos Variáveis - Custos Fixos - Impostos',
     },
     {
-      label: 'Caixa Disponivel',
+      label: 'Caixa Disponível',
       value: formatCurrency(kpis.caixaDisponivel),
       variation: variations.caixaDisponivel,
       icon: <Wallet className="h-4 w-4" />,
-      tooltip: 'Ultimo saldo de caixa registrado',
+      tooltip: 'Saldo atual em conta bancária — atualizado manualmente',
     },
     {
       label: 'Runway',
       value: kpis.runway >= 99 ? '99+ meses' : `${kpis.runway.toFixed(1)} meses`,
       variation: variations.runway,
       icon: <Clock className="h-4 w-4" />,
-      tooltip: 'Meses que o caixa cobre com o burn rate atual',
+      tooltip: 'Quanto tempo a empresa sobrevive sem novas receitas — Caixa ÷ Burn Rate',
     },
   ]
 
@@ -377,6 +387,19 @@ export default function DashboardPage() {
         <Skeleton className="h-12 w-full rounded-xl" />
       ) : (
         <HealthBanner status={healthStatus} />
+      )}
+
+      {/* Welcome onboarding when no data */}
+      {healthStatus === 'sem_dados' && !isLoading && (
+        <div className="card-glass p-6 space-y-4">
+          <p className="text-lg font-semibold text-text-primary">👋 Bem-vindo ao Painel CFO!</p>
+          <p className="text-sm text-text-secondary">Comece cadastrando seus dados financeiros:</p>
+          <div className="flex flex-wrap gap-3">
+            <a href="/custos-fixos" className="text-sm text-brand-cyan hover:underline">1. Custos Fixos →</a>
+            <a href="/receitas" className="text-sm text-brand-cyan hover:underline">2. Receitas →</a>
+            <a href="/gastos-variaveis" className="text-sm text-brand-cyan hover:underline">3. Gastos Variáveis →</a>
+          </div>
+        </div>
       )}
 
       {/* Section 2 — KPI Cards */}
@@ -409,7 +432,7 @@ export default function DashboardPage() {
           <Skeleton className="h-72 w-full rounded-lg" />
         ) : chartData.length === 0 ? (
           <div className="flex items-center justify-center h-72 text-text-dark text-sm">
-            Adicione receitas e despesas para visualizar o grafico
+            Adicione receitas e despesas para visualizar o gráfico
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
@@ -463,13 +486,13 @@ export default function DashboardPage() {
       {/* Section 5 — Cost Distribution */}
       <div className="card-glass p-4 sm:p-6">
         <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-4">
-          Distribuicao de Custos
+          Distribuição de Custos
         </h2>
         {isLoading ? (
           <Skeleton className="h-72 w-full rounded-lg" />
         ) : costDistribution.length === 0 ? (
           <div className="flex items-center justify-center h-48 text-text-dark text-sm">
-            Nenhum custo registrado no periodo
+            Nenhum custo registrado no período
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row items-center gap-6">
@@ -526,7 +549,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-brand-cyan" />
-            Analise IA
+            Análise IA
           </h2>
           <Button
             onClick={handleGenerateAI}
@@ -535,13 +558,17 @@ export default function DashboardPage() {
             variant="outline"
             size="sm"
           >
-            {aiLoading ? 'Analisando...' : 'Gerar analise do mes'}
+            {aiLoading ? 'Analisando...' : 'Gerar análise do mês'}
           </Button>
         </div>
 
         {aiError && (
           <div className="rounded-lg bg-status-warning/10 border border-status-warning/30 px-3 py-2 mb-3">
-            <p className="text-xs text-status-warning">{aiError}</p>
+            <p className="text-xs text-status-warning">
+              {aiError.includes('non-2xx') || aiError.includes('Edge Function')
+                ? 'Configure a GROQ_API_KEY nas variáveis de ambiente do Supabase para ativar a análise por IA'
+                : `Não foi possível gerar a análise agora. Tente novamente em instantes.`}
+            </p>
           </div>
         )}
 
@@ -551,7 +578,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="flex items-center justify-center h-24 text-text-dark text-sm">
-            Clique em &quot;Gerar analise do mes&quot; para obter insights da IA
+            Clique em &quot;Gerar análise do mês&quot; para obter insights da IA
           </div>
         )}
       </div>
