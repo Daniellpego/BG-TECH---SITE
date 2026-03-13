@@ -1,9 +1,14 @@
 -- ══════════════════════════════════════════════════════════════
 -- Ecosistema BG Tech 2026 — Unified Supabase Schema
 --
--- Tables: leads, deals, projetos, tarefas, cfo_lancamentos (existing)
+-- Tables: leads, deals, projetos, tarefas
 -- Triggers: cross-panel sync (CRM → CFO, Projetos → CFO)
--- Realtime: enabled on all tables
+-- Realtime: enabled on CRM/project tables
+--
+-- NOTE: The trigger functions below (on_deal_ganho, on_projeto_entregue,
+-- on_lead_meta_ads) originally wrote to "cfo_lancamentos" which was never
+-- created. Migration 003 uses CREATE OR REPLACE FUNCTION to rewrite them
+-- to target the correct CFO tables (receitas, gastos_variaveis, etc.).
 -- ══════════════════════════════════════════════════════════════
 
 -- ─── ENUM TYPES ──────────────────────────────────────────────

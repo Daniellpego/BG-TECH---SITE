@@ -127,6 +127,32 @@ export interface ResumoMensal {
   clientes_ativos: number
 }
 
+export type QuizResultadoTipo = 'diagnostico' | 'parceria'
+export type QuizOrigem = 'meta_ads' | 'google_ads' | 'site_organico' | 'indicacao'
+
+export interface QuizSession {
+  id: string
+  lead_id: string | null
+  setor: string | null
+  faturamento_faixa: string | null
+  horas_retrabalho: string | null
+  gargalos: string[] | null
+  nivel_tecnologia: string | null
+  urgencia: string | null
+  respostas: Record<string, unknown> | null
+  score_automacao: number | null
+  custo_invisivel_min: number | null
+  custo_invisivel_max: number | null
+  resultado_tipo: QuizResultadoTipo
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  utm_content: string | null
+  origem: QuizOrigem | null
+  completed_at: string | null
+  created_at: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -138,6 +164,7 @@ export interface Database {
       emprestimo_socio: { Row: EmprestimoSocio; Insert: Omit<EmprestimoSocio, 'id' | 'created_at'>; Update: Partial<Omit<EmprestimoSocio, 'id' | 'created_at'>> }
       historico_decisoes: { Row: HistoricoDecisao; Insert: Omit<HistoricoDecisao, 'id' | 'created_at'>; Update: Partial<Omit<HistoricoDecisao, 'id' | 'created_at'>> }
       projecoes: { Row: Projecao; Insert: Omit<Projecao, 'id' | 'created_at' | 'updated_at'>; Update: Partial<Omit<Projecao, 'id' | 'created_at' | 'updated_at'>> }
+      quiz_sessions: { Row: QuizSession; Insert: Omit<QuizSession, 'id' | 'created_at'>; Update: Partial<Omit<QuizSession, 'id' | 'created_at'>> }
     }
     Views: {
       vw_resumo_mensal: { Row: ResumoMensal }

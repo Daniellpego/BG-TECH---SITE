@@ -228,16 +228,29 @@ O ecosistema segue um design system consistente com tema dark inspirado em Linea
 
 ## Database Schema
 
-```sql
-leads ──────┐
-             ├──▶ deals ──────▶ projetos ──────▶ tarefas
-             │         │
-             │         └──▶ cfo_lancamentos (via trigger)
-             │
-             └──▶ cfo_lancamentos (Meta Ads trigger)
+```
+── CRM ──────────────────────────────────────────────────
+  leads ──FK──▶ deals ──FK──▶ projetos ──FK──▶ tarefas
+    │              │              │
+    │              │              └──trigger──▶ historico_decisoes
+    │              │                           (projeto entregue)
+    │              ├──trigger──▶ receitas
+    │              │             (deal ganho → receita confirmada)
+    │              └──trigger──▶ projetos
+    │                            (deal ganho → projeto backlog)
+    └──trigger──▶ gastos_variaveis
+                  (lead meta_ads → custo marketing)
+
+── CFO ──────────────────────────────────────────────────
+  receitas · custos_fixos · gastos_variaveis · caixa
+  projecoes · metas_financeiras · emprestimo_socio
+  historico_decisoes
+
+── QUIZ ─────────────────────────────────────────────────
+  quiz_sessions ──FK──▶ leads
 ```
 
-**5 tabelas** · **4 triggers automáticos** · **RLS ativo** · **Realtime habilitado**
+**16 tabelas** · **7 triggers** · **RLS ativo em todas** · **Realtime habilitado**
 
 ---
 
