@@ -79,6 +79,58 @@ const capitalize = (str) => {
   return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 };
 
+// ── Score & Cost calculation ─────────────────────────────
+function calculateScore(answers) {
+  const PESO_MATURIDADE = 0.40;
+  const PESO_HORAS = 0.30;
+  const PESO_DOR = 0.15;
+  const PESO_FATURAMENTO = 0.15;
+
+  const maturidadeScores = [20, 40, 55, 75, 92];
+  const scoreMaturidade = maturidadeScores[answers.maturidade] ?? 50;
+
+  const horasScores = [85, 60, 35, 15];
+  const scoreHoras = horasScores[answers.horas_perdidas] ?? 50;
+
+  const dorScores = [30, 35, 40, 45, 25];
+  // Multi-select: use worst (lowest) score
+  const dorVal = answers.dor;
+  let scoreDor = 35;
+  if (Array.isArray(dorVal)) {
+    scoreDor = Math.min(...dorVal.map(d => dorScores[d] ?? 35));
+  } else if (typeof dorVal === 'number') {
+    scoreDor = dorScores[dorVal] ?? 35;
+  }
+
+  const faturamentoScores = [60, 50, 40, 30];
+  const scoreFaturamento = faturamentoScores[answers.faturamento] ?? 50;
+
+  const score = Math.round(
+    (scoreMaturidade * PESO_MATURIDADE) +
+    (scoreHoras * PESO_HORAS) +
+    (scoreDor * PESO_DOR) +
+    (scoreFaturamento * PESO_FATURAMENTO)
+  );
+
+  return Math.max(15, Math.min(95, score));
+}
+
+function calculateCost(answers) {
+  const baseCosts = [
+    { min: 4200, max: 8500 },
+    { min: 14500, max: 22000 },
+    { min: 28500, max: 42000 },
+    { min: 65000, max: 98000 },
+  ];
+  const base = baseCosts[answers.faturamento] || baseCosts[0];
+  const horasMultiplier = [0.6, 0.85, 1.15, 1.5];
+  const multiplier = horasMultiplier[answers.horas_perdidas] || 1.0;
+  return {
+    min: Math.round(base.min * multiplier / 1000) * 1000,
+    max: Math.round(base.max * multiplier / 1000) * 1000,
+  };
+}
+
 const QUESTIONS = [
   {
     id: 'segmento', label: 'PASSO 1 DE 6',
@@ -95,7 +147,20 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'horas_perdidas', label: 'PASSO 2 DE 6',
+    id: 'faturamento', label: 'PASSO 2 DE 6',
+    title: 'Qual faixa melhor representa o faturamento mensal da sua empresa?',
+    desc: 'Precisamos dessa referência para calcular o impacto real em R$ no seu diagnóstico.',
+    type: 'options',
+    options: [
+      { icon: 'wallet', title: 'Até R$ 50 mil/mês', sub: 'Fase de validação e primeiros clientes' },
+      { icon: 'trending-up', title: 'R$ 50k a R$ 200k/mês', sub: 'Ganhando tração — hora de escalar sem quebrar' },
+      { icon: 'landmark', title: 'R$ 200k a R$ 500k/mês', sub: 'Operação sólida buscando eficiência máxima' },
+      { icon: 'gem', title: 'Acima de R$ 500k/mês', sub: 'Estrutura robusta — cada 1% de melhoria vale muito' }
+    ],
+    badge: 'Empresas nesta faixa recebem atendimento prioritário'
+  },
+  {
+    id: 'horas_perdidas', label: 'PASSO 3 DE 6',
     title: 'Quantas horas por semana sua equipe gasta com retrabalho e tarefas que poderiam ser automáticas?',
     desc: 'Some mentalmente: copiar dados entre planilhas, responder manualmente, gerar relatórios no braço...',
     type: 'options',
@@ -107,10 +172,11 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'dor', label: 'PASSO 3 DE 6',
+    id: 'dor', label: 'PASSO 4 DE 6',
     title: 'Qual desses gargalos mais corrói o lucro da sua empresa hoje?',
-    desc: 'Ao nomear o problema, a solução fica mais clara. Escolha o que mais dói.',
-    type: 'options',
+    desc: 'Escolha até 2 opções. Ao nomear o problema, a solução fica mais clara.',
+    type: 'multi',
+    maxSelect: 2,
     options: [
       { icon: 'clock', title: 'Processos manuais e retrabalho', sub: 'Equipe boa, gastando 30% do dia em tarefas sem valor' },
       { icon: 'cable', title: 'Sistemas que não se integram', sub: 'Ferramentas que não se falam = dados duplicados e furos' },
@@ -118,19 +184,6 @@ const QUESTIONS = [
       { icon: 'bar-chart', title: 'Decisões no escuro', sub: 'Sem dados em tempo real, tudo é chute' },
       { icon: 'users', title: 'Equipe sobrecarregada', sub: 'Crescer virou sinônimo de contratar mais — não devia ser assim' }
     ]
-  },
-  {
-    id: 'faturamento', label: 'PASSO 4 DE 6',
-    title: 'Qual faixa melhor representa o faturamento mensal da sua empresa?',
-    desc: 'Precisamos dessa referência para calcular o impacto real em R$ no seu diagnóstico.',
-    type: 'options',
-    options: [
-      { icon: 'wallet', title: 'Até R$ 50 mil/mês', sub: 'Fase de validação e primeiros clientes' },
-      { icon: 'trending-up', title: 'R$ 50k a R$ 200k/mês', sub: 'Ganhando tração — hora de escalar sem quebrar' },
-      { icon: 'landmark', title: 'R$ 200k a R$ 500k/mês', sub: 'Operação sólida buscando eficiência máxima' },
-      { icon: 'gem', title: 'Acima de R$ 500k/mês', sub: 'Estrutura robusta — cada 1% de melhoria vale muito' }
-    ],
-    badge: 'Empresas nesta faixa recebem atendimento prioritário'
   },
   {
     id: 'maturidade', label: 'PASSO 5 DE 6',
@@ -178,18 +231,24 @@ const echos = {
     "Sobrecarga operacional gera turnover alto. A automação resolve isso direto na raiz."
   ],
   faturamento: [
-    null,
+    "Mesmo nessa faixa, automação pode devolver até 15% da margem operacional. O diagnóstico vai mostrar onde.",
     "Nessa faixa, cada R$1.000 economizado vira lucro direto. Automação aqui tem ROI imediato.",
     "Com esse porte, ineficiências de 2% já representam dezenas de milhares perdidos por mês.",
     "Seu volume exige tecnologia robusta. Qualquer gargalo manual sangra em escala."
   ],
+  maturidade: [
+    "Isso é mais comum do que parece. O diagnóstico vai mostrar exatamente por onde começar.",
+    "Software parado é dinheiro jogado fora. Vamos identificar o que ativar primeiro.",
+    "Dados em 5 lugares diferentes = decisão no escuro. Isso tem solução rápida.",
+    "Boa base. O próximo nível é conectar tudo num fluxo único e inteligente.",
+    "Excelente base. Você não precisa de mais ferramentas — precisa de engenharia certa."
+  ],
   janela_decisao: [
-    "Perfeito. Vamos priorizar ações de impacto imediato para os próximos 7 dias.",
+    "Excelente decisão. Você receberá atendimento prioritário da nossa equipe de engenharia.",
     "Ótimo timing. Dá para estruturar a implementação com controle e previsibilidade.",
     "Faz sentido. Vamos montar um plano de maturação para você avançar no momento certo.",
     "Entendemos. Mas enquanto você estuda, sua operação continua perdendo entre R$4k e R$15k/mês."
   ]
-  // Nota: janela_decisao agora é exibida na tela de resultado
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -550,7 +609,7 @@ function renderIntro() {
       <h2 style="color: var(--text-1);">O Diagnóstico BG Tech</h2>
 
       <div class="intro-social-proof">
-        <span><i data-lucide="check-circle" width="16"></i> Diagnóstico 100% gratuito</span>
+        <span><i data-lucide="check-circle" width="16"></i> Baseado em dados de 47+ operações B2B reais</span>
         <span><i data-lucide="check-circle" width="16"></i> Resultado em menos de 3 minutos</span>
         <span><i data-lucide="check-circle" width="16"></i> Sem compromisso</span>
       </div>
@@ -587,16 +646,8 @@ function renderStep() {
   }
 
   if (q.type === 'teaser') {
-    const matI = answers.maturidade ?? 2;
-    const horasI = answers.horas_perdidas ?? 1;
-    const fatI = answers.faturamento ?? 1;
-
-    let partialScore = 38;
-    if (matI === 1) partialScore = 52;
-    if (matI === 2) partialScore = 61;
-    if (matI === 3) partialScore = 78;
-    if (matI === 4) partialScore = 92;
-    if (horasI >= 2) partialScore = Math.max(35, partialScore - 8);
+    const partialScore = calculateScore(answers);
+    const tCost = calculateCost(answers);
 
     const tScoreLabels = [
       { max: 40, label: 'Operação em Risco', color: '#ef4444' },
@@ -608,11 +659,7 @@ function renderStep() {
     const tScoreCat = tScoreLabels.find(s => partialScore <= s.max);
     const tCircleOffset = 251 - (251 * (partialScore / 100));
 
-    let minL = 4200, maxL = 8500;
-    if (fatI === 1) { minL = 14500; maxL = 22000; }
-    if (fatI === 2) { minL = 28500; maxL = 42000; }
-    if (fatI === 3) { minL = 65000; maxL = 98000; }
-    const blurRange = `R$ ${(minL / 1000).toFixed(0)}k a R$ ${(maxL / 1000).toFixed(0)}k`;
+    const blurRange = `R$ ${(tCost.min / 1000).toFixed(0)}k a R$ ${(tCost.max / 1000).toFixed(0)}k`;
 
     body.innerHTML = `
       <div class="reveal visible" style="text-align: center;">
@@ -644,7 +691,7 @@ function renderStep() {
             <span>Custo Invisível Estimado</span>
           </div>
           <div class="teaser-blur-value">${blurRange} /mês</div>
-          <p class="teaser-unlock-hint">Desbloqueie para ver o número exato e as 3 ações prioritárias</p>
+          <p class="teaser-unlock-hint">Seu custo invisível está calculado. Veja o número exato e as 3 ações prioritárias →</p>
         </div>
 
         <button class="btn-primary btn-large btn-shimmer" id="teaser-unlock-btn" style="width: 100%; margin-bottom: 12px;">
@@ -670,12 +717,19 @@ function renderStep() {
     return;
   }
 
-  if (q.type === 'options') {
+  if (q.type === 'options' || q.type === 'multi') {
+    const isMulti = q.type === 'multi';
+    const maxSelect = q.maxSelect || 2;
     let html = `<div class="reveal visible"><span class="q-label">${q.label}</span><h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>`;
     html += `<div class="q-options">`;
     q.options.forEach((opt, i) => {
       const iconClass = opt.iconColor ? opt.iconColor : '';
-      const isSelected = answers[q.id] === i ? 'selected' : '';
+      let isSelected = '';
+      if (isMulti) {
+        isSelected = Array.isArray(answers[q.id]) && answers[q.id].includes(i) ? 'selected' : '';
+      } else {
+        isSelected = answers[q.id] === i ? 'selected' : '';
+      }
       html += `
         <div class="q-option ${isSelected}" data-index="${i}">
           <div class="q-icon"><i data-lucide="${opt.icon}" class="${iconClass}"></i></div>
@@ -684,48 +738,96 @@ function renderStep() {
     });
     html += `</div>`;
     if (q.badge) html += `<div class="q-badge-exclusive" style="display:none;"><i data-lucide="shield-check" width="14"></i> ${q.badge}</div>`;
-    if (currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
+    if (isMulti) html += `<div class="q-nav" style="margin-top: 16px;"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button><button class="btn-primary js-multi-next" style="display:none;">Continuar <i data-lucide="arrow-right" width="16"></i></button></div>`;
+    else if (currentStep > 0) html += `<div class="q-nav"><button class="btn-ghost js-prev"><i data-lucide="arrow-left" width="16"></i> Voltar</button></div>`;
     html += `</div>`;
     body.innerHTML = html;
 
-    body.querySelectorAll('.q-option').forEach(opt => {
-      opt.addEventListener('click', function () {
-        const idx = parseInt(this.getAttribute('data-index'));
-        answers[q.id] = idx;
-        const ecoText = echos[q.id]?.[idx];
+    if (isMulti) {
+      // Initialize multi-select state
+      if (!Array.isArray(answers[q.id])) answers[q.id] = [];
+      const multiNextBtn = body.querySelector('.js-multi-next');
+      if (answers[q.id].length > 0 && multiNextBtn) multiNextBtn.style.display = 'inline-flex';
 
-        // GAP 2: Show badge only for R$200k+ (index >= 2)
-        if (q.badge) {
-          const badge = body.querySelector('.q-badge-exclusive');
-          if (badge) {
-            if (idx >= 2) {
-              badge.style.display = 'flex';
-              badge.style.animation = 'fadeInUp 0.3s ease forwards';
-            } else {
-              badge.style.display = 'none';
+      body.querySelectorAll('.q-option').forEach(opt => {
+        opt.addEventListener('click', function () {
+          const idx = parseInt(this.getAttribute('data-index'));
+          let sel = answers[q.id];
+          if (sel.includes(idx)) {
+            sel = sel.filter(x => x !== idx);
+            this.classList.remove('selected');
+          } else if (sel.length < maxSelect) {
+            sel.push(idx);
+            this.classList.add('selected');
+          } else {
+            // At max: deselect oldest, select new
+            const oldest = sel.shift();
+            body.querySelector(`.q-option[data-index="${oldest}"]`)?.classList.remove('selected');
+            sel.push(idx);
+            this.classList.add('selected');
+          }
+          answers[q.id] = sel;
+          if (multiNextBtn) multiNextBtn.style.display = sel.length > 0 ? 'inline-flex' : 'none';
+        });
+      });
+
+      if (multiNextBtn) {
+        multiNextBtn.addEventListener('click', () => {
+          const firstIdx = answers[q.id][0];
+          const ecoText = echos[q.id]?.[firstIdx];
+          if (ecoText) {
+            body.innerHTML = `
+              <div class="micro-validation" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 60px 20px;">
+                <i data-lucide="zap" style="color:var(--blue); width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
+                <p style="color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
+              </div>`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            setTimeout(() => { nextStep(); }, 2500);
+          } else {
+            nextStep();
+          }
+        });
+      }
+    } else {
+      body.querySelectorAll('.q-option').forEach(opt => {
+        opt.addEventListener('click', function () {
+          const idx = parseInt(this.getAttribute('data-index'));
+          answers[q.id] = idx;
+          const ecoText = echos[q.id]?.[idx];
+
+          // GAP 2: Show badge only for R$200k+ (index >= 2)
+          if (q.badge) {
+            const badge = body.querySelector('.q-badge-exclusive');
+            if (badge) {
+              if (idx >= 2) {
+                badge.style.display = 'flex';
+                badge.style.animation = 'fadeInUp 0.3s ease forwards';
+              } else {
+                badge.style.display = 'none';
+              }
             }
           }
-        }
 
-        if (q.id === 'segmento') {
-          const segName = q.options[idx].title;
-          body.innerHTML = `<div class="micro-validation"><i data-lucide="check-circle-2" style="margin-bottom:12px;width:32px;height:32px;"></i><br>Calibrando diagnóstico para ${segName}...</div>`;
-          if (typeof lucide !== 'undefined') lucide.createIcons();
-          setTimeout(() => { nextStep(); }, 1200);
-        } else if (ecoText) {
-          const isWarning = q.id === 'janela_decisao' && idx === 3;
-          body.innerHTML = `
-            <div class="micro-validation" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 60px 20px;">
-              <i data-lucide="${isWarning ? 'alert-triangle' : 'zap'}" style="color:${isWarning ? '#f59e0b' : 'var(--blue)'}; width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
-              <p style="color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
-            </div>`;
-          if (typeof lucide !== 'undefined') lucide.createIcons();
-          setTimeout(() => { nextStep(); }, 2500);
-        } else {
-          nextStep();
-        }
+          if (q.id === 'segmento') {
+            const segName = q.options[idx].title;
+            body.innerHTML = `<div class="micro-validation"><i data-lucide="check-circle-2" style="margin-bottom:12px;width:32px;height:32px;"></i><br>Calibrando diagnóstico para ${segName}...</div>`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            setTimeout(() => { nextStep(); }, 1200);
+          } else if (ecoText) {
+            const isWarning = q.id === 'janela_decisao' && idx === 3;
+            body.innerHTML = `
+              <div class="micro-validation" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 60px 20px;">
+                <i data-lucide="${isWarning ? 'alert-triangle' : 'zap'}" style="color:${isWarning ? '#f59e0b' : 'var(--blue)'}; width: 48px; height: 48px; margin-bottom: 24px; animation: pulse 2s infinite;"></i>
+                <p style="color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.5;">${ecoText}</p>
+              </div>`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            setTimeout(() => { nextStep(); }, 2500);
+          } else {
+            nextStep();
+          }
+        });
       });
-    });
+    }
   } else {
     let html = `<div class="reveal visible">
       <span class="q-label"><span class="live-dot"></span> DIAGNÓSTICO PRONTO</span>
@@ -829,15 +931,12 @@ function runLoading() {
   const body = document.getElementById('quiz-body');
 
   const segName = QUESTIONS[0].options[answers.segmento].title;
-  const fatIndex = answers.faturamento;
-  let basePerda = 6500;
-  if (fatIndex === 1) basePerda = 14000;
-  if (fatIndex === 2) basePerda = 32000;
-  if (fatIndex === 3) basePerda = 65000;
+  const loadingCost = calculateCost(answers);
+  const basePerda = loadingCost.max;
 
   const steps = [
     { icon: 'briefcase', text: `Mapeando gargalos na área de ${segName}...` },
-    { icon: 'search', text: `Cruzando dados com empresas em ${leadLocation}...` },
+    { icon: 'search', text: `Cruzando dados com empresas ${leadLocation && leadLocation !== 'sua região' ? 'em ' + leadLocation : 'do seu setor'}...` },
     { icon: 'dollar-sign', text: `Calculando horas perdidas e sangria financeira...`, special: true },
     { icon: 'activity', text: 'Priorizando automações com maior retorno imediato...' },
     { icon: 'target', text: 'Priorizando automações com maior retorno...' },
@@ -910,25 +1009,30 @@ function showResult() {
   const empresa = textData.empresa || 'sua empresa';
 
   const fatIndex = answers.faturamento;
-  const matIndex = answers.maturidade;
   const horasIndex = answers.horas_perdidas;
-  const dorIndex = answers.dor;
   // janela_decisao será coletada na tela de resultado; default neutro
   const decIndex = answers.janela_decisao ?? 1;
 
-  let minLoss = 4200, maxLoss = 8500;
-  if (fatIndex === 1) { minLoss = 14500; maxLoss = 22000; }
-  if (fatIndex === 2) { minLoss = 28500; maxLoss = 42000; }
-  if (fatIndex === 3) { minLoss = 65000; maxLoss = 98000; }
+  const cost = calculateCost(answers);
+  const minLoss = cost.min;
+  const maxLoss = cost.max;
 
   const lostValueStr = `R$ ${(minLoss / 1000).toFixed(0)}k a R$ ${(maxLoss / 1000).toFixed(0)}k`;
-  const workersEquiv = (maxLoss / 3500).toFixed(1);
-  let score = 38;
-  if (matIndex === 1) score = 52;
-  if (matIndex === 2) score = 61;
-  if (matIndex === 3) score = 78;
-  if (matIndex === 4) score = 92;
-  if (horasIndex >= 2) score = Math.max(35, score - 8);
+
+  // Salário médio por setor para equivalência de funcionários
+  const salarioPorSetor = {
+    'Construção Civil': 3200,
+    'Jurídico e Contabilidade': 4500,
+    'Comércio e Varejo': 2800,
+    'Indústria e Manufatura': 3500,
+    'Saúde': 4000,
+    'Serviços e Consultoria': 4200,
+  };
+  const segOptName = QUESTIONS[0].options[answers.segmento]?.title || '';
+  const salarioSetor = salarioPorSetor[segOptName] || 3500;
+  const workersEquiv = (maxLoss / salarioSetor).toFixed(1);
+
+  const score = calculateScore(answers);
 
   const scoreLabels = [
     { max: 40, label: 'Operação em Risco', color: '#ef4444' },
@@ -975,9 +1079,9 @@ function showResult() {
   const now = new Date();
   const diagnosticId = `BG-${now.getFullYear().toString().slice(-2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
-  const recupAuto = (maxLoss * 0.6 / 1000).toFixed(1);
-  const recupInteg = (maxLoss * 0.35 / 1000).toFixed(1);
-  const recupDash = (maxLoss * 0.2 / 1000).toFixed(1);
+  const recupAuto = (maxLoss * 0.55 / 1000).toFixed(1);
+  const recupInteg = (maxLoss * 0.30 / 1000).toFixed(1);
+  const recupDash = (maxLoss * 0.15 / 1000).toFixed(1);
 
   body.innerHTML = `
     <div class="reveal visible" style="animation: fadeIn 0.5s ease-out;">
@@ -1056,7 +1160,7 @@ function showResult() {
           Agora que você viu os números: quando você quer agir?
         </h3>
         <div class="janela-opts-grid">
-          <button class="janela-opt-btn" data-dec="0" data-echo="Perfeito. Vamos priorizar ações de impacto imediato para os próximos 7 dias.">
+          <button class="janela-opt-btn" data-dec="0" data-echo="Excelente decisão. Você receberá atendimento prioritário da nossa equipe de engenharia.">
             <strong>Nos próximos 7 dias</strong><span>Preciso de resultado rápido</span>
           </button>
           <button class="janela-opt-btn" data-dec="1" data-echo="Ótimo timing. Dá para estruturar a implementação com controle e previsibilidade.">
@@ -1175,11 +1279,17 @@ function showResult() {
   });
 
   // ── Data collection ──────────────────────────────────────
-  const segOpt = QUESTIONS[0].options[answers.segmento];
-  const horasOpt = QUESTIONS[1].options[answers.horas_perdidas];
-  const dorOpt = QUESTIONS[2].options[answers.dor];
-  const fatOpt = QUESTIONS[3].options[answers.faturamento];
-  const matOpt = QUESTIONS[4].options[answers.maturidade];
+  const qById = (id) => QUESTIONS.find(q => q.id === id);
+  const segOpt = qById('segmento')?.options[answers.segmento];
+  const horasOpt = qById('horas_perdidas')?.options[answers.horas_perdidas];
+  const fatOpt = qById('faturamento')?.options[answers.faturamento];
+  const matOpt = qById('maturidade')?.options[answers.maturidade];
+
+  // Dor is multi-select (array of indices)
+  const dorQ = qById('dor');
+  const dorIndices = Array.isArray(answers.dor) ? answers.dor : (typeof answers.dor === 'number' ? [answers.dor] : []);
+  const dorTitles = dorIndices.map(i => dorQ?.options[i]?.title).filter(Boolean);
+  const dorLabel = dorTitles.length > 0 ? dorTitles.join(' + ') : 'N/A';
 
   // Payload do LEAD — apenas colunas que existem na tabela leads
   const leadPayload = {
@@ -1194,7 +1304,7 @@ function showResult() {
     temperatura: leadTemperature.toLowerCase(),
     responsavel: 'Bryan',
     diagnostico_id: diagnosticId,
-    notas: `Score: ${score}/100 | Custo: R$ ${(minLoss/1000).toFixed(0)}k-${(maxLoss/1000).toFixed(0)}k/mês | Dor: ${dorOpt ? dorOpt.title : 'N/A'} | Horas perdidas: ${horasOpt ? horasOpt.title : 'N/A'} | Maturidade: ${matOpt ? matOpt.title : 'N/A'} | Faturamento: ${fatOpt ? fatOpt.title : 'N/A'}`
+    notas: `Score: ${score}/100 | Custo: R$ ${(minLoss/1000).toFixed(0)}k-${(maxLoss/1000).toFixed(0)}k/mês | Dor: ${dorLabel} | Horas perdidas: ${horasOpt ? horasOpt.title : 'N/A'} | Maturidade: ${matOpt ? matOpt.title : 'N/A'} | Faturamento: ${fatOpt ? fatOpt.title : 'N/A'}`
   };
 
   // Payload da QUIZ_SESSION — dados detalhados do quiz
@@ -1202,7 +1312,7 @@ function showResult() {
     setor: segOpt ? segOpt.title : '',
     faturamento_faixa: fatOpt ? fatOpt.title : '',
     horas_retrabalho: horasOpt ? horasOpt.title : '',
-    gargalos: dorOpt ? [dorOpt.title] : [],
+    gargalos: dorTitles,
     nivel_tecnologia: matOpt ? matOpt.title : '',
     respostas: JSON.stringify({ answers, textData }),
     score_automacao: score,
