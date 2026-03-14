@@ -14,6 +14,7 @@ export interface ProjecaoMes {
   receita: number
   clientesNovos: number
   clientesAtivos: number
+  mensalidadeMes: number
   custosFixos: number
   custosVariaveis: number
   resultado: number
@@ -127,20 +128,21 @@ export function useProjecoes(): UseProjecoesResult {
         const anoOffset = Math.floor((month + i) / 12)
         const mesLabel = `${MONTH_SHORT[mesIndex]}/${String((year + anoOffset) % 100).padStart(2, '0')}`
 
-        // Novos clientes neste mês (com crescimento aplicado)
-        const clientesNovosMes = Math.round(
-          novosClientesMes * Math.pow(1 + taxaCrescimento, i)
-        )
+        // Novos clientes neste mês — FIXO, não cresce com a taxa
+        const clientesNovosMes = novosClientesMes
 
         // Clientes ativos = soma de clientes de TODOS os meses anteriores
         // (não conta os novos deste mês — mensalidade começa no mês seguinte)
         const clientesAtivos = mesesProj.reduce((s, m) => s + m.clientesNovos, 0)
 
-        // Receita de Setup: cobrado UMA VEZ, no mês que o cliente fecha
+        // Mensalidade cresce pela taxa de crescimento mensal
+        const mensalidadeMes = mensalidadePorCliente * Math.pow(1 + taxaCrescimento, i)
+
+        // Receita de Setup: cobrado UMA VEZ, VALOR FIXO (não cresce)
         const receitaSetup = clientesNovosMes * setupPorCliente
 
-        // Receita de Mensalidade (MRR): clientes ativos × mensalidade
-        const receitaMRR = clientesAtivos * mensalidadePorCliente
+        // Receita de Mensalidade (MRR): clientes ativos × mensalidade do mês
+        const receitaMRR = clientesAtivos * mensalidadeMes
 
         // Receita total do mês
         const receita = receitaSetup + receitaMRR
@@ -160,6 +162,7 @@ export function useProjecoes(): UseProjecoesResult {
           receita,
           clientesNovos: clientesNovosMes,
           clientesAtivos,
+          mensalidadeMes,
           custosFixos: custosFixosMes,
           custosVariaveis,
           resultado,

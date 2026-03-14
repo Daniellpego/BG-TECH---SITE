@@ -145,6 +145,7 @@ function QuarterlyBreakdown({ proj }: { proj: ProjecaoCalculada }) {
                       <span className="text-[10px] text-text-dark uppercase">Mês</span>
                       <p className="text-sm font-semibold text-text-primary">{m.label}</p>
                       <span className="text-[10px] text-text-dark">{m.clientesNovos} novos · {m.clientesAtivos} ativos</span>
+                      <p className="text-[10px] text-text-dark">Mensalidade: {formatCurrency(m.mensalidadeMes)}</p>
                     </div>
                     <div>
                       <span className="text-[10px] text-text-dark uppercase">Setup</span>
