@@ -5438,60 +5438,6 @@ footer, .site-footer {
   50% { box-shadow: 0 6px 24px rgba(37,211,102,0.35), 0 0 0 8px rgba(37,211,102,0.12); }
 }
 
-/* --- Exit Intent Popup --- */
-.exit-overlay {
-  position: fixed; inset: 0; z-index: 10000;
-  background: rgba(0,0,0,0);
-  pointer-events: none;
-  transition: background 0.3s;
-}
-.exit-overlay.show { background: rgba(0,0,0,0.72); pointer-events: all; }
-.exit-popup {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -46%);
-  width: min(520px, 92vw);
-  background: linear-gradient(145deg, #0D2040 0%, #091828 100%);
-  border: 1px solid rgba(0,200,240,0.25);
-  border-radius: 24px; padding: 44px;
-  opacity: 0;
-  transition: all 0.35s cubic-bezier(.22,1,.36,1);
-}
-.exit-popup::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,200,240,0.5), transparent);
-}
-.exit-overlay.show .exit-popup { opacity: 1; transform: translate(-50%, -50%); }
-.exit-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(255,255,255,0.06); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--t-muted); transition: all 0.2s;
-}
-.exit-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
-.exit-popup h3 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -.5px; margin-bottom: 10px; font-family: 'Poppins', sans-serif; }
-.exit-popup h3 em { font-style: normal; background: linear-gradient(135deg, #00C8F0, #40D8EE); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-.exit-popup p { font-size: 14px; font-weight: 300; color: var(--t-muted); line-height: 1.65; margin-bottom: 20px; font-family: 'Poppins', sans-serif; }
-.exit-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.exit-btn-main {
-  flex: 1; min-width: 200px;
-  background: linear-gradient(135deg, #00C8F0 0%, #40D8EE 100%);
-  color: #060E1C; font-weight: 700; font-size: 14px;
-  border: none; border-radius: 300px; padding: 14px 20px;
-  cursor: pointer; text-decoration: none;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 20px rgba(0,200,240,0.3);
-  transition: all 0.2s;
-}
-.exit-btn-main:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(0,200,240,0.45); }
-.exit-btn-skip {
-  background: transparent; border: none;
-  color: var(--t-dim); font-size: 13px; cursor: pointer;
-  padding: 14px 16px; font-family: 'Poppins', sans-serif; white-space: nowrap;
-}
-
 /* --- Eyebrow in dark sections --- */
 .eyebrow {
   color: var(--cyan) !important;
