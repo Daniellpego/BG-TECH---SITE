@@ -47,6 +47,7 @@ import {
 import { useGroqAnalysis } from '@/hooks/use-groq'
 import { useDashboard } from '@/hooks/use-dashboard'
 import type { DashboardAlert, HealthStatus } from '@/hooks/use-dashboard'
+import { useTax } from '@/providers/tax-provider'
 
 // ── Health Banner ────────────────────────────────────────────────────
 const HEALTH_CONFIG: Record<
@@ -251,16 +252,23 @@ function ChartTooltipContent({
 export default function DashboardPage() {
   useEffect(() => { document.title = 'Painel Geral | BG Tech CFO' }, [])
 
-  const {
-    kpis,
-    variations,
-    chartData,
-    costDistribution,
-    alerts,
-    healthStatus,
-    isLoading,
-    error,
-  } = useDashboard()
+  const dashboard = useDashboard()
+  const { simplesEnabled, aliquota } = useTax()
+
+  // Apply Simples Nacional overlay
+  const impostoSimples = simplesEnabled ? dashboard.kpis.receitaTotal * (aliquota / 100) : 0
+  const kpis = {
+    ...dashboard.kpis,
+    resultadoLiquido: dashboard.kpis.resultadoLiquido - impostoSimples,
+    burnRate: dashboard.kpis.burnRate + impostoSimples,
+    runway: (dashboard.kpis.burnRate + impostoSimples) > 0
+      ? dashboard.kpis.caixaDisponivel / (dashboard.kpis.burnRate + impostoSimples)
+      : dashboard.kpis.caixaDisponivel > 0 ? 99 : 0,
+    margem: dashboard.kpis.receitaTotal > 0
+      ? ((dashboard.kpis.resultadoLiquido - impostoSimples) / dashboard.kpis.receitaTotal) * 100
+      : 0,
+  }
+  const { variations, chartData, costDistribution, alerts, healthStatus, isLoading, error } = dashboard
 
   const { analyze, isLoading: aiLoading, error: aiError } = useGroqAnalysis()
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())

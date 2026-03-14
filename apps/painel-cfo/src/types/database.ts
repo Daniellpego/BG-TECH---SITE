@@ -108,6 +108,7 @@ export interface Projecao {
   taxa_crescimento_mensal: number
   novos_clientes_mes: number
   ticket_medio: number
+  setup_por_cliente: number
   custos_fixos_projetados: number | null
   custo_variavel_percentual: number
   meses_projecao: number

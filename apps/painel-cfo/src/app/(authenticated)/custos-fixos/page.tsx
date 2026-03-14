@@ -3,10 +3,11 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useMemo, useEffect } from 'react'
-import { Wallet, Plus, DollarSign, Calendar, Percent, Flame } from 'lucide-react'
+import { Wallet, Plus, DollarSign, Calendar, Percent, Flame, Users, Save } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { useCustosFixos } from '@/hooks/use-custos-fixos'
 import { useReceitas } from '@/hooks/use-receitas'
+import { useConfigCFO, useUpdateConfigCFO, computeProLabore } from '@/hooks/use-config-cfo'
 import { CustoFixoForm } from '@/components/custos-fixos/custo-fixo-form'
 import { CustosFixosTable } from '@/components/custos-fixos/custos-fixos-table'
 import { Button } from '@/components/ui/button'
@@ -61,8 +62,37 @@ export default function CustosFixosPage() {
 
   const { data: custosFixos, isLoading } = useCustosFixos()
   const { data: receitas } = useReceitas()
+  const { data: configCFO, isLoading: configLoading } = useConfigCFO()
+  const updateConfig = useUpdateConfigCFO()
   const [formOpen, setFormOpen] = useState(false)
   const [editCustoFixo, setEditCustoFixo] = useState<CustoFixo | null>(null)
+
+  // Pró-labore local state
+  const [plValor, setPlValor] = useState('')
+  const [plSocios, setPlSocios] = useState('')
+  const [plDirty, setPlDirty] = useState(false)
+
+  // Sync local state with config
+  useEffect(() => {
+    if (configCFO && !plDirty) {
+      setPlValor(String(configCFO.prolabore_valor))
+      setPlSocios(String(configCFO.prolabore_socios))
+    }
+  }, [configCFO, plDirty])
+
+  const proLaboreCalc = computeProLabore(configCFO ? {
+    ...configCFO,
+    prolabore_valor: Number(plValor) || 0,
+    prolabore_socios: Number(plSocios) || 0,
+  } : undefined)
+
+  async function handleSaveProLabore() {
+    await updateConfig.mutateAsync({
+      prolabore_valor: Number(plValor) || 0,
+      prolabore_socios: Number(plSocios) || 1,
+    })
+    setPlDirty(false)
+  }
 
   const kpis = useMemo(() => {
     const ativos = custosFixos?.filter((c) => c.status === 'ativo') ?? []
@@ -147,6 +177,69 @@ export default function CustosFixosPage() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Pró-labore Section */}
+      <div className="card-glass space-y-4">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-[#ec4899]" />
+          <h2 className="text-sm font-semibold text-text-primary">Pró-labore dos Sócios</h2>
+          <span className="text-[10px] text-text-dark ml-auto">INSS: {configCFO?.prolabore_inss_percentual ?? 11}%</span>
+        </div>
+
+        {configLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <label className="text-xs text-text-secondary mb-1 block">Valor por sócio (R$)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={plValor}
+                  onChange={(e) => { setPlValor(e.target.value); setPlDirty(true) }}
+                  className="flex h-9 w-full rounded-lg bg-bg-navy/50 border border-brand-blue-deep/30 px-3 py-1.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-text-secondary mb-1 block">Qtd. sócios</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={plSocios}
+                  onChange={(e) => { setPlSocios(e.target.value); setPlDirty(true) }}
+                  className="flex h-9 w-full rounded-lg bg-bg-navy/50 border border-brand-blue-deep/30 px-3 py-1.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-cyan/50"
+                />
+              </div>
+              <div>
+                <span className="text-xs text-text-secondary mb-1 block">Total Pró-labore</span>
+                <p className="text-lg font-bold text-[#ec4899]">{formatCurrency(proLaboreCalc.totalProLabore)}</p>
+              </div>
+              <div>
+                <span className="text-xs text-text-secondary mb-1 block">INSS ({configCFO?.prolabore_inss_percentual ?? 11}%)</span>
+                <p className="text-lg font-bold text-status-negative">{formatCurrency(proLaboreCalc.totalINSS)}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between border-t border-brand-blue-deep/20 pt-3">
+              <div>
+                <span className="text-xs text-text-secondary">Custo total mensal (Pró-labore + INSS):</span>
+                <span className="text-sm font-bold text-text-primary ml-2">{formatCurrency(proLaboreCalc.custoTotal)}</span>
+              </div>
+              {plDirty && (
+                <Button size="sm" onClick={handleSaveProLabore} disabled={updateConfig.isPending}>
+                  <Save className="h-3.5 w-3.5 mr-1" />
+                  {updateConfig.isPending ? 'Salvando...' : 'Salvar'}
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Empty State */}

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { CalendarRange, TrendingUp, TrendingDown, DollarSign, ChevronDown, ChevronUp } from 'lucide-react'
 import { useBalanco } from '@/hooks/use-balanco'
 import { usePeriod } from '@/providers/period-provider'
+import { useTax } from '@/providers/tax-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/format'
@@ -43,7 +44,22 @@ export default function BalancoAnualPage() {
   useEffect(() => { document.title = 'Balanço Anual | BG Tech CFO' }, [])
 
   const { year, setYear } = usePeriod()
-  const { meses, faturamentoAno, gastosAno, saldoAno, isLoading } = useBalanco()
+  const balanco = useBalanco()
+  const { simplesEnabled, aliquota } = useTax()
+
+  // Apply Simples Nacional overlay
+  const meses = simplesEnabled
+    ? balanco.meses.map((m) => {
+        const imposto = m.entradas * (aliquota / 100)
+        return { ...m, saidas: m.saidas + imposto, saldo: m.saldo - imposto }
+      })
+    : balanco.meses
+  const faturamentoAno = balanco.faturamentoAno
+  const gastosAno = simplesEnabled
+    ? balanco.gastosAno + faturamentoAno * (aliquota / 100)
+    : balanco.gastosAno
+  const saldoAno = faturamentoAno - gastosAno
+  const isLoading = balanco.isLoading
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null)
 
   const now = new Date()

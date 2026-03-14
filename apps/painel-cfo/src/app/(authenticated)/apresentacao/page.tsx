@@ -8,6 +8,7 @@ import { X, TrendingUp, DollarSign, BarChart3, Timer, Flame, PiggyBank, ArrowRig
 import { usePeriod } from '@/providers/period-provider'
 import { useDashboard } from '@/hooks/use-dashboard'
 import { useDRE } from '@/hooks/use-dre'
+import { useTax } from '@/providers/tax-provider'
 import { formatCurrency } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/logo'
@@ -29,8 +30,22 @@ export default function ApresentacaoPage() {
   const { month, year } = usePeriod()
   const dashboard = useDashboard()
   const dre = useDRE()
+  const { simplesEnabled, aliquota } = useTax()
 
-  const { kpis, healthStatus } = dashboard
+  // Apply Simples Nacional overlay
+  const impostoSimples = simplesEnabled ? dashboard.kpis.receitaTotal * (aliquota / 100) : 0
+  const kpis = {
+    ...dashboard.kpis,
+    resultadoLiquido: dashboard.kpis.resultadoLiquido - impostoSimples,
+    burnRate: dashboard.kpis.burnRate + impostoSimples,
+    runway: (dashboard.kpis.burnRate + impostoSimples) > 0
+      ? dashboard.kpis.caixaDisponivel / (dashboard.kpis.burnRate + impostoSimples)
+      : dashboard.kpis.caixaDisponivel > 0 ? 99 : 0,
+    margem: dashboard.kpis.receitaTotal > 0
+      ? ((dashboard.kpis.resultadoLiquido - impostoSimples) / dashboard.kpis.receitaTotal) * 100
+      : 0,
+  }
+  const { healthStatus } = dashboard
   const health = HEALTH_MAP[healthStatus]
 
   // Dynamic title
@@ -154,8 +169,14 @@ export default function ApresentacaoPage() {
             <CascadeItem label="(-) Custos Fixos" value={-dre.current.cfTotal} negative />
             <ArrowRight className="h-5 w-5 text-brand-blue-deep shrink-0 hidden sm:block" />
             <CascadeItem label="(-) Impostos" value={-dre.current.impostos} negative />
+            {simplesEnabled && (
+              <>
+                <ArrowRight className="h-5 w-5 text-brand-blue-deep shrink-0 hidden sm:block" />
+                <CascadeItem label={`(-) Simples ${aliquota}%`} value={-impostoSimples} negative />
+              </>
+            )}
             <ArrowRight className="h-5 w-5 text-brand-blue-deep shrink-0 hidden sm:block" />
-            <CascadeItem label="Resultado Líquido" value={dre.current.resultadoLiquido} highlight final />
+            <CascadeItem label="Resultado Líquido" value={dre.current.resultadoLiquido - impostoSimples} highlight final />
           </div>
         </div>
 

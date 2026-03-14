@@ -4,13 +4,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { usePeriod } from '@/providers/period-provider'
-import type { Projecao, Receita, CustoFixo, Caixa } from '@/types/database'
+import type { Projecao, CustoFixo, Caixa } from '@/types/database'
 
 export interface ProjecaoMes {
   mes: number
   label: string
+  receitaSetup: number
+  receitaMRR: number
   receita: number
-  mrr: number
+  clientesNovos: number
+  clientesAtivos: number
+  mensalidadeMes: number
   custosFixos: number
   custosVariaveis: number
   resultado: number
@@ -21,7 +25,10 @@ export interface ProjecaoCalculada {
   cenario: Projecao
   meses: ProjecaoMes[]
   receita12m: number
+  receitaSetup12m: number
+  receitaMRR12m: number
   mrr12m: number
+  clientesAtivos12m: number
   lucroAcumulado: number
   breakEven: number
   runwayAtual: number
@@ -56,28 +63,6 @@ export function useProjecoes(): UseProjecoesResult {
     },
   })
 
-  // Fetch last month's MRR (recorrente + confirmado)
-  const prevMonth = month === 1 ? 12 : month - 1
-  const prevYear = month === 1 ? year - 1 : year
-  const prevStart = `${prevYear}-${String(prevMonth).padStart(2, '0')}-01`
-  const prevLastDay = new Date(prevYear, prevMonth, 0).getDate()
-  const prevEnd = `${prevYear}-${String(prevMonth).padStart(2, '0')}-${String(prevLastDay).padStart(2, '0')}`
-
-  const { data: receitasPrevMonth, isLoading: loadingReceitas } = useQuery({
-    queryKey: ['projecoes-receitas', prevStart, prevEnd],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('receitas')
-        .select('*')
-        .gte('data', prevStart)
-        .lte('data', prevEnd)
-        .eq('status', 'confirmado')
-
-      if (error) throw error
-      return data as Receita[]
-    },
-  })
-
   // Fetch active custos fixos
   const { data: custosFixos, isLoading: loadingCustos } = useQuery({
     queryKey: ['projecoes-custos-fixos'],
@@ -107,14 +92,10 @@ export function useProjecoes(): UseProjecoesResult {
     },
   })
 
-  const isLoading = loadingCenarios || loadingReceitas || loadingCustos || loadingCaixa
+  const isLoading = loadingCenarios || loadingCustos || loadingCaixa
 
   const projecoes = useMemo(() => {
     if (!cenarios) return []
-
-    const currentMRR = (receitasPrevMonth ?? [])
-      .filter((r) => r.recorrente)
-      .reduce((s, r) => s + Number(r.valor_bruto), 0)
 
     const totalCustosFixos = (custosFixos ?? []).reduce(
       (s, c) => s + Number(c.valor_mensal),
@@ -125,7 +106,6 @@ export function useProjecoes(): UseProjecoesResult {
 
     return cenarios.map((cenario) => {
       const mesesProj: ProjecaoMes[] = []
-      let prevMRR = currentMRR
       let prevCaixa = caixaInicial
       let lucroAcumulado = 0
 
@@ -133,24 +113,42 @@ export function useProjecoes(): UseProjecoesResult {
         ? Number(cenario.custos_fixos_projetados)
         : totalCustosFixos
 
+      const novosClientesMes = Number(cenario.novos_clientes_mes)
+      const setupPorCliente = Number(cenario.setup_por_cliente ?? 0)
+      const mensalidadePorCliente = Number(cenario.ticket_medio) // ticket_medio = mensalidade
+      const custoVarPct = Number(cenario.custo_variavel_percentual) / 100
+      const taxaCrescimento = Number(cenario.taxa_crescimento_mensal) / 100
+
+      // Nova lógica: Setup cobrado UMA VEZ no mês de entrada
+      // Mensalidade começa no mês SEGUINTE ao fechamento
+      // Clientes ativos = soma de clientes dos meses ANTERIORES
+
       for (let i = 0; i < 12; i++) {
         const mesIndex = ((month - 1 + i + 1) % 12)
         const anoOffset = Math.floor((month + i) / 12)
         const mesLabel = `${MONTH_SHORT[mesIndex]}/${String((year + anoOffset) % 100).padStart(2, '0')}`
 
-        // MRR grows by growth rate each month
-        const mrrGrown = prevMRR * (1 + Number(cenario.taxa_crescimento_mensal) / 100)
+        // Novos clientes neste mês — FIXO, não cresce com a taxa
+        const clientesNovosMes = novosClientesMes
 
-        // First month: novos_clientes * ticket_medio added to MRR
-        const newClientRevenue = i === 0
-          ? Number(cenario.novos_clientes_mes) * Number(cenario.ticket_medio)
-          : 0
+        // Clientes ativos = soma de clientes de TODOS os meses anteriores
+        // (não conta os novos deste mês — mensalidade começa no mês seguinte)
+        const clientesAtivos = mesesProj.reduce((s, m) => s + m.clientesNovos, 0)
 
-        const mrr = mrrGrown + newClientRevenue
-        const receita = mrr
+        // Mensalidade cresce pela taxa de crescimento mensal
+        const mensalidadeMes = mensalidadePorCliente * Math.pow(1 + taxaCrescimento, i)
+
+        // Receita de Setup: cobrado UMA VEZ, VALOR FIXO (não cresce)
+        const receitaSetup = clientesNovosMes * setupPorCliente
+
+        // Receita de Mensalidade (MRR): clientes ativos × mensalidade do mês
+        const receitaMRR = clientesAtivos * mensalidadeMes
+
+        // Receita total do mês
+        const receita = receitaSetup + receitaMRR
 
         const custosFixosMes = cfProjetados
-        const custosVariaveis = receita * Number(cenario.custo_variavel_percentual) / 100
+        const custosVariaveis = receita * custoVarPct
         const resultado = receita - custosFixosMes - custosVariaveis
         const caixaAcumulado = prevCaixa + resultado
 
@@ -159,33 +157,43 @@ export function useProjecoes(): UseProjecoesResult {
         mesesProj.push({
           mes: i + 1,
           label: mesLabel,
+          receitaSetup,
+          receitaMRR,
           receita,
-          mrr,
+          clientesNovos: clientesNovosMes,
+          clientesAtivos,
+          mensalidadeMes,
           custosFixos: custosFixosMes,
           custosVariaveis,
           resultado,
           caixaAcumulado,
         })
 
-        prevMRR = mrr
         prevCaixa = caixaAcumulado
       }
 
       const receita12m = mesesProj.reduce((s, m) => s + m.receita, 0)
-      const mrr12m = mesesProj[11]?.mrr ?? 0
+      const receitaSetup12m = mesesProj.reduce((s, m) => s + m.receitaSetup, 0)
+      const receitaMRR12m = mesesProj.reduce((s, m) => s + m.receitaMRR, 0)
 
-      // Break-even in clients: how many clients needed so revenue covers costs
-      const ticketMedio = Number(cenario.ticket_medio)
-      const margemContribuicao = ticketMedio * (1 - Number(cenario.custo_variavel_percentual) / 100)
+      // MRR no mês 12 (apenas mensalidades)
+      const mrr12m = mesesProj[11]?.receitaMRR ?? 0
+
+      // Total de clientes ativos no mês 12
+      // = soma de todos os clientes novos de todos os 12 meses
+      const clientesAtivos12m = mesesProj.reduce((s, m) => s + m.clientesNovos, 0)
+
+      // Break-even: quantos clientes ativos necessários pra cobrir custos fixos
+      const margemContribuicao = mensalidadePorCliente * (1 - custoVarPct)
       const breakEven = margemContribuicao > 0
         ? Math.ceil(cfProjetados / margemContribuicao)
         : 0
 
-      // Runway: months of cash left at current burn rate
-      const burnMensal = cfProjetados + (currentMRR * Number(cenario.custo_variavel_percentual) / 100) - currentMRR
+      // Runway: meses de caixa ao ritmo atual
+      const burnMensal = cfProjetados
       const runwayAtual = burnMensal > 0 ? Math.floor(caixaInicial / burnMensal) : 99
 
-      // Month of break-even (first month with positive resultado)
+      // Mês de break-even (primeiro mês com resultado positivo)
       const mesBreakEvenIdx = mesesProj.findIndex((m) => m.resultado >= 0)
       const mesBreakEven = mesBreakEvenIdx >= 0 ? mesesProj[mesBreakEvenIdx]!.label : 'N/A'
 
@@ -193,14 +201,17 @@ export function useProjecoes(): UseProjecoesResult {
         cenario,
         meses: mesesProj,
         receita12m,
+        receitaSetup12m,
+        receitaMRR12m,
         mrr12m,
+        clientesAtivos12m,
         lucroAcumulado,
         breakEven,
         runwayAtual,
         mesBreakEven,
       } as ProjecaoCalculada
     })
-  }, [cenarios, receitasPrevMonth, custosFixos, caixaData, month, year])
+  }, [cenarios, custosFixos, caixaData, month, year])
 
   return { projecoes, isLoading }
 }
@@ -210,6 +221,7 @@ export interface ProjecaoInsert {
   taxa_crescimento_mensal: number
   novos_clientes_mes: number
   ticket_medio: number
+  setup_por_cliente?: number
   custos_fixos_projetados?: number | null
   custo_variavel_percentual: number
   meses_projecao: number
@@ -224,6 +236,28 @@ export function useCreateProjecao() {
       const { data, error } = await supabase
         .from('projecoes')
         .insert(projecao as unknown as Record<string, unknown>)
+        .select()
+        .single()
+
+      if (error) throw error
+      return data as Projecao
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projecoes-cenarios'] })
+    },
+  })
+}
+
+export function useUpdateProjecao() {
+  const queryClient = useQueryClient()
+  const supabase = createClient()
+
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: Partial<ProjecaoInsert> & { id: string }) => {
+      const { data, error } = await supabase
+        .from('projecoes')
+        .update(updates as unknown as Record<string, unknown>)
+        .eq('id', id)
         .select()
         .single()
 

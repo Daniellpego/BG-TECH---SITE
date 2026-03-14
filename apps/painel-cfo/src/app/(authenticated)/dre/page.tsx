@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useMemo, useEffect } from 'react'
 import { FileText, TrendingUp, TrendingDown, Activity } from 'lucide-react'
 import { useDRE, type DRELine } from '@/hooks/use-dre'
+import { useTax } from '@/providers/tax-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -66,8 +67,9 @@ function DRERow({ line }: { line: DRELine }) {
     )
   }
 
+  const isSimplesLine = line.label.includes('SIMPLES NACIONAL')
   const isNegativeHeader =
-    line.label.startsWith('(-)') || line.label.includes('CUSTOS') || line.label.includes('IMPOSTOS')
+    !isSimplesLine && (line.label.startsWith('(-)') || line.label.includes('CUSTOS') || line.label.includes('IMPOSTOS'))
   const isPositiveHeader = line.label === 'RECEITA BRUTA'
   const isSubtotal = line.type === 'subtotal'
   const isTotal = line.type === 'total'
@@ -82,6 +84,7 @@ function DRERow({ line }: { line: DRELine }) {
         'transition-colors',
         isTotal && 'bg-brand-blue-deep/40',
         isSubtotal && 'bg-brand-blue-deep/20',
+        isSimplesLine && 'bg-status-warning/10',
         isSub && 'hover:bg-bg-hover/50'
       )}
     >
@@ -94,6 +97,7 @@ function DRERow({ line }: { line: DRELine }) {
           isTotal && 'text-lg font-bold text-text-primary',
           isSubtotal && 'font-semibold text-text-primary',
           isPositiveHeader && 'font-bold text-status-positive',
+          isSimplesLine && 'font-semibold text-status-warning',
           isNegativeHeader && !isSubtotal && !isTotal && 'font-semibold text-status-negative',
           isSub && 'text-sm text-text-secondary'
         )}
@@ -108,18 +112,20 @@ function DRERow({ line }: { line: DRELine }) {
           isTotal && 'text-lg font-bold',
           isSubtotal && 'font-semibold',
           isSub && 'text-sm',
-          isTotal || isSubtotal
-            ? valuePositive
-              ? 'text-status-positive'
-              : 'text-status-negative'
-            : isNegativeHeader
-              ? 'text-status-negative'
-              : isPositiveHeader
+          isSimplesLine
+            ? 'text-status-warning'
+            : isTotal || isSubtotal
+              ? valuePositive
                 ? 'text-status-positive'
-                : 'text-text-primary'
+                : 'text-status-negative'
+              : isNegativeHeader
+                ? 'text-status-negative'
+                : isPositiveHeader
+                  ? 'text-status-positive'
+                  : 'text-text-primary'
         )}
       >
-        {isNegativeHeader && !isSubtotal && !isTotal && line.month > 0 ? '-' : ''}
+        {(isNegativeHeader || isSimplesLine) && !isSubtotal && !isTotal && line.month > 0 ? '-' : ''}
         {formatDREValue(line.month)}
       </td>
 
@@ -130,14 +136,16 @@ function DRERow({ line }: { line: DRELine }) {
           isTotal && 'text-lg font-bold',
           isSubtotal && 'font-semibold',
           isSub && 'text-sm',
-          isTotal || isSubtotal
-            ? ytdPositive
-              ? 'text-status-positive'
-              : 'text-status-negative'
-            : 'text-text-secondary'
+          isSimplesLine
+            ? 'text-status-warning'
+            : isTotal || isSubtotal
+              ? ytdPositive
+                ? 'text-status-positive'
+                : 'text-status-negative'
+              : 'text-text-secondary'
         )}
       >
-        {isNegativeHeader && !isSubtotal && !isTotal && line.ytd > 0 ? '-' : ''}
+        {(isNegativeHeader || isSimplesLine) && !isSubtotal && !isTotal && line.ytd > 0 ? '-' : ''}
         {formatDREValue(line.ytd)}
       </td>
 
@@ -178,19 +186,59 @@ function CurrencyTooltip({ active, payload, label }: { active?: boolean; payload
 export default function DREPage() {
   useEffect(() => { document.title = 'DRE | BG Tech CFO' }, [])
 
-  const { lines, current, chartData, isLoading, isChartLoading } = useDRE()
+  const { lines: rawLines, current, chartData, isLoading, isChartLoading } = useDRE()
+  const { simplesEnabled, aliquota } = useTax()
+
+  // Inject Simples Nacional line when toggle is ON
+  const lines = useMemo(() => {
+    if (!simplesEnabled || isLoading) return rawLines
+    const impostoSimples = current.receitaBruta * (aliquota / 100)
+    const rb = current.receitaBruta
+    const result: DRELine[] = []
+
+    for (const line of rawLines) {
+      if (line.type === 'total' && line.label === '(=) RESULTADO LÍQUIDO') {
+        // Before resultado liquido, inject simples line
+        result.push({
+          label: '(-) SIMPLES NACIONAL (6%)',
+          month: impostoSimples,
+          ytd: impostoSimples, // simplified - uses monthly value
+          percent: rb > 0 ? (impostoSimples / rb) * 100 : 0,
+          percentYtd: rb > 0 ? (impostoSimples / rb) * 100 : 0,
+          type: 'header',
+        })
+        result.push({ label: '', month: 0, ytd: 0, percent: 0, percentYtd: 0, type: 'separator' })
+        // Adjust resultado liquido
+        const adjustedRL = current.resultadoLiquido - impostoSimples
+        result.push({
+          ...line,
+          month: adjustedRL,
+          ytd: adjustedRL,
+          percent: rb > 0 ? (adjustedRL / rb) * 100 : 0,
+          percentYtd: rb > 0 ? (adjustedRL / rb) * 100 : 0,
+        })
+      } else {
+        result.push(line)
+      }
+    }
+    return result
+  }, [rawLines, simplesEnabled, aliquota, current, isLoading])
 
   const last6 = useMemo(() => chartData.slice(-6), [chartData])
+
+  const impostoSimples = simplesEnabled ? current.receitaBruta * (aliquota / 100) : 0
 
   const kpis = useMemo(() => {
     if (isLoading) return null
     return {
       receitaBruta: current.receitaBruta,
       margemBruta: current.pctMargemBruta,
-      resultadoLiquido: current.resultadoLiquido,
-      margemLiquida: current.pctMargemLiquida,
+      resultadoLiquido: current.resultadoLiquido - impostoSimples,
+      margemLiquida: current.receitaBruta > 0
+        ? ((current.resultadoLiquido - impostoSimples) / current.receitaBruta) * 100
+        : 0,
     }
-  }, [current, isLoading])
+  }, [current, isLoading, impostoSimples])
 
   return (
     <PageTransition>
