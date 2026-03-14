@@ -1,3 +1,5 @@
+'use strict';
+
 const CONFIG = {
   whatsappNumber: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.whatsapp) || '5543997800051',
   webhookUrl: '',
@@ -500,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (opacity === 0) scrollIndicator.style.pointerEvents = 'none';
       else scrollIndicator.style.pointerEvents = 'auto';
     }
-  });
+  }, { passive: true });
 
   // Parallax suave no hero (máx 20px deslocamento)
   const heroContent = document.querySelector('.hero-content');
@@ -558,10 +560,15 @@ let textData = {};
 function openQuiz() {
   const savedAnswers = sessionStorage.getItem('bgtech_quiz');
   if (savedAnswers) {
-    const saved = JSON.parse(savedAnswers);
-    answers = saved.answers || {};
-    textData = saved.textData || {};
-    currentStep = saved.step ?? -1;
+    try {
+      const saved = JSON.parse(savedAnswers);
+      answers = saved.answers || {};
+      textData = saved.textData || {};
+      currentStep = saved.step ?? -1;
+    } catch (_) {
+      sessionStorage.removeItem('bgtech_quiz');
+      currentStep = -1; answers = {}; textData = {};
+    }
   } else {
     currentStep = -1; answers = {}; textData = {};
   }
