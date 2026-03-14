@@ -4,8 +4,8 @@
 
 :root {
   /* === FONTES === */
-  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
 
   /* === SISTEMA DE CORES PREMIUM (Escala 50-950) === */
@@ -4860,5 +4860,391 @@ header.scrolled {
 @media (max-width: 768px) {
   .segments-scroll {
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==========================================================================
+   ULTRA PROMPT — VISUAL OVERHAUL ADDITIONS
+   ========================================================================== */
+
+/* --- Brand Tokens (overrides) --- */
+:root {
+  --brand-cyan: #00C8F0;
+  --brand-navy: #0A1628;
+  --brand-blue: #1A6AAA;
+  --brand-blue-deep: #153B5F;
+}
+
+/* --- Hero highlight span --- */
+.hero-highlight {
+  background: linear-gradient(135deg, var(--brand-cyan, #00C8F0), #38D8FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Grid background for hero --- */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,200,240,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,240,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- Hero glow orbs (enhanced) --- */
+.hero-glow-1 {
+  position: absolute;
+  top: -120px;
+  left: -80px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,200,240,0.12), transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 6s ease-in-out infinite;
+}
+.hero-glow-2 {
+  position: absolute;
+  bottom: -100px;
+  right: -60px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,106,170,0.1), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 8s ease-in-out infinite reverse;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* --- Nav logo SVG text --- */
+.nav-logo-txt {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.nav-logo-txt .accent {
+  color: var(--brand-cyan, #00C8F0);
+}
+
+/* --- Header CTA glow button --- */
+.btn-cta-nav {
+  background: linear-gradient(135deg, var(--brand-cyan, #00C8F0), #38D8FF);
+  color: #0A1628;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.btn-cta-nav:hover {
+  box-shadow: 0 0 24px rgba(0,200,240,0.45);
+  transform: translateY(-1px);
+}
+
+/* --- Clients / Logo Wall Section --- */
+.clients-sec {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+.clients-sec .eyebrow {
+  color: var(--text-3);
+  margin-bottom: 24px;
+}
+.logo-wall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.logo-wall img {
+  height: 40px;
+  opacity: 0.45;
+  filter: grayscale(100%);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.logo-wall img:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+/* --- WhatsApp Floating Button --- */
+.wha-float {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  animation: whaEntrance 0.6s var(--ease-spring) both;
+  animation-delay: 3s;
+}
+.wha-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+  text-decoration: none;
+}
+.wha-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 32px rgba(37,211,102,0.55);
+}
+.wha-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+.wha-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(37,211,102,0.5);
+  animation: whaPulseRing 2s ease-out infinite;
+}
+@keyframes whaEntrance {
+  from { opacity: 0; transform: scale(0.5) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes whaPulseRing {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* --- Exit-Intent Popup --- */
+.exit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,7,13,0.85);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  backdrop-filter: blur(6px);
+}
+.exit-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.exit-popup {
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: exitPopIn 0.5s var(--ease-spring) both;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+}
+.exit-popup h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0A1628;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.exit-popup p {
+  color: #64748b;
+  font-size: 15px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.exit-popup .btn-primary {
+  width: 100%;
+  font-size: 16px;
+  padding: 16px;
+}
+.exit-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #64748b;
+  transition: background 0.2s;
+}
+.exit-close:hover {
+  background: #e2e8f0;
+}
+@keyframes exitPopIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- Price Anchor in CTA Final --- */
+.price-anchor {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: rgba(0,200,240,0.08);
+  border: 1px solid rgba(0,200,240,0.2);
+  border-radius: 12px;
+  color: rgba(230,242,255,0.9);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.price-anchor strong {
+  color: var(--brand-cyan, #00C8F0);
+  font-weight: 700;
+}
+
+/* --- Card Hover Glow Effect --- */
+.service-card,
+.problem-card,
+.segment-card,
+.case-card,
+.founder-card {
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.service-card:hover,
+.problem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,168,255,0.12);
+  border-color: rgba(0,200,240,0.25);
+}
+.segment-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0,200,240,0.3);
+  box-shadow: 0 8px 32px rgba(0,200,240,0.1);
+}
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,168,255,0.1);
+}
+.founder-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,168,255,0.08);
+}
+
+/* --- Founder Photo Glow Ring --- */
+.founder-photo {
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.founder-card:hover .founder-photo {
+  box-shadow: 0 0 20px rgba(0,200,240,0.3);
+}
+
+/* --- Scroll Reveal Animations --- */
+.rv {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.rv.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.rv-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.rv-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.rv-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.rv-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.rv-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.rv-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- Counter Number Animation --- */
+.counter-animate {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* --- 5th Service Card (Software sob Medida) --- */
+.service-card.software-card {
+  background: linear-gradient(135deg, rgba(0,200,240,0.05), rgba(26,106,170,0.05));
+  border: 1px solid rgba(0,200,240,0.15);
+}
+
+/* --- FAQ Accordion Smooth --- */
+.faq-item .faq-answer {
+  transition: max-height 0.4s var(--ease), padding 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- Mobile fixes for new components --- */
+@media (max-width: 768px) {
+  .wha-float {
+    bottom: 90px;
+    right: 18px;
+  }
+  .wha-btn {
+    width: 52px;
+    height: 52px;
+  }
+  .wha-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+  .exit-popup {
+    padding: 32px 24px;
+  }
+  .exit-popup h3 {
+    font-size: 19px;
+  }
+  .logo-wall {
+    gap: 28px;
+  }
+  .logo-wall img {
+    height: 32px;
+  }
+  .hero-glow-1,
+  .hero-glow-2 {
+    display: none;
   }
 }

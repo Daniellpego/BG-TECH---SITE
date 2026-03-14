@@ -206,12 +206,9 @@
   }
   </script>
 
-  <!-- Preload fonte crítica para eliminar FOUT -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  <!-- Preload fonte Poppins -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -253,6 +250,9 @@
   <main id="main-content">
 
     <section id="hero" class="dark-section">
+      <div class="grid-bg" aria-hidden="true"></div>
+      <div class="hero-glow-1" aria-hidden="true"></div>
+      <div class="hero-glow-2" aria-hidden="true"></div>
       <div class="hero-orb-1" aria-hidden="true"></div>
       <div class="hero-orb-2" aria-hidden="true"></div>
 
@@ -264,8 +264,7 @@
             <span class="badge-text-mobile">47+ EMPRESAS · DIAGNÓSTICO GRATUITO</span>
           </div>
           <h1 id="hero-headline" class="hero-title">
-            Perde vendas porque demora pra responder?<br><span class="hero-highlight">Equipe afogada em planilhas
-              manuais?</span>
+            Sua empresa perde dinheiro todo dia.<br><span class="hero-highlight">E você já sabe disso.</span>
           </h1>
           <p id="hero-subtitle" class="hero-subtitle">
             Para empresas B2B de 5 a 50 colaboradores: mostramos onde você perde margem hoje e o que automatizar primeiro — sem trocar os sistemas que já usa.
@@ -587,6 +586,16 @@
             </div>
             <div class="service-anchor">Decisão baseada em ROI</div>
           </div>
+          <div class="service-card arch-card software-card" data-anim="fade-up" data-delay="500">
+            <div class="service-card-top">
+              <div class="service-header">
+                <div class="service-icon"><i data-lucide="terminal"></i></div>
+                <h3 class="service-title">Software Sob Medida</h3>
+              </div>
+              <p class="service-desc">Desenvolvemos sistemas sob demanda para resolver problemas que software pronto não resolve. Do escopo ao deploy, com foco em ROI.</p>
+            </div>
+            <div class="service-anchor">Tecnologia que paga a si mesma</div>
+          </div>
         </div>
       </div>
     </section>
@@ -698,7 +707,7 @@
         <div class="founders-layout">
           <div class="founders-content" data-anim="fade-left">
             <span class="eyebrow">A LIDERANÇA</span>
-            <h2 class="section-title" style="text-align: left;">Engenharia com visão de negócios.</h2>
+            <h2 class="section-title" style="text-align: left;">Quem está por trás da engenharia que já devolveu R$4.8M em margem.</h2>
             <p class="section-subtitle" style="text-align: left; margin-left: 0;">Entendemos perfeitamente que você não
               quer comprar código. Você quer controle absoluto e redução de dor de cabeça. A BG Tech nasceu para ser o
               parceiro tecnológico da sua empresa.</p>
@@ -846,6 +855,9 @@
           <p style="color: rgba(0,200,240,0.75); margin-top: 8px; font-size: 13px; font-weight: 600;">
             Se não cumprirmos o escopo acordado, você não paga a fatura final. O risco é nosso.
           </p>
+          <div class="price-anchor">
+            Projetos a partir de <strong>R$2.500/mês</strong> · Parcele em até 6x · ROI típico no 1º mês
+          </div>
         </div>
       </div>
     </section>
@@ -865,8 +877,7 @@
             style="font-size: 24px; color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">BG
             <span style="color: #00A8FF;">TECH</span></span>
         </div>
-        <p style="color: rgba(230, 242, 255, 0.55); line-height: 1.6; font-size: 14px;">Engenharia Digital para Empresas
-          Inteligentes.</p>
+        <p style="color: rgba(230, 242, 255, 0.55); line-height: 1.6; font-size: 14px;">Engenharia Digital para Empresas Inteligentes. Automação, software sob medida e consultoria para PMEs B2B.</p>
         <p style="margin-top: 12px; font-size: 13px; color: rgba(230, 242, 255, 0.3);">CNPJ: 65.663.208/0001-36</p>
       </div>
       <div class="footer-links">
@@ -942,6 +953,112 @@
     <p>Diagnóstico gratuito em 2 min</p>
     <a href="#quiz" class="btn-primary btn-sm js-open-quiz">Fazer Diagnóstico</a>
   </div>
+
+  <!-- WhatsApp Floating Button -->
+  <div class="wha-float" id="wha-float">
+    <a href="https://wa.me/5543997800051" target="_blank" rel="noopener noreferrer" class="wha-btn" aria-label="Falar pelo WhatsApp">
+      <div class="wha-pulse"></div>
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
+
+  <!-- Exit-Intent Popup -->
+  <div class="exit-overlay" id="exit-overlay">
+    <div class="exit-popup">
+      <button class="exit-close" id="exit-close" aria-label="Fechar">&times;</button>
+      <h3>Espera — você ia sair sem descobrir quanto está perdendo?</h3>
+      <p>Em 3 minutos, o diagnóstico revela o custo invisível da sua operação e as 3 ações de maior impacto imediato.</p>
+      <button class="btn-primary btn-shimmer js-open-quiz exit-cta">Quero meu diagnóstico gratuito</button>
+    </div>
+  </div>
+
+  <!-- Exit-Intent + Counter + Scroll Reveal JS -->
+  <script>
+  (function(){
+    // Exit-intent popup
+    var exitShown = false;
+    var exitOverlay = document.getElementById('exit-overlay');
+    var exitClose = document.getElementById('exit-close');
+    function showExit() {
+      if (exitShown || !exitOverlay) return;
+      exitShown = true;
+      exitOverlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+    function hideExit() {
+      if (!exitOverlay) return;
+      exitOverlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+    document.addEventListener('mouseleave', function(e) {
+      if (e.clientY < 5) showExit();
+    });
+    if (exitClose) exitClose.addEventListener('click', hideExit);
+    if (exitOverlay) exitOverlay.addEventListener('click', function(e) {
+      if (e.target === exitOverlay) hideExit();
+    });
+    // Close exit on quiz open
+    document.querySelectorAll('.exit-cta').forEach(function(btn) {
+      btn.addEventListener('click', hideExit);
+    });
+
+    // Counter animation
+    function animateCounters() {
+      document.querySelectorAll('.counter').forEach(function(el) {
+        if (el.dataset.animated) return;
+        var target = parseFloat(el.dataset.target);
+        var prefix = el.dataset.prefix || '';
+        var suffix = el.dataset.suffix || '';
+        var isDecimal = String(target).includes('.');
+        var duration = 2000;
+        var start = 0;
+        var startTime = null;
+        el.dataset.animated = 'true';
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = start + (target - start) * eased;
+          el.textContent = prefix + (isDecimal ? current.toFixed(1) : Math.round(current)) + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    // Scroll reveal with IntersectionObserver
+    var rvObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Trigger counter animation if counters are in view
+          if (entry.target.querySelectorAll('.counter').length) {
+            animateCounters();
+          }
+          rvObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.rv, .rv-left, .rv-right, .rv-scale, [data-anim]').forEach(function(el) {
+      rvObserver.observe(el);
+    });
+
+    // Also trigger counter animation when trust-bar becomes visible
+    var trustBar = document.getElementById('trust-bar');
+    if (trustBar) {
+      var trustObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateCounters();
+            trustObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      trustObserver.observe(trustBar);
+    }
+  })();
+  </script>
 
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <script src="config.js"></script>

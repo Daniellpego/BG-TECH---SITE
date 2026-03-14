@@ -14,8 +14,8 @@ interface LeadsTableProps {
 }
 
 function StatusBadge({ status }: { status: Lead['status'] }) {
-  const label = LEAD_STATUS_LABELS[status]
-  const color = LEAD_STATUS_COLORS[status]
+  const label = LEAD_STATUS_LABELS[status] ?? 'Não definido'
+  const color = LEAD_STATUS_COLORS[status] ?? '#94A3B8'
   return (
     <span
       className="text-xs font-semibold px-2.5 py-0.5 rounded-md"
@@ -27,7 +27,7 @@ function StatusBadge({ status }: { status: Lead['status'] }) {
 }
 
 function OrigemBadge({ origem }: { origem: string }) {
-  const label = ORIGENS_LABELS[origem] ?? origem
+  const label = ORIGENS_LABELS[origem] ?? origem ?? 'Não definido'
   const color = ORIGENS_COLORS[origem] ?? '#94A3B8'
   return (
     <span
@@ -125,7 +125,7 @@ export function LeadsTable({ leads, isLoading }: LeadsTableProps) {
                 </td>
                 <td className="p-3 text-right hidden md:table-cell">
                   <span className="text-sm text-brand-cyan font-medium">
-                    {lead.valor_estimado > 0 ? formatCurrency(lead.valor_estimado) : '-'}
+                    {(lead.valor_estimado || 0) > 0 ? formatCurrency(lead.valor_estimado) : '-'}
                   </span>
                 </td>
                 <td className="p-3 hidden xl:table-cell">

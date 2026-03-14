@@ -85,11 +85,11 @@ export function useDashboard() {
   const leadsQuentes = leads.filter((l) => l.temperatura === 'quente').length
   const pipelineValue = leads
     .filter((l) => !['fechado_ganho', 'fechado_perdido'].includes(l.status))
-    .reduce((sum, l) => sum + l.valor_estimado, 0)
+    .reduce((sum, l) => sum + (l.valor_estimado || 0), 0)
 
   const dealsGanhos = deals.filter((d) => d.status === 'ganho')
-  const totalGanho = dealsGanhos.reduce((sum, d) => sum + d.valor, 0)
-  const totalMRR = dealsGanhos.reduce((sum, d) => sum + d.mrr, 0)
+  const totalGanho = dealsGanhos.reduce((sum, d) => sum + (d.valor || 0), 0)
+  const totalMRR = dealsGanhos.reduce((sum, d) => sum + (d.mrr || 0), 0)
 
   const dealsTotal = deals.filter((d) => d.status !== 'aberto').length
   const winRate = dealsTotal > 0 ? (dealsGanhos.length / dealsTotal) * 100 : 0

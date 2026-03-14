@@ -227,11 +227,11 @@ export default function DashboardPage() {
                           <span
                             className="text-xs font-semibold px-2 py-0.5 rounded-md"
                             style={{
-                              color: LEAD_STATUS_COLORS[lead.status],
-                              background: `${LEAD_STATUS_COLORS[lead.status]}20`,
+                              color: LEAD_STATUS_COLORS[lead.status] ?? '#94A3B8',
+                              background: `${LEAD_STATUS_COLORS[lead.status] ?? '#94A3B8'}20`,
                             }}
                           >
-                            {LEAD_STATUS_LABELS[lead.status]}
+                            {LEAD_STATUS_LABELS[lead.status] ?? 'Não definido'}
                           </span>
                           {lead.whatsapp && (
                             <a

@@ -48,10 +48,11 @@ export default function AnalyticsPage() {
     if (!leads.length) return []
     const counts: Record<string, number> = {}
     for (const lead of leads) {
-      counts[lead.status] = (counts[lead.status] ?? 0) + 1
+      const key = lead.status || 'nao_informado'
+      counts[key] = (counts[key] ?? 0) + 1
     }
     return Object.entries(counts).map(([status, count]) => ({
-      name: LEAD_STATUS_LABELS[status as LeadStatus] ?? status,
+      name: LEAD_STATUS_LABELS[status as LeadStatus] ?? (status === 'nao_informado' ? 'Não informado' : status),
       value: count,
       fill: LEAD_STATUS_COLORS[status as LeadStatus] ?? '#94A3B8',
     }))
@@ -61,10 +62,11 @@ export default function AnalyticsPage() {
     if (!leads.length) return []
     const counts: Record<string, number> = {}
     for (const lead of leads) {
-      counts[lead.origem] = (counts[lead.origem] ?? 0) + 1
+      const key = lead.origem || 'nao_informado'
+      counts[key] = (counts[key] ?? 0) + 1
     }
     return Object.entries(counts).map(([origem, count]) => ({
-      name: ORIGENS_LABELS[origem] ?? origem,
+      name: ORIGENS_LABELS[origem] ?? (origem === 'nao_informado' ? 'Não informado' : origem),
       value: count,
       fill: ORIGENS_COLORS[origem] ?? '#94A3B8',
     }))
@@ -101,10 +103,11 @@ export default function AnalyticsPage() {
     if (!leads.length) return []
     const values: Record<string, number> = {}
     for (const lead of leads) {
-      values[lead.origem] = (values[lead.origem] ?? 0) + lead.valor_estimado
+      const key = lead.origem || 'nao_informado'
+      values[key] = (values[key] ?? 0) + (lead.valor_estimado || 0)
     }
     return Object.entries(values).map(([origem, valor]) => ({
-      name: ORIGENS_LABELS[origem] ?? origem,
+      name: ORIGENS_LABELS[origem] ?? (origem === 'nao_informado' ? 'Não informado' : origem),
       valor,
     }))
   }, [leads])
